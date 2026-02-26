@@ -75,7 +75,7 @@ Date: 26 de Fev / 2026
 LCOM Project for group GRUPO_2LEIC<m><n>_<p>.
 Group members:
 
-<first name> <family name> (<email address>)
-<first name> <family name> (<email address>)
-<first name> <family name> (<email address>)
-<first name> <family name> (<email address>)
+Gustavo Bastos (up202403874@up.pt)
+Isaac Santos (up202407099@up.pt)
+Dalton Yuiti Kitadani Liaw Djoesman (up202407080@up.pt)
+Tiago Su (up202403468@up.pt)
