@@ -67,8 +67,8 @@ We declare that:
 4. We have not used AI tools to generate complete solutions that we present as entirely our own unaided work, and we have avoided plagiarism, whether from AI outputs or other sources.  
 5. If asked, we will provide details of which tools we used, for which files or parts of the project, and how we verified and adapted their outputs.
 
-Signed: `<student name>`, `<student name>`, `<student name>`, `<student name>`  
-Date: `<date>`
+Signed: Gustavo Bastos, Isaac Santos, Dalton Yuiti Kitadani Liaw Djoesman, Tiago Su
+Date: 26 de Fev / 2026
 
 ## Authors and acknowledgment
 
