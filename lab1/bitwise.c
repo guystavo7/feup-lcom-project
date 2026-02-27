@@ -1,4 +1,5 @@
 #include "bitwise.h"
+#include <stdarg.h>
 
 #define TODO return 255
 
@@ -26,9 +27,13 @@ uint8_t msb(uint16_t wide_msk) {
 
 uint8_t mask(int pos, ...) {
 	uint8_t msk = 0;
+	va_list list;
+
+	va_start(list, pos);
 
 	while (pos != MSK_END) {
 		msk |= (1 << pos);
+		pos = va_arg(list, int);
 	}
 
 	return msk;
