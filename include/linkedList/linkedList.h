@@ -1,0 +1,72 @@
+#ifndef LINKED_LIST_H
+#define LINKED_LIST_H
+
+typedef void (*freeFunction)(void *);
+typedef int (*compareFunction)(void *, void *);
+
+typedef enum { FALSE, TRUE } bool;
+
+struct _listNode {
+  void* data;
+  struct _listNode* next;
+};
+
+typedef struct _listNode listNode;
+
+typedef struct {
+  int _elementSize;
+  int _length;
+  freeFunction freeElement;
+  compareFunction compareElement;
+  listNode* head;
+  listNode* tail;
+} list;
+
+void listNew(list *list, int elementSize, freeFunction freeElement, compareFunction compareElement);
+void listFree(list *list);
+void listClear(list *list);
+
+void listAppendHead(list* list, void* element);
+void listAppendTail(list* list, void* element);
+int listGetSize(list *list);
+int listGetElementSize(list *list);
+
+bool listPeekHead(list* list, void* element);
+
+bool listPeekTail(list* list, void* element);
+
+bool listPopHead(list* list, void* element);
+
+bool listPopTail(list* list, void* element);
+
+bool listRemoveElement(list* list, void* element);
+
+bool listRemoveElementByIndex(list* list, int index);
+
+bool listInsertAt(list* list, int index, void* element);
+
+bool listGetAt(list* list, int index, void* element);
+
+void* listGetDataAt(list* list, int index);
+
+listNode* listGetHead(list* list);
+
+listNode* listGetTail(list* list);
+
+listNode* listGetNext(listNode* node);
+
+void* listNodeGetData(listNode* node);
+
+bool listIsEmpty(list* list);
+
+bool listContains(list* list, void* element);
+
+int listIndexOf(list* list, void* element);
+
+void* listFind(list* list, bool (*predicate)(void* element));
+
+int listFindIndex(list* list, bool (*predicate)(void* element));
+
+void listForEach(list* list, void (*callback)(void* element));
+
+#endif
