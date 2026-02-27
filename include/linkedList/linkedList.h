@@ -3,8 +3,10 @@
 
 typedef void (*freeFunction)(void *);
 typedef int (*compareFunction)(void *, void *);
-
-typedef enum { FALSE, TRUE } bool;
+typedef enum { 
+  FALSE, 
+  TRUE
+} boolean;
 
 struct _listNode {
   void* data;
@@ -31,21 +33,21 @@ void listAppendTail(list* list, void* element);
 int listGetSize(list *list);
 int listGetElementSize(list *list);
 
-bool listPeekHead(list* list, void* element);
+boolean listPeekHead(list* list, void* element);
 
-bool listPeekTail(list* list, void* element);
+boolean listPeekTail(list* list, void* element);
 
-bool listPopHead(list* list, void* element);
+boolean listPopHead(list* list, void* element);
 
-bool listPopTail(list* list, void* element);
+boolean listPopTail(list* list, void* element);
 
-bool listRemoveElement(list* list, void* element);
+boolean listRemoveElement(list* list, void* element);
 
-bool listRemoveElementByIndex(list* list, int index);
+boolean listRemoveElementByIndex(list* list, int index);
 
-bool listInsertAt(list* list, int index, void* element);
+boolean listInsertAt(list* list, int index, void* element);
 
-bool listGetAt(list* list, int index, void* element);
+boolean listGetAt(list* list, int index, void* element);
 
 void* listGetDataAt(list* list, int index);
 
@@ -57,15 +59,15 @@ listNode* listGetNext(listNode* node);
 
 void* listNodeGetData(listNode* node);
 
-bool listIsEmpty(list* list);
+boolean listIsEmpty(list* list);
 
-bool listContains(list* list, void* element);
+boolean listContains(list* list, void* element);
 
 int listIndexOf(list* list, void* element);
 
-void* listFind(list* list, bool (*predicate)(void* element));
+void* listFind(list* list, boolean (*predicate)(void* element));
 
-int listFindIndex(list* list, bool (*predicate)(void* element));
+int listFindIndex(list* list, boolean (*predicate)(void* element));
 
 void listForEach(list* list, void (*callback)(void* element));
 
