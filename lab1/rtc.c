@@ -43,8 +43,7 @@ int rtc_read_date(rtc_date *date) {
 	uint8_t day = readRTC(RTC_REG_DAY), month = readRTC(RTC_REG_MONTH), year = readRTC(RTC_REG_YEAR);
 	uint8_t isBDC = readRTC(RTC_REG_B);
 
-	// RTC_DM_MSK is wrong???
-	if (isBDC & (RTC_DM_MSK >> 1)) {
+	if (!(isBDC & RTC_DM_MSK)) {
 		day = bdc_to_bin(day);
 		month = bdc_to_bin(month);
 		year = bdc_to_bin(year);
