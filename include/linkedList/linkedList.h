@@ -2,6 +2,7 @@
 #define __LIST_NODE_H
 
 typedef void (*freeFunction)(void *);
+typedef enum { FALSE, TRUE } boolean;
 
 typedef struct _listNode {
   	void* data;
@@ -21,16 +22,20 @@ void freeList(list *list);
 
 void listAppendHead(list* list, void* element);
 void listAppendTail(list* list, void* element);
+
 int getListSize(list *list);
 int getElementSize(list *list);
 
-void getOrRemoveListHead(list* list, void* element, bool remove);
-void getOrRemoveListTail(list* list, void* element, bool remove);
+void* listGetHead(list* list);
+void* listGetTail(list* list);
 
-void listRemoveElement(list* list, void* element);
+void listPopHead(list* list);
+//void listPopTail(list* list);
 
-void listRemoveElementByIndex(list* list, void* element, int index);
+//void listRemoveElement(list* list, void* element);
 
-void listInsertAt(list* list, int index, void* element);
+//void listRemoveElementByIndex(list* list, void* element, int index);
+
+//void listInsertAt(list* list, int index, void* element);
 
 #endif

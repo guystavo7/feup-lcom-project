@@ -17,10 +17,12 @@ void printList(list* l) {
 void notFree(void* aa) {
 	return;
 }
+
 void testNewFreeList() {
 	list* l = newList(sizeof(int), notFree);
 	freeList(l);
 }
+
 void testAppendHead() {
 	list* l = newList(sizeof(int), notFree);
 	int num;
@@ -43,7 +45,27 @@ void testAppendHead() {
 	freeList(l);
 }
 
+void testGetters() {
+	list* l = newList(sizeof(int), notFree);
+	assert(getListSize(l) == 0);
+
+	int num;
+
+	num = 1;
+	listAppendHead(l, &num);
+	assert(getListSize(l) == 1);
+
+
+	num = 2;
+	listAppendHead(l, &num);
+	listAppendHead(l, &num);
+	assert(getListSize(l) == 3);
+
+	freeList(l);
+}
+
 int main() {
 	testNewFreeList();
 	testAppendHead();
+	testGetters();
 }
