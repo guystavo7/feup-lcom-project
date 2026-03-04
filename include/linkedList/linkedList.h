@@ -27,7 +27,7 @@ void listFree(list *list);
 void listClear(list *list);
 
 void listAppendHead(list* list, void* element);
-//void listAppendTail(list* list, void* element);
+void listAppendTail(list* list, void* element);
 int listGetSize(list *list);
 int listGetElementSize(list *list);
 
@@ -36,6 +36,7 @@ int listGetElementSize(list *list);
 
 void listPopHead(list* list);
 //boolean listPopHead(list* list, void* element);
+void listPopTail(list* list);
 //boolean listPopTail(list* list, void* element);
 
 //boolean listRemoveElement(list* list, void* element);

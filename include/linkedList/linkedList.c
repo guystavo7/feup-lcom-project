@@ -50,8 +50,26 @@ void listAppendHead(list* list, void* element) {
 	newNode -> data = element;
 	newNode -> next = list -> head;
 
-	if (list -> _length == 0) list -> tail = list -> head;
 	list -> head = newNode;
+	if (list -> _length == 0) list -> tail = list -> head;
+
+	list -> _length++;
+}
+
+void listAppendTail(list* list, void* element) {
+	listNode* newNode = malloc(sizeof(listNode));
+
+	newNode -> data = element;
+	newNode -> next = NULL;
+
+	if (list -> _length == 0) {
+		list -> head = newNode;
+	} else {
+		list -> tail -> next = newNode;
+
+	}
+
+	list -> tail = newNode;
 	list -> _length++;
 }
 
@@ -78,10 +96,25 @@ void listPopHead(list* list) {
 	list -> head = current -> next;
 	_nodeFree(current, list -> freeElement);
 
+	if (list -> _length == 1) list -> tail = NULL;
+	list -> _length--;
+}
+
+void listPopTail(list *list) {
+	if (list -> _length == 0) return;
 	if (list -> _length == 1) {
+		_nodeFree(list -> head, list -> freeElement);
 		list -> head = NULL;
 		list -> tail = NULL;
+		list -> _length--;
+		return;
 	}
 
+	listNode* current = list -> head;
+	while (current -> next -> next) current = current -> next;
+
+	list -> tail = current;
+	_nodeFree(current -> next, list -> freeElement);
+	current -> next = NULL;
 	list -> _length--;
 }
