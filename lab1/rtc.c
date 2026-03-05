@@ -1,5 +1,6 @@
 #include "rtc.h"
 #include <minix/syslib.h>
+#include <minix/sysutil.h>
 #include <stdio.h>
 
 #define TODO return -1
@@ -29,6 +30,7 @@ int getUIP() {
 uint8_t readRTC(uint8_t reg) {
 	int uip = getUIP();
 	while (uip) {
+		tickdelay(micros_to_ticks(20000));
 		uip = getUIP();
 	}
 
