@@ -118,3 +118,17 @@ void listPopTail(list *list) {
 	current -> next = NULL;
 	list -> _length--;
 }
+
+boolean listIsEmpty(list* list) {
+	return list -> _length == 0;
+}
+
+boolean listContains(list* list, void* element) {
+	listNode* current = list -> head;
+	while (current) {
+		if (list -> compareElement(current -> data, element)) return TRUE;
+		current = current -> next;
+	}
+
+	return FALSE;
+}

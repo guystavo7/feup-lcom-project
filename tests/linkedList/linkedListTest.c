@@ -29,11 +29,14 @@ void vectorFree(void* v) {
 }
 
 int intCompare(void* n1, void* n2) {
-	return *(int*)n1 < *(int*)n2;
+	return *(int*)n1 == *(int*)n2;
 }
 
 int vectorCompare(void* v1, void* v2) {
-	return 0;
+	vector* a = (vector*) v1;
+	vector* b = (vector*) v2;
+
+	return a -> x == b -> x && a -> y == b -> y;
 }
 
 void testNewFreeList1() {
@@ -129,6 +132,7 @@ void testGetters() {
 
 	list* l = listNew(sizeof(int), intFree, intCompare);
 	assert(listGetSize(l) == 0);
+	assert(listIsEmpty(l));
 
 	int* num1 = malloc(sizeof(int));
 	int* num2 = malloc(sizeof(int));
@@ -139,6 +143,7 @@ void testGetters() {
 	assert(listGetSize(l) == 1);
 	assert(*(int*)listGetHead(l) -> data == 1);
 	assert(*(int*)listGetTail(l) -> data == 1);
+	assert(!listIsEmpty(l));
 
 	*num2 = 2;
 	*num3 = 3;
@@ -175,10 +180,12 @@ void testClear() {
 
 	printList(l);
 	assert(listGetSize(l) == 3);
+	assert(listIsEmpty(l) == 0);
 
 	listClear(l);
 	printList(l);
 	assert(listGetSize(l) == 0);
+	assert(listIsEmpty(l));
 
 	listFree(l);
 }
@@ -326,6 +333,71 @@ void testAppend() {
 	listFree(l);
 }
 
+void testContains1() {
+	//Testing contains for integers
+	printf("Test contains 1\n");
+
+	list* l = listNew(sizeof(int), intFree, intCompare);
+	int* num1 = malloc(sizeof(int));
+	int* num2 = malloc(sizeof(int));
+	int* num3 = malloc(sizeof(int));
+
+	*num1 = 1;
+	*num2 = 2;
+	*num3 = 3;
+
+	assert(!listContains(l, num1));
+	assert(!listContains(l, num2));
+	assert(!listContains(l, num3));
+	listAppendHead(l, num1);
+
+	assert(listContains(l, num1));
+	assert(!listContains(l, num2));
+	assert(!listContains(l, num3));
+	listAppendHead(l, num2);
+
+	assert(listContains(l, num1));
+	assert(listContains(l, num2));
+	assert(!listContains(l, num3));
+	listPopHead(l);
+
+	num2 = malloc(sizeof(int));
+	*num2 = 2;
+
+	assert(listContains(l, num1));
+	assert(!listContains(l, num2));
+	assert(!listContains(l, num3));
+
+	free(num2);
+	free(num3);
+	listFree(l);
+}
+
+void testContains2() {
+	//Test contains for list of vectors
+	printf("Test contains 2\n");
+
+	list* l = listNew(sizeof(vector), vectorFree, vectorCompare);
+	vector* v1 = malloc(sizeof(vector));
+	vector* v2 = malloc(sizeof(vector));
+
+	v1 -> x = 1; v1 -> y = 2;
+	v2 -> x = 2; v2 -> y = 4;
+
+	assert(!listContains(l, v1));
+	assert(!listContains(l, v2));
+	listAppendHead(l, v1);
+
+	assert(listContains(l, v1));
+	assert(!listContains(l, v2));
+	listAppendHead(l, v2);
+
+	assert(listContains(l, v1));
+	assert(listContains(l, v2));
+
+	listFree(l);
+}
+
 int main() {
 	testNewFreeList1();
 	testNewFreeList2();
@@ -340,4 +412,7 @@ int main() {
 
 	testGetters();
 	testClear();
+
+	testContains1();
+	testContains2();
 }

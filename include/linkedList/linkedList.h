@@ -54,8 +54,8 @@ listNode* listGetTail(list* list);
 
 //void* listNodeGetData(listNode* node);
 
-//boolean listIsEmpty(list* list);
-//boolean listContains(list* list, void* element);
+boolean listIsEmpty(list* list);
+boolean listContains(list* list, void* element);
 
 //int listIndexOf(list* list, void* element);
 //void* listFind(list* list, boolean (*predicate)(void* element));
