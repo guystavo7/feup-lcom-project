@@ -132,3 +132,112 @@ boolean listContains(list* list, void* element) {
 
 	return FALSE;
 }
+
+void listInsertAt(list *list, int index, void *element) {
+	if (index == 0) {
+		listAppendHead(list, element);
+		return;
+	}
+
+	if (index >= list -> _length) {
+		listAppendTail(list, element);
+		return;
+	}
+
+	listNode* current = list -> head;
+	listNode* newNode = malloc(sizeof(listNode));
+	newNode -> data = element;
+
+	while (index > 1) {
+		current = current -> next;
+		index--;
+	}
+
+	newNode -> next = current -> next;
+	current -> next = newNode;
+	list -> _length++;
+}
+
+
+boolean listRemoveElement(list *list, void *element) {
+	if (list -> _length == 0) return FALSE;
+	if (list -> _length == 1) {
+		if (list -> head -> data == element) {
+			_nodeFree(list -> head, list -> freeElement);
+			list -> _length--;
+			list -> head = NULL;
+			list -> tail = NULL;
+			return TRUE;
+		}
+
+		return FALSE;
+	}
+
+	listNode* current = list -> head;
+	if (current -> data == element) {
+		list -> _length--;
+		list -> head = current -> next;
+		_nodeFree(current, list -> freeElement);
+
+		return TRUE;
+	}
+
+	while (current -> next) {
+		if (current -> next -> data == element) {
+			list -> _length--;
+			listNode* next = current -> next -> next;
+			if (!next) list -> tail = current;
+
+			_nodeFree(current -> next, list -> freeElement);
+			current -> next = next;
+			return TRUE;
+		}
+
+		current = current -> next;
+	}
+
+	return FALSE;
+}
+
+boolean listRemoveElementByIndex(list* list, int index) {
+	if (list -> _length == 0 || index < 0 || list -> _length <= index) return FALSE;
+
+	listNode* current = list -> head;
+
+	if (list -> _length == 1) {
+		_nodeFree(current, list -> freeElement);
+		list -> head = NULL;
+		list -> tail = NULL;
+
+	} else if (index == 0) {
+		list -> head = current -> next;
+		_nodeFree(current, list -> freeElement);
+
+	} else {
+		while (index != 1) {
+			current = current -> next;
+			index--;
+		}
+
+		if (current -> next == list -> tail) list -> tail = current;
+		listNode* next = current -> next -> next;
+
+		_nodeFree(current -> next, list -> freeElement);
+		current -> next = next;
+	}
+
+	list -> _length--;
+	return TRUE;
+}
+
+void* listGetAt(list* list, int index) {
+	if (index < 0 || index >= list -> _length) return NULL;
+	listNode* current = list -> head;
+
+	while (index) {
+		index--;
+		current = current -> next;
+	}
+
+	return current;
+}

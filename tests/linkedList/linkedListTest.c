@@ -398,6 +398,183 @@ void testContains2() {
 	listFree(l);
 }
 
+void testInsertAt() {
+	printf("Test insert at\n");
+
+	list* l = listNew(sizeof(int), intFree, intCompare);
+
+	int* n1 = malloc(sizeof(int));
+	int* n2 = malloc(sizeof(int));
+	int* n3 = malloc(sizeof(int));
+	int* n4 = malloc(sizeof(int));
+
+	*n1 = 1; *n2 = 2; *n3 = 3; *n4 = 4;
+
+	listInsertAt(l, 100, n1);
+	assert(*(int*)listGetHead(l) -> data == 1);
+	assert(*(int*)listGetTail(l) -> data == 1);
+	printList(l);
+
+
+	listInsertAt(l, 0, n2);
+	assert(*(int*)listGetHead(l) -> data == 2);
+	assert(*(int*)listGetTail(l) -> data == 1);
+	printList(l);
+
+
+	listInsertAt(l, 1, n3);
+	assert(*(int*)listGetHead(l) -> data == 2);
+	assert(*(int*)listGetTail(l) -> data == 1);
+	printList(l);
+
+
+	listInsertAt(l, 1, n4);
+	assert(*(int*)listGetHead(l) -> data == 2);
+	assert(*(int*)listGetTail(l) -> data == 1);
+	printList(l);
+
+	listFree(l);
+}
+
+void testRemoveElement() {
+	printf("Testing remove element\n");
+	list* l = listNew(sizeof(int), intFree, intCompare);
+	int* num1 = malloc(sizeof(int));
+	int* num2 = malloc(sizeof(int));
+	int* num3 = malloc(sizeof(int));
+	int* num4 = malloc(sizeof(int));
+	int* num5 = malloc(sizeof(int));
+
+	*num1 = 1; *num2 = 2; *num3 = 3; *num4 = 4; *num5 = 5;
+
+	assert(listRemoveElement(l, num1) == FALSE);
+
+	listAppendHead(l, num1);
+	listAppendHead(l, num2);
+	listAppendHead(l, num3);
+	listAppendHead(l, num4);
+
+	printList(l);
+	assert(listRemoveElement(l, num5) == FALSE);
+	assert(listGetSize(l) == 4);
+
+	printList(l);
+
+	assert(listRemoveElement(l, num1) == TRUE);
+	assert(listGetSize(l) == 3);
+	assert(*(int*)listGetTail(l) -> data == 2);
+	printList(l);
+
+	assert(listRemoveElement(l, num4) == TRUE);
+	assert(listGetSize(l) == 2);
+	assert(*(int*)listGetHead(l) -> data == 3);
+	printList(l);
+
+	listAppendHead(l, num5);
+
+	assert(listRemoveElement(l, num3) == TRUE);
+	assert(listGetSize(l) == 2);
+	assert(*(int*)listGetTail(l) -> data == 2);
+	assert(*(int*)listGetHead(l) -> data == 5);
+	printList(l);
+
+	assert(listRemoveElement(l, num5) == TRUE);
+	assert(listGetSize(l) == 1);
+	assert(*(int*)listGetTail(l) -> data == 2);
+	assert(*(int*)listGetHead(l) -> data == 2);
+	printList(l);
+
+	assert(listRemoveElement(l, num2) == TRUE);
+	assert(listGetSize(l) == 0);
+	assert(!listGetTail(l));
+	assert(!listGetHead(l));
+	printList(l);
+
+	listFree(l);
+}
+
+void testRemoveByIndex() {
+	printf("Test remove by index\n");
+	list* l = listNew(sizeof(int), intFree, intCompare);
+	int* num1 = malloc(sizeof(int));
+	int* num2 = malloc(sizeof(int));
+	int* num3 = malloc(sizeof(int));
+	int* num4 = malloc(sizeof(int));
+	int* num5 = malloc(sizeof(int));
+
+	*num1 = 1; *num2 = 2; *num3 = 3; *num4 = 4; *num5 = 5;
+	printList(l);
+
+	assert(listRemoveElementByIndex(l, 0) == FALSE);
+	listAppendHead(l, num1);
+	listAppendHead(l, num2);
+	listAppendHead(l, num3);
+	listAppendHead(l, num4);
+	listAppendHead(l, num5);
+
+	printList(l);
+	assert(listRemoveElementByIndex(l, -1) == FALSE);
+	assert(listRemoveElementByIndex(l, 5) == FALSE);
+	assert(listGetSize(l) == 5);
+	printList(l);
+
+	assert(listRemoveElementByIndex(l, 4) == TRUE);
+	assert(*(int*)listGetTail(l) -> data == 2);
+	assert(listGetSize(l) == 4);
+	printList(l);
+
+	assert(listRemoveElementByIndex(l, 0) == TRUE);
+	assert(*(int*)listGetHead(l) -> data == 4);
+	assert(listGetSize(l) == 3);
+	printList(l);
+
+	assert(listRemoveElementByIndex(l, 1) == TRUE);
+	assert(*(int*)listGetTail(l) -> data == 2);
+	assert(*(int*)listGetHead(l) -> data == 4);
+	assert(listGetSize(l) == 2);
+	printList(l);
+
+	assert(listRemoveElementByIndex(l, 1) == TRUE);
+	assert(*(int*)listGetTail(l) -> data == 4);
+	assert(*(int*)listGetHead(l) -> data == 4);
+	assert(listGetSize(l) == 1);
+	printList(l);
+
+	assert(listRemoveElementByIndex(l, 0) == TRUE);
+	assert(!listGetTail(l));
+	assert(!listGetHead(l));
+	assert(listGetSize(l) == 0);
+	printList(l);
+
+	listFree(l);
+}
+
+void testGetAt() {
+	printf("Test get at\n");
+	list* l = listNew(sizeof(int), intFree, intCompare);
+	int* num1 = malloc(sizeof(int));
+	int* num2 = malloc(sizeof(int));
+	int* num3 = malloc(sizeof(int));
+	int* num4 = malloc(sizeof(int));
+	int* num5 = malloc(sizeof(int));
+
+	*num1 = 1; *num2 = 2; *num3 = 3; *num4 = 4; *num5 = 5;
+	listAppendHead(l, num1);
+	listAppendHead(l, num2);
+	listAppendHead(l, num3);
+	listAppendHead(l, num4);
+	listAppendHead(l, num5);
+
+	printList(l);
+
+	for (int i = 0; i < 5; i++) {
+		listNode* node = listGetAt(l, i);
+		printf("Index %d: %d\n", i, *(int*)node -> data);
+	}
+
+	listFree(l);
+}
+
 int main() {
 	testNewFreeList1();
 	testNewFreeList2();
@@ -415,4 +592,9 @@ int main() {
 
 	testContains1();
 	testContains2();
+
+	testInsertAt();
+	testRemoveElement();
+	testRemoveByIndex();
+	testGetAt();
 }

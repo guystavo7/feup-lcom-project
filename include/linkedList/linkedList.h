@@ -31,28 +31,19 @@ void listAppendTail(list* list, void* element);
 int listGetSize(list *list);
 int listGetElementSize(list *list);
 
-//boolean listPeekHead(list* list, void* element);
-//boolean listPeekTail(list* list, void* element);
-
 void listPopHead(list* list);
-//boolean listPopHead(list* list, void* element);
 void listPopTail(list* list);
-//boolean listPopTail(list* list, void* element);
 
-//boolean listRemoveElement(list* list, void* element);
-//boolean listRemoveElementByIndex(list* list, int index);
+boolean listRemoveElement(list* list, void* element);
+boolean listRemoveElementByIndex(list* list, int index);
 
-//boolean listInsertAt(list* list, int index, void* element);
+void listInsertAt(list* list, int index, void* element);
 
-//boolean listGetAt(list* list, int index, void* element);
+void* listGetAt(list* list, int index);
 //void* listGetDataAt(list* list, int index);
 
 listNode* listGetHead(list* list);
 listNode* listGetTail(list* list);
-
-//listNode* listGetNext(listNode* node);
-
-//void* listNodeGetData(listNode* node);
 
 boolean listIsEmpty(list* list);
 boolean listContains(list* list, void* element);
