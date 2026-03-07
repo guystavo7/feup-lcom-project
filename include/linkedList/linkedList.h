@@ -38,9 +38,7 @@ boolean listRemoveElement(list* list, void* element);
 boolean listRemoveElementByIndex(list* list, int index);
 
 void listInsertAt(list* list, int index, void* element);
-
 void* listGetAt(list* list, int index);
-//void* listGetDataAt(list* list, int index);
 
 listNode* listGetHead(list* list);
 listNode* listGetTail(list* list);
@@ -48,10 +46,10 @@ listNode* listGetTail(list* list);
 boolean listIsEmpty(list* list);
 boolean listContains(list* list, void* element);
 
-//int listIndexOf(list* list, void* element);
-//void* listFind(list* list, boolean (*predicate)(void* element));
+int listIndexOf(list* list, void* element);
+void* listFind(list* list, boolean (*predicate)(void* element));
 
-//int listFindIndex(list* list, boolean (*predicate)(void* element));
-//void listForEach(list* list, void (*callback)(void* element));
+int listFindIndex(list* list, boolean (*predicate)(void* element));
+void listForEach(list* list, void (*callback)(void* element));
 
 #endif
