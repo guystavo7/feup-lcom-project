@@ -152,3 +152,22 @@ void* listFind(list* list, boolean (*predicate)(void* element)) {
 	}
 	return NULL;
 }
+
+int listFindIndex(list* list, boolean (*predicate)(void* element)) {
+	listNode* cur = list->head;
+	int index = 0;
+	while(cur) {
+		if(predicate(cur->data)) return index;
+		index++;
+		cur = cur->next;
+	}
+	return -1;
+}
+
+void listForEach(list* list, void (*callback)(void* element)) {
+	listNode* cur = list->head;
+	while(cur) {
+		callback(cur->data);
+		cur = cur->next;
+	}
+}

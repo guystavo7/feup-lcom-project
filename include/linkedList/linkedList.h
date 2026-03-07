@@ -51,7 +51,7 @@ boolean listContains(list* list, void* element);
 int listIndexOf(list* list, void* element);
 void* listFind(list* list, boolean (*predicate)(void* element));
 
-//int listFindIndex(list* list, boolean (*predicate)(void* element));
-//void listForEach(list* list, void (*callback)(void* element));
+int listFindIndex(list* list, boolean (*predicate)(void* element));
+void listForEach(list* list, void (*callback)(void* element));
 
 #endif
