@@ -42,6 +42,7 @@ void listClear(list* list) {
 
 	list->_length = 0;
 	list->head = NULL;
+	list->tail = NULL;
 }
 
 void listAppendHead(list* list, void* element) {
@@ -93,6 +94,13 @@ void listPopHead(list* list) {
 	if (list->_length == 0) return;
 
 	listNode* current = list->head;
+	if (list->_length == 1) {
+		_nodeFree(list->head, list->freeElement);
+		list->head = NULL;
+		list->tail = NULL;
+		list->_length = 0;
+		return;
+	}
 	list->head = current->next;
 	_nodeFree(current, list->freeElement);
 
