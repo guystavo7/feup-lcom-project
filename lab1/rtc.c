@@ -1,6 +1,7 @@
 #include "rtc.h"
 #include "minix/syslib.h"
 #include <stdio.h>
+#include <minix/sysutil.h>
 
 #define TODO return -1
 
@@ -28,7 +29,8 @@ static uint8_t rtc_read_reg(uint8_t reg) {
 int rtc_read_date(rtc_date *date) {
   uint8_t day, month, year, regB;
 
-  while (rtc_read_reg(RTC_REG_A) & RTC_UIP_MSK);
+  while (rtc_read_reg(RTC_REG_A) & RTC_UIP_MSK)
+    tickdelay(micros_to_ticks(20000));
 
   day = rtc_read_reg(RTC_REG_DAY);
   month = rtc_read_reg(RTC_REG_MONTH);
