@@ -8,6 +8,16 @@ typedef struct {
 	int y;
 } vector;
 
+boolean isEven(void* element) {
+	int* num = (int*)element;
+	return *num % 2 == 0;
+}
+
+boolean isGreaterThanThree(void* element) {
+	int* num = (int*)element;
+	return *num > 3;
+}
+
 void printList(list* l) {
 	listNode* current = l -> head;
 	int index = 0;
@@ -575,6 +585,78 @@ void testGetAt() {
 	listFree(l);
 }
 
+void testIndexOf() {
+	//Testing indexOf for integers
+	printf("Test indexOf\n");
+
+	list* l = listNew(sizeof(int), intFree, intCompare);
+	int* num1 = malloc(sizeof(int));
+	int* num2 = malloc(sizeof(int));
+	int* num3 = malloc(sizeof(int));
+
+	*num1 = 1;
+	*num2 = 2;
+	*num3 = 3;
+
+	assert(listIndexOf(l, num1) == -1);
+	assert(listIndexOf(l, num2) == -1);
+	assert(listIndexOf(l, num3) == -1);
+	listAppendHead(l, num1);
+
+	assert(listIndexOf(l, num1) == 0);
+	assert(listIndexOf(l, num2) == -1);
+	assert(listIndexOf(l, num3) == -1);
+	listAppendHead(l, num2);
+
+	assert(listIndexOf(l, num1) == 1);
+	assert(listIndexOf(l, num2) == 0);
+	assert(listIndexOf(l, num3) == -1);
+	listPopHead(l);
+
+	assert(listIndexOf(l, num1) == 0);
+	assert(listIndexOf(l, num3) == -1);
+
+	free(num3);
+	listFree(l);
+}
+
+void testFind() {
+	//Testing find for integers
+	printf("Test find\n");
+
+	list* l = listNew(sizeof(int), intFree, intCompare);
+	int* num1 = malloc(sizeof(int));
+	int* num2 = malloc(sizeof(int));
+	int* num3 = malloc(sizeof(int));
+	int* num4 = malloc(sizeof(int));
+	int* num5 = malloc(sizeof(int));
+
+	*num1 = 1; *num2 = 2; *num3 = 3; *num4 = 4; *num5 = 5;
+
+	assert(listFind(l, isEven) == NULL);
+	assert(listFind(l, isGreaterThanThree) == NULL);
+
+	listAppendHead(l, num1);
+	listAppendHead(l, num2);
+	listAppendHead(l, num3);
+	listAppendHead(l, num4);
+	listAppendHead(l, num5);
+
+	printList(l);
+
+	int* found = (int*)listFind(l, isEven);
+	assert(found != NULL);
+	assert(*found == 4);
+	printf("Found first even: %d\n", *found);
+
+	found = (int*)listFind(l, isGreaterThanThree);
+	assert(found != NULL);
+	assert(*found == 5);
+	printf("Found first > 3: %d\n", *found);
+
+	listFree(l);
+}
+
 int main() {
 	testNewFreeList1();
 	testNewFreeList2();
@@ -597,4 +679,7 @@ int main() {
 	testRemoveElement();
 	testRemoveByIndex();
 	testGetAt();
+
+	testIndexOf();
+	testFind();
 }
