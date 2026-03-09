@@ -18,6 +18,27 @@ boolean isGreaterThanThree(void* element) {
 	return *num > 3;
 }
 
+void printIntElement(void* element) {
+	int* num = (int*)element;
+	printf("  Element: %d\n", *num);
+}
+
+int sum = 0;
+void addToSum(void* element) {
+	int* num = (int*)element;
+	sum += *num;
+}
+
+void multiplyByTwo(void* element) {
+	int* num = (int*)element;
+	*num *= 2;
+}
+
+void addTwo(void* element) {
+	int* num = (int*)element;
+	*num += 2;
+}
+
 void printList(list* l) {
 	listNode* current = l -> head;
 	int index = 0;
@@ -657,6 +678,112 @@ void testFind() {
 	listFree(l);
 }
 
+void testFindIndex() {
+	//Testing findIndex for integers
+	printf("Test findIndex\n");
+
+	list* l = listNew(sizeof(int), intFree, intCompare);
+	int* num1 = malloc(sizeof(int));
+	int* num2 = malloc(sizeof(int));
+	int* num3 = malloc(sizeof(int));
+	int* num4 = malloc(sizeof(int));
+	int* num5 = malloc(sizeof(int));
+
+	*num1 = 1; *num2 = 2; *num3 = 3; *num4 = 4; *num5 = 5;
+
+	assert(listFindIndex(l, isEven) == -1);
+	assert(listFindIndex(l, isGreaterThanThree) == -1);
+
+	listAppendHead(l, num1);
+	listAppendHead(l, num2);
+	listAppendHead(l, num3);
+	listAppendHead(l, num4);
+	listAppendHead(l, num5);
+
+	printList(l);
+
+	int found = listFindIndex(l, isEven);
+	assert(found != -1);
+	assert(found == 1);
+	printf("Found first even: %d\n", found);
+
+	found = listFindIndex(l, isGreaterThanThree);
+	assert(found != -1);
+	assert(found == 0);
+	printf("Found first > 3: %d\n", found);
+
+	listFree(l);
+}
+
+void testForEach1() {
+	//Testing forEach for integers
+	printf("Test forEach1\n");
+
+	list* l = listNew(sizeof(int), intFree, intCompare);
+	int* num1 = malloc(sizeof(int));
+	int* num2 = malloc(sizeof(int));
+	int* num3 = malloc(sizeof(int));
+	int* num4 = malloc(sizeof(int));
+	int* num5 = malloc(sizeof(int));
+
+	*num1 = 1; *num2 = 2; *num3 = 3; *num4 = 4; *num5 = 5;
+
+	listAppendHead(l, num1);
+	listAppendHead(l, num2);
+	listAppendHead(l, num3);
+	listAppendHead(l, num4);
+	listAppendHead(l, num5);
+
+	printList(l);
+
+	printf("Using forEach to print:\n");
+	listForEach(l, printIntElement);
+
+	sum = 0;
+	listForEach(l, addToSum);
+	assert(sum == 15);
+	printf("Sum of all elements: %d\n", sum);
+
+	listFree(l);
+}
+
+void testForEach2() {
+	//Testing forEach to modify integer elements
+	printf("Test forEach2\n");
+
+	list* l = listNew(sizeof(int), intFree, intCompare);
+	int* num1 = malloc(sizeof(int));
+	int* num2 = malloc(sizeof(int));
+	int* num3 = malloc(sizeof(int));
+	int* num4 = malloc(sizeof(int));
+	int* num5 = malloc(sizeof(int));
+
+	*num1 = 1; *num2 = 2; *num3 = 3; *num4 = 4; *num5 = 5;
+
+	listAppendHead(l, num1);
+	listAppendHead(l, num2);
+	listAppendHead(l, num3);
+	listAppendHead(l, num4);
+	listAppendHead(l, num5);
+
+	printList(l);
+
+	listForEach(l, multiplyByTwo);
+	printf("After multiplying by 2:\n");
+	printList(l);
+
+	assert(*(int*)listGetHead(l)->data == 10);
+	assert(*(int*)listGetTail(l)->data == 2);
+
+	listForEach(l, addTwo);
+	printf("After adding 2:\n");
+	printList(l);
+	assert(*(int*)listGetHead(l)->data == 12);
+	assert(*(int*)listGetTail(l)->data == 4);
+
+	listFree(l);
+}
+
 int main() {
 	testNewFreeList1();
 	testNewFreeList2();
@@ -682,4 +809,7 @@ int main() {
 
 	testIndexOf();
 	testFind();
+	testFindIndex();
+	testForEach1();
+	testForEach2();
 }
