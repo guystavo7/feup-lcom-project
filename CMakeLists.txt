@@ -7,8 +7,9 @@ set( CMAKE_BUILD_TYPE "Debug" )
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 include_directories(include)
+include_directories(include/linkedList)
 
 set( CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE_TMP} )
 
 # fileName, cpp file, all libraries
-add_executable(testLinkedList ./tests/linkedListTest.c ./src/linkedList.c)
+add_executable(testLinkedList ./tests/linkedListTest.c ./include/linkedList/linkedList.c)
