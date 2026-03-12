@@ -16,44 +16,45 @@
 #define RTC_DM_MSK (1 << 2)
 
 static int bdc_to_bin(uint8_t bcd) {
-	return (bcd >> 4) * 10 + (bcd & 0x0F);
+    return (bcd >> 4) * 10 + (bcd & 0x0F);
 }
 
-int getUIP() {
-	uint32_t uip;
+int getUIP(uint32_t* uip) {
+    if (sys_outb(RTC_ADDR_REG, RTC_REG_A) || sys_inb(RTC_DATA_REG, uip)) return -1;
+    *uip &= RTC_UIP_MSK;
 
-	int ret = sys_outb(RTC_ADDR_REG, RTC_REG_A);
-	sys_inb(RTC_DATA_REG, &uip);
-	return uip & RTC_UIP_MSK;
+    return 0;
 }
 
-uint8_t readRTC(uint8_t reg) {
-	int uip = getUIP();
-	while (uip) {
-		tickdelay(micros_to_ticks(20000));
-		uip = getUIP();
-	}
+int readRTC(uint8_t reg, uint8_t* value) {
+    uint32_t uip;
 
-	uint32_t value;
-	sys_outb(RTC_ADDR_REG, reg);
-	sys_inb(RTC_DATA_REG, &value);
+    do {
+        if (getUIP(&uip)) return -1;
+        tickdelay(micros_to_ticks(20000));
 
-	return value;
+    } while (uip);
+
+    uint32_t v;
+    if (sys_outb(RTC_ADDR_REG, reg) || sys_inb(RTC_DATA_REG, &v)) return -1;
+    *value = v;
+
+    return 0;
 }
 
-int rtc_read_date(rtc_date *date) {
-	uint8_t day = readRTC(RTC_REG_DAY), month = readRTC(RTC_REG_MONTH), year = readRTC(RTC_REG_YEAR);
-	uint8_t isBDC = readRTC(RTC_REG_B);
+int rtc_read_date(rtc_date* date) {
+    uint8_t day, month, year, isBDC;
+    if (readRTC(RTC_REG_DAY, &day) || readRTC(RTC_REG_MONTH, &month) || readRTC(RTC_REG_YEAR, &year) || readRTC(RTC_REG_B, &isBDC)) return -1;
+    if (!(isBDC & RTC_DM_MSK)) {
+        day = bdc_to_bin(day);
+        month = bdc_to_bin(month);
+        year = bdc_to_bin(year);
+    }
 
-	if (!(isBDC & RTC_DM_MSK)) {
-		day = bdc_to_bin(day);
-		month = bdc_to_bin(month);
-		year = bdc_to_bin(year);
-	}
+    date->day = day;
+    date->month = month;
+    date->year = year;
 
-	date -> day = day;
-	date -> month = month;
-	date -> year = year;
-
-	return 1;
+    return 0;
 }
+
