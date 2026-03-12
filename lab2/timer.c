@@ -10,15 +10,28 @@
 
 #define READ_BACK_COMMAND 0xC0 
 #define READ_BACK_COUNT_BIT 1 << 5
+#define READ_BACK_STATUS_BIT 1 << 4
 #define INITIALIZATION_MODE_MSK 0x30
 #define COUNTING_MODE_MSK 0x0E
 #define COUNTING_BASE_MSK 0x01
+#define LSB_AND_MSB_MSK 0x30;
 
 int(timer_set_frequency)(uint8_t timer, uint32_t freq) {
-    /* To be implemented by the students */
-    printf("%s is not yet implemented!\n", __func__);
+	uint8_t st;
+	if (timer_get_conf(timer, &st)) return -1;
+	st = (st & 0x0F) | (timer << 6) | LSB_AND_MSB_MSK; 
 
-    return 1;
+	if (sys_outb(CONTROL_PORT_ADDR, st)) return -1;
+	uint16_t divider = TIMER_FREQ / freq;
+	uint8_t value;
+
+	util_get_LSB(divider, &value);
+	if (sys_outb(TIMER_BASE_ADDR + timer, value)) return -1;
+
+	util_get_MSB(divider, &value);
+	if (sys_outb(TIMER_BASE_ADDR + timer, value)) return -1;
+
+    return 0;
 }
 
 int(timer_subscribe_int)(uint8_t* bit_no) {
@@ -52,7 +65,7 @@ int(timer_get_conf)(uint8_t timer, uint8_t* st) {
 
 uint8_t getMode(uint8_t mode) {
 	mode = (mode & COUNTING_MODE_MSK) >> 1;
-	return mode > 5 ? mode - 5 : mode;
+	return mode > 5 ? mode - 4 : mode;
 }
 
 int(timer_display_conf)(uint8_t timer, uint8_t st, enum timer_status_field field) {
