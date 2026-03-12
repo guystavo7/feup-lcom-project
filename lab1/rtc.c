@@ -57,4 +57,3 @@ int rtc_read_date(rtc_date* date) {
 
     return 0;
 }
-
