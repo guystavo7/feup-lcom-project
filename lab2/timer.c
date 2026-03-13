@@ -6,10 +6,18 @@
 #include "i8254.h"
 
 int (timer_set_frequency)(uint8_t timer, uint32_t freq) {
-  /* To be implemented by the students */
-  printf("%s is not yet implemented!\n", __func__);
-
-  return 1;
+  uint8_t st;
+  if(timer_get_conf(timer, &st) != 0) return 1;
+  uint8_t word = (st & 0x0F) | TIMER_LSB_MSB | (timer << 6);
+  if(sys_outb(TIMER_CTRL, word) != 0) return 1;
+  uint16_t divider = TIMER_FREQ/freq;
+  uint8_t lsb, msb;
+  if(util_get_LSB(divider, &lsb) != 0) return 1;
+  if(util_get_MSB(divider, &msb) != 0) return 1;
+  if(sys_outb(TIMER_0 + timer, lsb) != 0) return 1;
+  if(sys_outb(TIMER_0 + timer, msb) != 0) return 1;
+  
+  return 0;
 }
 
 int (timer_subscribe_int)(uint8_t *bit_no) {
