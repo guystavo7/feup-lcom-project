@@ -49,7 +49,7 @@ int (timer_get_conf)(uint8_t timer, uint8_t *st) {
   if (util_sys_inb(TIMER_0 + timer, st) != 0) return 1;
 
   return 0;
-}uint32_t res;
+}
 
 int (timer_display_conf)(uint8_t timer, uint8_t st, enum timer_status_field field) {
   union timer_status_field_val conf;
@@ -62,10 +62,11 @@ int (timer_display_conf)(uint8_t timer, uint8_t st, enum timer_status_field fiel
     conf.bcd = st & BIT(0);
     break;
   case tsf_initial:
-    conf.in_mode = st & (BIT(4) | BIT(5)) >> 4;
+    conf.in_mode = (st & (BIT(4) | BIT(5))) >> 4;
     break;
   case tsf_mode:
-    conf.count_mode = ((st & (BIT(1) | BIT(2) | BIT(3))) >> 1) > 5 ? ((st & (BIT(1) | BIT(2) | BIT(3))) >> 1) - 5 : ((st & (BIT(1) | BIT(2) | BIT(3))) >> 1);
+    conf.count_mode = ((st & (BIT(1) | BIT(2) | BIT(3))) >> 1);
+    if (conf.count_mode > 5) conf.count_mode &= 0x03;
     break;
   }
 
