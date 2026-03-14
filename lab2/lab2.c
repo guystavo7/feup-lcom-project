@@ -1,3 +1,4 @@
+#include "i8254.h"
 #include <lcom/lab2.h>
 #include <lcom/lcf.h>
 
@@ -29,20 +30,43 @@ int main(int argc, char* argv[]) {
 }
 
 int(timer_test_read_config)(uint8_t timer, enum timer_status_field field) {
-	uint8_t st;
-	if (timer_get_conf(timer, &st)) return -1;
-	if (timer_display_conf(timer, st, field)) return -1;
+    uint8_t st;
+    if (timer_get_conf(timer, &st)) return -1;
+    if (timer_display_conf(timer, st, field)) return -1;
     return 0;
 }
 
 int(timer_test_time_base)(uint8_t timer, uint32_t freq) {
-	if (timer_set_frequency(timer, freq)) return -1;
+    if (timer_set_frequency(timer, freq)) return -1;
     return 0;
 }
 
 int(timer_test_int)(uint8_t time) {
-    /* To be implemented by the students */
-    printf("%s is not yet implemented!\n", __func__);
+    uint8_t hook_id = 0;
+    if (timer_subscribe_int(&hook_id)) return -1;
+    int ipc_status, r, ticks = time * 60;
+    message msg;
 
-    return 1;
+    while (ticks) {
+        if ((r = driver_receive(ANY, &msg, &ipc_status))) {
+            printf("Enable to read driver %d\n", r);
+            continue;
+        }
+
+        if (!is_ipc_notify(ipc_status)) continue;
+        switch (_ENDPOINT_P(msg.m_source)) {
+            case HARDWARE:
+                if (msg.m_notify.interrupts & (1 << hook_id)) {
+                    ticks--;
+
+                    if (ticks % 60 == 0) {
+                        timer_print_elapsed_time();
+                        timer_int_handler();
+                    }
+                }
+        }
+    }
+
+    if (timer_unsubscribe_int()) return -1;
+    return 0;
 }
