@@ -4,6 +4,7 @@
 #include <stdint.h>
 
 #include "kbd.h"
+#include "../lab2/timer.h"
 
 int main(int argc, char* argv[]) {
     // sets the language of LCF messages (can be either EN-US or PT-PT)
@@ -79,8 +80,38 @@ int(kbd_test_poll)() {
 }
 
 int(kbd_test_timed_scan)(uint8_t n) {
-    /* To be completed by the students */
-    printf("%s is not yet implemented!\n", __func__);
+    uint8_t bit_kbd = 1, bit_timer = 0, hook_id_timer;
+    int hook_id_kbd;
+    hook_id_kbd = bit_kbd;
+	hook_id_timer = bit_timer;
 
-    return 1;
+    kbdSubscribe(&hook_id_kbd);
+	timer_subscribe_int(&hook_id_timer);
+    message msg;
+    int r, ipc_status;
+
+    while (getScanCode() != 0x81 && getCounter() <= n * 60) {
+        if ((r = driver_receive(ANY, &msg, &ipc_status))) {
+            printf("Cannot read from %d driver\n", r);
+            continue;
+        }
+
+        if (!is_ipc_notify(ipc_status)) continue;
+        switch (_ENDPOINT_P(msg.m_source)) {
+            case HARDWARE:
+                if (msg.m_notify.interrupts & (1 << bit_kbd)) {
+					readKeys();
+					resetCounter();
+
+				} else if (msg.m_notify.interrupts & (1 << bit_timer)) timer_int_handler();
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    kbdUnsubscribe(&hook_id_kbd);
+	timer_unsubscribe_int();
+    return 0;
 }

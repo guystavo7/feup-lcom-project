@@ -7,12 +7,14 @@ SRCS = lab3.c kbd.c
 
 # additional compilation flags
 # "-Wall -Wextra -Werror -I . -std=c11 -Wno-unused-parameter" are already set
-CFLAGS += -pedantic -DLAB3
+CFLAGS += -pedantic -DLAB3 -I../lab2/
 
 # list of library dependencies (for Lab 2, only LCF library)
 DPADD += ${LIBLCF} ${LIB_NAME}              # Let make track the versions of the new target
 LDADD += -llcf -L.                          # Tell the compiler to look in the current directory for libraries
 LDADD += -lkbd                              #   and link the library named libtimers.a
+LDADD += -L../lab2
+LDADD += -ltimer
 
 LIB_NAME = libkbd.a                         # The name filename for your library
 LIB_SRCS = kbd.c utilsKBD.c                 # The source files to include
