@@ -1,7 +1,4 @@
-#include <lcom/lcf.h>
-#include <lcom/timer.h>
-
-#include <stdint.h>
+#include "timer.h"
 
 #include "i8254.h"
 
@@ -15,9 +12,6 @@
 #define COUNTING_MODE_MSK 0x0E
 #define COUNTING_BASE_MSK 0x01
 #define LSB_AND_MSB_MSK 0x30
-
-static int counter = 0;
-static int hook_id;
 
 int(timer_set_frequency)(uint8_t timer, uint32_t freq) {
     uint8_t st;
@@ -87,4 +81,12 @@ int(timer_display_conf)(uint8_t timer, uint8_t st, enum timer_status_field field
 
     if (timer_print_config(timer, field, conf)) return -1;
     return 0;
+}
+
+int getCounter() {
+	return counter;
+}
+
+void resetCounter() {
+	counter = 0;
 }
