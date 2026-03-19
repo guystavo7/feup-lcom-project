@@ -14,7 +14,7 @@
 #define INITIALIZATION_MODE_MSK 0x30
 #define COUNTING_MODE_MSK 0x0E
 #define COUNTING_BASE_MSK 0x01
-#define LSB_AND_MSB_MSK 0x30;
+#define LSB_AND_MSB_MSK 0x30
 
 static int counter = 0;
 static int hook_id;
