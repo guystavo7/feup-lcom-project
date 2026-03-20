@@ -52,8 +52,10 @@
 #define TIMER_RB_STATUS_ BIT(4)
 #define TIMER_RB_SEL(n)  BIT((n) + 1)
 
-#define KBC_PARITY_ERROR BIT(7)
-#define KBC_TIMEOUT_ERROR BIT(6)
+#define KBD_PARITY_ERROR BIT(7)
+#define KBD_TIMEOUT_ERROR BIT(6)
+
+#define KBD_ESC 0x81
 
 /**@}*/
 

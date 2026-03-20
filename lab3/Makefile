@@ -3,7 +3,7 @@ PROG=lab3
 
 # source code files to be compiled
 .PATH: ${.CURDIR}/.
-SRCS = lab3.c kbd.c
+SRCS = lab3.c kbd.c utils.c
 
 # additional compilation flags
 # "-Wall -Wextra -Werror -I . -std=c11 -Wno-unused-parameter" are already set
@@ -15,7 +15,7 @@ DPADD += ${LIBLCF} ${LIB_NAME}              # Let make track the versions of the
 LDADD += -llcf -L.                          # Tell the compiler to look in the current directory for libraries
 
 LIB_NAME = libkbd.a                       # The name filename for your library
-LIB_SRCS = kbd.c                  # The source files to include
+LIB_SRCS = kbd.c utils.c                # The source files to include
 LIB_OBJS = ${LIB_SRCS:.c=.o}                # The rule used to convert your .c source files in .o object files
 CLEANFILES += ${LIB_NAME} ${LIB_OBJS}       # Add the library file and object files to the files to be cleaned
 
