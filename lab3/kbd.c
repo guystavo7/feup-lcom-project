@@ -12,7 +12,6 @@ int checkIfCanRead(int* res) {
     uint8_t status, errors;
     if (checkForErrorsInStatus(&status, &errors)) return -1;
     if (!errors) *res = status & OBF_MSK;
-
     return 0;
 }
 
@@ -27,25 +26,21 @@ int checkIfCanWrite(int* res) {
     return 0;
 }
 
-int readOutputBuffer(uint16_t* output) {
+int readOutputBuffer(uint8_t* output) {
     // Read output buffer (needs to check if can read)
     int res = 0;
     if (checkIfCanRead(&res)) return -1;
-
-    if (res && sys_inb_16b(INPUT_OUTPUT_ADDR, output)) return -1;
+    if (res && sys_inb_8b(INPUT_OUTPUT_ADDR, output)) return -1;
     return 0;
 }
 
 int readCmdByte(uint8_t* cmd) {
     if (sys_outb(STATUS_COMMAND_ADDR, READ_CMD)) return -1;
     int res = 0;
-
     for (int i = 0; i < TRIES; i++) {
         if (!checkIfCanRead(&res) && res && !sys_inb_8b(INPUT_OUTPUT_ADDR, cmd)) return 0;
-
         tickdelay(micros_to_ticks(DELAY));
     }
-
     return -1;
 }
 
@@ -72,32 +67,47 @@ int enableIH() {
 }
 
 void(kbc_ih)() {
-    uint16_t output = 0;
-    int res = 0;
-    if (checkIfCanRead(&res) && !res) return;
-    if (!readOutputBuffer(&output)) scanCode = output;
+    uint8_t output = 0;
+    if (readOutputBuffer(&output)) return;
+    if (topByte == 0) {
+        topByte = output;
+    } else {
+        botByte = output;
+    }
+}
+
+void resetScanCode() {
+    lastTopByte = topByte;
+    topByte = 0;
+    botByte = 0;
+}
+
+bool isTwoByteCode() {
+    return topByte == 0xe0;
 }
 
 bool isValid() {
     // If scanCode is invalid or an error occurr, the scancode is 0
-    return scanCode;
+    return topByte;
+}
+
+uint8_t getLastTopByte() {
+    return lastTopByte;
 }
 
 uint8_t getMSB() {
-    return (uint8_t)((scanCode & MSB_MSK) >> 8);
+    return topByte;
 }
 uint8_t getLSB() {
-    return (uint8_t)(scanCode & LSB_MSK);
+    return botByte;
 }
 
 uint8_t getSize() {
-    return getMSB() ? 2 : 1;
-}
-
-uint16_t getScanCode() {
-    return scanCode;
+    return getLSB() ? 2 : 1;
 }
 
 bool isMake() {
-    return !(scanCode & MAKE_MSK);
+    uint8_t byte = botByte;
+    if (!botByte) byte = topByte;
+    return !(byte & MAKE_MSK);
 }

@@ -3,8 +3,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#include "kbd.h"
 #include "../lab2/timer.h"
+#include "kbd.h"
 
 int main(int argc, char* argv[]) {
     // sets the language of LCF messages (can be either EN-US or PT-PT)
@@ -32,13 +32,16 @@ int main(int argc, char* argv[]) {
 
 void readKeys() {
     kbc_ih();
-    if (!isValid()) return;
+    if (!isValid() || isTwoByteCode()) return;
 
     bool make = isMake();
     uint8_t size = getSize();
-    uint8_t bytes;
-    bytes = getScanCode();
-    kbd_print_scancode(make, size, &bytes);
+    uint8_t bytes[2];
+    bytes[0] = getMSB();
+    bytes[1] = getLSB();
+
+    kbd_print_scancode(make, size, bytes);
+    resetScanCode();
 }
 
 int(kbd_test_scan)() {
@@ -50,7 +53,7 @@ int(kbd_test_scan)() {
     message msg;
     int r, ipc_status;
 
-    while (getScanCode() != 0x81) {
+    while (getLastTopByte() != 0x81) {
         if ((r = driver_receive(ANY, &msg, &ipc_status))) {
             printf("Cannot read from %d driver\n", r);
             continue;
@@ -59,7 +62,9 @@ int(kbd_test_scan)() {
         if (!is_ipc_notify(ipc_status)) continue;
         switch (_ENDPOINT_P(msg.m_source)) {
             case HARDWARE:
-                if (msg.m_notify.interrupts & (1 << bit_no)) readKeys();
+                if (msg.m_notify.interrupts & (1 << bit_no)) {
+                    readKeys();
+                }
                 break;
 
             default:
@@ -72,7 +77,7 @@ int(kbd_test_scan)() {
 }
 
 int(kbd_test_poll)() {
-    while (getScanCode() != 0x81) {
+    while (getLastTopByte() != 0x81) {
         readKeys();
     }
 
@@ -83,14 +88,14 @@ int(kbd_test_timed_scan)(uint8_t n) {
     uint8_t bit_kbd = 1, bit_timer = 0, hook_id_timer;
     int hook_id_kbd;
     hook_id_kbd = bit_kbd;
-	hook_id_timer = bit_timer;
+    hook_id_timer = bit_timer;
 
     kbdSubscribe(&hook_id_kbd);
-	timer_subscribe_int(&hook_id_timer);
+    timer_subscribe_int(&hook_id_timer);
     message msg;
     int r, ipc_status;
 
-    while (getScanCode() != 0x81 && getCounter() <= n * 60) {
+    while (getLastTopByte() != 0x81 && getCounter() <= n * 60) {
         if ((r = driver_receive(ANY, &msg, &ipc_status))) {
             printf("Cannot read from %d driver\n", r);
             continue;
@@ -100,10 +105,11 @@ int(kbd_test_timed_scan)(uint8_t n) {
         switch (_ENDPOINT_P(msg.m_source)) {
             case HARDWARE:
                 if (msg.m_notify.interrupts & (1 << bit_kbd)) {
-					readKeys();
-					resetCounter();
+                    readKeys();
+                    resetCounter();
 
-				} else if (msg.m_notify.interrupts & (1 << bit_timer)) timer_int_handler();
+                } else if (msg.m_notify.interrupts & (1 << bit_timer))
+                    timer_int_handler();
                 break;
 
             default:
@@ -112,6 +118,6 @@ int(kbd_test_timed_scan)(uint8_t n) {
     }
 
     kbdUnsubscribe(&hook_id_kbd);
-	timer_unsubscribe_int();
+    timer_unsubscribe_int();
     return 0;
 }
