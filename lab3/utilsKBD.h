@@ -30,7 +30,6 @@
 #define DELAY 20000
 
 int sys_inb_8b(uint32_t addr, uint8_t* output);
-int sys_inb_16b(uint32_t addr, uint16_t* output);
 int kbdSubscribe(int* hook_id);
 int kbdUnsubscribe(int* hook_id);
 
