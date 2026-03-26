@@ -18,11 +18,16 @@ int checkIfCanRead(int* res) {
 int checkIfCanWrite(int* res) {
     // Read status and check for errors and if input is full (res == 1 OK to read)
     uint8_t status, errors;
-    if (checkForErrorsInStatus(&status, &errors)) return -1;
+    if (checkForErrorsInStatus(&status, &errors) || errors) return -1;
     if (!errors) *res = status & IBF_MSK;
 
     // Invert the value -> if res == 1 cannot to write so res = 0
-    if (*res) *res = 0;
+	if (*res) {
+		*res = 0;
+	} else {
+		*res = 1;
+	}
+
     return 0;
 }
 
@@ -37,10 +42,12 @@ int readOutputBuffer(uint8_t* output) {
 int readCmdByte(uint8_t* cmd) {
     if (sys_outb(STATUS_COMMAND_ADDR, READ_CMD)) return -1;
     int res = 0;
+
     for (int i = 0; i < TRIES; i++) {
         if (!checkIfCanRead(&res) && res && !sys_inb_8b(INPUT_OUTPUT_ADDR, cmd)) return 0;
         tickdelay(micros_to_ticks(DELAY));
     }
+
     return -1;
 }
 
@@ -49,8 +56,8 @@ int writeCmdByte(uint8_t cmd) {
     int res = 0;
 
     for (int i = 0; i < TRIES; i++) {
-        if (!checkIfCanWrite(&res) && res && sys_inb_8b(INPUT_OUTPUT_ADDR, &cmd)) return 0;
-
+		int res1 = checkIfCanWrite(&res);
+        if (!checkIfCanWrite(&res) && res && !sys_out_8b(INPUT_OUTPUT_ADDR, cmd)) return 0;
         tickdelay(micros_to_ticks(DELAY));
     }
 
@@ -61,8 +68,9 @@ int enableIH() {
     uint8_t cmd;
     if (readCmdByte(&cmd)) return -1;
     cmd |= KBD_IH_ENABLE_MSK;
-
     if (writeCmdByte(cmd)) return -1;
+	readCmdByte(&cmd);
+
     return 0;
 }
 

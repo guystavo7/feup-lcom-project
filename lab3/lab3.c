@@ -77,11 +77,12 @@ int(kbd_test_scan)() {
 }
 
 int(kbd_test_poll)() {
-    while (getLastTopByte() != 0x81) {
-        readKeys();
-    }
-
-    return 0;
+    while (getLastTopByte() != 0x81) readKeys();
+	uint8_t cmd;
+	readCmdByte(&cmd);
+	enableIH();
+	readCmdByte(&cmd);
+	return 0;
 }
 
 int(kbd_test_timed_scan)(uint8_t n) {

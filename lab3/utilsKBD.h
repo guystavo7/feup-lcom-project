@@ -26,10 +26,12 @@
 
 #define KBD_IH_ENABLE_MSK 0x01
 
-#define TRIES 5
+#define TRIES 10
 #define DELAY 20000
 
 int sys_inb_8b(uint32_t addr, uint8_t* output);
+int sys_out_8b(uint32_t addr, uint8_t input);
+
 int kbdSubscribe(int* hook_id);
 int kbdUnsubscribe(int* hook_id);
 
