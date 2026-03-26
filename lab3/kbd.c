@@ -1,4 +1,5 @@
 #include "kbd.h"
+#include "utilsKBD.h"
 
 int checkForErrorsInStatus(uint8_t* status, uint8_t* errors) {
     // Read status and check for errors (errors == 0 OK)
@@ -56,7 +57,6 @@ int writeCmdByte(uint8_t cmd) {
     int res = 0;
 
     for (int i = 0; i < TRIES; i++) {
-		int res1 = checkIfCanWrite(&res);
         if (!checkIfCanWrite(&res) && res && !sys_out_8b(INPUT_OUTPUT_ADDR, cmd)) return 0;
         tickdelay(micros_to_ticks(DELAY));
     }
