@@ -32,7 +32,7 @@ int main(int argc, char* argv[]) {
 
 void readKeys() {
     kbc_ih();
-    if (!isValid() || isTwoByteCode()) return;
+    if (!isValid() || (isTwoByteCode() && getLSB() == 0)) return;
 
     bool make = isMake();
     uint8_t size = getSize();
