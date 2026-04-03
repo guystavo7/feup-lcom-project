@@ -109,7 +109,9 @@ int(kbd_test_timed_scan)(uint8_t n) {
                     readKeys();
                     resetCounter();
 
-                } else if (msg.m_notify.interrupts & (1 << bit_timer))
+                } 
+
+				if (msg.m_notify.interrupts & (1 << bit_timer))
                     timer_int_handler();
                 break;
 

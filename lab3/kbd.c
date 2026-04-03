@@ -69,8 +69,6 @@ int enableIH() {
     if (readCmdByte(&cmd)) return -1;
     cmd |= KBD_IH_ENABLE_MSK;
     if (writeCmdByte(cmd)) return -1;
-	readCmdByte(&cmd);
-
     return 0;
 }
 
