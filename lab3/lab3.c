@@ -3,8 +3,64 @@
 #include <lcom/lab3.h>
 
 #include "kbd.h"
+#include "i8254.h"
 #include <stdbool.h>
 #include <stdint.h>
+
+#define KBC_ST_REG 0x64
+#define KBC_CMD_REG 0x64
+#define KBC_OUT_BUF 0x60
+#define KBC_IN_BUF 0x60
+#define KBC_IBF BIT(1)
+
+#define KBC_READ_CMD 0x20
+#define KBC_WRITE_CMD 0x60
+#define KBC_KBD_INT_EN BIT(0)
+
+static int kbc_wait_input_empty() {
+  uint8_t st = 0;
+  for (int attempts = 0; attempts < 10; attempts++) {
+    if (util_sys_in8b(KBC_ST_REG, &st) != 0) {
+      return 1;
+    }
+    if (!(st & KBC_IBF)) {
+      return 0;
+    }
+    tickdelay(micros_to_ticks(20000));
+  }
+  return 1;
+}
+
+static int kbc_enable_keyboard_interrupts() {
+  uint8_t cmd_byte = 0;
+
+  if (kbc_wait_input_empty() != 0) {
+    return 1;
+  }
+  if (sys_outb(KBC_CMD_REG, KBC_READ_CMD) != 0) {
+    return 1;
+  }
+  if (util_sys_in8b(KBC_OUT_BUF, &cmd_byte) != 0) {
+    return 1;
+  }
+
+  cmd_byte |= KBC_KBD_INT_EN;
+
+  if (kbc_wait_input_empty() != 0) {
+    return 1;
+  }
+  if (sys_outb(KBC_CMD_REG, KBC_WRITE_CMD) != 0) {
+    return 1;
+  }
+  if (kbc_wait_input_empty() != 0) {
+    return 1;
+  }
+  if (sys_outb(KBC_IN_BUF, cmd_byte) != 0) {
+    return 1;
+  }
+
+  return 0;
+}
 
 int main(int argc, char *argv[]) {
   // sets the language of LCF messages (can be either EN-US or PT-PT)
@@ -77,10 +133,59 @@ int(kbd_test_scan)() {
 }
 
 int(kbd_test_poll)() {
-  /* To be completed by the students */
-  printf("%s is not yet implemented!\n", __func__);
+  uint8_t st = 0;
+  uint8_t data = 0;
+  uint8_t first = 0;
 
-  return 1;
+  while (1) {
+    if (util_sys_in8b(0x64, &st) != 0) {
+      continue;
+    }
+
+    if (!(st & BIT(0))) {
+      continue;
+    }
+
+    if (util_sys_in8b(0x60, &data) != 0) {
+      continue;
+    }
+
+    if (st & (KBD_PARITY_ERROR | KBD_TIMEOUT_ERROR)) {
+      continue;
+    }
+
+    uint8_t bytes[2];
+    int size;
+
+    if (data == 0xE0) {
+      first = data;
+      continue;
+    }
+
+    if (first == 0xE0) {
+      size = 2;
+      bytes[0] = first;
+      bytes[1] = data;
+      first = 0;
+    }
+    else {
+      size = 1;
+      bytes[0] = data;
+    }
+
+    bool is_make = !(bytes[size - 1] & 0x80);
+    kbd_print_scancode(is_make, size, bytes);
+
+    if (size == 1 && bytes[0] == KBD_ESC) {
+      break;
+    }
+  }
+
+  if (kbc_enable_keyboard_interrupts() != 0) {
+    return 1;
+  }
+
+  return 0;
 }
 
 int(kbd_test_timed_scan)(uint8_t n) {
