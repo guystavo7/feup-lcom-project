@@ -1,6 +1,7 @@
 #include <lcom/lcf.h>
 
 #include <lcom/lab3.h>
+#include <lcom/timer.h>
 
 #include "kbd.h"
 #include "i8254.h"
@@ -16,6 +17,26 @@
 #define KBC_READ_CMD 0x20
 #define KBC_WRITE_CMD 0x60
 #define KBC_KBD_INT_EN BIT(0)
+
+static int timer_hook_id = 0;
+
+int(timer_subscribe_int)(uint8_t *bit_no) {
+  timer_hook_id = *bit_no;
+  if (sys_irqsetpolicy(TIMER0_IRQ, IRQ_REENABLE, &timer_hook_id) != 0) {
+    return 1;
+  }
+  return 0;
+}
+
+int(timer_unsubscribe_int)() {
+  if (sys_irqrmpolicy(&timer_hook_id) != 0) {
+    return 1;
+  }
+  return 0;
+}
+
+void(timer_int_handler)() {
+}
 
 static int kbc_wait_input_empty() {
   uint8_t st = 0;
@@ -189,8 +210,82 @@ int(kbd_test_poll)() {
 }
 
 int(kbd_test_timed_scan)(uint8_t n) {
-  /* To be completed by the students */
-  printf("%s is not yet implemented!\n", __func__);
+  uint8_t kbd_hook_id = 1;
+  uint8_t timer_hook_id = 0;
 
-  return 1;
+  if (kbd_subscribe_int(&kbd_hook_id) != 0) {
+    return 1;
+  }
+
+  if (timer_subscribe_int(&timer_hook_id) != 0) {
+    kbd_unsubscribe_int();
+    return 1;
+  }
+
+  uint32_t kbd_irq_set = BIT(kbd_hook_id);
+  uint32_t timer_irq_set = BIT(timer_hook_id);
+  uint32_t idle_ticks = 0;
+  uint32_t max_idle_ticks = (uint32_t)n * sys_hz();
+
+  int r, ipc_status;
+  message msg;
+  bool done = false;
+
+  while (!done) {
+    if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
+      printf("driver_receive failed with: %d", r);
+      continue;
+    }
+
+    if (!is_ipc_notify(ipc_status)) {
+      continue;
+    }
+
+    if (_ENDPOINT_P(msg.m_source) != HARDWARE) {
+      continue;
+    }
+
+    if (msg.m_notify.interrupts & timer_irq_set) {
+      timer_int_handler();
+      idle_ticks++;
+      if (idle_ticks >= max_idle_ticks) {
+        done = true;
+      }
+    }
+
+    if (msg.m_notify.interrupts & kbd_irq_set) {
+      kbc_ih();
+      idle_ticks = 0;
+
+      uint8_t bytes[2];
+      int size;
+
+      if (getCurrentScancode() > 0xFF) {
+        size = 2;
+        bytes[0] = (uint8_t)((getCurrentScancode() >> 8) & 0xFF);
+        bytes[1] = (uint8_t)(getCurrentScancode() & 0xFF);
+      }
+      else {
+        size = 1;
+        bytes[0] = (uint8_t)(getCurrentScancode() & 0xFF);
+      }
+
+      bool is_make = !(bytes[size - 1] & 0x80);
+      kbd_print_scancode(is_make, size, bytes);
+
+      if (size == 1 && bytes[0] == KBD_ESC) {
+        done = true;
+      }
+    }
+  }
+
+  int ret = 0;
+  if (timer_unsubscribe_int() != 0) {
+    ret = 1;
+  }
+  if (kbd_unsubscribe_int() != 0) {
+    ret = 1;
+  }
+
+  return ret;
 }
