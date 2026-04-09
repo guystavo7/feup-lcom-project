@@ -18,8 +18,7 @@ static int readStatus(uint8_t* status) {
 int getStatusAndErrors(uint8_t* status, uint8_t* errors) {
     if (readStatus(status)) return -1;
     *errors = *status & (PARITY_MSK | TIMEOUT_MSK);
-    return 0;
-}
+    return 0; }
 
 bool canRead() {
     uint8_t status, errors;
@@ -132,13 +131,13 @@ bool pressedMiddleButton() {
 
 int16_t getDeltaX() {
     int16_t byte = byte2;
-    if (byte1 & X_SIGN_MSK) byte = -byte;
+    if (byte1 & X_SIGN_MSK) byte = byte - 256;
     return byte;
 }
 
 int16_t getDeltaY() {
     int16_t byte = byte3;
-    if (byte1 & Y_SIGN_MSK) byte = -byte;
+    if (byte1 & Y_SIGN_MSK) byte = byte - 256;
     return byte;
 }
 
