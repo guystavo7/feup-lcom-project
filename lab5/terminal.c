@@ -10,8 +10,10 @@ int newTerminal(uint16_t mode) {
     bytesPerPixel = vmi.BitsPerPixel / 8;
     if (vmi.BitsPerPixel % 8) bytesPerPixel++;
 
+	vram_size = vmi.XResolution * vmi.YResolution * bytesPerPixel;
+
     mr.mr_base = (phys_bytes)vmi.PhysBasePtr;
-    mr.mr_limit = mr.mr_base + vmi.XResolution * vmi.YResolution * bytesPerPixel;
+	mr.mr_limit = mr.mr_base + vram_size;
 
     int r;
     if ((r = sys_privctl(SELF, SYS_PRIV_ADD_MEM, &mr))) {
@@ -19,7 +21,7 @@ int newTerminal(uint16_t mode) {
         return -1;
     }
 
-    if ((terminalMem = vm_map_phys(SELF, (void*)mr.mr_base, vmi.XResolution * vmi.YResolution)) == MAP_FAILED) {
+    if ((terminalMem = vm_map_phys(SELF, (void*)mr.mr_base, vram_size)) == MAP_FAILED) {
         printf("Error on vm_map_phys\n");
         return -1;
     }
@@ -34,10 +36,12 @@ int newTerminal(uint16_t mode) {
 
 void drawPixel(uint16_t x, uint16_t y, uint32_t color) {
 	uint16_t currentX = x * bytesPerPixel;
+	uint16_t offset;
 
 	for (int i = 0; i < (int) bytesPerPixel; i++) {
-		uint8_t c = color >> (8 * i);
-		terminalMem[currentX + i + y * vmi.XResolution * (int) bytesPerPixel] = c; 
+		uint8_t c = (color >> (8 * i)) & 0xFF;
+		offset = currentX + y * vmi.XResolution * bytesPerPixel;
+		terminalMem[offset + i] = c; 
 	}
 }
 
