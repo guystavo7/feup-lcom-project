@@ -2,17 +2,16 @@
 #define TERMINAL
 
 #include "terminalUtils.h"
+#include <lcom/lcf.h>
 
-static char* terminalMem;
+typedef struct Terminal Terminal;
 
-static vbe_mode_info_t vmi;
-static struct minix_mem_range mr;
+Terminal* newTerminal(uint16_t mode);
+void drawPixel(Terminal* terminal, uint16_t x, uint16_t y, uint32_t color);
+void drawLine(Terminal* terminal, uint16_t x, uint16_t y, uint16_t width, uint32_t color);
 
-static unsigned bytesPerPixel; 
-static unsigned long vram_size;
+void freeTerminal(Terminal* terminal);
 
-int newTerminal(uint16_t mode);
-void drawPixel(uint16_t x, uint16_t y, uint32_t color);
-void drawLine(uint16_t x, uint16_t y, uint16_t width, uint32_t color);
+unsigned int getBytesPerPixel(Terminal* terminal);
 
 #endif

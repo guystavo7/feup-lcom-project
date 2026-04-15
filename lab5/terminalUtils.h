@@ -14,6 +14,5 @@
 #define LINEAR_FRAME_BUFFER_BIT		1 << 14
 
 int enterMode(uint16_t mode);
-int exitMode();
 
 #endif
