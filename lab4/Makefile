@@ -12,7 +12,7 @@ CFLAGS += -pedantic -DLAB3 -I../lab2/
 # list of library dependencies (for Lab 2, only LCF library)
 DPADD += ${LIBLCF} ${LIB_NAME}              # Let make track the versions of the new target
 LDADD += -llcf -L.                          # Tell the compiler to look in the current directory for libraries
-LDADD += -lmouse                              #   and link the library named libtimers.a
+LDADD += -lmouse -ltimer -L../lab2/                             #   and link the library named libtimers.a
 
 LIB_NAME = libmouse.a                         # The name filename for your library
 LIB_SRCS = mouse.c utils.c                 # The source files to include
