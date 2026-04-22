@@ -79,6 +79,6 @@ int(timer_test_int)(uint8_t time) {
       /* no standard messages expected: do nothing */
     }
   }
-  timer_unsubscribe_int();
+  if (timer_unsubscribe_int() != 0) return 1;
   return 0;
 }

@@ -2,9 +2,10 @@
 // Created by greedisland on 3/15/26.
 //
 #include "keyboard.h"
-#include "../lab2/timer.h"
-#include "../lab2/utils.h"
 #include <lcom/lcf.h>
+
+#include <timer.h>
+#include <utils.h>
 
 #include <lcom/lab3.h>
 

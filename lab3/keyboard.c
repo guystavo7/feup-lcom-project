@@ -4,17 +4,18 @@
 
 #include "keyboard.h"
 #include <lcom/lcf.h>
-#include "i8254.h"
+
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 
-#include "utils.h"
+#include <i8254.h>
+#include <utils.h>
 
 #define DELAY_US 20000
 #define KBC_ST_REG 0x64
 #define KBC_CMD_REG 0x64
-#define KBC_ST_IBF 0x60
+#define KBC_ST_IBF BIT(1)
 #define KBC_OUT_BUF 0x60
 #define KBC_PARITY_ERR BIT(7)
 #define KBC_TIMEOUT_ERR BIT(6)
@@ -22,30 +23,34 @@
 
 static uint8_t scanCode = 0;
 static bool readError = false;
-static int hook_id = 0; /*identificar o driver, podia comecar com qualquer valor*/
+static int hook_id = 1; /*identificar o driver, podia comecar com qualquer valor*/
 
 void(kbc_ih)(void)
 {
     uint8_t status;
     uint8_t data;
-    if (util_sys_inb(0x64, &status) != 0)
-    {
-        
-        return; // para verificar se esta disponivel para ler
+    if (util_sys_inb(KBC_ST_REG, &status) != 0) {
+        readError = true;
+        return;
     }
 
-    readError=!((status & BIT(0)) == 1);
-    if ((status & BIT(0)) == 1)
-    {
-        util_sys_inb(0x60, &data);
-        if ((status & (BIT(6) | BIT(7))) == 0)
-        {
-            readError = false;
-            scanCode = data;
-        }
-        else
-            readError = true;
+    if ((status & KBC_OBF) == 0) {
+        readError = true;
+        return;
     }
+
+    if (util_sys_inb(KBC_OUT_BUF, &data) != 0) {
+        readError = true;
+        return;
+    }
+
+    if ((status & (KBC_PARITY_ERR | KBC_TIMEOUT_ERR)) != 0) {
+        readError = true;
+        return;
+    }
+
+    readError = false;
+    scanCode = data;
 }
 
 int(kbd_subscribe_int)(uint8_t *bit_no)

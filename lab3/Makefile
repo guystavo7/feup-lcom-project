@@ -2,21 +2,19 @@
 PROG=lab3
 
 # source code files to be compiled
-SRCS = lab3.c keyboard.c utils.c 
+SRCS = lab3.c keyboard.c
 
 # additional compilation flags (required for Lab 3)
 # "-Wall -Wextra -Werror -I . -std=c11 -Wno-unused-parameter" are already set
 CFLAGS += -DLAB3
 CFLAGS += -pedantic
 
-CFLAGS += -I../lab2                # Specify directories to the compiler to search for header files, libraries
+# Headers from lab2 (timer.h, utils.h, i8254.h); build lab2 first: make -C ../lab2 lib
+CFLAGS += -I../lab2
 
-LDADD += -llcf -L../lab2           # Tell the compiler to look in the lab2 directory for libraries
-LDADD += -ltimer                   # Link the library named libtimers.a
-
-# list of library dependencies (for Lab 3, only LCF library)
+# Link against libtimer.a from lab2 (contains timer.o and utils.o)
 DPADD += ${LIBLCF}
-LDADD += -llcf -L.
+LDADD += -L../lab2 -ltimer -llcf
 
 # include LCOM's makefile that does all the "heavy lifting"
 .include <minix.lcom.mk>
