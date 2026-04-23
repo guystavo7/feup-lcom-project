@@ -39,7 +39,7 @@ int(video_test_init)(uint16_t mode, uint8_t delay) {
         return 1;
     }
     
-    sleep(delay);
+    tickdelay(micros_to_ticks((uint32_t) delay * 1000000));
 
     if(vg_exit()){
         return 1;
