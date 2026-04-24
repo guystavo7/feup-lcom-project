@@ -42,6 +42,13 @@ int(timer_unsubscribe_int)() {
     return 0;
 }
 
+int timerSubscribe(int* bit_no) {
+	int* newHookId = bit_no;
+    if (sys_irqsetpolicy(TIMER0_IRQ, IRQ_REENABLE, newHookId)) return -1;
+	hook_id = *newHookId;
+    return 0;
+}
+
 void(timer_int_handler)() {
     counter++;
 }

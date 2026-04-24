@@ -21,6 +21,7 @@ int(timer_set_frequency)(uint8_t timer, uint32_t freq);
 
 int(timer_subscribe_int)(uint8_t* bit_no);
 int(timer_unsubscribe_int)();
+int (timerSubscribe)(int* hook_id);
 
 void(timer_int_handler)();
 

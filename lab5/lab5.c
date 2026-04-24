@@ -106,8 +106,6 @@ int(video_test_xpm)(xpm_map_t xpm, uint16_t x, uint16_t y) {
     message msg;
     int r, ipc_status;
 
-    printf("Finished drawing\n");
-
     while (getLSB() != 0x81) {
         if ((r = driver_receive(ANY, &msg, &ipc_status))) {
             printf("Cannot read driver %x\n", r);

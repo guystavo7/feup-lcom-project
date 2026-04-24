@@ -56,15 +56,10 @@ Terminal* newTerminal(uint16_t mode) {
 
 void drawPixel(Terminal* terminal, uint16_t x, uint16_t y, uint32_t color) {
     if (y < 0 || y >= terminal->vmi.YResolution || x < 0 || x >= terminal->vmi.XResolution) return;
-
     long currentX = x * terminal->bytesPerPixel;
-    long offset;
+    long offset = currentX + y * terminal->vmi.XResolution * terminal->bytesPerPixel;
 
-    for (int i = 0; i < (int)terminal->bytesPerPixel; i++) {
-        uint8_t c = (color >> (8 * i)) & 0xFF;
-        offset = currentX + y * terminal->vmi.XResolution * terminal->bytesPerPixel;
-        terminal->terminalMem[offset + i] = c;
-    }
+	memcpy(&terminal->terminalMem[offset], &color, 3);
 }
 
 void drawLine(Terminal* terminal, uint16_t x, uint16_t y, uint16_t width, uint32_t color) {

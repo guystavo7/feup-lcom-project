@@ -6,7 +6,7 @@
 #include "../lab2/timer.h"
 #include "kbd.h"
 
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[]) {
     // sets the language of LCF messages (can be either EN-US or PT-PT)
     lcf_set_language("EN-US");
 
@@ -32,7 +32,8 @@ int main(int argc, char* argv[]) {
 
 void readKeys() {
     kbc_ih();
-    if (!isValid() || (isTwoByteCode() && getLSB() == 0)) return;
+    if (!isValid() || (isTwoByteCode() && getLSB() == 0))
+        return;
 
     bool make = isMake();
     uint8_t size = getSize();
@@ -59,16 +60,17 @@ int(kbd_test_scan)() {
             continue;
         }
 
-        if (!is_ipc_notify(ipc_status)) continue;
+        if (!is_ipc_notify(ipc_status))
+            continue;
         switch (_ENDPOINT_P(msg.m_source)) {
-            case HARDWARE:
-                if (msg.m_notify.interrupts & (1 << bit_no)) {
-                    readKeys();
-                }
-                break;
+        case HARDWARE:
+            if (msg.m_notify.interrupts & (1 << bit_no)) {
+                readKeys();
+            }
+            break;
 
-            default:
-                break;
+        default:
+            break;
         }
     }
 
@@ -77,12 +79,13 @@ int(kbd_test_scan)() {
 }
 
 int(kbd_test_poll)() {
-    while (getLastTopByte() != 0x81) readKeys();
-	uint8_t cmd;
-	readCmdByte(&cmd);
-	enableIH();
-	readCmdByte(&cmd);
-	return 0;
+    while (getLastTopByte() != 0x81)
+        readKeys();
+    uint8_t cmd;
+    readCmdByte(&cmd);
+    enableIH();
+    readCmdByte(&cmd);
+    return 0;
 }
 
 int(kbd_test_timed_scan)(uint8_t n) {
@@ -97,26 +100,26 @@ int(kbd_test_timed_scan)(uint8_t n) {
     int r, ipc_status;
 
     while (getLastTopByte() != 0x81 && getCounter() <= n * 60) {
-        if ((r = driver_receive(ANY, &msg, &ipc_status))) {
+	        if ((r = driver_receive(ANY, &msg, &ipc_status))) {
             printf("Cannot read from %d driver\n", r);
             continue;
         }
 
-        if (!is_ipc_notify(ipc_status)) continue;
+        if (!is_ipc_notify(ipc_status))
+            continue;
         switch (_ENDPOINT_P(msg.m_source)) {
-            case HARDWARE:
-                if (msg.m_notify.interrupts & (1 << bit_kbd)) {
-                    readKeys();
-                    resetCounter();
+        case HARDWARE:
+            if (msg.m_notify.interrupts & (1 << bit_kbd)) {
+                readKeys();
+                resetCounter();
+            }
 
-                } 
+            if (msg.m_notify.interrupts & (1 << bit_timer))
+                timer_int_handler();
+            break;
 
-				if (msg.m_notify.interrupts & (1 << bit_timer))
-                    timer_int_handler();
-                break;
-
-            default:
-                break;
+        default:
+            break;
         }
     }
 
