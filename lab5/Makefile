@@ -7,12 +7,12 @@ SRCS = lab5.c graphics.c
 
 # additional compilation flags
 # "-Wall -Wextra -Werror -I . -std=c11 -Wno-unused-parameter" are already set
-CFLAGS += -pedantic -DLAB3 -I../lab2/
+CFLAGS += -pedantic -DLAB3 -I../lab2/ -I../lab3/
 
 # list of library dependencies (for Lab 2, only LCF library)
 DPADD += ${LIBLCF} ${LIB_NAME}              # Let make track the versions of the new target
 LDADD += -llcf -L.                          # Tell the compiler to look in the current directory for libraries
-LDADD += -lgraphics -ltimer -L../lab2/                             #   and link the library named libtimers.a
+LDADD += -lgraphics -ltimer -lkbd -L../lab2/ -L../lab3/
 
 LIB_NAME = libgraphics.a                         # The name filename for your library
 LIB_SRCS = graphics.c #utils.c                 # The source files to include

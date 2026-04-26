@@ -5,6 +5,9 @@
 
 #include <stdint.h>
 #include <stdio.h>
+#include "graphics.h"
+#include "i8254.h"
+#include "../lab3/kbd.h"
 
 int setGraphicsMode(uint16_t mode);
 int setTextMode(void);
@@ -45,12 +48,56 @@ int(video_test_init)(uint16_t mode, uint8_t delay) {
   return 0;
 }
 
-int(video_test_rectangle)(uint16_t mode, uint16_t x, uint16_t y,
-                          uint16_t width, uint16_t height, uint32_t color) {
-  printf("%s(0x%03X, %u, %u, %u, %u, 0x%08x): under construction\n",
-        __func__, mode, x, y, width, height, color);
+int(video_test_rectangle)(uint16_t mode, uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color) {
+  uint8_t hook_id = 1;
+  int r, ipc_status;
+  message msg;
+  if (kbd_subscribe_int(&hook_id) != 0) {
+    printf("kbd_subscribe_int failed\n");
+    return 1;
+  }
+  uint32_t irq_set = BIT(hook_id);
 
-  return 1;
+  if(startGraphics(mode)) return 1;
+  if (setGraphicsMode(mode) != 0) return 1;
+
+  vg_draw_rect(x, y, width, height, color);
+
+  while (getCurrentScancode() != KBD_ESC) {
+    if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
+      printf("driver_receive failed with: %d", r);
+      continue;
+    }
+    if (is_ipc_notify(ipc_status)) { /* received notification */
+      switch (_ENDPOINT_P(msg.m_source)) {
+      case HARDWARE: /* hardware interrupt notification */
+        if (msg.m_notify.interrupts & irq_set) { /* subscribed interrupt */
+          kbc_ih();
+          uint8_t bytes[2];
+          int size;
+          if (getCurrentScancode() > 0xFF) {
+            size = 2;
+            bytes[0] = (uint8_t)((getCurrentScancode() >> 8) & 0xFF);
+            bytes[1] = (uint8_t)(getCurrentScancode() & 0xFF);
+          }
+          else {
+            size = 1;
+            bytes[0] = (uint8_t)(getCurrentScancode() & 0xFF);
+          }
+          bool is_make = !(bytes[size - 1] & 0x80);
+          kbd_print_scancode(is_make, size, bytes);
+        }
+        break;
+      default:
+        break; /* no other notifications expected: do nothing */
+      }
+    } else { /* received a standard message, not a notification */
+             /* no standard messages expected: do nothing */
+    }
+  }
+  kbd_unsubscribe_int();
+  if (setTextMode() != 0) return 1;
+  return 0;
 }
 
 int(video_test_xpm)(xpm_map_t xpm, uint16_t x, uint16_t y) {
