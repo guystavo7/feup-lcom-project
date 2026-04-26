@@ -23,3 +23,5 @@ int vg_draw_rect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint32_t color)
 int gfx_draw_hline(uint16_t x, uint16_t y, uint16_t len, uint32_t color);
 
 int gfx_draw_pixel(uint16_t x, uint16_t y, uint32_t color);
+
+void draw_xpm(uint16_t x, uint16_t y, xpm_image_t *img);

@@ -97,3 +97,12 @@ int gfx_draw_pixel(uint16_t x, uint16_t y, uint32_t color){
   memcpy(&video_mem[offset], (uint8_t*)&color, bytes_per_pixel);
   return 0;
 }
+
+void draw_xpm(uint16_t x, uint16_t y, xpm_image_t *img) {
+  for (uint16_t row = 0; row < img->height; row++) {
+    for (uint16_t col = 0; col < img->width; col++) {
+      uint8_t color = img->bytes[row * img->width + col];
+      gfx_draw_pixel(x + col, y + row, color);
+    }
+  }
+}

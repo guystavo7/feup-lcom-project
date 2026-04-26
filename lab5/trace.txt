@@ -1,88 +1,218 @@
 @lcflib.a:2019, lcf_start
-  video_test_rectangle(mode, x, y, width, height, color)
-> video_test_rectangle(0x105, 100, 80, 200, 120, 0x00000002 [2])
-  @lab5.c:52, video_test_rectangle
-    vg_init(mode)
+  video_test_xpm(xpm, x, y)
+> video_test_xpm(0x81e09bc, 100, 100)
+  @lab5.c:103, video_test_xpm
+    vg_init(0x105)
   > vg_init(0x105)
     @graphics.c:55, vg_map_memory
       vbe_get_mode_info(mode, &vmi)
-    > vbe_get_mode_info(0x105, addr: 0x8248bf0)
-    < vbe_get_mode_info(0x105, addr: 0x8248bf0 [0xe0000000, 1024x768, Indexed (8 BPP) <768 KiB>]) -> (ret: 0)
+    > vbe_get_mode_info(0x105, addr: 0x8249dc0)
+    < vbe_get_mode_info(0x105, addr: 0x8249dc0 [0xe0000000, 1024x768, Indexed (8 BPP) <768 KiB>]) -> (ret: 0)
     @graphics.c:64, vg_map_memory
       sys_privctl(SELF, SYS_PRIV_ADD_MEM, &mr)
-    > sys_privctl(SELF, SYS_PRIV_ADD_MEM, addr: 0xeffff478 [0xe0000000 - 0xe00c0000 <768 KiB>])
+    > sys_privctl(SELF, SYS_PRIV_ADD_MEM, addr: 0xeffff4a8 [0xe0000000 - 0xe00c0000 <768 KiB>])
     < sys_privctl(SELF, SYS_PRIV_ADD_MEM, &mr) -> (ret: 0)
     @graphics.c:68, vg_map_memory
       vm_map_phys(SELF, (void *)mr.mr_base, vram_size)
     < vm_map_phys(SELF, addr: 0xe0000000, 768 KiB) -> (ret: 0xef93b000)
     @graphics.c:17, setGraphicsMode
       sys_int86(&reg)
-    > sys_int86(addr: 0xeffff4b0 [AX: 4f02, BX: 4105, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
-    < sys_int86(addr: 0xeffff4b0 [AX: 004f, BX: 4105, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+    > sys_int86(addr: 0xeffff4e0 [AX: 4f02, BX: 4105, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+    < sys_int86(addr: 0xeffff4e0 [AX: 004f, BX: 4105, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
   < vg_init(0x105) -> (ret: 0xef93b000)
+  @lab5.c:106, video_test_xpm
+    xpm_load(xpm, XPM_INDEXED, &img)
+  > xpm_load(addr: 0x81e09bc, XPM_INDEXED, addr: 0xeffff648)
+  < xpm_load(addr: 0x81e09bc, XPM_INDEXED, addr: 0xeffff648 [64x64 : 4096 bytes]) -> (ret: 0x8250000)
   @kbd.c:20, kbd_subscribe_int
     sys_irqsetpolicy(KEYBOARD_IRQ, IRQ_REENABLE | IRQ_EXCLUSIVE, &hookId)
-  > sys_irqsetpolicy(1, 3, addr: 0x822c1e8 [1])
-  < sys_irqsetpolicy(1, 3, addr: 0x822c1e8 [10]) -> (ret: 0)
-  @lab5.c:66, video_test_rectangle
+  > sys_irqsetpolicy(1, 3, addr: 0x822d3bc [1])
+  < sys_irqsetpolicy(1, 3, addr: 0x822d3bc [10]) -> (ret: 0)
+  @lab5.c:120, video_test_xpm
     driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff5d0, addr: 0xeffff614)
+  > driver_receive(ANY, addr: 0xeffff600, addr: 0xeffff640)
   < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @lab5.c:74, video_test_rectangle
+  @lab5.c:128, video_test_xpm
     kbc_ih()
     @utils.c:19, util_sys_in8b
       sys_inb(port, &res)
-    > sys_inb(0x64, addr: 0xeffff4e8)
-    < sys_inb(0x64, addr: 0xeffff4e8 [0x1d = 0b00011101])
+    > sys_inb(0x64, addr: 0xeffff518)
+    < sys_inb(0x64, addr: 0xeffff518 [0x1d = 0b00011101])
     @utils.c:19, util_sys_in8b
       sys_inb(port, &res)
-    > sys_inb(0x60, addr: 0xeffff4e8)
-    < sys_inb(0x60, addr: 0xeffff4e8 [0x9c = 0b10011100])
-  @lab5.c:87, video_test_rectangle
+    > sys_inb(0x60, addr: 0xeffff518)
+    < sys_inb(0x60, addr: 0xeffff518 [0xe0 = 0b11100000])
+  @lab5.c:141, video_test_xpm
     kbd_print_scancode(is_make, size, bytes)
-    "Breakcode: 0x9c"
-  < kbd_print_scancode(false, 1, addr: 0xeffff5ce [0x9c]) -> (ret: 0)
-  @lab5.c:66, video_test_rectangle
+    "Makecode: 0x00"
+  < kbd_print_scancode(true, 1, addr: 0xeffff5fe [0x00]) -> (ret: 0)
+  @lab5.c:120, video_test_xpm
     driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff5d0, addr: 0xeffff614)
+  > driver_receive(ANY, addr: 0xeffff600, addr: 0xeffff640)
   < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @lab5.c:74, video_test_rectangle
+  @lab5.c:128, video_test_xpm
     kbc_ih()
     @utils.c:19, util_sys_in8b
       sys_inb(port, &res)
-    > sys_inb(0x64, addr: 0xeffff4e8)
-    < sys_inb(0x64, addr: 0xeffff4e8 [0x1d = 0b00011101])
+    > sys_inb(0x64, addr: 0xeffff518)
+    < sys_inb(0x64, addr: 0xeffff518 [0x1d = 0b00011101])
     @utils.c:19, util_sys_in8b
       sys_inb(port, &res)
-    > sys_inb(0x60, addr: 0xeffff4e8)
-    < sys_inb(0x60, addr: 0xeffff4e8 [0x01 = 0b00000001])
-  @lab5.c:87, video_test_rectangle
+    > sys_inb(0x60, addr: 0xeffff518)
+    < sys_inb(0x60, addr: 0xeffff518 [0x5b = 0b01011011])
+  @lab5.c:141, video_test_xpm
+    kbd_print_scancode(is_make, size, bytes)
+    "Makecode: 0xe0 0x5b"
+  < kbd_print_scancode(true, 2, addr: 0xeffff5fe [0xe0, 0x5b]) -> (ret: 0)
+  @lab5.c:120, video_test_xpm
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff600, addr: 0xeffff640)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
+  @lab5.c:128, video_test_xpm
+    kbc_ih()
+    @utils.c:19, util_sys_in8b
+      sys_inb(port, &res)
+    > sys_inb(0x64, addr: 0xeffff518)
+    < sys_inb(0x64, addr: 0xeffff518 [0x1d = 0b00011101])
+    @utils.c:19, util_sys_in8b
+      sys_inb(port, &res)
+    > sys_inb(0x60, addr: 0xeffff518)
+    < sys_inb(0x60, addr: 0xeffff518 [0xe0 = 0b11100000])
+  @lab5.c:141, video_test_xpm
+    kbd_print_scancode(is_make, size, bytes)
+    "Makecode: 0xe0 0x5b"
+  < kbd_print_scancode(true, 2, addr: 0xeffff5fe [0xe0, 0x5b]) -> (ret: 0)
+  @lab5.c:120, video_test_xpm
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff600, addr: 0xeffff640)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
+  @lab5.c:128, video_test_xpm
+    kbc_ih()
+    @utils.c:19, util_sys_in8b
+      sys_inb(port, &res)
+    > sys_inb(0x64, addr: 0xeffff518)
+    < sys_inb(0x64, addr: 0xeffff518 [0x1d = 0b00011101])
+    @utils.c:19, util_sys_in8b
+      sys_inb(port, &res)
+    > sys_inb(0x60, addr: 0xeffff518)
+    < sys_inb(0x60, addr: 0xeffff518 [0xdb = 0b11011011])
+  @lab5.c:141, video_test_xpm
+    kbd_print_scancode(is_make, size, bytes)
+    "Breakcode: 0xe0 0xdb"
+  < kbd_print_scancode(false, 2, addr: 0xeffff5fe [0xe0, 0xdb]) -> (ret: 0)
+  @lab5.c:120, video_test_xpm
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff600, addr: 0xeffff640)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
+  @lab5.c:128, video_test_xpm
+    kbc_ih()
+    @utils.c:19, util_sys_in8b
+      sys_inb(port, &res)
+    > sys_inb(0x64, addr: 0xeffff518)
+    < sys_inb(0x64, addr: 0xeffff518 [0x1d = 0b00011101])
+    @utils.c:19, util_sys_in8b
+      sys_inb(port, &res)
+    > sys_inb(0x60, addr: 0xeffff518)
+    < sys_inb(0x60, addr: 0xeffff518 [0xe0 = 0b11100000])
+  @lab5.c:141, video_test_xpm
+    kbd_print_scancode(is_make, size, bytes)
+    "Breakcode: 0xe0 0xdb"
+  < kbd_print_scancode(false, 2, addr: 0xeffff5fe [0xe0, 0xdb]) -> (ret: 0)
+  @lab5.c:120, video_test_xpm
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff600, addr: 0xeffff640)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
+  @lab5.c:128, video_test_xpm
+    kbc_ih()
+    @utils.c:19, util_sys_in8b
+      sys_inb(port, &res)
+    > sys_inb(0x64, addr: 0xeffff518)
+    < sys_inb(0x64, addr: 0xeffff518 [0x1d = 0b00011101])
+    @utils.c:19, util_sys_in8b
+      sys_inb(port, &res)
+    > sys_inb(0x60, addr: 0xeffff518)
+    < sys_inb(0x60, addr: 0xeffff518 [0x5b = 0b01011011])
+  @lab5.c:141, video_test_xpm
+    kbd_print_scancode(is_make, size, bytes)
+    "Makecode: 0xe0 0x5b"
+  < kbd_print_scancode(true, 2, addr: 0xeffff5fe [0xe0, 0x5b]) -> (ret: 0)
+  @lab5.c:120, video_test_xpm
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff600, addr: 0xeffff640)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
+  @lab5.c:128, video_test_xpm
+    kbc_ih()
+    @utils.c:19, util_sys_in8b
+      sys_inb(port, &res)
+    > sys_inb(0x64, addr: 0xeffff518)
+    < sys_inb(0x64, addr: 0xeffff518 [0x1d = 0b00011101])
+    @utils.c:19, util_sys_in8b
+      sys_inb(port, &res)
+    > sys_inb(0x60, addr: 0xeffff518)
+    < sys_inb(0x60, addr: 0xeffff518 [0xe0 = 0b11100000])
+  @lab5.c:141, video_test_xpm
+    kbd_print_scancode(is_make, size, bytes)
+    "Makecode: 0xe0 0x5b"
+  < kbd_print_scancode(true, 2, addr: 0xeffff5fe [0xe0, 0x5b]) -> (ret: 0)
+  @lab5.c:120, video_test_xpm
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff600, addr: 0xeffff640)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
+  @lab5.c:128, video_test_xpm
+    kbc_ih()
+    @utils.c:19, util_sys_in8b
+      sys_inb(port, &res)
+    > sys_inb(0x64, addr: 0xeffff518)
+    < sys_inb(0x64, addr: 0xeffff518 [0x1d = 0b00011101])
+    @utils.c:19, util_sys_in8b
+      sys_inb(port, &res)
+    > sys_inb(0x60, addr: 0xeffff518)
+    < sys_inb(0x60, addr: 0xeffff518 [0xdb = 0b11011011])
+  @lab5.c:141, video_test_xpm
+    kbd_print_scancode(is_make, size, bytes)
+    "Breakcode: 0xe0 0xdb"
+  < kbd_print_scancode(false, 2, addr: 0xeffff5fe [0xe0, 0xdb]) -> (ret: 0)
+  @lab5.c:120, video_test_xpm
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff600, addr: 0xeffff640)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
+  @lab5.c:128, video_test_xpm
+    kbc_ih()
+    @utils.c:19, util_sys_in8b
+      sys_inb(port, &res)
+    > sys_inb(0x64, addr: 0xeffff518)
+    < sys_inb(0x64, addr: 0xeffff518 [0x1d = 0b00011101])
+    @utils.c:19, util_sys_in8b
+      sys_inb(port, &res)
+    > sys_inb(0x60, addr: 0xeffff518)
+    < sys_inb(0x60, addr: 0xeffff518 [0x01 = 0b00000001])
+  @lab5.c:141, video_test_xpm
     kbd_print_scancode(is_make, size, bytes)
     "Makecode: 0x01"
-  < kbd_print_scancode(true, 1, addr: 0xeffff5ce [0x01]) -> (ret: 0)
-  @lab5.c:66, video_test_rectangle
+  < kbd_print_scancode(true, 1, addr: 0xeffff5fe [0x01]) -> (ret: 0)
+  @lab5.c:120, video_test_xpm
     driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff5d0, addr: 0xeffff614)
+  > driver_receive(ANY, addr: 0xeffff600, addr: 0xeffff640)
   < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @lab5.c:74, video_test_rectangle
+  @lab5.c:128, video_test_xpm
     kbc_ih()
     @utils.c:19, util_sys_in8b
       sys_inb(port, &res)
-    > sys_inb(0x64, addr: 0xeffff4e8)
-    < sys_inb(0x64, addr: 0xeffff4e8 [0x1d = 0b00011101])
+    > sys_inb(0x64, addr: 0xeffff518)
+    < sys_inb(0x64, addr: 0xeffff518 [0x1d = 0b00011101])
     @utils.c:19, util_sys_in8b
       sys_inb(port, &res)
-    > sys_inb(0x60, addr: 0xeffff4e8)
-    < sys_inb(0x60, addr: 0xeffff4e8 [0x81 = 0b10000001])
-  @lab5.c:87, video_test_rectangle
+    > sys_inb(0x60, addr: 0xeffff518)
+    < sys_inb(0x60, addr: 0xeffff518 [0x81 = 0b10000001])
+  @lab5.c:141, video_test_xpm
     kbd_print_scancode(is_make, size, bytes)
     "Breakcode: 0x81"
-  < kbd_print_scancode(false, 1, addr: 0xeffff5ce [0x81]) -> (ret: 0)
+  < kbd_print_scancode(false, 1, addr: 0xeffff5fe [0x81]) -> (ret: 0)
   @kbd.c:26, kbd_unsubscribe_int
     sys_irqrmpolicy(&hookId)
-  > sys_irqrmpolicy(addr: 0x822c1e8 [10])
-  < sys_irqrmpolicy(addr: 0x822c1e8 [10]) -> (ret: 0)
-  @lab5.c:98, video_test_rectangle
+  > sys_irqrmpolicy(addr: 0x822d3bc [10])
+  < sys_irqrmpolicy(addr: 0x822d3bc [10]) -> (ret: 0)
+  @lab5.c:152, video_test_xpm
     vg_exit()
   < vg_exit() -> (ret: 0)
-< video_test_rectangle(0x105, 100, 80, 200, 120, 0x00000002 [2]) -> (ret: 0)
+< video_test_xpm(0x81e09bc, 100, 100) -> (ret: 0)
