@@ -12,6 +12,8 @@ int setGraphicsMode(uint16_t mode);
 
 int setTextMode(void);
 
+int vg_map_memory(uint16_t mode);
+
 int (writeCmd)(uint8_t cmd);
 
 int startGraphics(uint16_t mode);

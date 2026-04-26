@@ -40,7 +40,13 @@ int (writeCmd)(uint8_t cmd) {
   return 0;
 }
 
-int startGraphics(uint16_t mode) {
+void*(vg_init)(uint16_t mode) {
+  if(vg_map_memory(mode)) return NULL;
+  if(setGraphicsMode(mode)) return NULL;
+  return video_mem;
+}
+
+int vg_map_memory(uint16_t mode) {
   int r;
   struct minix_mem_range mr;
   unsigned int vram_base;
@@ -67,9 +73,13 @@ int startGraphics(uint16_t mode) {
   return 0;
 }
 
+int startGraphics(uint16_t mode) {
+  return vg_map_memory(mode);
+}
+
 int vg_draw_rect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint32_t color) {
   for (int i = y; i < h + y; i++){ 
-    if (gfx_draw_hline(x, i, w, color)) return 1;;
+    if (gfx_draw_hline(x, i, w, color)) return 1;
   }
   return 0;
 }
