@@ -3,6 +3,6 @@
 #include <stdio.h>
 
 void gameLoop() {
-	printf("OI\n");
+	printf("oo\n");
 }
 
