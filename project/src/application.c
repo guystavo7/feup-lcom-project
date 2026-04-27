@@ -1,11 +1,15 @@
 #include "../../lab2/timer.h"
 #include "../../lab3/kbc.h"
 #include "../../lab4/mouse.h"
+#include "../../lab5/spriteXMP.h"
+#include "../../lab5/terminal.h"
+
 #include "../include/game.h"
 #include "../include/utils.h"
 
 #include <lcom/lcf.h>
 
+#include <stdint.h>
 #include <stdio.h>
 
 // Any header files included below this line should have been created by you
@@ -35,10 +39,13 @@ int main(int argc, char* argv[]) {
 
 int(proj_main_loop)(int argc, char* argv[]) {
     int hook_id_timer = TIMER_IRQ_LINE;
+    int hook_id_kbd = KBC_IRQ_LINE;
     int hook_id_mouse = MOUSE_IRQ_LINE;
 
     mouseSubscribe(&hook_id_mouse);
     timer_subscribe_int((uint8_t*)&hook_id_timer);
+    kbcSubscribe((uint8_t*)&hook_id_kbd);
+
     enableDataReport();
 
     int r, ipc_status;
@@ -58,8 +65,12 @@ int(proj_main_loop)(int argc, char* argv[]) {
                 }
 
                 if (msg.m_notify.interrupts & (1 << MOUSE_IRQ_LINE)) {
-                    mouse_ih();
                     printf("Used mouse\n");
+                }
+
+                if (msg.m_notify.interrupts & (1 << KBC_IRQ_LINE)) {
+					kbcIh();
+					if (isKeyReady()) resetKeys();
                 }
 
                 break;
@@ -70,6 +81,7 @@ int(proj_main_loop)(int argc, char* argv[]) {
 
     mouseUnsubscribe(&hook_id_mouse);
     timer_unsubscribe_int();
+    kbcUnsubscribe();
     disableDataReport();
     return 0;
 }

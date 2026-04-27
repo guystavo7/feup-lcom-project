@@ -2,7 +2,7 @@
 
 #include <lcom/lab5.h>
 
-#include "../lab3/kbd.c"
+#include "../lab3/kbc.h"
 #include "spriteXMP.h"
 #include "terminal.h"
 
@@ -62,13 +62,13 @@ int(video_test_rectangle)(uint16_t mode, uint16_t x, uint16_t y, uint16_t width,
     uint8_t bit_no = 1;
     int hook_id = 1;
 
-    kbdSubscribe(&hook_id);
+    kbcSubscribe((uint8_t*)&hook_id);
     message msg;
     int r, ipc_status;
 
     printf("Finished drawing\n");
 
-    while (getLSB() != 0x81) {
+    while (getLastByte() != 0x81) {
         if ((r = driver_receive(ANY, &msg, &ipc_status))) {
             printf("Cannot read driver %x\n", r);
             continue;
@@ -78,7 +78,8 @@ int(video_test_rectangle)(uint16_t mode, uint16_t x, uint16_t y, uint16_t width,
         switch (_ENDPOINT_P(msg.m_source)) {
             case HARDWARE:
                 if (msg.m_notify.interrupts & (1 << bit_no)) {
-                    kbc_ih();
+					kbcIh();
+					if (isKeyReady()) resetKeys();
                 }
 
                 break;
@@ -88,7 +89,7 @@ int(video_test_rectangle)(uint16_t mode, uint16_t x, uint16_t y, uint16_t width,
     }
 
     vg_exit();
-    kbdUnsubscribe(&hook_id);
+    kbcUnsubscribe();
     return 0;
 }
 
@@ -102,11 +103,11 @@ int(video_test_xpm)(xpm_map_t xpm, uint16_t x, uint16_t y) {
     uint8_t bit_no = 1;
     int hook_id = 1;
 
-    kbdSubscribe(&hook_id);
+    kbcSubscribe((uint8_t*)&hook_id);
     message msg;
     int r, ipc_status;
 
-    while (getLSB() != 0x81) {
+    while (getLastByte() != 0x81) {
         if ((r = driver_receive(ANY, &msg, &ipc_status))) {
             printf("Cannot read driver %x\n", r);
             continue;
@@ -116,7 +117,8 @@ int(video_test_xpm)(xpm_map_t xpm, uint16_t x, uint16_t y) {
         switch (_ENDPOINT_P(msg.m_source)) {
             case HARDWARE:
                 if (msg.m_notify.interrupts & (1 << bit_no)) {
-                    kbc_ih();
+                    kbcIh();
+					if (isKeyReady()) resetKeys();
                 }
 
                 break;
@@ -126,7 +128,7 @@ int(video_test_xpm)(xpm_map_t xpm, uint16_t x, uint16_t y) {
     }
 
     vg_exit();
-    kbdUnsubscribe(&hook_id);
+    kbcUnsubscribe();
  
 	freeSpriteXPM(sprite);
 	freeTerminal(terminal);

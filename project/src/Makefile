@@ -12,7 +12,9 @@ CFLAGS += -Wall -Wextra -Werror -pedantic -std=c11
 DPADD += ${LIBLCF}
 LDADD += -llcf -L.
 LDADD += -L../../lab2 -ltimer
+LDADD += -L../../lab3 -lkbc
 LDADD += -L../../lab4 -lmouse
+LDADD += -L../../lab5 -lterminal
 
 all:
 	mkdir -p ../build

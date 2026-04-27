@@ -14,7 +14,7 @@ DPADD += ${LIBLCF} ${LIB_NAME}              # Let make track the versions of the
 LDADD += -llcf -L.                          # Tell the compiler to look in the current directory for libraries
 LDADD += -lterminal #   and link the library named libtimers.a
 LDADD += -L../lab3/
-LDADD += -lkbd
+LDADD += -lkbc
 
 LIB_NAME = libterminal.a                         # The name filename for your library
 LIB_SRCS = terminal.c                 # The source files to include
