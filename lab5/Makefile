@@ -12,12 +12,11 @@ CFLAGS += -pedantic -DLAB3 -I../lab3/
 # list of library dependencies (for Lab 2, only LCF library)
 DPADD += ${LIBLCF} ${LIB_NAME}              # Let make track the versions of the new target
 LDADD += -llcf -L.                          # Tell the compiler to look in the current directory for libraries
-LDADD += -lterminal #   and link the library named libtimers.a
 LDADD += -L../lab3/
 LDADD += -lkbc
 
 LIB_NAME = libterminal.a                         # The name filename for your library
-LIB_SRCS = terminal.c                 # The source files to include
+LIB_SRCS = terminal.c  ./terminalUtils.c               # The source files to include
 LIB_OBJS = ${LIB_SRCS:.c=.o}                # The rule used to convert your .c source files in .o object files
 CLEANFILES += ${LIB_NAME} ${LIB_OBJS}       # Add the library file and object files to the files to be cleaned
 

@@ -127,9 +127,7 @@ int(video_test_xpm)(xpm_map_t xpm, uint16_t x, uint16_t y) {
         }
     }
 
-    vg_exit();
     kbcUnsubscribe();
- 
 	freeSpriteXPM(sprite);
 	freeTerminal(terminal);
     return 0;

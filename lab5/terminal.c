@@ -70,6 +70,7 @@ void drawLine(Terminal* terminal, uint16_t x, uint16_t y, uint16_t width, uint32
 
 void freeTerminal(Terminal* terminal) {
     free(terminal);
+    vg_exit();
 }
 
 unsigned int getBytesPerPixel(Terminal* terminal) {
