@@ -10,7 +10,7 @@ enum keyState {
 };
 
 struct InputHandler {
-    enum keyState keys[3];
+    enum keyState keys[88];
 };
 
 static InputHandler* newInputHandler() {
@@ -29,7 +29,6 @@ InputHandler* getInstance() {
 }
 
 void readKey(InputHandler* inputHandler, uint16_t keycode, bool isMake) {
-	if (keycode > 0x04) return;
 	enum keyState currentState = inputHandler->keys[keycode - KEYCODE_1];
 
     if (isMake && currentState == KEYUP) {

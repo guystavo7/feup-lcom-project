@@ -1,5 +1,6 @@
 #include <lcom/lab2.h>
 #include <lcom/lcf.h>
+#include "timer.h"
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -26,6 +27,10 @@ int main(int argc, char *argv[]) {
     lcf_cleanup();
 
     return 0;
+}
+
+int (timer_subscribe_int)(uint8_t *bit_no) {
+	return timer_subscribe(bit_no);
 }
 
 int(timer_test_read_config)(uint8_t timer, enum timer_status_field field) {
