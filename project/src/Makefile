@@ -4,7 +4,6 @@ SRCS= \
 	application.c \
 	game.c \
 	./inputHandler.c \
-	./spriteXMP.c \
 
 OBJS = ${SRCS:.c=.o}
 
@@ -16,7 +15,8 @@ LDADD += -llcf -L.
 LDADD += -L../../lab2 -ltimer
 LDADD += -L../../lab3 -lkbc
 LDADD += -L../../lab4 -lmouse
-LDADD += -L../../lab5 -lterminal
+LDADD += -L../../lab5 -lterminal 
+LDADD += -L../../lab5 -lspriteXPM
 
 all:
 	mkdir -p ../build

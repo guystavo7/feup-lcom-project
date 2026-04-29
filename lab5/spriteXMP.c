@@ -29,7 +29,7 @@ static uint32_t getColorFromPixel(SpriteXPM* sprite, unsigned int bytesPerPixel,
     long currentX = x * bytesPerPixel;
     long offset = currentX + y * bytesPerPixel * sprite->img->width;
 
-    for (unsigned int i = 0; i < bytesPerPixel; i++) color = (color << 8) | sprite->pixMap[offset + i];
+    for (int i = bytesPerPixel - 1; i >= 0; i--) color = (color << 8) | sprite->pixMap[offset + i];
     return color;
 }
 
