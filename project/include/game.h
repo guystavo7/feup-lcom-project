@@ -1,6 +1,10 @@
 #ifndef GAME
 #define GAME
 
-void gameLoop();
+#include "../../lab5/terminal.h"
+
+void startGame();
+void exitGame();
+void gameLoop(Terminal* terminal);
 
 #endif

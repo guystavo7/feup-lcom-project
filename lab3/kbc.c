@@ -13,6 +13,8 @@ static uint16_t lastByte = 0;
 int(kbcSubscribe)(uint8_t *bit_no) {
     *bit_no = hook_id;
     int ret = sys_irqsetpolicy(KBC1_IRQ, IRQ_REENABLE | IRQ_EXCLUSIVE, &hook_id);
+	
+	
     return ret;
 }
 

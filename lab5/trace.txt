@@ -1,0 +1,357 @@
+@lcflib.a:2019, lcf_start
+  video_test_rectangle(mode, x, y, width, height, color)
+> video_test_rectangle(0x115, 0, 0, 10, 10, 0x005fcde4 [6278628])
+  @terminal.c:17, newTerminal
+    vbe_get_mode_info(mode, &vmi)
+  > vbe_get_mode_info(0x115, addr: 0xeffff480)
+  < vbe_get_mode_info(0x115, addr: 0xeffff480 [0xe0000000, 800x600, 8:8:8 (24) <1.37329 MiB>]) -> (ret: 0)
+  @terminal.c:32, newTerminal
+    sys_privctl(SELF, SYS_PRIV_ADD_MEM, &mr)
+  > sys_privctl(SELF, SYS_PRIV_ADD_MEM, addr: 0xeffff478 [0xe0000000 - 0xe015f900 <1.37329 MiB>])
+  < sys_privctl(SELF, SYS_PRIV_ADD_MEM, &mr) -> (ret: 0)
+  @terminal.c:37, newTerminal
+    vm_map_phys(SELF, (void*)mr.mr_base, vram_size)
+  < vm_map_phys(SELF, addr: 0xe0000000, 1.37329 MiB) -> (ret: 0xef89b000)
+  @./terminalUtils.c:13, enterMode
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff418 [AX: 4f02, BX: 4115, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff418 [AX: 004f, BX: 4115, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @terminal.c:62, drawPixel
+    printf("%x\n", color)
+    "5fcde4"
+  @kbc.c:15, kbcSubscribe
+    sys_irqsetpolicy(KBC1_IRQ, IRQ_REENABLE | IRQ_EXCLUSIVE, &hook_id)
+  > sys_irqsetpolicy(1, 3, addr: 0x822d9dc [1])
+  < sys_irqsetpolicy(1, 3, addr: 0x822d9dc [10]) -> (ret: 0)
+  @lab5.c:59, video_test_rectangle
+    printf("Finished drawing\n")
+    "Finished drawing"
+  @lab5.c:62, video_test_rectangle
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff5d0, addr: 0xeffff5cc)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
+  @./utils.c:23, util_sys_inb
+    sys_inb(port, &lol)
+  > sys_inb(0x64, addr: 0xeffff57c)
+  < sys_inb(0x64, addr: 0xeffff57c [0x1d = 0b00011101])
+  @./utils.c:23, util_sys_inb
+    sys_inb(port, &lol)
+  > sys_inb(0x60, addr: 0xeffff57c)
+  < sys_inb(0x60, addr: 0xeffff57c [0x01 = 0b00000001])
+  @lab5.c:62, video_test_rectangle
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff5d0, addr: 0xeffff5cc)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
+  @./utils.c:23, util_sys_inb
+    sys_inb(port, &lol)
+  > sys_inb(0x64, addr: 0xeffff57c)
+  < sys_inb(0x64, addr: 0xeffff57c [0x1d = 0b00011101])
+  @./utils.c:23, util_sys_inb
+    sys_inb(port, &lol)
+  > sys_inb(0x60, addr: 0xeffff57c)
+  < sys_inb(0x60, addr: 0xeffff57c [0x81 = 0b10000001])
+  @terminal.c:74, freeTerminal
+    vg_exit()
+  < vg_exit() -> (ret: 0)
+  @kbc.c:19, kbcUnsubscribe
+    sys_irqrmpolicy(&hook_id)
+  > sys_irqrmpolicy(addr: 0x822d9dc [10])
+  < sys_irqrmpolicy(addr: 0x822d9dc [10]) -> (ret: 0)
+< video_test_rectangle(0x115, 0, 0, 10, 10, 0x005fcde4 [6278628]) -> (ret: 0)

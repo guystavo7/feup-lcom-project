@@ -59,7 +59,7 @@ void drawPixel(Terminal* terminal, uint16_t x, uint16_t y, uint32_t color) {
     long currentX = x * terminal->bytesPerPixel;
     long offset = currentX + y * terminal->vmi.XResolution * terminal->bytesPerPixel;
 
-	memcpy(&terminal->terminalMem[offset], &color, 3);
+	memcpy(&terminal->terminalMem[offset], &color, terminal->bytesPerPixel);
 }
 
 void drawLine(Terminal* terminal, uint16_t x, uint16_t y, uint16_t width, uint32_t color) {

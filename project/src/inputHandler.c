@@ -21,7 +21,7 @@ static InputHandler* newInputHandler() {
 InputHandler* getInstance() {
     if (!isInstanceCreated) {
         instance = newInputHandler();
-		for (int i = 0; i < 3; i++) instance->keys[i] = KEYUP;
+		for (int i = 0; i < 88; i++) instance->keys[i] = KEYUP;
 		isInstanceCreated = true;
     }
 

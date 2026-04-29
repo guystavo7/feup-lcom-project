@@ -44,6 +44,7 @@ int(proj_main_loop)(int argc, char* argv[]) {
     timer_subscribe((uint8_t*)&hook_id_timer);
     kbcSubscribe((uint8_t*)&hook_id_kbd);
     Terminal* terminal = newTerminal(0x115);
+	startGame();
 
     enableDataReport();
 
@@ -61,7 +62,7 @@ int(proj_main_loop)(int argc, char* argv[]) {
             case HARDWARE:
                 if (msg.m_notify.interrupts & (1 << TIMER_IRQ_LINE)) {
                     timer_int_handler();
-					gameLoop();
+					gameLoop(terminal);
                 }
 
                 //if (msg.m_notify.interrupts & (1 << MOUSE_IRQ_LINE)) {
@@ -90,6 +91,7 @@ int(proj_main_loop)(int argc, char* argv[]) {
     kbcUnsubscribe();
     //disableDataReport();
 
+	exitGame();
     freeTerminal(terminal);
     return 0;
 }

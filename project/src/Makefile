@@ -3,7 +3,8 @@ PROG=proj
 SRCS= \
 	application.c \
 	game.c \
-	./inputHandler.c
+	./inputHandler.c \
+	./spriteXMP.c \
 
 OBJS = ${SRCS:.c=.o}
 
