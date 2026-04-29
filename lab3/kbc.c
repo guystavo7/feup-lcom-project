@@ -18,7 +18,7 @@ int(kbcSubscribe)(uint8_t *bit_no) {
 
 int(kbcUnsubscribe)() { return sys_irqrmpolicy(&hook_id); }
 
-int kbcSendCommand(uint8_t cmd) {
+static int kbcSendCommand(uint8_t cmd) {
     uint8_t stat = 0;
     int counter = 10;
     while (counter--) {
@@ -34,7 +34,7 @@ int kbcSendCommand(uint8_t cmd) {
     return -1;
 }
 
-uint8_t kbcReadCommandResponse() {
+static uint8_t kbcReadCommandResponse() {
     uint8_t stat, data;
 
     int counter = 10;
@@ -95,27 +95,24 @@ void kbcDisableInterrupts() {
     kbcWriteCommandByte(cmd_byte);
 }
 
-void resetKeys() {
-	lastByte = kbcGetScancode();
+void kbcResetKeys() {
+    lastByte = kbcGetScancode();
     topbyte = 0;
     botbyte = 0;
 }
 
-uint8_t getMSB() { return botbyte; }
-uint8_t getLSB() { return topbyte; }
-bool isTwoByteCode() { return topbyte == 0xE0; }
-uint8_t getSize() { return topbyte == 0xE0 ? 2 : 1; }
+uint8_t kbcGetMSB() { return botbyte; }
+uint8_t kbcGetLSB() { return topbyte; }
+bool kbcIsTwoByteCode() { return topbyte == 0xE0; }
+uint8_t kbcGetSize() { return topbyte == 0xE0 ? 2 : 1; }
 
-bool isMake() {
+bool kbcIsMake() {
     uint8_t byte = botbyte;
-    if (!botbyte)
-        byte = topbyte;
+    if (!botbyte) byte = topbyte;
     return !(byte & 0x80);
 }
 
-bool isKeyReady() { 
-	return (!isTwoByteCode() && topbyte) || botbyte;
-}
+bool kbcIsKeyReady() { return (!kbcIsTwoByteCode() && topbyte) || botbyte; }
 
 void(kbcIh)() {
     uint8_t status = 0;
@@ -127,22 +124,22 @@ void(kbcIh)() {
         util_sys_inb(KBC_IO_BUF_REG, &key);
 
         if (topbyte == 0) {
-			topbyte = key;
+            topbyte = key;
         } else {
-			botbyte = key;
+            botbyte = key;
         }
     }
 }
 
 uint16_t kbcGetScancode() {
-    if (isTwoByteCode()) {
+    if (kbcIsTwoByteCode()) {
         return topbyte << 8 | botbyte;
     }
 
     return topbyte;
 }
 
-uint16_t getLastByte() {
-	if (lastByte == 0) return kbcGetScancode();
-	return lastByte;
+uint16_t _getLastByte() {
+    if (lastByte == 0) return kbcGetScancode();
+    return lastByte;
 }

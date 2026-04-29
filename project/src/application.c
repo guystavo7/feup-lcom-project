@@ -5,6 +5,7 @@
 
 #include "../include/game.h"
 #include "../include/utils.h"
+#include "../include/inputHandler.h"
 
 #include <lcom/lcf.h>
 
@@ -42,7 +43,7 @@ int(proj_main_loop)(int argc, char* argv[]) {
     mouseSubscribe(&hook_id_mouse);
     timer_subscribe_int((uint8_t*)&hook_id_timer);
     kbcSubscribe((uint8_t*)&hook_id_kbd);
-	Terminal* terminal = newTerminal(0x115);
+    Terminal* terminal = newTerminal(0x115);
 
     enableDataReport();
 
@@ -67,8 +68,14 @@ int(proj_main_loop)(int argc, char* argv[]) {
                 }
 
                 if (msg.m_notify.interrupts & (1 << KBC_IRQ_LINE)) {
-					kbcIh();
-					if (isKeyReady()) resetKeys();
+                    kbcIh();
+					if (!isKeyReady()) continue;
+					if (!isTwoByteCode()) {
+						uint16_t keycode = (uint16_t)(kbcGetScancode() & ~(0x80));
+						readKey(getInstance(), keycode, isMake());
+					}
+
+					resetKeys();
                 }
 
                 break;
@@ -80,7 +87,7 @@ int(proj_main_loop)(int argc, char* argv[]) {
     mouseUnsubscribe(&hook_id_mouse);
     timer_unsubscribe_int();
     kbcUnsubscribe();
-	freeTerminal(terminal);
+    freeTerminal(terminal);
     disableDataReport();
     return 0;
 }

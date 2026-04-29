@@ -35,16 +35,16 @@ int main(int argc, char *argv[]) {
 
 void getKeys() {
     kbcIh();
-    if (!isKeyReady()) return;
+    if (!kbcIsKeyReady()) return;
 
-    bool make = isMake();
-    uint8_t size = getSize();
+    bool make = kbcIsMake();
+    uint8_t size = kbcGetSize();
     uint8_t bytes[2];
-    bytes[0] = getLSB();
-    bytes[1] = getMSB();
+    bytes[0] = kbcGetLSB();
+    bytes[1] = kbcGetMSB();
 
     kbd_print_scancode(make, size, bytes);
-    resetKeys();
+    kbcResetKeys();
 }
 
 int(kbd_test_scan)() {
@@ -55,7 +55,7 @@ int(kbd_test_scan)() {
     int irq_set = 1 << bit_no;
 
     message msg;
-    while (getLastByte() != 0x81) {
+    while (_getLastByte() != 0x81) {
         if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
             printf("driver_receive failed with: %d", r);
             continue;
@@ -81,7 +81,7 @@ int(kbd_test_scan)() {
 }
 
 int(kbd_test_poll)() {
-    while (getLastByte() != 0x81) {
+    while (_getLastByte() != 0x81) {
         getKeys();
     }
 
@@ -103,7 +103,7 @@ int(kbd_test_timed_scan)(uint8_t n) {
     message msg;
     int f = 60;
 
-    while (getLastByte() != 0x81 & timer_get_counter() < n * f) {
+    while (_getLastByte() != 0x81 & timer_get_counter() < n * f) {
         if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
             printf("driver_receive failed with: %d", r);
             continue;

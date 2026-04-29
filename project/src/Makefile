@@ -3,6 +3,7 @@ PROG=proj
 SRCS= \
 	application.c \
 	game.c \
+	./inputHandler.c
 
 OBJS = ${SRCS:.c=.o}
 

@@ -68,7 +68,7 @@ int(video_test_rectangle)(uint16_t mode, uint16_t x, uint16_t y, uint16_t width,
 
     printf("Finished drawing\n");
 
-    while (getLastByte() != 0x81) {
+    while (_getLastByte() != 0x81) {
         if ((r = driver_receive(ANY, &msg, &ipc_status))) {
             printf("Cannot read driver %x\n", r);
             continue;
@@ -79,7 +79,7 @@ int(video_test_rectangle)(uint16_t mode, uint16_t x, uint16_t y, uint16_t width,
             case HARDWARE:
                 if (msg.m_notify.interrupts & (1 << bit_no)) {
 					kbcIh();
-					if (isKeyReady()) resetKeys();
+					if (kbcIsKeyReady()) kbcResetKeys();
                 }
 
                 break;
@@ -99,7 +99,6 @@ int(video_test_xpm)(xpm_map_t xpm, uint16_t x, uint16_t y) {
 	SpriteXPM* sprite = newSpriteXPM(xpm, type);
 
 	drawSpriteXPM(sprite, terminal, x, y);
-
     uint8_t bit_no = 1;
     int hook_id = 1;
 
@@ -107,7 +106,7 @@ int(video_test_xpm)(xpm_map_t xpm, uint16_t x, uint16_t y) {
     message msg;
     int r, ipc_status;
 
-    while (getLastByte() != 0x81) {
+    while (_getLastByte() != 0x81) {
         if ((r = driver_receive(ANY, &msg, &ipc_status))) {
             printf("Cannot read driver %x\n", r);
             continue;
@@ -118,7 +117,7 @@ int(video_test_xpm)(xpm_map_t xpm, uint16_t x, uint16_t y) {
             case HARDWARE:
                 if (msg.m_notify.interrupts & (1 << bit_no)) {
                     kbcIh();
-					if (isKeyReady()) resetKeys();
+					if (kbcIsKeyReady()) kbcResetKeys();
                 }
 
                 break;

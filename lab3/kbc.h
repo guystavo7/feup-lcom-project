@@ -18,21 +18,18 @@ int kbcSubscribe(uint8_t *bit_no);
 int kbcUnsubscribe();
 
 uint16_t kbcGetScancode();
-uint16_t getLastByte();
-
-int kbcSendCommand(uint8_t cmd);
-uint8_t kbcReadCommandResponse();
+uint16_t _getLastByte();
 
 void kbcEnableInterrupts();
 
 void(kbcIh)();
-void resetKeys();
+void kbcResetKeys();
 
-uint8_t getMSB();
-uint8_t getLSB();
+uint8_t kbcGetMSB();
+uint8_t kbcGetLSB();
 
-bool isTwoByteCode();
-uint8_t getLastTopByte();
-uint8_t getSize();
-bool isMake();
-bool isKeyReady();
+bool kbcIsTwoByteCode();
+uint8_t kbcGetLastTopByte();
+uint8_t kbcGetSize();
+bool kbcIsMake();
+bool kbcIsKeyReady();
