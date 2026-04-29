@@ -33,15 +33,8 @@ int main(int argc, char* argv[]) {
     return 0;
 }
 
-int drawRectangleTest(uint16_t mode, uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color) {
-    Terminal* terminal;
-    if ((terminal = newTerminal(mode)) == NULL) {
-        printf("Error on starting new terminal\n");
-        return -1;
-    }
-
+int drawRectangleTest(Terminal* terminal, uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color) {
     for (int i = y; i < y + height; i++) drawLine(terminal, x, i, width, color);
-    freeTerminal(terminal);
     return 0;
 }
 
@@ -53,11 +46,8 @@ int(video_test_init)(uint16_t mode, uint8_t delay) {
 }
 
 int(video_test_rectangle)(uint16_t mode, uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color) {
-    if (drawRectangleTest(mode, x, y, width, height, color)) {
-        printf("Cannot draw rectangle\n");
-        vg_exit();
-        return -1;
-    }
+    Terminal* terminal = newTerminal(mode);
+    drawRectangleTest(terminal, x, y, width, height, color);
 
     uint8_t bit_no = 1;
     int hook_id = 1;
@@ -78,8 +68,8 @@ int(video_test_rectangle)(uint16_t mode, uint16_t x, uint16_t y, uint16_t width,
         switch (_ENDPOINT_P(msg.m_source)) {
             case HARDWARE:
                 if (msg.m_notify.interrupts & (1 << bit_no)) {
-					kbcIh();
-					if (kbcIsKeyReady()) kbcResetKeys();
+                    kbcIh();
+                    if (kbcIsKeyReady()) kbcResetKeys();
                 }
 
                 break;
@@ -88,17 +78,17 @@ int(video_test_rectangle)(uint16_t mode, uint16_t x, uint16_t y, uint16_t width,
         }
     }
 
-    vg_exit();
+	freeTerminal(terminal);
     kbcUnsubscribe();
     return 0;
 }
 
 int(video_test_xpm)(xpm_map_t xpm, uint16_t x, uint16_t y) {
-	Terminal* terminal = newTerminal(0x105);
-	enum xpm_image_type type = XPM_INDEXED;
-	SpriteXPM* sprite = newSpriteXPM(xpm, type);
+    Terminal* terminal = newTerminal(0x105);
+    enum xpm_image_type type = XPM_INDEXED;
+    SpriteXPM* sprite = newSpriteXPM(xpm, type);
 
-	drawSpriteXPM(sprite, terminal, x, y);
+    drawSpriteXPM(sprite, terminal, x, y);
     uint8_t bit_no = 1;
     int hook_id = 1;
 
@@ -117,7 +107,7 @@ int(video_test_xpm)(xpm_map_t xpm, uint16_t x, uint16_t y) {
             case HARDWARE:
                 if (msg.m_notify.interrupts & (1 << bit_no)) {
                     kbcIh();
-					if (kbcIsKeyReady()) kbcResetKeys();
+                    if (kbcIsKeyReady()) kbcResetKeys();
                 }
 
                 break;
@@ -127,7 +117,7 @@ int(video_test_xpm)(xpm_map_t xpm, uint16_t x, uint16_t y) {
     }
 
     kbcUnsubscribe();
-	freeSpriteXPM(sprite);
-	freeTerminal(terminal);
+    freeSpriteXPM(sprite);
+    freeTerminal(terminal);
     return 0;
 }
