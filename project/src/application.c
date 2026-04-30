@@ -62,6 +62,7 @@ int(proj_main_loop)(int argc, char* argv[]) {
             case HARDWARE:
                 if (msg.m_notify.interrupts & (1 << TIMER_IRQ_LINE)) {
                     timer_int_handler();
+					refreshTerminal(terminal);
 					gameLoop(terminal);
                 }
 

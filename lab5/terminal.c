@@ -2,6 +2,7 @@
 
 struct Terminal {
     char* terminalMem;
+	char* empytyBuffer;
 
     vbe_mode_info_t vmi;
     struct minix_mem_range mr;
@@ -45,6 +46,8 @@ Terminal* newTerminal(uint16_t mode) {
     }
 
     Terminal* res = (Terminal*)malloc(sizeof(Terminal));
+	res->empytyBuffer = malloc(sizeof(char) * vram_size);
+	for (unsigned long i = 0; i < vram_size; i++) res->empytyBuffer[i] = 0;
     res->vmi = vmi;
     res->mr = mr;
     res->terminalMem = terminalMem;
@@ -75,4 +78,8 @@ void freeTerminal(Terminal* terminal) {
 
 unsigned int getBytesPerPixel(Terminal* terminal) {
     return terminal->bytesPerPixel;
+}
+
+void refreshTerminal(Terminal *terminal) {
+	memcpy(terminal->terminalMem, terminal->empytyBuffer, terminal->vmi.XResolution * terminal->vmi.YResolution * terminal->bytesPerPixel);
 }

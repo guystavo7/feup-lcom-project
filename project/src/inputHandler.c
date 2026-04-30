@@ -29,22 +29,22 @@ InputHandler* getInstance() {
 }
 
 void readKey(InputHandler* inputHandler, uint16_t keycode, bool isMake) {
-	enum keyState currentState = inputHandler->keys[keycode - KEYCODE_1];
+	enum keyState currentState = inputHandler->keys[keycode - KEYCODE_ESQ];
 
     if (isMake && currentState == KEYUP) {
-        inputHandler->keys[keycode - KEYCODE_1] = KEYDOWN;
+        inputHandler->keys[keycode - KEYCODE_ESQ] = KEYDOWN;
     } else if (!isMake){
-        inputHandler->keys[keycode - KEYCODE_1] = KEYUP;
+        inputHandler->keys[keycode - KEYCODE_ESQ] = KEYUP;
     }
 }
 
 bool getKeyDown(InputHandler* inputHandler, uint16_t keycode) {
-	bool isKeyDown = inputHandler->keys[keycode - KEYCODE_1] == KEYDOWN;
-	if (isKeyDown) inputHandler->keys[keycode - KEYCODE_1] = KEYPRESSED;
+	bool isKeyDown = inputHandler->keys[keycode - KEYCODE_ESQ] == KEYDOWN;
+	if (isKeyDown) inputHandler->keys[keycode - KEYCODE_ESQ] = KEYPRESSED;
 
 	return isKeyDown;
 }
 
 bool getKeyPressed(InputHandler* inputHandler, uint16_t keycode) {
-	return inputHandler->keys[keycode - KEYCODE_1] != KEYUP;
+	return inputHandler->keys[keycode - KEYCODE_ESQ] != KEYUP;
 }

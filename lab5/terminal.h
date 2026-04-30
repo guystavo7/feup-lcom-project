@@ -13,5 +13,6 @@ void drawLine(Terminal* terminal, uint16_t x, uint16_t y, uint16_t width, uint32
 void freeTerminal(Terminal* terminal);
 
 unsigned int getBytesPerPixel(Terminal* terminal);
+void refreshTerminal(Terminal* terminal);
 
 #endif
