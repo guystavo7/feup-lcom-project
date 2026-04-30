@@ -13,7 +13,7 @@
 
 
 void printTest(const char* format , ...){
-#ifdef DEBUG
+#if DEBUG
     va_list args;
     va_start(args,format);
     vprintf(format, args);
@@ -208,17 +208,41 @@ void vec_set_val(Vector*vec, unsigned int pos, long long int val){
         return;
         }
     printTest("set_val-start\n");
-    for(unsigned int j=0; j<vec->data_size;j++){
-        vec->data[pos*vec->data_size+j]=val;
-        val>>=8;
-    printTest("val[%d]=%d\n",j,val);
+    
+    if(DEBUG){
+        for(unsigned int j=0; j<vec->data_size;j++){
+            
+    vec->data[pos*vec->data_size+j]=0;
+
+    } 
+    }
+
+    memcpy(&vec->data[pos*vec->data_size],&val,vec->data_size);
+    
+
+
+}
+
+char* vec_get_copy(Vector*vec, unsigned int pos){
+    if(!((0<=pos) && (pos<(vec->size)))){
+        printf("index out of range");
+        fflush(stdout);
+        //error
+    } 
+    char* val=(char*)malloc(vec->data_size);
+
+    printTest("get-start\n");
+    for(unsigned int j=0; j<(vec->data_size);j++){
+        val[j]=vec->data[pos*vec->data_size+j]; 
+
+        printTest("val[%d]=%d\n",j,val[j]);
 
     printTest("vec->data[%d]=%d\n",pos*vec->data_size+j,vec->data[pos*vec->data_size+j]);
 
     } 
-    printTest("set_val-end\n");
+    printTest("get-end\n");
 
-
+    return val;
 }
 
 char* vec_get(Vector*vec, unsigned int pos){
@@ -227,17 +251,21 @@ char* vec_get(Vector*vec, unsigned int pos){
         fflush(stdout);
         //error
     } 
-    char* val=(char*)malloc(vec->data_size);
-    printTest("get-start\n");
-    for(unsigned int j=0; j<(vec->data_size);j++){
-        val[j]=vec->data[pos*vec->data_size+j]; 
-        printTest("val[%d]=%d\n",j,val[j]);
+    char* val=&vec->data[pos*vec->data_size];
+    
 
-    printTest("vec->data[%d]=%d\n",pos*vec->data_size+j,vec->data[pos*vec->data_size+j]);
 
+    return val;
+}
+
+long long int vec_get_val(Vector*vec, unsigned int pos){
+    if(!((0<=pos) && (pos<(vec->size)))){
+        printf("index out of range");
+        fflush(stdout);
+        //error
     } 
-    printTest("get-end\n");
-
+    long long int val=0;
+    memcpy(&val,&vec->data[pos*vec->data_size],vec->data_size);
     return val;
 }
 
@@ -257,6 +285,8 @@ int vec_find(Vector*vec, char* val) {
     }
     return -1;
 }
+
+
 
 
 /*

@@ -1,5 +1,5 @@
 
-//#define DEBUG
+#define DEBUG 0
 
 typedef struct vector Vector;
 
@@ -22,5 +22,6 @@ void vec_remove(Vector*vec, unsigned int pos);
 void vec_set(Vector*vec, unsigned int pos, char* val);
 void vec_set_val(Vector*vec, unsigned int pos, long long int val);
 char* vec_get(Vector*vec, unsigned int pos);
-
+long long int vec_get_val(Vector*vec, unsigned int pos);
+char* vec_get_copy(Vector*vec, unsigned int pos);
 int vec_find(Vector*vec, char* val);
