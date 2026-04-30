@@ -46,12 +46,12 @@ int(proj_main_loop)(int argc, char* argv[]) {
     Terminal* terminal = newTerminal(0x115);
 	startGame();
 
-    enableDataReport();
+    //enableDataReport();
 
     int r, ipc_status;
     message msg;
 
-    while (!getKeyPressed(getInstance(), KEYCODE_ESQ)) {
+    while (!getKeyPressed(getInputHandler(), KEYCODE_ESQ)) {
         if ((r = driver_receive(ANY, &msg, &ipc_status))) {
             printf("Driver receive failed: %d\n", r);
             continue;
@@ -75,7 +75,7 @@ int(proj_main_loop)(int argc, char* argv[]) {
 					if (!kbcIsKeyReady()) continue;
 					if (!kbcIsTwoByteCode()) {
 						uint16_t keycode = (uint16_t)(kbcGetScancode() & ~(0x80));
-						readKey(getInstance(), keycode, kbcIsMake());
+						readKey(getInputHandler(), keycode, kbcIsMake());
 					}
 
 					kbcResetKeys();

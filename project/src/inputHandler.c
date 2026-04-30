@@ -18,7 +18,7 @@ static InputHandler* newInputHandler() {
     return i;
 }
 
-InputHandler* getInstance() {
+InputHandler* getInputHandler() {
     if (!isInstanceCreated) {
         instance = newInputHandler();
 		for (int i = 0; i < 88; i++) instance->keys[i] = KEYUP;

@@ -18,10 +18,10 @@ void exitGame() {
 }
 
 void gameLoop(Terminal* terminal) {
-    if (getKeyPressed(getInstance(), KEYCODE_W)) y--;
-    if (getKeyPressed(getInstance(), KEYCODE_S)) y++;
-    if (getKeyPressed(getInstance(), KEYCODE_A)) x--;
-    if (getKeyPressed(getInstance(), KEYCODE_D)) x++;
+    if (getKeyPressed(getInputHandler(), KEYCODE_W)) y--;
+    if (getKeyPressed(getInputHandler(), KEYCODE_S)) y++;
+    if (getKeyPressed(getInputHandler(), KEYCODE_A)) x--;
+    if (getKeyPressed(getInputHandler(), KEYCODE_D)) x++;
 
     if (x < 0) x = 0;
     if (x > 800) x = 800;
