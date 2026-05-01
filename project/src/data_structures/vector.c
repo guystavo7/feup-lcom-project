@@ -39,7 +39,7 @@ struct vector {
 
 typedef struct vector Vector;
 
-Vector*  vec_create(unsigned int data_size){
+Vector*  vectorCreate(unsigned int data_size){
 
     Vector* vec=(Vector*)malloc(sizeof(Vector));
     vec->size=0;
@@ -50,18 +50,18 @@ Vector*  vec_create(unsigned int data_size){
     return vec;
 }
 
-void  vec_free(Vector* v){
+void  vectorFree(Vector* v){
 
     
     free(v->data);
     free(v);
 }
 
-unsigned int vec_size(Vector* v){
+unsigned int vectorGetSize(Vector* v){
     return v->size;
 }
 
-void vec_resize(Vector* vec,unsigned int size){
+void vectorResize(Vector* vec,unsigned int size){
 
     if(size<0){
         return;
@@ -96,14 +96,14 @@ void vec_resize(Vector* vec,unsigned int size){
 
 }
 
-void vec_push_back(Vector*vec, char* val){ 
-    vec_resize(vec,vec->size+1);
-    vec_set(vec,(vec->size)-1,val); 
+void vectorPushBack(Vector*vec, char* val){ 
+    vectorResize(vec,vec->size+1);
+    vectorSet(vec,(vec->size)-1,val); 
 }
 
-void vec_push_back_val(Vector*vec, long long int val){ 
-    vec_resize(vec,vec->size+1);
-    vec_set_val(vec,(vec->size)-1,val); 
+void vectorPushBackVal(Vector*vec, long long int val){ 
+    vectorResize(vec,vec->size+1);
+    vectorSetVal(vec,(vec->size)-1,val); 
 }
 /*
 void vec_push_mem_back(VECTOR* vec) {
@@ -111,7 +111,7 @@ void vec_push_mem_back(VECTOR* vec) {
     vec->data[vec->size-1]=(char**)malloc(sizeof(char**));
 }
 */
-void vec_insert(Vector*vec, unsigned int pos, char* val){
+void vectorInsert(Vector*vec, unsigned int pos, char* val){
 
 
     if( !( 0<=pos and pos<=vec->size)){
@@ -119,7 +119,7 @@ void vec_insert(Vector*vec, unsigned int pos, char* val){
         fflush(stdout);
         return;
     }
-    vec_resize(vec,vec->size+1);
+    vectorResize(vec,vec->size+1);
 
     for(unsigned int i=vec->size-1; i>pos;i--) {
         for(unsigned int j=0; j<vec->data_size;j++){
@@ -152,7 +152,7 @@ void vec_insert_mem(VECTOR*vec, unsigned int pos){
 
 }
 */
-void vec_pop_back(Vector*vec) {
+void vectorPopBack(Vector*vec) {
 
     if( vec->size<=0){
         printf("vec cannot pop_back no elements\n");
@@ -165,7 +165,7 @@ void vec_pop_back(Vector*vec) {
 
 }
 
-void vec_remove(Vector*vec, unsigned int pos){
+void vectorRemove(Vector*vec, unsigned int pos){
 
     if( !( 0<=pos and pos<=vec->size)){
         printf("vec insert pos = %d is invalid\n",pos);
@@ -188,7 +188,7 @@ void vec_remove(Vector*vec, unsigned int pos){
 }
 
 
-void vec_set(Vector*vec, unsigned int pos, char* val){
+void vectorSet(Vector*vec, unsigned int pos, char* val){
     if(!(0<=pos && pos<vec->size)){
         printf("index out of range");
         fflush(stdout);
@@ -200,7 +200,7 @@ void vec_set(Vector*vec, unsigned int pos, char* val){
     } 
 }
 
-void vec_set_val(Vector*vec, unsigned int pos, long long int val){
+void vectorSetVal(Vector*vec, unsigned int pos, long long int val){
     if(!(0<=pos && pos<vec->size)){
         printf("index out of range");
         fflush(stdout);
@@ -223,7 +223,7 @@ void vec_set_val(Vector*vec, unsigned int pos, long long int val){
 
 }
 
-char* vec_get_copy(Vector*vec, unsigned int pos){
+char* vectorGetCopy(Vector*vec, unsigned int pos){
     if(!((0<=pos) && (pos<(vec->size)))){
         printf("index out of range");
         fflush(stdout);
@@ -245,7 +245,7 @@ char* vec_get_copy(Vector*vec, unsigned int pos){
     return val;
 }
 
-char* vec_get(Vector*vec, unsigned int pos){
+char* vectorGet(Vector*vec, unsigned int pos){
     if(!((0<=pos) && (pos<(vec->size)))){
         printf("index out of range");
         fflush(stdout);
@@ -258,7 +258,7 @@ char* vec_get(Vector*vec, unsigned int pos){
     return val;
 }
 
-long long int vec_get_val(Vector*vec, unsigned int pos){
+long long int vectorGetVal(Vector*vec, unsigned int pos){
     if(!((0<=pos) && (pos<(vec->size)))){
         printf("index out of range");
         fflush(stdout);
@@ -269,7 +269,7 @@ long long int vec_get_val(Vector*vec, unsigned int pos){
     return val;
 }
 
-int vec_find(Vector*vec, char* val) {
+int vectorFind(Vector*vec, char* val) {
     for (int i = 0; i < vec->size; i++) {
         bool equal=true;
         for(unsigned int j=0; j<vec->data_size;j++){

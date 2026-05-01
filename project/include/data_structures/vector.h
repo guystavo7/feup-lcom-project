@@ -3,25 +3,25 @@
 
 typedef struct vector Vector;
 
-Vector*  vec_create(unsigned int data_size);
+Vector*  vectorCreate(unsigned int data_size);
 
-void  vec_free(Vector* v);
+void  vectorFree(Vector* v);
 
-unsigned int vec_size(Vector* v);
+unsigned int vectorGetSize(Vector* v);
 
-void vec_resize(Vector* vec,unsigned int size);
+void vectorResize(Vector* vec,unsigned int size);
 
-void vec_push_back(Vector*vec, char* val);
-void vec_push_back_val(Vector*vec, long long int val);
+void vectorPushBack(Vector*vec, char* val);
+void vectorPushBackVal(Vector*vec, long long int val);
 
-void vec_insert(Vector*vec, unsigned int pos, char* val);
+void vectorInsert(Vector*vec, unsigned int pos, char* val);
 
-void vec_pop_back(Vector*vec);
-void vec_remove(Vector*vec, unsigned int pos);
+void vectorPopBack(Vector*vec);
+void vectorRemove(Vector*vec, unsigned int pos);
 
-void vec_set(Vector*vec, unsigned int pos, char* val);
-void vec_set_val(Vector*vec, unsigned int pos, long long int val);
-char* vec_get(Vector*vec, unsigned int pos);
-long long int vec_get_val(Vector*vec, unsigned int pos);
-char* vec_get_copy(Vector*vec, unsigned int pos);
-int vec_find(Vector*vec, char* val);
+void vectorSet(Vector*vec, unsigned int pos, char* val);
+void vectorSetVal(Vector*vec, unsigned int pos, long long int val);
+char* vectorGet(Vector*vec, unsigned int pos);
+long long int vectorGetVal(Vector*vec, unsigned int pos);
+char* vectorGetCopy(Vector*vec, unsigned int pos);
+int vectorFind(Vector*vec, char* val);
