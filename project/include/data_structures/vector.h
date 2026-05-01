@@ -1,4 +1,5 @@
 
+#pragma once
 #define DEBUG 0
 
 typedef struct vector Vector;
