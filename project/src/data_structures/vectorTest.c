@@ -38,7 +38,7 @@ void test1_create_and_size() {
 }
 
 void test2_push_back_and_get() {
-    printf("\n--- Test 2: vec_push_back, vec_get_copy (Different Byte Lengths) ---\n");
+    printf("\n--- Test 2: vec_push_back, vectorGetCopy (Different Byte Lengths) ---\n");
     
     Vector* v_char = vectorCreate(sizeof(char));
     char c = -50; 
@@ -321,6 +321,160 @@ void test14_floats() {
     if(res_d1) free(res_d1);
 }
 
+#include <stdbool.h> // Required for bool tests
+
+void test16_create_with_data() {
+    printf("\n--- Test 16: vectorCreateWithData (Variadic Initialization Expanded) ---\n");
+    
+    // ---------------------------------------------------------
+    // SCENARIO 1: Standard Integers (4 bytes)
+    // ---------------------------------------------------------
+    Vector* v_int = vectorCreateWithData(sizeof(int), 3, 111, 222, 333);
+    print_result("Variadic Create (int): Size initialized to 3", 3, vectorGetSize(v_int));
+    
+    int* res_i0 = (int*)vectorGetCopy(v_int, 0);
+    int* res_i1 = (int*)vectorGetCopy(v_int, 1);
+    int* res_i2 = (int*)vectorGetCopy(v_int, 2);
+    
+    print_result("Variadic Create (int): 1st element exact", 111, res_i0 ? *res_i0 : -1);
+    print_result("Variadic Create (int): 2nd element exact", 222, res_i1 ? *res_i1 : -1);
+    print_result("Variadic Create (int): 3rd element exact", 333, res_i2 ? *res_i2 : -1);
+    
+    // ---------------------------------------------------------
+    // SCENARIO 2: Long Long Integers (8 bytes)
+    // ---------------------------------------------------------
+    Vector* v_ll = vectorCreateWithData(sizeof(long long int), 2, 999999999LL, -555555555LL);
+    print_result("Variadic Create (long long): Size initialized to 2", 2, vectorGetSize(v_ll));
+    
+    long long int* res_ll0 = (long long int*)vectorGetCopy(v_ll, 0);
+    long long int* res_ll1 = (long long int*)vectorGetCopy(v_ll, 1);
+    
+    print_result("Variadic Create (long long): 1st element exact", 999999999LL, res_ll0 ? *res_ll0 : -1);
+    print_result("Variadic Create (long long): 2nd element exact", -555555555LL, res_ll1 ? *res_ll1 : -1);
+
+    // ---------------------------------------------------------
+    // SCENARIO 3: Char (1 byte)
+    // ---------------------------------------------------------
+    // Note: C implicitly promotes chars to ints in variadic functions.
+    Vector* v_char = vectorCreateWithData(sizeof(char), 3, 'A', 'B', 'Z');
+    print_result("Variadic Create (char): Size initialized to 3", 3, vectorGetSize(v_char));
+
+    char* res_c0 = (char*)vectorGetCopy(v_char, 0);
+    char* res_c1 = (char*)vectorGetCopy(v_char, 1);
+    char* res_c2 = (char*)vectorGetCopy(v_char, 2);
+
+    print_result("Variadic Create (char): 1st element exact", 'A', res_c0 ? *res_c0 : -1);
+    print_result("Variadic Create (char): 2nd element exact", 'B', res_c1 ? *res_c1 : -1);
+    print_result("Variadic Create (char): 3rd element exact", 'Z', res_c2 ? *res_c2 : -1);
+
+    // ---------------------------------------------------------
+    // SCENARIO 4: Short Int (2 bytes)
+    // ---------------------------------------------------------
+    // Note: Short ints are also promoted to standard ints on the stack.
+    short s1 = 32000, s2 = -15000;
+    Vector* v_short = vectorCreateWithData(sizeof(short), 2, s1, s2);
+    print_result("Variadic Create (short): Size initialized to 2", 2, vectorGetSize(v_short));
+
+    short* res_s0 = (short*)vectorGetCopy(v_short, 0);
+    short* res_s1 = (short*)vectorGetCopy(v_short, 1);
+
+    print_result("Variadic Create (short): 1st element exact", 32000, res_s0 ? *res_s0 : -1);
+    print_result("Variadic Create (short): 2nd element exact", -15000, res_s1 ? *res_s1 : -1);
+
+    // ---------------------------------------------------------
+    // SCENARIO 5: Booleans (1 byte)
+    // ---------------------------------------------------------
+    // Note: Bools promote to ints (1 for true, 0 for false).
+    Vector* v_bool = vectorCreateWithData(sizeof(bool), 2, true, false);
+    print_result("Variadic Create (bool): Size initialized to 2", 2, vectorGetSize(v_bool));
+
+    bool* res_b0 = (bool*)vectorGetCopy(v_bool, 0);
+    bool* res_b1 = (bool*)vectorGetCopy(v_bool, 1);
+
+    print_result("Variadic Create (bool): 1st element exact (true)", 1, res_b0 ? *res_b0 : -1);
+    print_result("Variadic Create (bool): 2nd element exact (false)", 0, res_b1 ? *res_b1 : -1);
+
+    // ---------------------------------------------------------
+    // SCENARIO 6: Edge Case (Size 0)
+    // ---------------------------------------------------------
+    Vector* v_empty = vectorCreateWithData(sizeof(int), 0);
+    print_result("Variadic Create (0 elements): Size initialized to 0", 0, vectorGetSize(v_empty));
+
+    // ---------------------------------------------------------
+    // Cleanup
+    // ---------------------------------------------------------
+    vectorFree(v_int);
+    vectorFree(v_ll);
+    vectorFree(v_char);
+    vectorFree(v_short);
+    vectorFree(v_bool);
+    vectorFree(v_empty);
+    
+    if (res_i0) free(res_i0);
+    if (res_i1) free(res_i1);
+    if (res_i2) free(res_i2);
+    
+    if (res_ll0) free(res_ll0);
+    if (res_ll1) free(res_ll1);
+
+    if (res_c0) free(res_c0);
+    if (res_c1) free(res_c1);
+    if (res_c2) free(res_c2);
+
+    if (res_s0) free(res_s0);
+    if (res_s1) free(res_s1);
+
+    if (res_b0) free(res_b0);
+    if (res_b1) free(res_b1);
+}
+
+void test17_create_with_floating_data() {
+    printf("\n--- Test 17: vectorCreateWithFloatingData (Floats & Doubles) ---\n");
+
+    // ---------------------------------------------------------
+    // SCENARIO 1: Floats (4 bytes)
+    // ---------------------------------------------------------
+    Vector* v_float = vectorCreateWithFloatingData(sizeof(float), 3, 3.14f, -2.5f, 0.0f);
+    print_result("Variadic Floating (float): Size initialized to 3", 3, vectorGetSize(v_float));
+
+    float* res_f0 = (float*)vectorGetCopy(v_float, 0);
+    float* res_f1 = (float*)vectorGetCopy(v_float, 1);
+    float* res_f2 = (float*)vectorGetCopy(v_float, 2);
+
+    int f_match0 = (res_f0 && *res_f0 == 3.14f) ? 1 : 0;
+    int f_match1 = (res_f1 && *res_f1 == -2.5f) ? 1 : 0;
+    int f_match2 = (res_f2 && *res_f2 == 0.0f) ? 1 : 0;
+
+    print_result("Variadic Floating (float): 1st element exact", 1, f_match0);
+    print_result("Variadic Floating (float): 2nd element exact", 1, f_match1);
+    print_result("Variadic Floating (float): 3rd element exact", 1, f_match2);
+
+    // ---------------------------------------------------------
+    // SCENARIO 2: Doubles (8 bytes)
+    // ---------------------------------------------------------
+    Vector* v_double = vectorCreateWithFloatingData(sizeof(double), 2, 2.718281828459, -999.999999);
+    print_result("Variadic Floating (double): Size initialized to 2", 2, vectorGetSize(v_double));
+
+    double* res_d0 = (double*)vectorGetCopy(v_double, 0);
+    double* res_d1 = (double*)vectorGetCopy(v_double, 1);
+
+    int d_match0 = (res_d0 && *res_d0 == 2.718281828459) ? 1 : 0;
+    int d_match1 = (res_d1 && *res_d1 == -999.999999) ? 1 : 0;
+
+    print_result("Variadic Floating (double): 1st element exact", 1, d_match0);
+    print_result("Variadic Floating (double): 2nd element exact", 1, d_match1);
+
+    // ---------------------------------------------------------
+    // Cleanup
+    // ---------------------------------------------------------
+    vectorFree(v_float);
+    vectorFree(v_double);
+    if (res_f0) free(res_f0);
+    if (res_f1) free(res_f1);
+    if (res_f2) free(res_f2);
+    if (res_d0) free(res_d0);
+    if (res_d1) free(res_d1);
+}
 /* ========================================================================== */
 /* MAIN TEST SUIT                              */
 /* ========================================================================== */
@@ -346,6 +500,8 @@ void testSuit() {
     test12_boundary_manipulations();
     test13_strings();
     test14_floats();
+    test16_create_with_data();
+    test17_create_with_floating_data();
 
     printf("\n==================================================================================\n");
     printf("                                END OF TEST SUITE                                 \n");
@@ -354,6 +510,11 @@ void testSuit() {
 
 int main() {
     // Run the full test suite
+    //test
+    /*
+    gcc -g -fsanitize=address vectorTest.c vector.c -o vectorTest
+    ./vectorTest
+    */
     testSuit();
     return 0;
 }
