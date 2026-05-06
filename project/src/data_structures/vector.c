@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <stdbool.h>
 #include <stdarg.h>
 
 void printTest(const char *format, ...) {
@@ -27,7 +28,6 @@ struct vector {
   unsigned int capacity;
 };
 
-typedef struct vector Vector;
 
 Vector *vectorCreate(unsigned int data_size) {
 
@@ -107,9 +107,8 @@ unsigned int vectorGetSize(Vector *v) { return v->size; }
 
 void vectorResize(Vector *vec, unsigned int size) {
 
-  if (size < 0) {
-    return;
-  }
+  
+  
 
   if (size > vec->capacity) {
 
@@ -124,7 +123,7 @@ void vectorResize(Vector *vec, unsigned int size) {
 
     // memcpy(new_data,vec->data,sizeof(char***)*vec->size-1);
 
-    for (int i = 0; i < vec->size * vec->data_size; i++) {
+    for (unsigned int i = 0; i < vec->size * vec->data_size; i++) {
 
       fflush(stdout);
       new_data[i] = vec->data[i];
@@ -154,7 +153,7 @@ void vec_push_mem_back(VECTOR* vec) {
 */
 void vectorInsert(Vector *vec, unsigned int pos, char *val) {
 
-  if (!(0 <= pos and pos <= vec->size)) {
+  if (!( pos <= vec->size)) { //0 <= pos and
     printf("vec insert pos = %d is invalid\n", pos);
     fflush(stdout);
     return;
@@ -204,7 +203,7 @@ void vectorPopBack(Vector *vec) {
 
 void vectorRemove(Vector *vec, unsigned int pos) {
 
-  if (!(0 <= pos and pos <= vec->size)) {
+  if (!( pos <= vec->size)) {
     printf("vec insert pos = %d is invalid\n", pos);
     fflush(stdout);
     return;
@@ -221,7 +220,7 @@ void vectorRemove(Vector *vec, unsigned int pos) {
 }
 
 void vectorSet(Vector *vec, unsigned int pos, char *val) {
-  if (!(0 <= pos && pos < vec->size)) {
+  if (!(pos < vec->size)) {
     printf("index out of range");
     fflush(stdout);
     // error
@@ -233,7 +232,7 @@ void vectorSet(Vector *vec, unsigned int pos, char *val) {
 }
 
 void vectorSetVal(Vector *vec, unsigned int pos, long long int val) {
-  if (!(0 <= pos && pos < vec->size)) {
+  if (!(pos < vec->size)) { //0 <= pos && 
     printf("index out of range");
     fflush(stdout);
     // error
@@ -252,7 +251,7 @@ void vectorSetVal(Vector *vec, unsigned int pos, long long int val) {
 }
 
 char *vectorGetCopy(Vector *vec, unsigned int pos) {
-  if (!((0 <= pos) && (pos < (vec->size)))) {
+  if (!( (pos < (vec->size)))) {//(0 <= pos) &&
     printf("index out of range");
     fflush(stdout);
     // error
@@ -274,7 +273,7 @@ char *vectorGetCopy(Vector *vec, unsigned int pos) {
 }
 
 char *vectorGet(Vector *vec, unsigned int pos) {
-  if (!((0 <= pos) && (pos < (vec->size)))) {
+  if (!( (pos < (vec->size)))) {
     printf("index out of range");
     fflush(stdout);
     // error
@@ -285,7 +284,7 @@ char *vectorGet(Vector *vec, unsigned int pos) {
 }
 
 long long int vectorGetVal(Vector *vec, unsigned int pos) {
-  if (!((0 <= pos) && (pos < (vec->size)))) {
+  if (!( (pos < (vec->size)))) {
     printf("index out of range");
     fflush(stdout);
     // error
@@ -296,7 +295,7 @@ long long int vectorGetVal(Vector *vec, unsigned int pos) {
 }
 
 int vectorFind(Vector *vec, char *val) {
-  for (int i = 0; i < vec->size; i++) {
+  for (unsigned int i = 0; i < vec->size; i++) {
     bool equal = true;
     for (unsigned int j = 0; j < vec->data_size; j++) {
       if (vec->data[i * vec->data_size + j] != val[j]) {
