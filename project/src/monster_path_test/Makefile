@@ -1,12 +1,15 @@
 PROG=proj
 
 .PATH: ..
+.PATH: ../data_structures/
 SRCS= \
 	main.c \
 	mp_test.c \
 	inputHandler.c \
 	monster.c \
-	vector.c
+	vector.c \
+	vec2d.c \
+	path.c \
 
 OBJS = ${SRCS:.c=.o}
 

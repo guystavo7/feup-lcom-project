@@ -4,15 +4,15 @@ struct monster
 {
   Vec2d* vel;
   Vec2d* pos;
-  SpriteXPM* sprite;
+  
 };
 
 
-Monster* monsterCreate(float x,float y,float vel_x,float vel_y, SpriteXPM* sprite){
+Monster* monsterCreate(float x,float y,float vel_x,float vel_y){
   Monster* m=malloc(sizeof(Monster));
   m->pos=vec2dCreate(x,y);
   m->vel=vec2dCreate(vel_x,vel_y);
-  m->sprite=sprite;
+  
   return m;
 }
 
@@ -38,6 +38,12 @@ float monsterGetVelY(Monster* m){
   return vec2dGetY(m->vel);
 }
 
+
+void monsterGetPos(Monster*m,Vec2d* pos){
+  vec2dSetX(pos,vec2dGetX(m->pos));
+  vec2dSetY(pos,vec2dGetY(m->pos));
+}
+
 void monsterSetX(Monster* m,float x){
   vec2dSetX(m->pos,x);
 }
@@ -52,17 +58,23 @@ void monsterSetVelY(Monster* m,float y){
   vec2dSetY(m->vel,y);
 }
 
-
 void monsterSetDir(Monster* m,float dx, float dy){
-  float dm2=dx*dx+dy*dy;
+  Vec2d* v=vec2dCreate(dx,dy);
+  monsterSetDirWithVec(m,v);
+  free(v);
+}
+
+void monsterSetDirWithVec(Monster* m,Vec2d* v){
+  float dm2=vec2dModule2(v);
   float cur_m=vec2dModule(m->vel);
   if( (dm2>(1-EPSILON)) && ((1-EPSILON)>dm2) ){
-    vec2dSetX(m->vel,dx*cur_m);
-    vec2dSetY(m->vel,dy*cur_m);
+    
+    vec2dSetWithVec2d(m->vel,v);
+    vec2dMultiply(m->vel,cur_m);
   }
   else{
-    vec2dFree(m->vel);
-    m->vel=vec2dCreate(dx,dy);
+    
+    vec2dSetWithVec2d(m->vel,v);
     vec2dNormalize(m->vel);
     vec2dMultiply(m->vel,cur_m);
   }

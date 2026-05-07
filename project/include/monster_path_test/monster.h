@@ -8,22 +8,21 @@
 
 //static SpriteXPM* sprite;
 
-typedef struct a
-{
-  /* data */
-}SpriteXPM;
+
 
 
 
 typedef struct monster Monster;
 
-Monster* monsterCreate(float x,float y,float vel_x,float vel_y, SpriteXPM* sprite);
+Monster* monsterCreate(float x,float y,float vel_x,float vel_y);
 
 
 Monster* monsterFree(Monster* m);
 
 float monsterGetX(Monster* m);
 float monsterGetY(Monster* m);
+
+void monsterGetPos(Monster*m,Vec2d* pos);
 
 float monsterGetVelX(Monster* m);
 float monsterGetVelY(Monster* m);
@@ -34,4 +33,8 @@ void monsterSetVelX(Monster* m,float vel_x);
 void monsterSetVelY(Monster* m,float vel_y);
 
 void monsterSetDir(Monster* m,float dx, float dy);
+void monsterSetDirWithVec(Monster* m,Vec2d* v);
+
+
+
 void monsterUpdatePos(Monster* m,double delta_t);

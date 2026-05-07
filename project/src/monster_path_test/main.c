@@ -3,7 +3,7 @@
 #include "../../../lab4/mouse.h"
 #include "../../../lab5/terminal.h"
 
-#include "../../include/game.h"
+#include "../../include/monster_path_test/mp_test.h"
 #include "../../include/utils.h"
 #include "../../include/inputHandler.h"
 
@@ -44,6 +44,7 @@ int(proj_main_loop)(int argc, char* argv[]) {
     timer_subscribe((uint8_t*)&hook_id_timer);
     kbcSubscribe((uint8_t*)&hook_id_kbd);
     Terminal* terminal = newTerminal(0x115);
+    float delta_time=1/60.0f;//time between frames 
 	startGame();
 
     //enableDataReport();
@@ -63,7 +64,7 @@ int(proj_main_loop)(int argc, char* argv[]) {
                 if (msg.m_notify.interrupts & (1 << TIMER_IRQ_LINE)) {
                     timer_int_handler();
 					refreshTerminal(terminal);
-					gameLoop(terminal);
+					gameLoop(terminal,delta_time);
                 }
 
                 //if (msg.m_notify.interrupts & (1 << MOUSE_IRQ_LINE)) {

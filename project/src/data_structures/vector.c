@@ -105,6 +105,8 @@ void vectorFree(Vector *v) {
 
 unsigned int vectorGetSize(Vector *v) { return v->size; }
 
+unsigned int vectorGetDataSize(Vector *v) { return v->data_size; }
+
 void vectorResize(Vector *vec, unsigned int size) {
 
   

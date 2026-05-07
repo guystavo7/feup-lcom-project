@@ -13,6 +13,12 @@ Vec2d* vec2dCreate(float x,float y){
   return v;
 }
 
+Vec2d* vec2dCreateWithVec2d(Vec2d* v2){
+  Vec2d* v=malloc(sizeof(Vec2d));
+  vec2dSetWithVec2d(v,v2);
+  return v;
+}
+
 
 void vec2dFree(Vec2d* v){
   free(v);
@@ -31,6 +37,17 @@ void vec2dSetX(Vec2d* v,float x){
 
 void vec2dSetY(Vec2d* v,float y){
   v->y=y;
+}
+
+
+void vec2dSetWithVec2d(Vec2d* v,Vec2d* v2){
+  v->x=v2->x;
+  v->y=v2->y;
+}
+
+float vec2dModule2(Vec2d* v){
+  float m=v->x*v->x+v->y*v->y;
+  return m;
 }
 
 float vec2dModule(Vec2d* v){
@@ -57,4 +74,10 @@ void vec2dMultiply(Vec2d* v,float delta){
 void vec2dAddVec(Vec2d*v,Vec2d* v2){
   v->x+=v2->x;
   v->y+=v2->y;
+}
+
+
+void vec2dSubVec(Vec2d*v,Vec2d* v2){
+  v->x-=v2->x;
+  v->y-=v2->y;
 }

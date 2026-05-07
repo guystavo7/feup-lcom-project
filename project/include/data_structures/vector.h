@@ -1,4 +1,4 @@
-
+#pragma once
 #define DEBUG 0
 
 typedef struct vector Vector;
@@ -10,6 +10,7 @@ Vector *vectorCreateWithFloatingData(unsigned int data_size, unsigned int size, 
 void  vectorFree(Vector* v);
 
 unsigned int vectorGetSize(Vector* v);
+unsigned int vectorGetDataSize(Vector* v);
 
 void vectorResize(Vector* vec,unsigned int size);
 
