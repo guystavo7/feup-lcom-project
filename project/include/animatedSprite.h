@@ -13,6 +13,6 @@ animatedSprite* newAnimatedSprite(float frameSpeed, SpriteXPM* xpm);
 
 void freeAnimatedSprite();
 
-void updateAnimatedSprite(animatedSprite* sprite, Terminal* t, float deltaTime);
+void updateAnimatedSprite(int x, int y, animatedSprite* sprite, Terminal* t, float deltaTime);
 
 #endif
