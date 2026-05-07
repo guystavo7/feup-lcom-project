@@ -16,7 +16,7 @@
 /* TESTING FRAMEWORK                                                          */
 /* ========================================================================== */
 
-#define EPSILON 0.0001f
+
 
 // Helper to safely compare floating point numbers
 bool float_equals(float a, float b) {
@@ -93,49 +93,50 @@ void test4_direction_normalization() {
     
     Vec2d* v = vec2dCreate(3.0f, 4.0f);
     
-    // Assume vec2dDir allocates and returns a NEW normalized vector
-    Vec2d* dir = vec2dDir(v);
+    // vec2dNormalize modifies the vector IN PLACE (no new allocation)
+    vec2dNormalize(v);
     
     // Normalized vector of (3,4) is (3/5, 4/5) -> (0.6, 0.8)
-    print_result_float("vec2dDir sets normalized X correctly", 0.6f, vec2dGetX(dir));
-    print_result_float("vec2dDir sets normalized Y correctly", 0.8f, vec2dGetY(dir));
+    print_result_float("vec2dNormalize sets X correctly", 0.6f, vec2dGetX(v));
+    print_result_float("vec2dNormalize sets Y correctly", 0.8f, vec2dGetY(v));
     
-    // The magnitude of a direction vector must ALWAYS be exactly 1.0
-    print_result_float("vec2dDir magnitude is exactly 1.0 (Unit Vector)", 1.0f, vec2dModule(dir));
+    // The magnitude of a normalized vector must ALWAYS be exactly 1.0
+    print_result_float("vec2dNormalize magnitude is exactly 1.0", 1.0f, vec2dModule(v));
 
-    vec2dFree(v);
-    vec2dFree(dir);
+    vec2dFree(v); // Only one vector to free now!
 }
 
 void test5_direction_edge_cases() {
     printf("\n--- Test 5: Direction Edge Cases (Divide by Zero) ---\n");
     
     Vec2d* v_zero = vec2dCreate(0.0f, 0.0f);
-    Vec2d* dir = vec2dDir(v_zero);
+    
+    // Attempt to normalize the zero vector in place
+    vec2dNormalize(v_zero);
     
     /* 
-     * If vec2dDir tries to divide by the module (which is 0), it will cause a NaN 
+     * If vec2dNormalize tries to divide by the module (which is 0), it will cause a NaN 
      * (Not a Number) or crash. A robust implementation should catch this and 
-     * return either (0,0) or a default vector like (1,0). 
-     * We will test assuming it safely falls back to returning (0,0).
+     * safely leave the vector as (0,0) or set to a default like (1,0). 
+     * We will test assuming it safely falls back to (0,0).
      */
     bool handled_safely = false;
-    if (dir != NULL) {
-        float dx = vec2dGetX(dir);
-        float dy = vec2dGetY(dir);
-        if (float_equals(dx, 0.0f) && float_equals(dy, 0.0f)) {
-            handled_safely = true;
-        }
+    
+    float dx = vec2dGetX(v_zero);
+    float dy = vec2dGetY(v_zero);
+    
+    // Check if the values are safely resting at 0.0f instead of NaN
+    if (float_equals(dx, 0.0f) && float_equals(dy, 0.0f)) {
+        handled_safely = true;
     }
     
     printf("%-50s | Expected: %-15s | Obtained: %-15s | [%s]\n", 
-           "vec2dDir safely handles (0,0) without crashing", 
+           "vec2dNormalize safely handles (0,0)", 
            "Handled", 
            handled_safely ? "Handled" : "Failed/NaN", 
            handled_safely ? "TEST PASSED" : "TEST NOT PASSED");
 
-    vec2dFree(v_zero);
-    if (dir) vec2dFree(dir);
+    vec2dFree(v_zero); // Only one vector to free now!
 }
 
 /* ========================================================================== */

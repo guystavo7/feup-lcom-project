@@ -38,11 +38,23 @@ float vec2dModule(Vec2d* v){
   return m;
 }
 
-Vec2d* vec2dDir(Vec2d* v){
+void vec2dNormalize(Vec2d* v){
   if(v->x==0.0f && v->y==0.0f){
-    return vec2dCreate(0,0);
+    return;
   }
   float m=vec2dModule(v);
-  Vec2d* d=vec2dCreate(v->x/m,v->y/m);
-  return d;
+  v->x/=m;
+  v->y/=m;
+}
+
+
+void vec2dMultiply(Vec2d* v,float delta){
+  v->x*=delta;
+  v->y*=delta;
+}
+
+
+void vec2dAddVec(Vec2d*v,Vec2d* v2){
+  v->x+=v2->x;
+  v->y+=v2->y;
 }
