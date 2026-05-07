@@ -45,7 +45,7 @@ void print_result_ptr(const char* description, void* expected, void* obtained) {
 void test1_create_and_getters() {
     printf("\n--- Test 1: Creation and Getters (NULL Sprite) ---\n");
     
-    Monster* m = monsterCreate(10.5f, 20.5f, -2.0f, 3.5f, NULL);
+    Monster* m = monsterCreate(10.5f, 20.5f, -2.0f, 3.5f);
     
     print_result_float("monsterCreate sets X correctly", 10.5f, monsterGetX(m));
     print_result_float("monsterCreate sets Y correctly", 20.5f, monsterGetY(m));
@@ -58,7 +58,7 @@ void test1_create_and_getters() {
 void test2_setters() {
     printf("\n--- Test 2: Position and Velocity Setters ---\n");
     
-    Monster* m = monsterCreate(0.0f, 0.0f, 0.0f, 0.0f, NULL);
+    Monster* m = monsterCreate(0.0f, 0.0f, 0.0f, 0.0f);
     
     monsterSetX(m, 100.0f);
     print_result_float("monsterSetX updates X safely", 100.0f, monsterGetX(m));
@@ -82,7 +82,7 @@ void test3_update_position() {
     printf("\n--- Test 3: Physics & Position Update ---\n");
     
     // Create monster at (10, 10) moving at (5, -2) units per second
-    Monster* m = monsterCreate(10.0f, 10.0f, 5.0f, -2.0f, NULL);
+    Monster* m = monsterCreate(10.0f, 10.0f, 5.0f, -2.0f);
     
     // Simulate passing 2.0 seconds (delta_t)
     // Expected X: 10.0 + (5.0 * 2.0) = 20.0
@@ -106,7 +106,7 @@ void test3_update_position() {
 void test4_set_direction() {
     printf("\n--- Test 4: Set Direction Logic ---\n");
     
-    Monster* m = monsterCreate(0.0f, 0.0f, 10.0f, 10.0f, NULL);
+    Monster* m = monsterCreate(0.0f, 0.0f, 10.0f, 10.0f);
     
     // Depending on your implementation, monsterSetDir might normalize the vector 
     // or just directly assign the values to VelX and VelY. We test the signs to be safe.
@@ -127,7 +127,7 @@ void test4_set_direction() {
 void test5_free() {
     printf("\n--- Test 5: Safe Memory Cleanup ---\n");
     
-    Monster* m = monsterCreate(0.0f, 0.0f, 0.0f, 0.0f, NULL);
+    Monster* m = monsterCreate(0.0f, 0.0f, 0.0f, 0.0f);
     
     // monsterFree should return NULL so we can do: m = monsterFree(m);
     m = monsterFree(m);

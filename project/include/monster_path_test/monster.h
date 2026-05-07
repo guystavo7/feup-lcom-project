@@ -14,6 +14,8 @@
 
 typedef struct monster Monster;
 
+unsigned int monsterSizeof();
+
 Monster* monsterCreate(float x,float y,float vel_x,float vel_y);
 
 

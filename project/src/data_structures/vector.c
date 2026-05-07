@@ -296,6 +296,10 @@ long long int vectorGetVal(Vector *vec, unsigned int pos) {
   return val;
 }
 
+char* vectorGetBack(Vector *vec){
+  return vectorGet(vec,vec->size-1);
+}
+
 int vectorFind(Vector *vec, char *val) {
   for (unsigned int i = 0; i < vec->size; i++) {
     bool equal = true;

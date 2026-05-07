@@ -25,6 +25,7 @@ void vectorRemove(Vector*vec, unsigned int pos);
 void vectorSet(Vector*vec, unsigned int pos, char* val);
 void vectorSetVal(Vector*vec, unsigned int pos, long long int val);
 char* vectorGet(Vector*vec, unsigned int pos);
+char* vectorGetBack(Vector *vec);
 long long int vectorGetVal(Vector*vec, unsigned int pos);
 char* vectorGetCopy(Vector*vec, unsigned int pos);
 int vectorFind(Vector*vec, char* val);

@@ -7,6 +7,9 @@ struct monster
   
 };
 
+unsigned int monsterSizeof(){
+  return sizeof(Monster);
+}
 
 Monster* monsterCreate(float x,float y,float vel_x,float vel_y){
   Monster* m=malloc(sizeof(Monster));
