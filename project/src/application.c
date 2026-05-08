@@ -6,6 +6,7 @@
 #include "../include/game.h"
 #include "../include/utils.h"
 #include "../include/inputHandler.h"
+#include "../include/cursorHandler.h"
 
 #include <lcom/lcf.h>
 
@@ -38,15 +39,17 @@ int main(int argc, char* argv[]) {
 int(proj_main_loop)(int argc, char* argv[]) {
     int hook_id_timer = TIMER_IRQ_LINE;
     int hook_id_kbd = KBC_IRQ_LINE;
-    //int hook_id_mouse = MOUSE_IRQ_LINE;
+    int hook_id_mouse = MOUSE_IRQ_LINE;
 
-    //mouseSubscribe(&hook_id_mouse);
+    mouseSubscribe(&hook_id_mouse);
     timer_subscribe((uint8_t*)&hook_id_timer);
     kbcSubscribe((uint8_t*)&hook_id_kbd);
     Terminal* terminal = newTerminal(0x115);
+    cursorInit(800, 600);
+    cursorReset();
 	startGame();
 
-    //enableDataReport();
+    enableDataReport();
 
     int r, ipc_status;
     message msg;
@@ -66,19 +69,27 @@ int(proj_main_loop)(int argc, char* argv[]) {
 					gameLoop(terminal);
                 }
 
-                //if (msg.m_notify.interrupts & (1 << MOUSE_IRQ_LINE)) {
-                    //printf("Used mouse\n");
-                //}
+                if (msg.m_notify.interrupts & (1 << MOUSE_IRQ_LINE)) {
+                    mouse_ih();
+                    if(isReady()){
+                        if(!(isOverflowingX() || isOverflowingY())){
+                            int16_t dx = getDeltaX();
+                            int16_t dy = getDeltaY();
+                            cursorUpdateCoordinates(dx, -dy);
+                        }
+                        cleanBytes();
+                    }
+                }
 
                 if (msg.m_notify.interrupts & (1 << KBC_IRQ_LINE)) {
                     kbcIh();
-					if (!kbcIsKeyReady()) continue;
-					if (!kbcIsTwoByteCode()) {
-						uint16_t keycode = (uint16_t)(kbcGetScancode() & ~(0x80));
-						readKey(getInputHandler(), keycode, kbcIsMake());
-					}
-
-					kbcResetKeys();
+					if (kbcIsKeyReady()){
+                        if (!kbcIsTwoByteCode()) {
+                            uint16_t keycode = (uint16_t)(kbcGetScancode() & ~(0x80));
+                            readKey(getInputHandler(), keycode, kbcIsMake());
+                        }
+                        kbcResetKeys();
+                    }
                 }
 
                 break;
@@ -87,10 +98,10 @@ int(proj_main_loop)(int argc, char* argv[]) {
         }
     }
 
-    //mouseUnsubscribe(&hook_id_mouse);
+    disableDataReport();
+    mouseUnsubscribe(&hook_id_mouse);
     timer_unsubscribe_int();
     kbcUnsubscribe();
-    //disableDataReport();
 
 	exitGame();
     freeTerminal(terminal);
