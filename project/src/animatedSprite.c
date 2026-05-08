@@ -22,7 +22,7 @@ animatedSprite* newAnimatedSprite(float frameSpeed, SpriteXPM** xpm, int n) {
 }
 
 void freeAnimatedSprite(animatedSprite* sprite) {
-  for (size_t i = 0; i < sprite->n; i++){
+  for (int i = 0; i < sprite->n; i++){
     freeSpriteXPM(sprite->sprites[i]);
   }
   free(sprite->sprites);
