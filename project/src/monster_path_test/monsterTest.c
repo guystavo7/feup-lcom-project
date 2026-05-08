@@ -3,15 +3,13 @@
 #include <stdbool.h>
 #include <math.h>
 
-// #include "Monster.h" // Uncomment this in your actual code
 #include "../../include/monster_path_test/monster.h"
+#include "../../include/monster_path_test/vec2d.h"
 
 /*
   gcc -g -Wall -fsanitize=address monsterTest.c monster.c vec2d.c -o monsterTest -lm
   ./monsterTest
 */
-
-
 
 /* ========================================================================== */
 /* TESTING FRAMEWORK                                                          */
@@ -27,14 +25,14 @@ bool float_equals(float a, float b) {
 // Helper for formatted float test output
 void print_result_float(const char* description, float expected, float obtained) {
     int passed = float_equals(expected, obtained);
-    printf("%-50s | Expected: %-10.4f | Obtained: %-10.4f | [%s]\n", 
+    printf("%-55s | Expected: %-10.4f | Obtained: %-10.4f | [%s]\n", 
            description, expected, obtained, passed ? "TEST PASSED" : "TEST NOT PASSED");
 }
 
 // Helper for pointer test output
 void print_result_ptr(const char* description, void* expected, void* obtained) {
     int passed = (expected == obtained);
-    printf("%-50s | Expected: %-10p | Obtained: %-10p | [%s]\n", 
+    printf("%-55s | Expected: %-10p | Obtained: %-10p | [%s]\n", 
            description, expected, obtained, passed ? "TEST PASSED" : "TEST NOT PASSED");
 }
 
@@ -43,7 +41,7 @@ void print_result_ptr(const char* description, void* expected, void* obtained) {
 /* ========================================================================== */
 
 void test1_create_and_getters() {
-    printf("\n--- Test 1: Creation and Getters (NULL Sprite) ---\n");
+    printf("\n--- Test 1: Creation and Getters ---\n");
     
     Monster* m = monsterCreate(10.5f, 20.5f, -2.0f, 3.5f);
     
@@ -108,8 +106,6 @@ void test4_set_direction() {
     
     Monster* m = monsterCreate(0.0f, 0.0f, 10.0f, 10.0f);
     
-    // Depending on your implementation, monsterSetDir might normalize the vector 
-    // or just directly assign the values to VelX and VelY. We test the signs to be safe.
     monsterSetDir(m, -1.0f, 0.0f);
     
     float newVelX = monsterGetVelX(m);
@@ -135,6 +131,52 @@ void test5_free() {
     print_result_ptr("monsterFree returns NULL pointer", NULL, m);
 }
 
+void test6_get_pos_vec2d() {
+    printf("\n--- Test 6: monsterGetPos (Vec2d integration) ---\n");
+    
+    Monster* m = monsterCreate(88.8f, -44.4f, 0.0f, 0.0f);
+    Vec2d* pos = vec2dCreate(0.0f, 0.0f);
+    
+    monsterGetPos(m, pos);
+    
+    print_result_float("monsterGetPos injects X into Vec2d correctly", 88.8f, vec2dGetX(pos));
+    print_result_float("monsterGetPos injects Y into Vec2d correctly", -44.4f, vec2dGetY(pos));
+    
+    vec2dFree(pos);
+    monsterFree(m);
+}
+
+void test7_set_dir_with_vec() {
+    printf("\n--- Test 7: monsterSetDirWithVec ---\n");
+    
+    Monster* m = monsterCreate(0.0f, 0.0f, 10.0f, 10.0f);
+    Vec2d* dirVec = vec2dCreate(0.0f, -1.0f); // Pointing UP
+    
+    monsterSetDirWithVec(m, dirVec);
+    
+    float newVelX = monsterGetVelX(m);
+    float newVelY = monsterGetVelY(m);
+    
+    int isNotMovingHorizontally = float_equals(newVelX, 0.0f) ? 1 : 0;
+    int isMovingUp = (newVelY < 0.0f) ? 1 : 0;
+    
+    print_result_float("monsterSetDirWithVec zeroes X dir safely", 1.0f, (float)isNotMovingHorizontally);
+    print_result_float("monsterSetDirWithVec applies negative Y dir safely", 1.0f, (float)isMovingUp);
+    
+    vec2dFree(dirVec);
+    monsterFree(m);
+}
+
+void test8_monster_sizeof() {
+    printf("\n--- Test 8: monsterSizeof ---\n");
+    
+    unsigned int size = monsterSizeof();
+    int isValidSize = (size > 0) ? 1 : 0; // The struct size must be > 0 bytes
+    
+    printf("%-55s | Expected: > 0      | Obtained: %-10u | [%s]\n", 
+           "monsterSizeof returns valid positive byte size", size, isValidSize ? "TEST PASSED" : "TEST NOT PASSED");
+}
+
 /* ========================================================================== */
 /* MAIN TEST SUIT                                                             */
 /* ========================================================================== */
@@ -149,6 +191,9 @@ void testSuitMonster() {
     test3_update_position();
     test4_set_direction();
     test5_free();
+    test6_get_pos_vec2d();
+    test7_set_dir_with_vec();
+    test8_monster_sizeof();
 
     printf("\n==================================================================================\n");
     printf("                                  END OF TEST SUITE                               \n");

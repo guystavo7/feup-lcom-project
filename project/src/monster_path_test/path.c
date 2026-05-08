@@ -21,9 +21,9 @@ Path* pathCreate(float point_change_distance,Vector* points){
   Path* p=malloc(sizeof(Path));
   p->pcd=point_change_distance;
 
-  p->sub_keys=vectorCreate(sizeof(void*));
-  p->sub_values=vectorCreate(4);
-  p->points=vectorCreate(4);
+  p->sub_keys=vectorCreate(sizeof(void*),NULL);
+  p->sub_values=vectorCreate(4,NULL);
+  p->points=vectorCreate(4,NULL);
   for(unsigned int i=0;i<vectorGetSize(points);i++) {
     vectorPushBack(p->points,vectorGet(points,i));
   }

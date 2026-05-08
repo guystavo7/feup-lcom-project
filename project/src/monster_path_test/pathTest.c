@@ -4,11 +4,14 @@
 #include <math.h>
 
 #include "../../include/monster_path_test/path.h"
+#include "../../include/data_structures/vector.h"
+#include "../../include/monster_path_test/vec2d.h"
 
 /* test command
   gcc -g -Wall -fsanitize=address pathTest.c path.c vec2d.c ../data_structures/vector.c -o pathTest -lm
   ./pathTest
 */
+
 /* ========================================================================== */
 /* TESTING FRAMEWORK                                                          */
 /* ========================================================================== */
@@ -38,8 +41,8 @@ void print_result_bool(const char* description, bool expected, bool obtained) {
 void test1_path_create_and_subscribe() {
     printf("\n--- Test 1: Creation and Initial Subscription ---\n");
     
-    // Create vector with 2 points: (10.0, 15.0) and (20.0, 25.0)
-    Vector* pts = vectorCreateWithFloatingData(sizeof(float), 4, 10.0f, 15.0f, 20.0f, 25.0f);
+    // UPDATED: Added NULL as the freeFunction callback for the new Vector interface
+    Vector* pts = vectorCreateWithFloatingData(sizeof(float), NULL, 4, 10.0f, 15.0f, 20.0f, 25.0f);
     Path* p = pathCreate(5.0f, pts);
     
     int dummy_entity = 1;
@@ -55,13 +58,14 @@ void test1_path_create_and_subscribe() {
 
     vec2dFree(curTarget);
     pathFree(p);
-    vectorFree(pts); // Assuming Path doesn't take ownership of the vector memory
+    vectorFree(pts); 
 }
 
 void test2_multiple_subscribers() {
     printf("\n--- Test 2: Multiple Independent Subscribers ---\n");
     
-    Vector* pts = vectorCreateWithFloatingData(sizeof(float), 6, 0.0f, 0.0f, 100.0f, 0.0f, 100.0f, 100.0f);
+    // UPDATED: Added NULL 
+    Vector* pts = vectorCreateWithFloatingData(sizeof(float), NULL, 6, 0.0f, 0.0f, 100.0f, 0.0f, 100.0f, 100.0f);
     Path* p = pathCreate(2.0f, pts);
     
     int entity1 = 1;
@@ -91,8 +95,8 @@ void test2_multiple_subscribers() {
 void test3_distance_checking() {
     printf("\n--- Test 3: Point Change Distance Logic ---\n");
     
-    // Target is (10, 10), Change distance is 3.0f
-    Vector* pts = vectorCreateWithFloatingData(sizeof(float), 2, 10.0f, 10.0f);
+    // UPDATED: Added NULL
+    Vector* pts = vectorCreateWithFloatingData(sizeof(float), NULL, 2, 10.0f, 10.0f);
     Path* p = pathCreate(3.0f, pts);
     
     int entity = 1;
@@ -117,8 +121,8 @@ void test3_distance_checking() {
 void test4_direction_calculation() {
     printf("\n--- Test 4: Direction to Current Point ---\n");
     
-    // Target is (10, 5)
-    Vector* pts = vectorCreateWithFloatingData(sizeof(float), 2, 10.0f, 5.0f);
+    // UPDATED: Added NULL
+    Vector* pts = vectorCreateWithFloatingData(sizeof(float), NULL, 2, 10.0f, 5.0f);
     Path* p = pathCreate(1.0f, pts);
     
     int entity = 1;
@@ -142,10 +146,8 @@ void test4_direction_calculation() {
 void test5_full_following_logic() {
     printf("\n--- Test 5: Full pathFollowingDir Logic ---\n");
     
-    // Point 1: (50, 0)
-    // Point 2: (50, 50)
-    // Distance threshold: 2.0f
-    Vector* pts = vectorCreateWithFloatingData(sizeof(float), 4, 50.0f, 0.0f, 50.0f, 50.0f);
+    // UPDATED: Added NULL
+    Vector* pts = vectorCreateWithFloatingData(sizeof(float), NULL, 4, 50.0f, 0.0f, 50.0f, 50.0f);
     Path* p = pathCreate(2.0f, pts);
     
     int entity = 1;
@@ -153,18 +155,12 @@ void test5_full_following_logic() {
     
     Vec2d* dir = vec2dCreate(0.0f, 0.0f);
     
-    // Scenario A: Far from Point 1. Pos = (10, 0)
-    // Should move Right (1, 0) towards Point 1 (50, 0)
     Vec2d* pos_far = vec2dCreate(10.0f, 0.0f);
     pathFollowingDir(p, &entity, pos_far, dir);
     print_result_float("Following Dir far from P1 (X=1.0)", 1.0f, vec2dGetX(dir));
     print_result_float("Following Dir far from P1 (Y=0.0)", 0.0f, vec2dGetY(dir));
     
     // Scenario B: Hit Point 1 threshold! Pos = (49, 0).
-    // Target is (50,0). Distance is 1.0 <= 2.0. 
-    // It should AUTOMATICALLY switch to Point 2 (50, 50).
-    // New direction from (49, 0) to (50, 50) should be slightly right, mostly up.
-    // For pure testing, let's test if the current point actually updated.
     Vec2d* pos_close = vec2dCreate(49.0f, 0.0f);
     pathFollowingDir(p, &entity, pos_close, dir);
     

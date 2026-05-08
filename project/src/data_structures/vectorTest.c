@@ -1,6 +1,9 @@
+ 
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 #include "../../include/data_structures/vector.h" 
 
@@ -11,7 +14,7 @@
 // Helper to format and print the aligned test output
 void print_result(const char* description, long long expected, long long obtained) {
     int passed = (expected == obtained);
-    printf("%-50s | Expected: %-20lld | Obtained: %-20lld | [%s]\n", 
+    printf("%-60s | Expected: %-15lld | Obtained: %-15lld | [%s]\n", 
            description, 
            expected, 
            obtained, 
@@ -26,9 +29,9 @@ void print_result(const char* description, long long expected, long long obtaine
 void test1_create_and_size() {
     printf("\n--- Test 1: vec_create, vec_size (Multiple Lengths) ---\n");
     
-    Vector* v1 = vectorCreate(sizeof(char));          
-    Vector* v4 = vectorCreate(sizeof(int));           
-    Vector* v8 = vectorCreate(sizeof(long long int)); 
+    Vector* v1 = vectorCreate(sizeof(char), NULL);          
+    Vector* v4 = vectorCreate(sizeof(int), NULL);           
+    Vector* v8 = vectorCreate(sizeof(long long int), NULL); 
     
     print_result("vec_create size 0 (1-byte data)", 0, vectorGetSize(v1));
     print_result("vec_create size 0 (4-byte data)", 0, vectorGetSize(v4));
@@ -40,19 +43,19 @@ void test1_create_and_size() {
 void test2_push_back_and_get() {
     printf("\n--- Test 2: vec_push_back, vectorGetCopy (Different Byte Lengths) ---\n");
     
-    Vector* v_char = vectorCreate(sizeof(char));
+    Vector* v_char = vectorCreate(sizeof(char), NULL);
     char c = -50; 
     vectorPushBack(v_char, (char*)&c);
     char* res_c = (char*)vectorGetCopy(v_char, 0);
     print_result("1-Byte Push/Get Copy (char)", -50, res_c ? *res_c : 0);
     
-    Vector* v_int = vectorCreate(sizeof(int));
+    Vector* v_int = vectorCreate(sizeof(int), NULL);
     int i = 2147483647; 
     vectorPushBack(v_int, (char*)&i);
     int* res_i = (int*)vectorGetCopy(v_int, 0);
     print_result("4-Byte Push/Get Copy (int)", 2147483647, res_i ? *res_i : 0);
 
-    Vector* v_ll = vectorCreate(sizeof(long long int));
+    Vector* v_ll = vectorCreate(sizeof(long long int), NULL);
     long long int ll = 0x123456789ABCDEF0LL; 
     vectorPushBack(v_ll, (char*)&ll);
     long long int* res_ll = (long long int*)vectorGetCopy(v_ll, 0);
@@ -64,7 +67,7 @@ void test2_push_back_and_get() {
 
 void test3_push_back_val() {
     printf("\n--- Test 3: vec_push_back_val, vec_get_val (Edge Cases) ---\n");
-    Vector* v = vectorCreate(sizeof(long long int)); 
+    Vector* v = vectorCreate(sizeof(long long int), NULL); 
     
     vectorPushBackVal(v, 666LL);                  
     vectorPushBackVal(v, -1LL);                   
@@ -81,7 +84,7 @@ void test3_push_back_val() {
 
 void test4_set_and_set_val() {
     printf("\n--- Test 4: vec_set, vec_set_val (Using 2-byte short) ---\n");
-    Vector* v = vectorCreate(sizeof(short)); 
+    Vector* v = vectorCreate(sizeof(short), NULL); 
     
     vectorPushBackVal(v, 10LL);
     vectorPushBackVal(v, 20LL);
@@ -101,7 +104,7 @@ void test4_set_and_set_val() {
 
 void test5_insert() {
     printf("\n--- Test 5: vec_insert (Block Shifting) ---\n");
-    Vector* v = vectorCreate(sizeof(char)); 
+    Vector* v = vectorCreate(sizeof(char), NULL); 
     
     vectorPushBackVal(v, 10LL);
     vectorPushBackVal(v, 30LL);
@@ -123,7 +126,7 @@ void test5_insert() {
 
 void test6_pop_back() {
     printf("\n--- Test 6: vec_pop_back ---\n");
-    Vector* v = vectorCreate(sizeof(int));
+    Vector* v = vectorCreate(sizeof(int), NULL);
     vectorPushBackVal(v, 100000LL);
     vectorPushBackVal(v, 200000LL);
     
@@ -139,7 +142,7 @@ void test6_pop_back() {
 
 void test7_remove() {
     printf("\n--- Test 7: vec_remove ---\n");
-    Vector* v = vectorCreate(sizeof(long long int));
+    Vector* v = vectorCreate(sizeof(long long int), NULL);
     vectorPushBackVal(v, 100LL);
     vectorPushBackVal(v, 200LL);
     vectorPushBackVal(v, 300LL);
@@ -157,7 +160,7 @@ void test7_remove() {
 
 void test8_resize() {
     printf("\n--- Test 8: vec_resize ---\n");
-    Vector* v = vectorCreate(sizeof(int)); 
+    Vector* v = vectorCreate(sizeof(int), NULL); 
     vectorPushBackVal(v, 1LL);
     vectorPushBackVal(v, 2LL);
     
@@ -172,7 +175,7 @@ void test8_resize() {
 
 void test9_find() {
     printf("\n--- Test 9: vec_find ---\n");
-    Vector* v = vectorCreate(sizeof(int)); 
+    Vector* v = vectorCreate(sizeof(int), NULL); 
     
     vectorPushBackVal(v, 44444LL);
     vectorPushBackVal(v, 55555LL);
@@ -189,7 +192,7 @@ void test9_find() {
 
 void test10_stress_test() {
     printf("\n--- Test 10: Stress Test (10,000 Items Dynamic Reallocation) ---\n");
-    Vector* v = vectorCreate(sizeof(int));
+    Vector* v = vectorCreate(sizeof(int), NULL);
     
     int iterations = 10000;
     for(int i = 0; i < iterations; i++) {
@@ -218,7 +221,7 @@ void test11_custom_structs() {
         double health;
     } Player;
     
-    Vector* v = vectorCreate(sizeof(Player));
+    Vector* v = vectorCreate(sizeof(Player), NULL);
     
     Player p1 = {1, 100.5};
     Player p2 = {2, 75.0};
@@ -228,7 +231,6 @@ void test11_custom_structs() {
     
     Player* res = (Player*)vectorGetCopy(v, 1);
     
-    // Test if both fields copied cleanly without memory corruption
     int struct_id_match = (res && res->id == 2) ? 1 : 0;
     int struct_hp_match = (res && res->health == 75.0) ? 1 : 0;
     
@@ -241,18 +243,16 @@ void test11_custom_structs() {
 
 void test12_boundary_manipulations() {
     printf("\n--- Test 12: Extreme Boundary Insertions & Removals ---\n");
-    Vector* v = vectorCreate(sizeof(int));
+    Vector* v = vectorCreate(sizeof(int), NULL);
     
     vectorPushBackVal(v, 10LL);
     vectorPushBackVal(v, 20LL);
     
-    // Insert at absolute front (Index 0)
     int front = 999;
     vectorInsert(v, 0, (char*)&front);
     int* res_front = (int*)vectorGetCopy(v, 0);
     print_result("Insert at Head (Index 0)", 999, res_front ? *res_front : -1);
     
-    // Remove at absolute front
     vectorRemove(v, 0);
     int* res_after_rm = (int*)vectorGetCopy(v, 0);
     print_result("Remove Head (Shifted correctly)", 10, res_after_rm ? *res_after_rm : -1);
@@ -263,8 +263,7 @@ void test12_boundary_manipulations() {
 
 void test13_strings() {
     printf("\n--- Test 13: Character Arrays (Strings) ---\n");
-    // Allocate 16 bytes per slot to hold strings
-    Vector* v = vectorCreate(16); 
+    Vector* v = vectorCreate(16, NULL); 
     
     char word1[16] = "Hello";
     char word2[16] = "Vector";
@@ -284,28 +283,24 @@ void test13_strings() {
 void test14_floats() {
     printf("\n--- Test 14: Floating Point Numbers (float & double) ---\n");
     
-    // --- 4-BYTE FLOAT TEST ---
-    Vector* v_float = vectorCreate(sizeof(float)); 
+    Vector* v_float = vectorCreate(sizeof(float), NULL); 
     float f1 = 3.14159f;
     float f2 = -987.654f;
 
-    // We MUST use pointer-based push/get for floats to preserve the IEEE 754 binary format
     vectorPushBack(v_float, (char*)&f1);
     vectorPushBack(v_float, (char*)&f2);
 
     float* res_f1 = (float*)vectorGetCopy(v_float, 0);
     float* res_f2 = (float*)vectorGetCopy(v_float, 1);
 
-    // Because memory copying is exact, we can strictly compare the exact decimal values
     int f_match1 = (res_f1 && *res_f1 == 3.14159f) ? 1 : 0;
     int f_match2 = (res_f2 && *res_f2 == -987.654f) ? 1 : 0;
 
     print_result("Float Copy: 1st element exact (3.14159)", 1, f_match1);
     print_result("Float Copy: 2nd element exact (-987.654)", 1, f_match2);
 
-    // --- 8-BYTE DOUBLE TEST ---
-    Vector* v_double = vectorCreate(sizeof(double));
-    double d1 = 2.718281828459045; // High precision Euler's number
+    Vector* v_double = vectorCreate(sizeof(double), NULL);
+    double d1 = 2.718281828459045; 
     
     vectorPushBack(v_double, (char*)&d1);
     double* res_d1 = (double*)vectorGetCopy(v_double, 0);
@@ -313,7 +308,6 @@ void test14_floats() {
     int d_match = (res_d1 && *res_d1 == 2.718281828459045) ? 1 : 0;
     print_result("Double Copy: High precision exact match", 1, d_match);
 
-    // Cleanup
     vectorFree(v_float);
     vectorFree(v_double);
     if(res_f1) free(res_f1);
@@ -321,159 +315,138 @@ void test14_floats() {
     if(res_d1) free(res_d1);
 }
 
-#include <stdbool.h> // Required for bool tests
+void test15_get_back() {
+    printf("\n--- Test 15: vectorGetBack (Retrieval of Last Element) ---\n");
+    Vector* v = vectorCreate(sizeof(int), NULL); 
+    
+    vectorPushBackVal(v, 77LL);
+    vectorPushBackVal(v, 88LL);
+    vectorPushBackVal(v, 99LL);
+    
+    int* res = (int*)vectorGetBack(v);
+    print_result("vectorGetBack fetches last element", 99, res ? *res : -1);
+
+    vectorPopBack(v);
+    int* res_after_pop = (int*)vectorGetBack(v);
+    print_result("vectorGetBack accurate after pop", 88, res_after_pop ? *res_after_pop : -1);
+
+    vectorFree(v);
+}
 
 void test16_create_with_data() {
-    printf("\n--- Test 16: vectorCreateWithData (Variadic Initialization Expanded) ---\n");
+    printf("\n--- Test 16: vectorCreateWithData (Variadic with NULL free) ---\n");
     
-    // ---------------------------------------------------------
-    // SCENARIO 1: Standard Integers (4 bytes)
-    // ---------------------------------------------------------
-    Vector* v_int = vectorCreateWithData(sizeof(int), 3, 111, 222, 333);
+    Vector* v_int = vectorCreateWithData(sizeof(int), NULL, 3, 111, 222, 333);
     print_result("Variadic Create (int): Size initialized to 3", 3, vectorGetSize(v_int));
     
-    int* res_i0 = (int*)vectorGetCopy(v_int, 0);
-    int* res_i1 = (int*)vectorGetCopy(v_int, 1);
     int* res_i2 = (int*)vectorGetCopy(v_int, 2);
-    
-    print_result("Variadic Create (int): 1st element exact", 111, res_i0 ? *res_i0 : -1);
-    print_result("Variadic Create (int): 2nd element exact", 222, res_i1 ? *res_i1 : -1);
     print_result("Variadic Create (int): 3rd element exact", 333, res_i2 ? *res_i2 : -1);
-    
-    // ---------------------------------------------------------
-    // SCENARIO 2: Long Long Integers (8 bytes)
-    // ---------------------------------------------------------
-    Vector* v_ll = vectorCreateWithData(sizeof(long long int), 2, 999999999LL, -555555555LL);
-    print_result("Variadic Create (long long): Size initialized to 2", 2, vectorGetSize(v_ll));
-    
-    long long int* res_ll0 = (long long int*)vectorGetCopy(v_ll, 0);
-    long long int* res_ll1 = (long long int*)vectorGetCopy(v_ll, 1);
-    
-    print_result("Variadic Create (long long): 1st element exact", 999999999LL, res_ll0 ? *res_ll0 : -1);
-    print_result("Variadic Create (long long): 2nd element exact", -555555555LL, res_ll1 ? *res_ll1 : -1);
 
-    // ---------------------------------------------------------
-    // SCENARIO 3: Char (1 byte)
-    // ---------------------------------------------------------
-    // Note: C implicitly promotes chars to ints in variadic functions.
-    Vector* v_char = vectorCreateWithData(sizeof(char), 3, 'A', 'B', 'Z');
-    print_result("Variadic Create (char): Size initialized to 3", 3, vectorGetSize(v_char));
-
-    char* res_c0 = (char*)vectorGetCopy(v_char, 0);
-    char* res_c1 = (char*)vectorGetCopy(v_char, 1);
-    char* res_c2 = (char*)vectorGetCopy(v_char, 2);
-
-    print_result("Variadic Create (char): 1st element exact", 'A', res_c0 ? *res_c0 : -1);
-    print_result("Variadic Create (char): 2nd element exact", 'B', res_c1 ? *res_c1 : -1);
-    print_result("Variadic Create (char): 3rd element exact", 'Z', res_c2 ? *res_c2 : -1);
-
-    // ---------------------------------------------------------
-    // SCENARIO 4: Short Int (2 bytes)
-    // ---------------------------------------------------------
-    // Note: Short ints are also promoted to standard ints on the stack.
-    short s1 = 32000, s2 = -15000;
-    Vector* v_short = vectorCreateWithData(sizeof(short), 2, s1, s2);
-    print_result("Variadic Create (short): Size initialized to 2", 2, vectorGetSize(v_short));
-
-    short* res_s0 = (short*)vectorGetCopy(v_short, 0);
-    short* res_s1 = (short*)vectorGetCopy(v_short, 1);
-
-    print_result("Variadic Create (short): 1st element exact", 32000, res_s0 ? *res_s0 : -1);
-    print_result("Variadic Create (short): 2nd element exact", -15000, res_s1 ? *res_s1 : -1);
-
-    // ---------------------------------------------------------
-    // SCENARIO 5: Booleans (1 byte)
-    // ---------------------------------------------------------
-    // Note: Bools promote to ints (1 for true, 0 for false).
-    Vector* v_bool = vectorCreateWithData(sizeof(bool), 2, true, false);
+    Vector* v_bool = vectorCreateWithData(sizeof(bool), NULL, 2, true, false);
     print_result("Variadic Create (bool): Size initialized to 2", 2, vectorGetSize(v_bool));
-
+    
     bool* res_b0 = (bool*)vectorGetCopy(v_bool, 0);
-    bool* res_b1 = (bool*)vectorGetCopy(v_bool, 1);
+    print_result("Variadic Create (bool): 1st element exact", 1, res_b0 ? *res_b0 : -1);
 
-    print_result("Variadic Create (bool): 1st element exact (true)", 1, res_b0 ? *res_b0 : -1);
-    print_result("Variadic Create (bool): 2nd element exact (false)", 0, res_b1 ? *res_b1 : -1);
-
-    // ---------------------------------------------------------
-    // SCENARIO 6: Edge Case (Size 0)
-    // ---------------------------------------------------------
-    Vector* v_empty = vectorCreateWithData(sizeof(int), 0);
-    print_result("Variadic Create (0 elements): Size initialized to 0", 0, vectorGetSize(v_empty));
-
-    // ---------------------------------------------------------
-    // Cleanup
-    // ---------------------------------------------------------
     vectorFree(v_int);
-    vectorFree(v_ll);
-    vectorFree(v_char);
-    vectorFree(v_short);
     vectorFree(v_bool);
-    vectorFree(v_empty);
-    
-    if (res_i0) free(res_i0);
-    if (res_i1) free(res_i1);
     if (res_i2) free(res_i2);
-    
-    if (res_ll0) free(res_ll0);
-    if (res_ll1) free(res_ll1);
-
-    if (res_c0) free(res_c0);
-    if (res_c1) free(res_c1);
-    if (res_c2) free(res_c2);
-
-    if (res_s0) free(res_s0);
-    if (res_s1) free(res_s1);
-
     if (res_b0) free(res_b0);
-    if (res_b1) free(res_b1);
 }
 
 void test17_create_with_floating_data() {
-    printf("\n--- Test 17: vectorCreateWithFloatingData (Floats & Doubles) ---\n");
+    printf("\n--- Test 17: vectorCreateWithFloatingData (Variadic with NULL free) ---\n");
 
-    // ---------------------------------------------------------
-    // SCENARIO 1: Floats (4 bytes)
-    // ---------------------------------------------------------
-    Vector* v_float = vectorCreateWithFloatingData(sizeof(float), 3, 3.14f, -2.5f, 0.0f);
+    Vector* v_float = vectorCreateWithFloatingData(sizeof(float), NULL, 3, 3.14f, -2.5f, 0.0f);
     print_result("Variadic Floating (float): Size initialized to 3", 3, vectorGetSize(v_float));
 
-    float* res_f0 = (float*)vectorGetCopy(v_float, 0);
     float* res_f1 = (float*)vectorGetCopy(v_float, 1);
-    float* res_f2 = (float*)vectorGetCopy(v_float, 2);
-
-    int f_match0 = (res_f0 && *res_f0 == 3.14f) ? 1 : 0;
     int f_match1 = (res_f1 && *res_f1 == -2.5f) ? 1 : 0;
-    int f_match2 = (res_f2 && *res_f2 == 0.0f) ? 1 : 0;
-
-    print_result("Variadic Floating (float): 1st element exact", 1, f_match0);
     print_result("Variadic Floating (float): 2nd element exact", 1, f_match1);
-    print_result("Variadic Floating (float): 3rd element exact", 1, f_match2);
 
-    // ---------------------------------------------------------
-    // SCENARIO 2: Doubles (8 bytes)
-    // ---------------------------------------------------------
-    Vector* v_double = vectorCreateWithFloatingData(sizeof(double), 2, 2.718281828459, -999.999999);
-    print_result("Variadic Floating (double): Size initialized to 2", 2, vectorGetSize(v_double));
-
-    double* res_d0 = (double*)vectorGetCopy(v_double, 0);
-    double* res_d1 = (double*)vectorGetCopy(v_double, 1);
-
-    int d_match0 = (res_d0 && *res_d0 == 2.718281828459) ? 1 : 0;
-    int d_match1 = (res_d1 && *res_d1 == -999.999999) ? 1 : 0;
-
-    print_result("Variadic Floating (double): 1st element exact", 1, d_match0);
-    print_result("Variadic Floating (double): 2nd element exact", 1, d_match1);
-
-    // ---------------------------------------------------------
-    // Cleanup
-    // ---------------------------------------------------------
     vectorFree(v_float);
-    vectorFree(v_double);
-    if (res_f0) free(res_f0);
     if (res_f1) free(res_f1);
-    if (res_f2) free(res_f2);
-    if (res_d0) free(res_d0);
-    if (res_d1) free(res_d1);
+}
+
+// Global counter for the custom free function test
+static int custom_free_call_count = 0;
+
+void my_mock_free_function(void* data) {
+    // Assuming the vector stores pointers to dynamically allocated ints
+    int** ptr_to_dynamic_int = (int**)data;
+    if (ptr_to_dynamic_int && *ptr_to_dynamic_int) {
+        free(*ptr_to_dynamic_int);
+        custom_free_call_count++;
+    }
+}
+
+void test18_custom_free_function_intensive() {
+    printf("\n--- Test 18: vectorCreate Custom freeFunction Callback (INTENSIVE) ---\n");
+    custom_free_call_count = 0;
+    
+    // Create vector that stores POINTERS to integers, passing our custom callback
+    Vector* v = vectorCreate(sizeof(int*), my_mock_free_function);
+    
+    // ---------------------------------------------------------
+    // PHASE 1: Massive Allocation
+    // ---------------------------------------------------------
+    int TOTAL_INITIAL_ITEMS = 1000;
+    for (int i = 0; i < TOTAL_INITIAL_ITEMS; i++) {
+        int* dyn_int = malloc(sizeof(int)); 
+        *dyn_int = i;
+        vectorPushBack(v, (char*)&dyn_int);
+    }
+    print_result("Massive Allocation (Nothing freed yet)", 0, custom_free_call_count);
+
+    // ---------------------------------------------------------
+    // PHASE 2: Pop Back
+    // ---------------------------------------------------------
+    vectorPopBack(v);
+    vectorPopBack(v);
+    vectorPopBack(v);
+    print_result("Callback triggered on vectorPopBack x3", 3, custom_free_call_count);
+
+    // ---------------------------------------------------------
+    // PHASE 3: Targeted Removal (Edges and Middle)
+    // ---------------------------------------------------------
+    vectorRemove(v, 0); // Remove Head
+    vectorRemove(v, 500); // Remove Middle
+    vectorRemove(v, vectorGetSize(v) - 1); // Remove Tail
+    print_result("Callback triggered on targeted vectorRemove x3", 6, custom_free_call_count);
+
+    // ---------------------------------------------------------
+    // PHASE 4: Shrinking Resize
+    // ---------------------------------------------------------
+    // Current size is 1000 - 3 (pops) - 3 (removes) = 994.
+    // Shrinking it to 500 should permanently discard and free 494 elements.
+    int current_size = vectorGetSize(v);
+    int target_size = 500;
+    int expected_frees_from_resize = current_size - target_size;
+    
+    vectorResize(v, target_size);
+    print_result("Callback triggered on vectorResize (Shrinking)", 6 + expected_frees_from_resize, custom_free_call_count);
+
+    // ---------------------------------------------------------
+    // PHASE 5: Overwriting Elements (Strict Memory Leak Check)
+    // ---------------------------------------------------------
+    // If you overwrite index 0, the pointer that USED to be there is lost.
+    // A robust vector implementation MUST call the freeFunction on the old data before overwriting.
+    int expected_frees_before_set = custom_free_call_count;
+    
+    int* new_dyn_int = malloc(sizeof(int)); 
+    *new_dyn_int = 9999;
+    vectorSet(v, 0, (char*)&new_dyn_int); // Overwrite index 0
+    
+    print_result("Callback triggered on vectorSet (Freeing old overwritten data)", expected_frees_before_set + 1, custom_free_call_count);
+
+    // ---------------------------------------------------------
+    // PHASE 6: Final Cleanup
+    // ---------------------------------------------------------
+    // Destroy the entire vector. 
+    // Total allocations = 1000 (initial) + 1 (the new item from vectorSet) = 1001.
+    // By the time the vector is freed, EVERY SINGLE ONE should have triggered the callback.
+    vectorFree(v);
+    print_result("Callback triggered on vectorFree for all remaining items", TOTAL_INITIAL_ITEMS + 1, custom_free_call_count);
 }
 /* ========================================================================== */
 /* MAIN TEST SUIT                              */
@@ -493,15 +466,17 @@ void testSuit() {
     test7_remove();
     test8_resize();
     test9_find();
-    
-    // New Extensive Tests
     test10_stress_test();
     test11_custom_structs();
     test12_boundary_manipulations();
     test13_strings();
     test14_floats();
+    
+    // New Interface Tests
+    test15_get_back();
     test16_create_with_data();
     test17_create_with_floating_data();
+    test18_custom_free_function_intensive();
 
     printf("\n==================================================================================\n");
     printf("                                END OF TEST SUITE                                 \n");

@@ -14,17 +14,20 @@ static Path* path;
 
 static Vector* listOfMonsters;
 
-static int initial_value=1;
+static float initial_value=0.25;
 static float counter;
 
-
+void freeListOfMonsters(void* li){
+    Monster* m=*(Monster**)li;
+    monsterFree(m);
+}
 
  void startGame() {
-    counter=initial_value;
+    counter=-1;//initial_value;
 
     sprite = newSpriteXPM((xpm_map_t)abc, XPM_8_8_8);
     //pathPoints=vectorCreateWithFloatingData(4,4*2,10.0f,10.0f,450.0f,10.0f,10.0f,450.0f,450.0f,450.0f);
-    pathPoints = vectorCreateWithFloatingData(sizeof(float), 11 * 2, 
+    pathPoints = vectorCreateWithFloatingData(sizeof(float), NULL,11 * 2, 
     400.0f, 50.0f,    // 1.  Ponta Topo
     456.1f, 222.7f,   // 2.  Vale Superior Direito
     637.8f, 222.7f,   // 3.  Ponta Direita
@@ -37,15 +40,13 @@ static float counter;
     343.9f, 222.7f,   // 10. Vale Superior Esquerdo
     400.0f, 50.0f     // 11. Ponta Topo (Fecha o caminho)
 );
-    path=pathCreate(3.0f,pathPoints);
+    path=pathCreate(5.0f,pathPoints);
 
-    listOfMonsters=vectorCreate(monsterSizeof());
+    listOfMonsters=vectorCreate(sizeof(Monster*),freeListOfMonsters);
 
     
 
-    vectorPushBack(listOfMonsters,(char*)monsterCreate(0,0,100,0));
-
-    pathSubscribe(path,(void *)vectorGetSize(listOfMonsters));
+    
 
 
 
@@ -56,6 +57,7 @@ void exitGame() {
     freeSpriteXPM(sprite);
     
     vectorFree(listOfMonsters);
+    vectorFree(pathPoints);
     pathFree(path);
 }
 
@@ -63,11 +65,14 @@ void gameLoop(Terminal* terminal,float delta_time) {
     
     counter-=delta_time;
 
-    if(counter<0 && vectorGetSize(listOfMonsters)<=1000){
+    if(counter<0 && vectorGetSize(listOfMonsters)<=50){
         counter=initial_value;
         printf("new_monster!\n");
-        vectorPushBack(listOfMonsters,(char*) monsterCreate(0,0,100,0));
+        Monster *m=monsterCreate(400,50,300,0);
+        ;
+        vectorPushBack(listOfMonsters,(char*)&m);
         pathSubscribe(path,(void *)vectorGetSize(listOfMonsters));
+        
     }
     
 
@@ -75,7 +80,7 @@ void gameLoop(Terminal* terminal,float delta_time) {
     Vec2d* pos=vec2dCreate(0,0);
     for(unsigned int i=0;i<vectorGetSize(listOfMonsters);i++){
         
-        Monster* m=(Monster*)vectorGet(listOfMonsters,i);
+        Monster* m=*(Monster**)vectorGet(listOfMonsters,i);
         monsterGetPos(m,pos);
         pathFollowingDir(path,(void *)(i+1),pos,n_dir);
         monsterSetDirWithVec(m,n_dir);

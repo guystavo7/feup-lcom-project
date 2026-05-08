@@ -3,10 +3,10 @@
 
 typedef struct vector Vector;
 
-Vector*  vectorCreate(unsigned int data_size);
+Vector*  vectorCreate(unsigned int data_size,void (*freeFunction)(void*));
 
-Vector *vectorCreateWithData(unsigned int data_size, unsigned int size, ...);
-Vector *vectorCreateWithFloatingData(unsigned int data_size, unsigned int size, ...);
+Vector *vectorCreateWithData(unsigned int data_size,void (*freeFunction)(void*), unsigned int size, ...);
+Vector *vectorCreateWithFloatingData(unsigned int data_size,void (*freeFunction)(void*), unsigned int size, ...);
 void  vectorFree(Vector* v);
 
 unsigned int vectorGetSize(Vector* v);
