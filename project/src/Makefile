@@ -4,6 +4,7 @@ SRCS= \
 	application.c \
 	game.c \
 	./inputHandler.c \
+	./timer.c \
 
 OBJS = ${SRCS:.c=.o}
 

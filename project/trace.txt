@@ -3,12 +3,12 @@
 > proj_main_loop(0, [NULL])
   @timer.c:34, timer_subscribe
     sys_irqsetpolicy(TIMER0_IRQ, IRQ_REENABLE, &hookId)
-  > sys_irqsetpolicy(0, 1, addr: 0x82375f4 [0])
-  < sys_irqsetpolicy(0, 1, addr: 0x82375f4 [10]) -> (ret: 0)
+  > sys_irqsetpolicy(0, 1, addr: 0x823a124 [0])
+  < sys_irqsetpolicy(0, 1, addr: 0x823a124 [10]) -> (ret: 0)
   @kbc.c:15, kbcSubscribe
     sys_irqsetpolicy(KBC1_IRQ, IRQ_REENABLE | IRQ_EXCLUSIVE, &hook_id)
-  > sys_irqsetpolicy(1, 3, addr: 0x822d278 [1])
-  < sys_irqsetpolicy(1, 3, addr: 0x822d278 [11]) -> (ret: 0)
+  > sys_irqsetpolicy(1, 3, addr: 0x822fda8 [1])
+  < sys_irqsetpolicy(1, 3, addr: 0x822fda8 [11]) -> (ret: 0)
   @terminal.c:18, newTerminal
     vbe_get_mode_info(mode, &vmi)
   > vbe_get_mode_info(0x115, addr: 0xeffff610)
@@ -26,398 +26,115 @@
   < sys_int86(addr: 0xeffff590 [AX: 004f, BX: 4115, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
   @./spriteXMP.c:12, newSpriteXPM
     xpm_load(map, type, img)
-  > xpm_load(addr: 0x822d1cc, XPM_8_8_8, addr: 0x824c270)
-  < xpm_load(addr: 0x822d1cc, XPM_8_8_8, addr: 0x824c270 [32x32 : 3072 bytes]) -> (ret: 0x8251000)
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
-  @application.c:55, proj_main_loop
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
-  @application.c:64, proj_main_loop
-    timer_int_handler()
+  > xpm_load(addr: 0x822fcf8, XPM_8_8_8, addr: 0x824e270)
+  < xpm_load(addr: 0x822fcf8, XPM_8_8_8, addr: 0x824e270 [32x32 : 3072 bytes]) -> (ret: 0x8253000)
+  @game.c:169, testTimer
+    printf("==================================================================================\n")
+    "=================================================================================="
+  @game.c:170, testTimer
+    printf("                             TIMER INTERFACE TEST SUITE                           \n")
+    "                             TIMER INTERFACE TEST SUITE                           "
+  @game.c:171, testTimer
+    printf("==================================================================================\n")
+    "=================================================================================="
+  @game.c:42, test1_create_and_initial_state
+    printf("\n--- Test 1: Creation and Initial State ---\n")
+    "
+--- Test 1: Creation and Initial State ---"
+  @game.c:24, print_result
+    printf("%-50s | Expected: %-15lld | Obtained: %-15lld | [%s]\n", description, expected, obtained, passed ? "TEST PASSED" : "TEST NOT PASSED")
+    "newTimer stores initial time correctly             | Expected: 5000            | Obtained: 5000            | [TEST PASSED]"
+  @game.c:34, print_result_bool
+    printf("%-50s | Expected: %-15s | Obtained: %-15s | [%s]\n", description, expected ? "True" : "False", obtained ? "True" : "False", passed ? "TEST PASSED" : "TEST NOT PASSED")
+    "Timer is NOT running immediately after creation    | Expected: False           | Obtained: False           | [TEST PASSED]"
+  @game.c:53, test2_set_initial_time
+    printf("\n--- Test 2: Set Initial Time ---\n")
+    "
+--- Test 2: Set Initial Time ---"
+  @game.c:24, print_result
+    printf("%-50s | Expected: %-15lld | Obtained: %-15lld | [%s]\n", description, expected, obtained, passed ? "TEST PASSED" : "TEST NOT PASSED")
+    "timerSetInitialTime overwrites old value           | Expected: 9999            | Obtained: 9999            | [TEST PASSED]"
+  @game.c:24, print_result
+    printf("%-50s | Expected: %-15lld | Obtained: %-15lld | [%s]\n", description, expected, obtained, passed ? "TEST PASSED" : "TEST NOT PASSED")
+    "timerSetInitialTime accepts 0                      | Expected: 0               | Obtained: 0               | [TEST PASSED]"
+  @game.c:24, print_result
+    printf("%-50s | Expected: %-15lld | Obtained: %-15lld | [%s]\n", description, expected, obtained, passed ? "TEST PASSED" : "TEST NOT PASSED")
+    "timerSetInitialTime accepts negative bounds        | Expected: -500            | Obtained: -500            | [TEST PASSED]"
+  @game.c:70, test3_start_and_stop
+    printf("\n--- Test 3: Start and Stop State Machine ---\n")
+    "
+--- Test 3: Start and Stop State Machine ---"
+  @game.c:34, print_result_bool
+    printf("%-50s | Expected: %-15s | Obtained: %-15s | [%s]\n", description, expected ? "True" : "False", obtained ? "True" : "False", passed ? "TEST PASSED" : "TEST NOT PASSED")
+    "timerStart sets isRunning to True                  | Expected: True            | Obtained: True            | [TEST PASSED]"
+  @game.c:34, print_result_bool
+    printf("%-50s | Expected: %-15s | Obtained: %-15s | [%s]\n", description, expected ? "True" : "False", obtained ? "True" : "False", passed ? "TEST PASSED" : "TEST NOT PASSED")
+    "Calling timerStart twice safely keeps it True      | Expected: True            | Obtained: True            | [TEST PASSED]"
+  @game.c:34, print_result_bool
+    printf("%-50s | Expected: %-15s | Obtained: %-15s | [%s]\n", description, expected ? "True" : "False", obtained ? "True" : "False", passed ? "TEST PASSED" : "TEST NOT PASSED")
+    "timerStop sets isRunning to False                  | Expected: False           | Obtained: False           | [TEST PASSED]"
+  @game.c:34, print_result_bool
+    printf("%-50s | Expected: %-15s | Obtained: %-15s | [%s]\n", description, expected ? "True" : "False", obtained ? "True" : "False", passed ? "TEST PASSED" : "TEST NOT PASSED")
+    "Calling timerStop twice safely keeps it False      | Expected: False           | Obtained: False           | [TEST PASSED]"
+  @game.c:91, test4_restart
+    printf("\n--- Test 4: Restart Logic ---\n")
+    "
+--- Test 4: Restart Logic ---"
+  @game.c:34, print_result_bool
+    printf("%-50s | Expected: %-15s | Obtained: %-15s | [%s]\n", description, expected ? "True" : "False", obtained ? "True" : "False", passed ? "TEST PASSED" : "TEST NOT PASSED")
+    "timerRestart starts a previously stopped timer     | Expected: True            | Obtained: True            | [TEST PASSED]"
+  @game.c:34, print_result_bool
+    printf("%-50s | Expected: %-15s | Obtained: %-15s | [%s]\n", description, expected ? "True" : "False", obtained ? "True" : "False", passed ? "TEST PASSED" : "TEST NOT PASSED")
+    "timerRestart keeps an active timer running         | Expected: True            | Obtained: True            | [TEST PASSED]"
+  @game.c:106, test5_update_logic
+    printf("\n--- Test 5: Update Logic & Expiration ---\n")
+    "
+--- Test 5: Update Logic & Expiration ---"
+  @game.c:34, print_result_bool
+    printf("%-50s | Expected: %-15s | Obtained: %-15s | [%s]\n", description, expected ? "True" : "False", obtained ? "True" : "False", passed ? "TEST PASSED" : "TEST NOT PASSED")
+    "Timer still running after partial update (400/1000) | Expected: True            | Obtained: True            | [TEST PASSED]"
+  @game.c:34, print_result_bool
+    printf("%-50s | Expected: %-15s | Obtained: %-15s | [%s]\n", description, expected ? "True" : "False", obtained ? "True" : "False", passed ? "TEST PASSED" : "TEST NOT PASSED")
+    "Timer still running right before expiration (999/1000) | Expected: True            | Obtained: True            | [TEST PASSED]"
+  @game.c:34, print_result_bool
+    printf("%-50s | Expected: %-15s | Obtained: %-15s | [%s]\n", description, expected ? "True" : "False", obtained ? "True" : "False", passed ? "TEST PASSED" : "TEST NOT PASSED")
+    "Timer automatically stops upon exact expiration (1000/1000) | Expected: False           | Obtained: False           | [TEST PASSED]"
+  @game.c:34, print_result_bool
+    printf("%-50s | Expected: %-15s | Obtained: %-15s | [%s]\n", description, expected ? "True" : "False", obtained ? "True" : "False", passed ? "TEST PASSED" : "TEST NOT PASSED")
+    "Timer automatically stops upon massive overshoot   | Expected: False           | Obtained: False           | [TEST PASSED]"
+  @game.c:131, test6_update_while_stopped
+    printf("\n--- Test 6: Update Guard Clauses ---\n")
+    "
+--- Test 6: Update Guard Clauses ---"
+  @game.c:34, print_result_bool
+    printf("%-50s | Expected: %-15s | Obtained: %-15s | [%s]\n", description, expected ? "True" : "False", obtained ? "True" : "False", passed ? "TEST PASSED" : "TEST NOT PASSED")
+    "timerUpdate is ignored if timer is stopped         | Expected: True            | Obtained: True            | [TEST PASSED]"
+  @game.c:146, test7_multiple_instances
+    printf("\n--- Test 7: Independent Instances (No Global State) ---\n")
+    "
+--- Test 7: Independent Instances (No Global State) ---"
+  @game.c:34, print_result_bool
+    printf("%-50s | Expected: %-15s | Obtained: %-15s | [%s]\n", description, expected ? "True" : "False", obtained ? "True" : "False", passed ? "TEST PASSED" : "TEST NOT PASSED")
+    "T1 is running independently                        | Expected: True            | Obtained: True            | [TEST PASSED]"
+  @game.c:34, print_result_bool
+    printf("%-50s | Expected: %-15s | Obtained: %-15s | [%s]\n", description, expected ? "True" : "False", obtained ? "True" : "False", passed ? "TEST PASSED" : "TEST NOT PASSED")
+    "T2 remains stopped independently                   | Expected: False           | Obtained: False           | [TEST PASSED]"
+  @game.c:34, print_result_bool
+    printf("%-50s | Expected: %-15s | Obtained: %-15s | [%s]\n", description, expected ? "True" : "False", obtained ? "True" : "False", passed ? "TEST PASSED" : "TEST NOT PASSED")
+    "T1 expired independently                           | Expected: False           | Obtained: False           | [TEST PASSED]"
+  @game.c:34, print_result_bool
+    printf("%-50s | Expected: %-15s | Obtained: %-15s | [%s]\n", description, expected ? "True" : "False", obtained ? "True" : "False", passed ? "TEST PASSED" : "TEST NOT PASSED")
+    "T2 is still unaffected                             | Expected: False           | Obtained: False           | [TEST PASSED]"
+  @game.c:181, testTimer
+    printf("\n==================================================================================\n")
+    "
+=================================================================================="
+  @game.c:182, testTimer
+    printf("                                  END OF TEST SUITE                               \n")
+    "                                  END OF TEST SUITE                               "
+  @game.c:183, testTimer
+    printf("==================================================================================\n")
+    "=================================================================================="
   @application.c:55, proj_main_loop
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff760, addr: 0xeffff7a0)
@@ -782,12 +499,12 @@
     timer_unsubscribe_int()
     @timer.c:39, timer_unsubscribe_int
       sys_irqrmpolicy(&hookId)
-    > sys_irqrmpolicy(addr: 0x82375f4 [10])
-    < sys_irqrmpolicy(addr: 0x82375f4 [10]) -> (ret: 0)
+    > sys_irqrmpolicy(addr: 0x823a124 [10])
+    < sys_irqrmpolicy(addr: 0x823a124 [10]) -> (ret: 0)
   @kbc.c:19, kbcUnsubscribe
     sys_irqrmpolicy(&hook_id)
-  > sys_irqrmpolicy(addr: 0x822d278 [11])
-  < sys_irqrmpolicy(addr: 0x822d278 [11]) -> (ret: 0)
+  > sys_irqrmpolicy(addr: 0x822fda8 [11])
+  < sys_irqrmpolicy(addr: 0x822fda8 [11]) -> (ret: 0)
   @terminal.c:76, freeTerminal
     vg_exit()
   < vg_exit() -> (ret: 0)

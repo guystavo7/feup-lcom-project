@@ -1,0 +1,41 @@
+==================================================================================
+                             TIMER INTERFACE TEST SUITE                           
+==================================================================================
+
+--- Test 1: Creation and Initial State ---
+newTimer stores initial time correctly             | Expected: 5000            | Obtained: 5000            | [TEST PASSED]
+Timer is NOT running immediately after creation    | Expected: False           | Obtained: False           | [TEST PASSED]
+
+--- Test 2: Set Initial Time ---
+timerSetInitialTime overwrites old value           | Expected: 9999            | Obtained: 9999            | [TEST PASSED]
+timerSetInitialTime accepts 0                      | Expected: 0               | Obtained: 0               | [TEST PASSED]
+timerSetInitialTime accepts negative bounds        | Expected: -500            | Obtained: -500            | [TEST PASSED]
+
+--- Test 3: Start and Stop State Machine ---
+timerStart sets isRunning to True                  | Expected: True            | Obtained: True            | [TEST PASSED]
+Calling timerStart twice safely keeps it True      | Expected: True            | Obtained: True            | [TEST PASSED]
+timerStop sets isRunning to False                  | Expected: False           | Obtained: False           | [TEST PASSED]
+Calling timerStop twice safely keeps it False      | Expected: False           | Obtained: False           | [TEST PASSED]
+
+--- Test 4: Restart Logic ---
+timerRestart starts a previously stopped timer     | Expected: True            | Obtained: True            | [TEST PASSED]
+timerRestart keeps an active timer running         | Expected: True            | Obtained: True            | [TEST PASSED]
+
+--- Test 5: Update Logic & Expiration ---
+Timer still running after partial update (400/1000) | Expected: True            | Obtained: True            | [TEST PASSED]
+Timer still running right before expiration (999/1000) | Expected: True            | Obtained: True            | [TEST PASSED]
+Timer automatically stops upon exact expiration (1000/1000) | Expected: False           | Obtained: False           | [TEST PASSED]
+Timer automatically stops upon massive overshoot   | Expected: False           | Obtained: False           | [TEST PASSED]
+
+--- Test 6: Update Guard Clauses ---
+timerUpdate is ignored if timer is stopped         | Expected: True            | Obtained: True            | [TEST PASSED]
+
+--- Test 7: Independent Instances (No Global State) ---
+T1 is running independently                        | Expected: True            | Obtained: True            | [TEST PASSED]
+T2 remains stopped independently                   | Expected: False           | Obtained: False           | [TEST PASSED]
+T1 expired independently                           | Expected: False           | Obtained: False           | [TEST PASSED]
+T2 is still unaffected                             | Expected: False           | Obtained: False           | [TEST PASSED]
+
+==================================================================================
+                                  END OF TEST SUITE                               
+==================================================================================
