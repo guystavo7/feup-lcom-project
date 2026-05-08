@@ -1,2 +1,10 @@
+# Build artifacts
+project/build/
+
+# Binaries
+project/src/proj
+
+project/src/.gdbinit
+
 compile_flags.txt
 lab4/compile_flags.txt
