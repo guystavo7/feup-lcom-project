@@ -2,6 +2,7 @@
 #include "../../lab5/spriteXMP.h"
 #include "../include/inputHandler.h"
 #include "../resources/1.h"
+#include "../include/cursorHandler.h"
 
 #include <stdio.h>
 
@@ -29,4 +30,8 @@ void gameLoop(Terminal* terminal) {
     if (y > 600) y = 600;
 
     drawSpriteXPM(sprite, terminal, x, y);
+
+    int pu, pv;
+    cursorSpaceToPixel(&pu, &pv);
+    drawSpriteXPM(sprite, terminal, pu, pv);
 }
