@@ -43,7 +43,7 @@ int(proj_main_loop)(int argc, char* argv[]) {
     //mouseSubscribe(&hook_id_mouse);
     timer_subscribe((uint8_t*)&hook_id_timer);
     kbcSubscribe((uint8_t*)&hook_id_kbd);
-    Terminal* terminal = newTerminal(0x105);
+    Terminal* terminal = newTerminal(0x115);
 	startGame();
 
     //enableDataReport();
