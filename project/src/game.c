@@ -1,32 +1,40 @@
 #include "../include/game.h"
+#include "../include/rigidBody.h"
+#include "../include/arena.h"
+
 #include "../../lab5/spriteXMP.h"
 #include "../include/inputHandler.h"
 #include "../resources/1.h"
 
 #include <stdio.h>
 
+static Arena* arena;
 static SpriteXPM* sprite;
-static int x = 50;
-static int y = 50;
+static RigidBody* rb;
 
 void startGame() {
     sprite = newSpriteXPM((xpm_map_t)abc, XPM_8_8_8);
+	rb = newRigidBody(100, 100, 32, 32, 0);
+	arena = newArena();
 }
 
 void exitGame() {
     freeSpriteXPM(sprite);
+	freeRigidBody(rb);
+	freeArena(arena);
 }
 
 void gameLoop(Terminal* terminal) {
-    if (getKeyPressed(getInputHandler(), KEYCODE_W)) y--;
-    if (getKeyPressed(getInputHandler(), KEYCODE_S)) y++;
-    if (getKeyPressed(getInputHandler(), KEYCODE_A)) x--;
-    if (getKeyPressed(getInputHandler(), KEYCODE_D)) x++;
+	int dirX = 0, dirY = 0;
 
-    if (x < 0) x = 0;
-    if (x > 800) x = 800;
-    if (y < 0) y = 0;
-    if (y > 600) y = 600;
+    if (getKeyPressed(getInputHandler(), KEYCODE_W)) dirY = -1;
+    if (getKeyPressed(getInputHandler(), KEYCODE_S)) dirY = 1;
+    if (getKeyPressed(getInputHandler(), KEYCODE_A)) dirX = -1;
+    if (getKeyPressed(getInputHandler(), KEYCODE_D)) dirX = 1;
 
-    drawSpriteXPM(sprite, terminal, x, y);
+	printf("X: %d, Y: %d\n", rigidBodyGetX(rb), rigidBodyGetY(rb));
+
+	rigidBodySetVelocity(rb, 5 * dirX, 5 * dirY);
+	updateRigidBody(rb, arena, 1);
+    drawSpriteXPM(sprite, terminal, rigidBodyGetX(rb), rigidBodyGetY(rb));
 }
