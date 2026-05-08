@@ -1,9 +1,8 @@
 #include "../include/game.h"
+
 #include "../../lab5/spriteXMP.h"
 #include "../include/inputHandler.h"
 #include "../resources/1.h"
-
-#include <stdio.h>
 
 static SpriteXPM* sprite;
 static int x = 50;
