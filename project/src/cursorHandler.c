@@ -1,47 +1,55 @@
 #include "../include/cursorHandler.h"
 #include <stdint.h>
 
-static int u = 0, v = 0;
-int width, height;
-int center[2];
+struct cursor{
+  int x, y;
+  int width, height;
+  int center[2];
+};
+
+static struct cursor c;
 
 void cursorInit(int w, int h){
-  center[0] = w/2;
-  center[1] = h/2;
-  width = w;
-  height = h;
+  c.center[0] = w/2;
+  c.center[1] = h/2;
+  c.x = 0;
+  c.y = 0;
+  c.width = w;
+  c.height = h;
 }
 
 void cursorReset(){
-  u = 0;
-  v = 0;
+  c.x = 0;
+  c.y = 0;
 }
 
-void cursorUpdateCoordinates(int16_t du, int16_t dv){
-  int nextX = u + du;
-  int nextY = v + dv;
+void cursorUpdateCoordinates(int16_t dx, int16_t dy){
+  int nextX = c.x + dx;
+  int nextY = c.y + dy;
 
-  int pu = center[0] + nextX;
-  if (pu < 0) u = -center[0];
-  else if (pu > width - 1) u = (width - 1) - center[0];
-  else u = nextX;
+  int px = c.center[0] + nextX;
+  if (px < 0) c.x = -c.center[0];
+  else if (px > c.width - 1) c.x = (c.width - 1) - c.center[0];
+  else c.x = nextX;
 
-  int pv = center[1] + nextY;
-  if (pv < 0) v = -center[1];
-  else if (pv > height - 1) v = (height - 1) - center[1];
-  else v = nextY;
+  int pv = c.center[1] + nextY;
+  if (pv < 0) c.y = -c.center[1];
+  else if (pv > c.height - 1) c.y = (c.height - 1) - c.center[1];
+  else c.y = nextY;
 }
 
-void cursorSpaceToPixel(int* pu, int* pv){
-  *pu = center[0] + u;
-  *pv = center[1] + v;
+void cursorSpaceToPixel(int* px, int* py){
+
+  *px = c.center[0] + c.x;
+  *py = c.center[1] + c.y;
+
 }
 
-int cursorGetU(){
-  return u;
+int cursorGetX(){
+  return c.x;
 }
 
-int cursorGetV(){
-  return v;
+int cursorGetY(){
+  return c.y;
 }
 

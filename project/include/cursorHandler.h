@@ -4,10 +4,10 @@
 #include <stdint.h>
 void cursorInit(int w, int h);
 void cursorReset();
-void cursorUpdateCoordinates(int16_t du, int16_t dv);
-void cursorSpaceToPixel(int* pu, int*pv);
+void cursorUpdateCoordinates(int16_t dx, int16_t dy);
+void cursorSpaceToPixel(int* px, int*py);
 
-int cursorGetU();
-int cursorGetV();
+int cursorGetX();
+int cursorGetY();
 
 #endif

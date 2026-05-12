@@ -54,8 +54,8 @@ void gameLoop(Terminal* terminal) {
     if (y < 0) y = 0;
     if (y > 600) y = 600;
 
-    int pu, pv;
-    cursorSpaceToPixel(&pu, &pv);
-    drawSpriteXPM(sprite, terminal, pu, pv);
+    int px, py;
+    cursorSpaceToPixel(&px, &py);
+    drawSpriteXPM(sprite, terminal, px, py);
     animatedSpriteUpdate(x, y, playerSprite, terminal, deltaTime);
 }
