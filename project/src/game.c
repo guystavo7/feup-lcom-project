@@ -3,6 +3,8 @@
 #include "../../lab5/spriteXMP.h"
 #include "../../lab2/timer.h"
 #include "../include/inputHandler.h"
+#include "../resources/1.h"
+#include "../include/cursorHandler.h"
 #include "../resources/coinEdge.h"
 #include "../resources/coinMid.h"
 #include "../resources/coinMidDark.h"
@@ -14,6 +16,7 @@ static animatedSprite* playerSprite;
 static int x = 50;
 static int y = 50;
 static int prevCounter = 0;
+static SpriteXPM* sprite;
 
 void startGame() {
     //create animation frames from coin sprites
@@ -21,6 +24,8 @@ void startGame() {
     frames[0] = newSpriteXPM((xpm_map_t)coin_f3_xpm, XPM_8_8_8);
     frames[1] = newSpriteXPM((xpm_map_t)coin_f2_xpm, XPM_8_8_8);
     frames[2] = newSpriteXPM((xpm_map_t)coin_f4_xpm, XPM_8_8_8);
+
+    sprite= newSpriteXPM((xpm_map_t)abc, XPM_8_8_8);
     
     //create animation at 6 FPS for faster flip
     playerSprite = animatedSpriteNew(3.0f, frames, 3);
@@ -49,5 +54,8 @@ void gameLoop(Terminal* terminal) {
     if (y < 0) y = 0;
     if (y > 600) y = 600;
 
+    int pu, pv;
+    cursorSpaceToPixel(&pu, &pv);
+    drawSpriteXPM(sprite, terminal, pu, pv);
     animatedSpriteUpdate(x, y, playerSprite, terminal, deltaTime);
 }
