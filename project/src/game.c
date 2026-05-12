@@ -23,13 +23,13 @@ void startGame() {
     frames[2] = newSpriteXPM((xpm_map_t)coin_f4_xpm, XPM_8_8_8);
     
     //create animation at 6 FPS for faster flip
-    playerSprite = newAnimatedSprite(6.0f, frames, 3);
+    playerSprite = animatedSpriteNew(1.0f, frames, 3);
     
     prevCounter = timer_get_counter();
 }
 
 void exitGame() {
-    freeAnimatedSprite(playerSprite);
+    animatedSpriteFree(playerSprite);
 }
 
 void gameLoop(Terminal* terminal) {
@@ -49,5 +49,5 @@ void gameLoop(Terminal* terminal) {
     if (y < 0) y = 0;
     if (y > 768) y = 768;
 
-    updateAnimatedSprite(x, y, playerSprite, terminal, deltaTime);
+    animatedSpriteUpdate(x, y, playerSprite, terminal, deltaTime);
 }

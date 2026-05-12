@@ -11,7 +11,7 @@ struct animatedSprite {
   float elapsedTime;
 };
 
-animatedSprite* newAnimatedSprite(float frameSpeed, SpriteXPM** xpm, int n) {
+animatedSprite* animatedSpriteNew(float frameSpeed, SpriteXPM** xpm, int n) {
   animatedSprite* s = malloc(sizeof(animatedSprite));
   s->frameSpeed = frameSpeed;
   s->sprites = xpm;
@@ -21,7 +21,7 @@ animatedSprite* newAnimatedSprite(float frameSpeed, SpriteXPM** xpm, int n) {
   return s;
 }
 
-void freeAnimatedSprite(animatedSprite* sprite) {
+void animatedSpriteFree(animatedSprite* sprite) {
   for (int i = 0; i < sprite->n; i++){
     freeSpriteXPM(sprite->sprites[i]);
   }
@@ -29,8 +29,8 @@ void freeAnimatedSprite(animatedSprite* sprite) {
   free(sprite);
 }
 
-void updateAnimatedSprite(int x, int y, animatedSprite* sprite, Terminal* t, float deltaTime) {
-  sprite->elapsedTime += deltaTime;
+void animatedSpriteUpdate(int x, int y, animatedSprite* sprite, Terminal* t, float deltaTime) {
+  sprite->elapsedTime += deltaTime * sprite->frameSpeed;
   
   float frameDuration = 1.0f / sprite->frameSpeed;
   

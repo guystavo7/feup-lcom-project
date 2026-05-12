@@ -15,10 +15,10 @@ typedef struct {
     float elapsedTime;
 } animatedSprite;
 
-animatedSprite* newAnimatedSprite(float frameSpeed, SpriteXPM** xpm_array, int n);
+animatedSprite* animatedSpriteNew(float frameSpeed, SpriteXPM** xpm_array, int n);
 
-void freeAnimatedSprite(animatedSprite* sprite);
+void animatedSpriteFree(animatedSprite* sprite);
 
-void updateAnimatedSprite(int x, int y, animatedSprite* sprite, Terminal* t, float deltaTime);
+void animatedSpriteUpdate(int x, int y, animatedSprite* sprite, Terminal* t, float deltaTime);
 
 #endif
