@@ -28,7 +28,7 @@ void startGame() {
     sprite= newSpriteXPM((xpm_map_t)abc, XPM_8_8_8);
     
     //create animation at 6 FPS for faster flip
-    playerSprite = animatedSpriteNew(3.0f, frames, 3);
+    playerSprite = animatedSpriteNew(1.0f, frames, 3);
     
     prevCounter = timer_get_counter();
 }
@@ -37,13 +37,8 @@ void exitGame() {
     animatedSpriteFree(playerSprite);
 }
 
-void gameLoop(Terminal* terminal) {
-    int currentCounter = timer_get_counter();
-    int tickDiff = currentCounter - prevCounter;
-    prevCounter = currentCounter;
-    
-    float deltaTime = tickDiff / 60.0f;
-    
+void gameLoop(Terminal* terminal, float deltaTime) {
+    printf("%d", deltaTime);
     if (getKeyPressed(getInputHandler(), KEYCODE_W)) y--;
     if (getKeyPressed(getInputHandler(), KEYCODE_S)) y++;
     if (getKeyPressed(getInputHandler(), KEYCODE_A)) x--;

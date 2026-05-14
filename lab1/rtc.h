@@ -17,3 +17,4 @@ typedef struct {
  * configuration and perform data conversions if necessary (e.g. BCD to binary).
  */
 int rtc_read_date(rtc_date *date);
+int rtcGetSeconds();
