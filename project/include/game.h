@@ -5,6 +5,6 @@
 
 void startGame();
 void exitGame();
-void gameLoop(Terminal* terminal);
+void gameLoop(Terminal* terminal, int deltaTime);
 
 #endif

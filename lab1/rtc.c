@@ -57,3 +57,17 @@ int rtc_read_date(rtc_date* date) {
 
     return 0;
 }
+
+int rtcGetSeconds(){
+    uint8_t sec, min, hour, day, isBDC;
+    if (readRTC(RTC_SECONDS, &sec) || readRTC(RTC_MINUTES, &min) || readRTC(RTC_HOURS, &hour) || readRTC(RTC_REG_DAY, &day ) || readRTC(RTC_REG_B, &isBDC)) return -1;
+    if (!(isBDC & RTC_DM_MSK)) {
+        sec = bdc_to_bin(sec);
+        min = bdc_to_bin(min);
+        hour = bdc_to_bin(hour);
+        day = bdc_to_bin(day);
+        isBDC = bdc_to_bin(isBDC);
+    }
+
+    return sec + min * 60 + hour * 3600 + day * 24 * 3600;
+}

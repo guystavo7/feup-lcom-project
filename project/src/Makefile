@@ -6,6 +6,7 @@ SRCS= \
 	./inputHandler.c \
 	cursorHandler.c \
 	animatedSprite.c \
+	rtc.c \
 
 
 OBJS = ${SRCS:.c=.o}

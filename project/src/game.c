@@ -37,12 +37,7 @@ void exitGame() {
     animatedSpriteFree(playerSprite);
 }
 
-void gameLoop(Terminal* terminal) {
-    int currentCounter = timer_get_counter();
-    int tickDiff = currentCounter - prevCounter;
-    prevCounter = currentCounter;
-    
-    float deltaTime = tickDiff / 60.0f;
+void gameLoop(Terminal* terminal, int deltaTime) {
     
     if (getKeyPressed(getInputHandler(), KEYCODE_W)) y--;
     if (getKeyPressed(getInputHandler(), KEYCODE_S)) y++;
