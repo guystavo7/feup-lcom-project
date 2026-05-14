@@ -42,7 +42,6 @@ int(proj_main_loop)(int argc, char* argv[]) {
     int hook_id_kbd = KBC_IRQ_LINE;
     int hook_id_mouse = MOUSE_IRQ_LINE;
 
-    int lastFrameTime = rtcGetSeconds();
     mouseSubscribe(&hook_id_mouse);
     timer_subscribe((uint8_t*)&hook_id_timer);
     kbcSubscribe((uint8_t*)&hook_id_kbd);
