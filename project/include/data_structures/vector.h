@@ -1,15 +1,16 @@
-
+#pragma once
 #define DEBUG 0
 
 typedef struct vector Vector;
 
-Vector*  vectorCreate(unsigned int data_size);
+Vector*  vectorCreate(unsigned int data_size,void (*freeFunction)(void*));
 
-Vector *vectorCreateWithData(unsigned int data_size, unsigned int size, ...);
-Vector *vectorCreateWithFloatingData(unsigned int data_size, unsigned int size, ...);
+Vector *vectorCreateWithData(unsigned int data_size,void (*freeFunction)(void*), unsigned int size, ...);
+Vector *vectorCreateWithFloatingData(unsigned int data_size,void (*freeFunction)(void*), unsigned int size, ...);
 void  vectorFree(Vector* v);
 
 unsigned int vectorGetSize(Vector* v);
+unsigned int vectorGetDataSize(Vector* v);
 
 void vectorResize(Vector* vec,unsigned int size);
 
@@ -24,6 +25,7 @@ void vectorRemove(Vector*vec, unsigned int pos);
 void vectorSet(Vector*vec, unsigned int pos, char* val);
 void vectorSetVal(Vector*vec, unsigned int pos, long long int val);
 char* vectorGet(Vector*vec, unsigned int pos);
+char* vectorGetBack(Vector *vec);
 long long int vectorGetVal(Vector*vec, unsigned int pos);
 char* vectorGetCopy(Vector*vec, unsigned int pos);
 int vectorFind(Vector*vec, char* val);
