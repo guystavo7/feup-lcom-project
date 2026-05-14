@@ -43,7 +43,6 @@ int(proj_main_loop)(int argc, char* argv[]) {
     int hook_id_mouse = MOUSE_IRQ_LINE;
 
     int lastFrameTime = rtcGetSeconds();
-
     mouseSubscribe(&hook_id_mouse);
     timer_subscribe((uint8_t*)&hook_id_timer);
     kbcSubscribe((uint8_t*)&hook_id_kbd);
@@ -51,9 +50,10 @@ int(proj_main_loop)(int argc, char* argv[]) {
     cursorInit(800, 600);
     cursorReset();
 	startGame();
-
+    
     enableDataReport();
-
+    int lastFrameTime = timer_get_counter();
+    
     int r, ipc_status;
     message msg;
 
@@ -69,9 +69,9 @@ int(proj_main_loop)(int argc, char* argv[]) {
                 if (msg.m_notify.interrupts & (1 << TIMER_IRQ_LINE)) {
                     timer_int_handler();
 					refreshTerminal(terminal);
-                    int currTime = rtcGetSeconds();
-					gameLoop(terminal, 1);
-                    lastFrameTime = currTime;
+                    int currFrameTime = timer_get_counter();
+					gameLoop(terminal, (float)(currFrameTime - lastFrameTime)/60);
+                    lastFrameTime = currFrameTime;
                 }
 
                 if (msg.m_notify.interrupts & (1 << MOUSE_IRQ_LINE)) {
