@@ -9,6 +9,9 @@
 #define RTC_DATA_REG 0x71
 #define RTC_REG_A 0x0A
 #define RTC_REG_B 0x0B
+#define RTC_RG_SECONDS 0x00
+#define RTC_RG_MIN 0x02
+#define RTC_RG_HOUR 0x04
 #define RTC_REG_DAY 0x07
 #define RTC_REG_MONTH 0x08
 #define RTC_REG_YEAR 0x09
@@ -56,4 +59,22 @@ int rtc_read_date(rtc_date* date) {
     date->year = year;
 
     return 0;
+}
+
+int rtcGetSeconds(){
+    uint8_t sec, min, hour, day, isBDC;
+<<<<<<< HEAD
+    if (readRTC(RTC_SECONDS, &sec) || readRTC(RTC_MINUTES, &min) || readRTC(RTC_HOURS, &hour) || readRTC(RTC_REG_DAY, &day ) || readRTC(RTC_REG_B, &isBDC)) return -1;
+=======
+    if (readRTC(RTC_RG_SECONDS, &sec) || readRTC(RTC_RG_MIN, &min) || readRTC(RTC_RG_HOUR, &hour) || readRTC(RTC_REG_DAY, &day ) || readRTC(RTC_REG_B, &isBDC)) return -1;
+>>>>>>> 8aff819f058a6408879ece182428dc0e92b2fafb
+    if (!(isBDC & RTC_DM_MSK)) {
+        sec = bdc_to_bin(sec);
+        min = bdc_to_bin(min);
+        hour = bdc_to_bin(hour);
+        day = bdc_to_bin(day);
+        isBDC = bdc_to_bin(isBDC);
+    }
+
+    return sec + min * 60 + hour * 3600 + day * 24 * 3600;
 }
