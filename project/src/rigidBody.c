@@ -11,19 +11,18 @@ struct RigidBody {
     BoxCollider* collider;
 };
 
-RigidBody* newRigidBody(int x, int y, int width, int height, int tag) {
+RigidBody* rigidBodyNew(int x, int y, int width, int height, int tag) {
     RigidBody* res = malloc(sizeof(RigidBody));
-
     res->x = x;
     res->y = y;
     res->velocityX = 0;
     res->velocityY = 0;
-    res->collider = newBoxCollider(x, y, width, height, tag);
+    res->collider = boxColliderNew(x, y, width, height, tag);
 
     return res;
 }
 
-void freeRigidBody(RigidBody* rb) {
+void rigidBodyFree(RigidBody* rb) {
     free(rb->collider);
     free(rb);
 }
@@ -75,7 +74,7 @@ static void moveY(RigidBody* rb, Arena* arena, float deltaTime) {
 	boxColliderSetY(rb->collider, rb->y);
 }
 
-void updateRigidBody(RigidBody* rb, Arena* arena, float deltaTime) {
+void rigidBodyUpdate(RigidBody* rb, Arena* arena, float deltaTime) {
     moveX(rb, arena, deltaTime);
     moveY(rb, arena, deltaTime);
 }

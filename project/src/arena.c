@@ -8,27 +8,25 @@ struct Arena {
 	BoxCollider** walls;
 };
 
-Arena* newArena() {
+Arena* arenaNew() {
 	Arena* res = malloc(sizeof(Arena));
-	res->walls = malloc(sizeof(BoxCollider*) * 5);
+	res->walls = malloc(sizeof(BoxCollider*) * 4);
 	
-	BoxCollider* topWall = newBoxCollider(0, -10, 800, 10, 0);
-	BoxCollider* botWall = newBoxCollider(0, 790, 800, 10, 0);
-	BoxCollider* leftWall = newBoxCollider(-10, 0, 10, 590, 0);
-	BoxCollider* rightWall = newBoxCollider(790, 0, 10, 590, 0);
-	BoxCollider* wall = newBoxCollider(20, 40, 20, 40, 0);
+	BoxCollider* topWall = boxColliderNew(0, -10, 800, 10, 0);
+	BoxCollider* botWall = boxColliderNew(0, 600, 800, 10, 0);
+	BoxCollider* leftWall = boxColliderNew(-10, 0, 10, 600, 0);
+	BoxCollider* rightWall = boxColliderNew(800, 0, 10, 600, 0);
 
 	res->walls[0] = topWall;
 	res->walls[1] = botWall;
 	res->walls[2] = leftWall;
 	res->walls[3] = rightWall;
-	res->walls[4] = wall;
-	res->collidersN = 5;
+	res->collidersN = 4;
 
 	return res;
 }
 
-void freeArena(Arena *arena){
+void arenaFree(Arena *arena){
 	for (int i = 0; i < arena->collidersN; i++) free(arena->walls[i]);
 	free(arena->walls);
 	free(arena);

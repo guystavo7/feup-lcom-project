@@ -8,10 +8,10 @@
 
 typedef struct RigidBody RigidBody;
 
-RigidBody* newRigidBody(int x, int y, int width, int height, int tag);
-void freeRigidBody(RigidBody* rb);
+RigidBody* rigidBodyNew(int x, int y, int width, int height, int tag);
+void rigidBodyFree(RigidBody* rb);
 
-void updateRigidBody(RigidBody* rb, Arena* arena, float deltaTime);
+void rigidBodyUpdate(RigidBody* rb, Arena* arena, float deltaTime);
 void rigidBodySetVelocity(RigidBody* rb, int xSpeed, int ySpeed);
 
 BoxCollider* rigidBodyGetBoxCollider(RigidBody* rb);

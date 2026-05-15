@@ -9,7 +9,7 @@ struct BoxCollider {
     int tag;
 };
 
-BoxCollider* newBoxCollider(int x, int y, int width, int height, int tag) {
+BoxCollider* boxColliderNew(int x, int y, int width, int height, int tag) {
     BoxCollider* res = malloc(sizeof(BoxCollider));
     res->x = x;
     res->y = y;
@@ -20,7 +20,7 @@ BoxCollider* newBoxCollider(int x, int y, int width, int height, int tag) {
     return res;
 }
 
-void freeBoxCollider(BoxCollider* boxCollider) {
+void boxColliderFree(BoxCollider* boxCollider) {
     free(boxCollider);
 }
 
@@ -32,7 +32,7 @@ bool boxIsCollidingWithPoint(BoxCollider* b, int x, int y) {
     return b->x >= x && b->x + b->width <= x && b->y >= y && b->y + b->height <= y;
 }
 
-void updateBoxCollider(BoxCollider* b, int x, int y) {
+void boxColliderUpdate(BoxCollider* b, int x, int y) {
     b->x = x;
     b->y = y;
 }

@@ -6,22 +6,20 @@
 #include "../include/inputHandler.h"
 #include "../resources/1.h"
 
-#include <stdio.h>
-
 static Arena* arena;
 static SpriteXPM* sprite;
 static RigidBody* rb;
 
 void startGame() {
     sprite = newSpriteXPM((xpm_map_t)abc, XPM_8_8_8);
-	rb = newRigidBody(100, 100, 32, 32, 0);
-	arena = newArena();
+	rb = rigidBodyNew(100, 100, 32, 32, 0);
+	arena = arenaNew();
 }
 
 void exitGame() {
     freeSpriteXPM(sprite);
-	freeRigidBody(rb);
-	freeArena(arena);
+	rigidBodyFree(rb);
+	arenaFree(arena);
 }
 
 void gameLoop(Terminal* terminal) {
@@ -32,9 +30,7 @@ void gameLoop(Terminal* terminal) {
     if (getKeyPressed(getInputHandler(), KEYCODE_A)) dirX = -1;
     if (getKeyPressed(getInputHandler(), KEYCODE_D)) dirX = 1;
 
-	printf("X: %d, Y: %d\n", rigidBodyGetX(rb), rigidBodyGetY(rb));
-
 	rigidBodySetVelocity(rb, 5 * dirX, 5 * dirY);
-	updateRigidBody(rb, arena, 1);
+	rigidBodyUpdate(rb, arena, 1);
     drawSpriteXPM(sprite, terminal, rigidBodyGetX(rb), rigidBodyGetY(rb));
 }

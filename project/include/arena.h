@@ -6,8 +6,8 @@
 
 typedef struct Arena Arena;
 
-Arena* newArena();
-void freeArena(Arena* arena);
+Arena* arenaNew();
+void arenaFree(Arena* arena);
 
 int arenaDetectCollisions(Arena* arena, BoxCollider* box, int tag, BoxCollider** colliders);
 
