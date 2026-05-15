@@ -6,176 +6,162 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <stdbool.h>
 #include <stdarg.h>
+#include <stdbool.h>
 
-void printTest(const char *format, ...) {
+void printTest(const char* format, ...) {
 #if DEBUG
-  va_list args;
-  va_start(args, format);
-  vprintf(format, args);
-  va_end(args);
+    va_list args;
+    va_start(args, format);
+    vprintf(format, args);
+    va_end(args);
 
 #endif
 }
 
 struct vector {
-
-  char *data;
-  void (*freeFunction)(void*);
-  unsigned int data_size;
-  unsigned int size;
-  unsigned int capacity;
+    char* data;
+    void (*freeFunction)(void*);
+    unsigned int data_size;
+    unsigned int size;
+    unsigned int capacity;
 };
 
-
-Vector *vectorCreate(unsigned int data_size,void (*freeFunction)(void*)) {
-
-  Vector *vec = (Vector *)malloc(sizeof(Vector));
-  vec->size = 0;
-  vec->capacity = 1;
-  vec->data_size = data_size;
-  vec->data = (char *)malloc(data_size * vec->capacity);
-  vec->freeFunction=freeFunction;
-  return vec;
+Vector* vectorCreate(unsigned int data_size, void (*freeFunction)(void*)) {
+    Vector* vec = (Vector*)malloc(sizeof(Vector));
+    vec->size = 0;
+    vec->capacity = 1;
+    vec->data_size = data_size;
+    vec->data = (char*)malloc(data_size * vec->capacity);
+    vec->freeFunction = freeFunction;
+    return vec;
 }
 
-Vector *vectorCreateWithData(unsigned int data_size,void (*freeFunction)(void*), unsigned int size, ...) {
+Vector* vectorCreateWithData(unsigned int data_size, void (*freeFunction)(void*), unsigned int size, ...) {
+    Vector* vec = vectorCreate(data_size, freeFunction);
 
-  Vector *vec = vectorCreate(data_size,freeFunction);
-  
+    va_list args;
+    va_start(args, size);
 
-  va_list args;
-  va_start(args, size);
-  
+    for (unsigned int i = 0; i < size; i++) {
+        if (data_size <= 4) {
+            int data = (int)va_arg(args, int);
+            vectorPushBack(vec, (char*)&data);
+        } else if (data_size == 8) {
 
-  for (unsigned int i = 0; i < size; i++) {
-    if(data_size<=4){
-        int data=(int)va_arg(args,int);
-        vectorPushBack(vec,(char*)&data);
+            long long int data = va_arg(args, long long int);
+            vectorPushBack(vec, (char*)&data);
+        } else {
+            printf("unsupported data type");
+            fflush(stdout);
+        }
     }
-    else if(data_size==8){
+    va_end(args);
 
-        long long int data=va_arg(args,long long int);
-        vectorPushBack(vec,(char*)&data);
+    return vec;
+}
+
+Vector* vectorCreateWithFloatingData(unsigned int data_size, void (*freeFunction)(void*), unsigned int size, ...) {
+
+    Vector* vec = vectorCreate(data_size, freeFunction);
+
+    va_list args;
+    va_start(args, size);
+
+    for (unsigned int i = 0; i < size; i++) {
+        if (data_size == 4) {
+            float data = va_arg(args, double);
+            vectorPushBack(vec, (char*)&data);
+        } else if (data_size == 8) {
+            double data = va_arg(args, double);
+            vectorPushBack(vec, (char*)&data);
+        } else {
+            printf("unsupported data type");
+            fflush(stdout);
+        }
     }
-    else{
-        printf("unsupported data type");
+    va_end(args);
+
+    return vec;
+}
+
+void vectorCleanVecData(Vector* vec) {
+    if (vec->freeFunction != NULL) {
+        for (unsigned int i = 0; i < vec->size; i++) {
+            vec->freeFunction((void*)vectorGet(vec, i));
+        }
+    }
+}
+
+void vectorFree(Vector* vec) {
+
+    vectorCleanVecData(vec);
+    free(vec->data);
+    free(vec);
+}
+
+unsigned int vectorGetSize(Vector* v) {
+    return v->size;
+}
+
+unsigned int vectorGetDataSize(Vector* v) {
+    return v->data_size;
+}
+
+void vectorResize(Vector* vec, unsigned int size) {
+
+    if (size > vec->capacity) {
+
+        while (size > ((vec->capacity))) {
+
+            vec->capacity *= 2;
+        }
+
         fflush(stdout);
-    }
-  }
-  va_end(args);
+        // vec->data[vec->size]=(char**)malloc(sizeof(char*));
+        char* new_data = (char*)malloc(vec->data_size * vec->capacity);
 
-  return vec;
+        // memcpy(new_data,vec->data,sizeof(char***)*vec->size-1);
+
+        for (unsigned int i = 0; i < vec->size * vec->data_size; i++) {
+
+            fflush(stdout);
+            new_data[i] = vec->data[i];
+        }
+
+        char* temp = vec->data;
+        vec->data = new_data;
+        free(temp);
+    }
+    if (size < vec->size && vec->freeFunction != NULL) {
+        for (unsigned int i = size; i < vec->size; i++) {
+            vec->freeFunction((void*)vectorGet(vec, i));
+        }
+    }
+    vec->size = size;
 }
 
-Vector *vectorCreateWithFloatingData(unsigned int data_size,void (*freeFunction)(void*), unsigned int size, ...) {
-
-  Vector *vec = vectorCreate(data_size,freeFunction);
-  
-
-  va_list args;
-  va_start(args, size);
-  
-
-  for (unsigned int i = 0; i < size; i++) {
-    if(data_size==4){
-        float data=va_arg(args,double);
-        vectorPushBack(vec,(char*)&data);
-    }
-    else if(data_size==8 ){
-        double data=va_arg(args,double);
-        vectorPushBack(vec,(char*)&data);
-    }
-    else{
-        printf("unsupported data type");
+void vectorSet_(Vector* vec, unsigned int pos, char* val) {
+    if (!(pos < vec->size)) {
+        printf("index out of range");
         fflush(stdout);
-    }
-  }
-  va_end(args);
-
-  return vec;
-}
-
-void vectorCleanVecData(Vector *vec){
-  if(vec->freeFunction!=NULL){
-    for (unsigned int i = 0; i < vec->size; i++)
-    {
-      vec->freeFunction((void*)vectorGet(vec,i));
-    }
-    
-  }
-
-}
-
-void vectorFree(Vector *vec) {
-
-  vectorCleanVecData(vec);
-  free(vec->data);
-  free(vec);
-}
-
-unsigned int vectorGetSize(Vector *v) { return v->size; }
-
-unsigned int vectorGetDataSize(Vector *v) { return v->data_size; }
-
-void vectorResize(Vector *vec, unsigned int size) {
-
-  
-  
-
-  if (size > vec->capacity) {
-
-    while (size > ((vec->capacity))) {
-
-      vec->capacity *= 2;
+        // error
+        return;
     }
 
-    fflush(stdout);
-    // vec->data[vec->size]=(char**)malloc(sizeof(char*));
-    char *new_data = (char *)malloc(vec->data_size * vec->capacity);
-
-    // memcpy(new_data,vec->data,sizeof(char***)*vec->size-1);
-
-    for (unsigned int i = 0; i < vec->size * vec->data_size; i++) {
-
-      fflush(stdout);
-      new_data[i] = vec->data[i];
+    for (unsigned int j = 0; j < vec->data_size; j++) {
+        vec->data[pos * vec->data_size + j] = val[j];
     }
-
-    char *temp = vec->data;
-    vec->data = new_data;
-    free(temp);
-  }
-  if(size < vec->size && vec->freeFunction!= NULL ){
-    for (unsigned int i = size; i < vec->size ; i++) {
-      vec->freeFunction((void*)vectorGet(vec,i));
-    }
-  }
-  vec->size = size;
 }
 
-void vectorSet_(Vector *vec, unsigned int pos, char *val) {
-  if (!(pos < vec->size)) {
-    printf("index out of range");
-    fflush(stdout);
-    // error
-    return;
-  }
-  
-  for (unsigned int j = 0; j < vec->data_size; j++) {
-    vec->data[pos * vec->data_size + j] = val[j];
-  }
+void vectorPushBack(Vector* vec, char* val) {
+    vectorResize(vec, vec->size + 1);
+    vectorSet_(vec, (vec->size) - 1, val);
 }
 
-void vectorPushBack(Vector *vec, char *val) {
-  vectorResize(vec, vec->size + 1);
-  vectorSet_(vec, (vec->size) - 1, val);
-}
-
-void vectorPushBackVal(Vector *vec, long long int val) {
-  vectorResize(vec, vec->size + 1);
-  vectorSetVal(vec, (vec->size) - 1, val);
+void vectorPushBackVal(Vector* vec, long long int val) {
+    vectorResize(vec, vec->size + 1);
+    vectorSetVal(vec, (vec->size) - 1, val);
 }
 /*
 void vec_push_mem_back(VECTOR* vec) {
@@ -183,24 +169,24 @@ void vec_push_mem_back(VECTOR* vec) {
     vec->data[vec->size-1]=(char**)malloc(sizeof(char**));
 }
 */
-void vectorInsert(Vector *vec, unsigned int pos, char *val) {
+void vectorInsert(Vector* vec, unsigned int pos, char* val) {
 
-  if (!( pos <= vec->size)) { //0 <= pos and
-    printf("vec insert pos = %d is invalid\n", pos);
-    fflush(stdout);
-    return;
-  }
-  vectorResize(vec, vec->size + 1);
-
-  for (unsigned int i = vec->size - 1; i > pos; i--) {
-    for (unsigned int j = 0; j < vec->data_size; j++) {
-      vec->data[i * vec->data_size + j] =
-          vec->data[(i - 1) * vec->data_size + j];
+    if (!(pos <= vec->size)) { // 0 <= pos and
+        printf("vec insert pos = %d is invalid\n", pos);
+        fflush(stdout);
+        return;
     }
-  }
-  for (unsigned int j = 0; j < vec->data_size; j++) {
-    vec->data[pos * vec->data_size + j] = val[j];
-  }
+    vectorResize(vec, vec->size + 1);
+
+    for (unsigned int i = vec->size - 1; i > pos; i--) {
+        for (unsigned int j = 0; j < vec->data_size; j++) {
+            vec->data[i * vec->data_size + j] =
+                vec->data[(i - 1) * vec->data_size + j];
+        }
+    }
+    for (unsigned int j = 0; j < vec->data_size; j++) {
+        vec->data[pos * vec->data_size + j] = val[j];
+    }
 }
 
 /*
@@ -222,135 +208,134 @@ void vec_insert_mem(VECTOR*vec, unsigned int pos){
 
 }
 */
-void vectorPopBack(Vector *vec) {
+void vectorPopBack(Vector* vec) {
 
-  if (vec->size <= 0) {
-    printf("vec cannot pop_back no elements\n");
-    fflush(stdout);
-    return;
-  }
+    if (vec->size <= 0) {
+        printf("vec cannot pop_back no elements\n");
+        fflush(stdout);
+        return;
+    }
 
-  vectorRemove(vec,vec->size-1);
+    vectorRemove(vec, vec->size - 1);
 }
 
-void vectorRemove(Vector *vec, unsigned int pos) {
+void vectorRemove(Vector* vec, unsigned int pos) {
 
-  if (!( (pos < vec->size) )) {
-    printf("vec insert pos = %d is invalid\n", pos);
-    fflush(stdout);
-    return;
-  }
+    if (!((pos < vec->size))) {
+        printf("vec insert pos = %d is invalid\n", pos);
+        fflush(stdout);
+        return;
+    }
 
+    if (vec->freeFunction != NULL) {
+        vec->freeFunction((void*)vectorGet(vec, pos));
+    }
+    for (unsigned int i = pos + 1; i < vec->size; i++) {
+        for (unsigned int j = 0; j < vec->data_size; j++) {
+            vec->data[(i - 1) * vec->data_size + j] =
+                vec->data[i * vec->data_size + j];
+        }
+    }
 
-  if(vec->freeFunction!=NULL){
-    vec->freeFunction((void*)vectorGet(vec,pos));
-  }
-  for (unsigned int i = pos + 1; i < vec->size; i++) {
+    vec->size--;
+}
+
+void vectorSet(Vector* vec, unsigned int pos, char* val) {
+    if (!(pos < vec->size)) {
+        printf("index out of range");
+        fflush(stdout);
+        // error
+        return;
+    }
+    if (vec->freeFunction != NULL) {
+        vec->freeFunction((void*)vectorGet(vec, pos));
+    }
     for (unsigned int j = 0; j < vec->data_size; j++) {
-      vec->data[(i - 1) * vec->data_size + j] =
-          vec->data[i * vec->data_size + j];
+        vec->data[pos * vec->data_size + j] = val[j];
     }
-  }
-
-  vec->size--;
 }
 
-void vectorSet(Vector *vec, unsigned int pos, char *val) {
-  if (!(pos < vec->size)) {
-    printf("index out of range");
-    fflush(stdout);
-    // error
-    return;
-  }
-  if( vec->freeFunction!= NULL ){
-    vec->freeFunction((void*)vectorGet(vec,pos));
-  }
-  for (unsigned int j = 0; j < vec->data_size; j++) {
-    vec->data[pos * vec->data_size + j] = val[j];
-  }
-}
-
-void vectorSetVal(Vector *vec, unsigned int pos, long long int val) {
-  if (!(pos < vec->size)) { //0 <= pos && 
-    printf("index out of range");
-    fflush(stdout);
-    // error
-    return;
-  }
-  printTest("set_val-start\n");
-
-  if (DEBUG) {
-    for (unsigned int j = 0; j < vec->data_size; j++) {
-
-      vec->data[pos * vec->data_size + j] = 0;
+void vectorSetVal(Vector* vec, unsigned int pos, long long int val) {
+    if (!(pos < vec->size)) { // 0 <= pos &&
+        printf("index out of range");
+        fflush(stdout);
+        // error
+        return;
     }
-  }
+    printTest("set_val-start\n");
 
-  memcpy(&vec->data[pos * vec->data_size], &val, vec->data_size);
-}
+    if (DEBUG) {
+        for (unsigned int j = 0; j < vec->data_size; j++) {
 
-char *vectorGetCopy(Vector *vec, unsigned int pos) {
-  if (!( (pos < (vec->size)))) {//(0 <= pos) &&
-    printf("index out of range");
-    fflush(stdout);
-    // error
-  }
-  char *val = (char *)malloc(vec->data_size);
-
-  printTest("get-start\n");
-  for (unsigned int j = 0; j < (vec->data_size); j++) {
-    val[j] = vec->data[pos * vec->data_size + j];
-
-    printTest("val[%d]=%d\n", j, val[j]);
-
-    printTest("vec->data[%d]=%d\n", pos * vec->data_size + j,
-              vec->data[pos * vec->data_size + j]);
-  }
-  printTest("get-end\n");
-
-  return val;
-}
-
-char *vectorGet(Vector *vec, unsigned int pos) {
-  if (!( (pos < (vec->size)))) {
-    printf("index out of range");
-    fflush(stdout);
-    // error
-  }
-  char *val = &vec->data[pos * vec->data_size];
-
-  return val;
-}
-
-long long int vectorGetVal(Vector *vec, unsigned int pos) {
-  if (!( (pos < (vec->size)))) {
-    printf("index out of range");
-    fflush(stdout);
-    // error
-  }
-  long long int val = 0;
-  memcpy(&val, &vec->data[pos * vec->data_size], vec->data_size);
-  return val;
-}
-
-char* vectorGetBack(Vector *vec){
-  return vectorGet(vec,vec->size-1);
-}
-
-int vectorFind(Vector *vec, char *val) {
-  for (unsigned int i = 0; i < vec->size; i++) {
-    bool equal = true;
-    for (unsigned int j = 0; j < vec->data_size; j++) {
-      if (vec->data[i * vec->data_size + j] != val[j]) {
-        equal = false;
-        break;
-      }
+            vec->data[pos * vec->data_size + j] = 0;
+        }
     }
-    if (equal) {
-      return i;
+
+    memcpy(&vec->data[pos * vec->data_size], &val, vec->data_size);
+}
+
+char* vectorGetCopy(Vector* vec, unsigned int pos) {
+    if (!((pos < (vec->size)))) { //(0 <= pos) &&
+        printf("index out of range");
+        fflush(stdout);
+        // error
     }
-  }
-  return -1;
+    char* val = (char*)malloc(vec->data_size);
+
+    printTest("get-start\n");
+    for (unsigned int j = 0; j < (vec->data_size); j++) {
+        val[j] = vec->data[pos * vec->data_size + j];
+
+        printTest("val[%d]=%d\n", j, val[j]);
+
+        printTest("vec->data[%d]=%d\n", pos * vec->data_size + j,
+                  vec->data[pos * vec->data_size + j]);
+    }
+    printTest("get-end\n");
+
+    return val;
+}
+
+char* vectorGet(Vector* vec, unsigned int pos) {
+    if (!((pos < (vec->size)))) {
+        printf("index out of range");
+        fflush(stdout);
+        // error
+    }
+    char* val = &vec->data[pos * vec->data_size];
+
+    return val;
+}
+
+long long int vectorGetVal(Vector* vec, unsigned int pos) {
+    if (!((pos < (vec->size)))) {
+        printf("index out of range");
+        fflush(stdout);
+        // error
+    }
+    long long int val = 0;
+    memcpy(&val, &vec->data[pos * vec->data_size], vec->data_size);
+    return val;
+}
+
+char* vectorGetBack(Vector* vec) {
+    return vectorGet(vec, vec->size - 1);
+}
+
+int vectorFind(Vector* vec, char* val) {
+    for (unsigned int i = 0; i < vec->size; i++) {
+        bool equal = true;
+        for (unsigned int j = 0; j < vec->data_size; j++) {
+            if (vec->data[i * vec->data_size + j] != val[j]) {
+                equal = false;
+                break;
+            }
+        }
+        if (equal) {
+            return i;
+        }
+    }
+    return -1;
 }
 
 /*

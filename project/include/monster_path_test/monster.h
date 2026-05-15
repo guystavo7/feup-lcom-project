@@ -1,16 +1,5 @@
-
-//#include "../../../lab5/spriteXMP.h"
-
-//#include "../../resources/1.h"
-#include "../../include/monster_path_test/vec2d.h"
-
+#include "../../include/vec2d.h"
 #include <stdio.h>
-
-//static SpriteXPM* sprite;
-
-
-
-
 
 typedef struct monster Monster;
 
