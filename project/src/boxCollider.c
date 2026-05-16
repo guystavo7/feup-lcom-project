@@ -1,20 +1,25 @@
 #include "../include/boxCollider.h"
+#include "../include/vec2d.h"
 #include <stdlib.h>
 
 struct BoxCollider {
-    int x;
-    int y;
-    int width;
-    int height;
+    Vec2d pos;
+    Vec2d offset;
+    Vec2d size;
+
     int tag;
 };
 
-BoxCollider* boxColliderNew(int x, int y, int width, int height, int tag) {
+BoxCollider* boxColliderNew(Vec2d pos, Vec2d offset, Vec2d size, int tag) {
     BoxCollider* res = malloc(sizeof(BoxCollider));
-    res->x = x;
-    res->y = y;
-    res->width = width;
-    res->height = height;
+    res->pos.x = pos.x;
+    res->pos.y = pos.y;
+
+    res->offset.x = offset.x;
+    res->offset.y = offset.y;
+
+    res->size.x = size.x;
+    res->size.y = size.y;
     res->tag = tag;
 
     return res;
@@ -25,24 +30,35 @@ void boxColliderFree(BoxCollider* boxCollider) {
 }
 
 bool boxIsCollidingWithBox(BoxCollider* b1, BoxCollider* b2) {
-    return b1->x < b2->x + b2->width && b1->x + b1->width > b2->x && b1->y < b2->y + b2->height && b1->y + b1->height > b2->y;
+    float x1 = b1->pos.x + b1->offset.x;
+    float y1 = b1->pos.y + b1->offset.y;
+
+    float x2 = b2->pos.x + b2->offset.x;
+    float y2 = b2->pos.y + b2->offset.y;
+
+    return x1 < x2 + b2->size.x && x1 + b1->size.x > x2 && y1 < y2 + b2->size.y && y1 + b1->size.y > y2;
 }
 
-bool boxIsCollidingWithPoint(BoxCollider* b, int x, int y) {
-    return b->x >= x && b->x + b->width <= x && b->y >= y && b->y + b->height <= y;
+bool boxIsCollidingWithPoint(BoxCollider* b, Vec2d pos) {
+    return b->pos.x >= pos.x && b->pos.x + b->size.x <= pos.x && b->pos.y >= pos.y && b->pos.y + b->size.y <= pos.y;
 }
 
 void boxColliderUpdate(BoxCollider* b, int x, int y) {
-    b->x = x;
-    b->y = y;
+    b->pos.x = x;
+    b->pos.y = y;
 }
 
 void boxColliderSetX(BoxCollider* b, int x) {
-    b->x = x;
+    b->pos.x = x;
 }
 
 void boxColliderSetY(BoxCollider* b, int y) {
-    b->y = y;
+    b->pos.y = y;
+}
+
+void boxColliderSetPos(BoxCollider *b, Vec2d pos) {
+	b->pos.x = pos.x;
+	b->pos.y = pos.y;
 }
 
 int boxColliderGetTag(BoxCollider* b) {
@@ -50,17 +66,25 @@ int boxColliderGetTag(BoxCollider* b) {
 }
 
 int boxColliderGetHeight(BoxCollider* b) {
-    return b->height;
+    return b->size.y;
 }
 
 int boxColliderGetWidth(BoxCollider* b) {
-    return b->width;
+    return b->size.x;
 }
 
 int boxColliderGetX(BoxCollider* b) {
-    return b->x;
+    return b->pos.x;
 }
 
 int boxColliderGetY(BoxCollider* b) {
-    return b->y;
+    return b->pos.y;
+}
+
+int boxColliderGetOffsetX(BoxCollider* b) {
+    return b->offset.x;
+}
+
+int boxColliderGetOffsetY(BoxCollider *b) {
+	return b->offset.y;
 }

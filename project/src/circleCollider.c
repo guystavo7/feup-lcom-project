@@ -4,6 +4,7 @@
 struct CircleCollider {
     int x;
     int y;
+
     int radius;
     int tag;
 };

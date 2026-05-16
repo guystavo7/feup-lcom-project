@@ -5,18 +5,14 @@
 
 #include "arena.h"
 #include "boxCollider.h"
+#include "vec2d.h"
 
 typedef struct RigidBody RigidBody;
 
-RigidBody* rigidBodyNew(int x, int y, int width, int height, int tag);
+RigidBody* rigidBodyNew(Vec2d pos, Vec2d offset, Vec2d size, int tag);
 void rigidBodyFree(RigidBody* rb);
 
-void rigidBodyUpdate(RigidBody* rb, Arena* arena, float deltaTime);
+void rigidBodyUpdate(RigidBody* rb, Vec2d* pos, Arena* arena, BoxCollider* hitBox, float deltaTime);
 void rigidBodySetVelocity(RigidBody* rb, int xSpeed, int ySpeed);
-
-BoxCollider* rigidBodyGetBoxCollider(RigidBody* rb);
-
-int rigidBodyGetX(RigidBody* rb);
-int rigidBodyGetY(RigidBody* rb);
 
 #endif

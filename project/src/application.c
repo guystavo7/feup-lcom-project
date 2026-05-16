@@ -1,4 +1,3 @@
-#include "../include/rtc.h"
 #include "../../lab2/timer.h"
 #include "../../lab3/kbc.h"
 #include "../../lab4/mouse.h"
@@ -69,7 +68,9 @@ int(proj_main_loop)(int argc, char* argv[]) {
                     timer_int_handler();
 					refreshTerminal(terminal);
                     int currFrameTime = timer_get_counter();
-					gameLoop(terminal, (float)(currFrameTime - lastFrameTime)/60);
+					float deltaTime = (float)(currFrameTime - lastFrameTime) / 60;
+
+					gameLoop(terminal, deltaTime);
                     lastFrameTime = currFrameTime;
                 }
 
