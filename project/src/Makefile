@@ -4,10 +4,11 @@ SRCS= \
 	application.c \
 	game.c \
 	./inputHandler.c \
+	./boxCollider.c \
+	./rigidBody.c \
+	./arena.c \
 	cursorHandler.c \
 	animatedSprite.c \
-	rtc.c \
-
 
 OBJS = ${SRCS:.c=.o}
 
