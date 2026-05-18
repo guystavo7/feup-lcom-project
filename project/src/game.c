@@ -4,6 +4,7 @@
 #include "../include/inputHandler.h"
 #include "../include/rigidBody.h"
 #include "../include/cursorHandler.h"
+#include "../include/button.h"
 
 #include "../resources/1.h"
 #include "../resources/coinEdge.h"
@@ -37,9 +38,11 @@ void startGame() {
     frames[2] = newSpriteXPM((xpm_map_t)coin_f4_xpm, XPM_8_8_8);
 
     playerSprite = animatedSpriteNew(1.0f, frames, 3);
+    buttonInit();
 }
 
 void exitGame() {
+    buttonFree();
     animatedSpriteFree(playerSprite);
     freeSpriteXPM(mouse);
     rigidBodyFree(rb);
@@ -60,5 +63,6 @@ void gameLoop(Terminal* terminal, float deltaTime) {
     rigidBodyUpdate(rb, &playerPos, arena, hitBox, deltaTime);
     animatedSpriteUpdate(playerPos.x, playerPos.y, playerSprite, terminal, deltaTime);
 
+    buttonDraw(terminal);
     cursorDraw(terminal, mouse);
 }
