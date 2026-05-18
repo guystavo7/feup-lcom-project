@@ -10,7 +10,7 @@ BoxCollider* boxColliderNew(Vec2d pos, Vec2d offset, Vec2d size, int tag);
 void boxColliderFree(BoxCollider* boxCollider);
 
 bool boxIsCollidingWithBox(BoxCollider* b1, BoxCollider* b2);
-bool boxIsCollidingWithPoint(BoxCollider* b1, Vec2d pos);
+bool boxIsCollidingWithPoint(BoxCollider* b, Vec2d pos);
 
 int boxColliderGetTag(BoxCollider* b);
 int boxColliderGetWidth(BoxCollider* b);
