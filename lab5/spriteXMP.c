@@ -36,7 +36,9 @@ static uint32_t getColorFromPixel(SpriteXPM* sprite, unsigned int bytesPerPixel,
 void drawSpriteXPM(SpriteXPM* sprite, Terminal* terminal, __uint16_t x, __uint16_t y) {
     for (uint16_t i = 0; i < sprite->img->height; i++) {
         for (uint16_t j = 0; j < sprite->img->width; j++) {
-            drawPixel(terminal, x + j, y + i, getColorFromPixel(sprite, getBytesPerPixel(terminal), j, i));
+            uint32_t color = getColorFromPixel(sprite, getBytesPerPixel(terminal), j, i);
+            if (color == xpm_transparency_color(XPM_8_8_8)) continue; //funcao dada pelo lcf
+            drawPixel(terminal, x + j, y + i, color);
         }
     }
 }
