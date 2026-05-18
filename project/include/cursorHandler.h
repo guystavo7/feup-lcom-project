@@ -8,6 +8,7 @@ void cursorInit(int w, int h);
 void cursorReset();
 void cursorUpdateCoordinates(int16_t dx, int16_t dy);
 void cursorDraw(Terminal* terminal, SpriteXPM* sprite);
+void cursorGetPixelPosition(uint16_t* px, uint16_t* py);
 
 int cursorGetX();
 int cursorGetY();

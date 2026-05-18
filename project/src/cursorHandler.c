@@ -44,6 +44,11 @@ void cursorDraw(Terminal* terminal, SpriteXPM* sprite) {
   drawSpriteXPM(sprite, terminal, px, py);
 }
 
+void cursorGetPixelPosition(uint16_t* px, uint16_t* py) {
+  *px = c.center[0] + c.x;
+  *py = c.center[1] + c.y;
+}
+
 int cursorGetX(){
   return c.x;
 }
