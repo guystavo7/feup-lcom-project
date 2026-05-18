@@ -7,6 +7,7 @@
 #include "../include/utils.h"
 #include "../include/inputHandler.h"
 #include "../include/cursorHandler.h"
+#include "../include/button.h"
 
 #include <lcom/lcf.h>
 
@@ -54,6 +55,7 @@ int(proj_main_loop)(int argc, char* argv[]) {
     
     int r, ipc_status;
     message msg;
+    bool prevLeft = false;
 
     while (!getKeyPressed(getInputHandler(), KEYCODE_ESQ)) {
         if ((r = driver_receive(ANY, &msg, &ipc_status))) {
@@ -82,6 +84,13 @@ int(proj_main_loop)(int argc, char* argv[]) {
                             int16_t dy = getDeltaY();
                             cursorUpdateCoordinates(dx, -dy);
                         }
+                        bool left = pressedLeftButton();
+                        if (!left && prevLeft) {
+                            uint16_t mx, my;
+                            cursorGetPixelPosition(&mx, &my);
+                            buttonOnMouseClick(mx, my);
+                        }
+                        prevLeft = left;
                         cleanBytes();
                     }
                 }
