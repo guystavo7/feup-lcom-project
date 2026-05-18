@@ -2,10 +2,9 @@
 #include "../include/boxCollider.h"
 #include "../include/inputHandler.h"
 #include "../include/rigidBody.h"
-#include "../resources/coin.h"
+#include "../resources/warrior.h"
 
 #include <stdlib.h>
-#include "../include/utils.h"
 
 struct Player {
     Vec2d pos;
@@ -35,13 +34,14 @@ Player* playerNew(Vec2d pos) {
     res->hitBox = boxColliderNew(pos, offset, res->size, 0);
     res->rb = rigidBodyNew(offset, res->size, 0);
 
-    SpriteXPM** frames = malloc(3 * sizeof(SpriteXPM*));
+	int n = 6;
+    SpriteXPM** frames = malloc(n * sizeof(SpriteXPM*));
 
-    frames[0] = newSpriteXPM((xpm_map_t)coin_f3_xpm, XPM_8_8_8, offset.x, offset.y);
-    frames[1] = newSpriteXPM((xpm_map_t)coin_f2_xpm, XPM_8_8_8, offset.x, offset.y);
-    frames[2] = newSpriteXPM((xpm_map_t)coin_f4_xpm, XPM_8_8_8, offset.x, offset.y);
+	for (int i = 8; i < 8 + n; i++) {
+		frames[i - 8] = newSpriteXPM((xpm_map_t)all_xpms[i], XPM_8_8_8, offset.x, offset.y);
+	}
 
-    res->sprite = animatedSpriteNew(1.0f, frames, 3);
+    res->sprite = animatedSpriteNew(10.0f, frames, n);
 	return res;
 }
 
