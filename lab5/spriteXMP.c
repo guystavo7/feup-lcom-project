@@ -4,16 +4,21 @@
 
 struct SpriteXPM {
     xpm_image_t* img;
+	int offsetX;
+	int offsetY;
+
     uint8_t* pixMap;
 };
 
-SpriteXPM* newSpriteXPM(xpm_map_t map, enum xpm_image_type type) {
+SpriteXPM* newSpriteXPM(xpm_map_t map, enum xpm_image_type type, int offsetX, int offsetY) {
     xpm_image_t* img = malloc(sizeof(xpm_image_t));
     uint8_t* pixMap = xpm_load(map, type, img);
 
     SpriteXPM* sprite = malloc(sizeof(SpriteXPM));
     sprite->img = img;
     sprite->pixMap = pixMap;
+	sprite->offsetX = offsetX;
+	sprite->offsetY = offsetY;
 
     return sprite;
 }
@@ -36,7 +41,7 @@ static uint32_t getColorFromPixel(SpriteXPM* sprite, unsigned int bytesPerPixel,
 void drawSpriteXPM(SpriteXPM* sprite, Terminal* terminal, __uint16_t x, __uint16_t y) {
     for (uint16_t i = 0; i < sprite->img->height; i++) {
         for (uint16_t j = 0; j < sprite->img->width; j++) {
-            drawPixel(terminal, x + j, y + i, getColorFromPixel(sprite, getBytesPerPixel(terminal), j, i));
+            drawPixel(terminal, x + sprite->offsetX + j, y + sprite->offsetY + i, getColorFromPixel(sprite, getBytesPerPixel(terminal), j, i));
         }
     }
 }

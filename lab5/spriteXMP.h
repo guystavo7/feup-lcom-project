@@ -6,7 +6,7 @@
 
 typedef struct SpriteXPM SpriteXPM;
 
-SpriteXPM* newSpriteXPM(xpm_map_t xpm, enum xpm_image_type type);
+SpriteXPM* newSpriteXPM(xpm_map_t xpm, enum xpm_image_type type, int offsetX, int offsetY);
 void freeSpriteXPM(SpriteXPM* sprite); 
 void drawSpriteXPM(SpriteXPM* sprite, Terminal* terminal, uint16_t x, uint16_t y);
 
