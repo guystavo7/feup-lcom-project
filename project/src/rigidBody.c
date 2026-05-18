@@ -7,6 +7,8 @@ struct RigidBody {
 	Vec2d velocity;
 };
 
+
+
 RigidBody* rigidBodyNew(Vec2d offset, Vec2d size, int tag) {
     RigidBody* res = malloc(sizeof(RigidBody));
     res->velocity.x = 0;
@@ -19,9 +21,10 @@ void rigidBodyFree(RigidBody* rb) {
     free(rb);
 }
 
-static int moveX(RigidBody* rb, int x, Arena* arena, BoxCollider* hitBox, float deltaTime) {
+static float moveX(RigidBody* rb, float x, Arena* arena, BoxCollider* hitBox, float deltaTime) {
     int width = boxColliderGetWidth(hitBox);
     x += rb->velocity.x * deltaTime;
+
 	boxColliderSetX(hitBox, x);
 
     BoxCollider* colliders[10];
@@ -42,7 +45,7 @@ static int moveX(RigidBody* rb, int x, Arena* arena, BoxCollider* hitBox, float 
 	return x;
 }
 
-static int moveY(RigidBody* rb, int y, Arena* arena, BoxCollider* hitBox, float deltaTime) {
+static float moveY(RigidBody* rb, float y, Arena* arena, BoxCollider* hitBox, float deltaTime) {
     int height = boxColliderGetHeight(hitBox);
     y += rb->velocity.y * deltaTime;
 	boxColliderSetY(hitBox, y);

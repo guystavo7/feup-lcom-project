@@ -11,6 +11,7 @@ SRCS= \
 	animatedSprite.c \
 	./vec2d.c \
 	./player.c \
+	./utils.c \
 
 OBJS = ${SRCS:.c=.o}
 
