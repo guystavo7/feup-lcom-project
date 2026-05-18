@@ -16,8 +16,7 @@
 #define COLOR_POPUP_BORDER 0x00FFFFFF
 
 static bool popupVisible = false;
-static unsigned int frameCounter = 0;
-static unsigned int ignoreCloseUntil = 0;
+
 
 static bool pointInRect(int px, int py, int x, int y, int w, int h) {
     return px >= x && px < x + w && py >= y && py < y + h;
@@ -40,14 +39,11 @@ static void drawBorderedRect(Terminal* terminal, uint16_t x, uint16_t y, uint16_
 
 void buttonInit(void) {
     popupVisible = false;
-    frameCounter = 0;
-    ignoreCloseUntil = 0;
 }
 
 void buttonFree(void) {}
 
 void buttonDraw(Terminal* terminal) {
-    frameCounter++;
 
     drawBorderedRect(terminal, BUTTON_X, BUTTON_Y, BUTTON_W, BUTTON_H, COLOR_BUTTON_FILL, COLOR_BUTTON_BORDER);
 
@@ -58,11 +54,8 @@ void buttonDraw(Terminal* terminal) {
 void buttonOnMouseClick(int mx, int my) {
     if (pointInRect(mx, my, BUTTON_X, BUTTON_Y, BUTTON_W, BUTTON_H)) {
         popupVisible = true;
-        ignoreCloseUntil = frameCounter + 5;
         return;
     }
-
-    if (popupVisible && frameCounter < ignoreCloseUntil) return;
 
     if (popupVisible && !pointInRect(mx, my, POPUP_X, POPUP_Y, POPUP_W, POPUP_H)) popupVisible = false;
 }
