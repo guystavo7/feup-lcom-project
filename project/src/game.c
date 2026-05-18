@@ -1,16 +1,15 @@
 #include "../include/game.h"
-#include "../../lab5/spriteXMP.h"
 #include "../include/animatedSprite.h"
 #include "../include/arena.h"
 #include "../include/inputHandler.h"
 #include "../include/rigidBody.h"
 #include "../include/cursorHandler.h"
-#include "../include/arena.h"
 
 #include "../resources/1.h"
 #include "../resources/coinEdge.h"
 #include "../resources/coinMid.h"
 #include "../resources/coinMidDark.h"
+#include "../resources/cursor.h"
 
 static Arena* arena;
 static SpriteXPM* mouse;
@@ -22,7 +21,7 @@ static Vec2d playerPos = {100, 100};
 static AnimatedSprite* playerSprite;
 
 void startGame() {
-    mouse = newSpriteXPM((xpm_map_t)abc, XPM_8_8_8, 0, 0);
+    mouse = newSpriteXPM((xpm_map_t)cursor_xpm, XPM_8_8_8);
 
 	Vec2d playerSize = {16, 16};
 	Vec2d offset = {0, 0};
@@ -32,12 +31,10 @@ void startGame() {
     arena = arenaNew();
 
     SpriteXPM** frames = malloc(3 * sizeof(SpriteXPM*));
-	int offsetX = 0;
-	int offsetY = 0;
 
-    frames[0] = newSpriteXPM((xpm_map_t)coin_f3_xpm, XPM_8_8_8, offsetX, offsetY);
-    frames[1] = newSpriteXPM((xpm_map_t)coin_f2_xpm, XPM_8_8_8, offsetX, offsetY);
-    frames[2] = newSpriteXPM((xpm_map_t)coin_f4_xpm, XPM_8_8_8, offsetX, offsetY);
+    frames[0] = newSpriteXPM((xpm_map_t)coin_f3_xpm, XPM_8_8_8);
+    frames[1] = newSpriteXPM((xpm_map_t)coin_f2_xpm, XPM_8_8_8);
+    frames[2] = newSpriteXPM((xpm_map_t)coin_f4_xpm, XPM_8_8_8);
 
     playerSprite = animatedSpriteNew(1.0f, frames, 3);
 }
@@ -63,7 +60,5 @@ void gameLoop(Terminal* terminal, float deltaTime) {
     rigidBodyUpdate(rb, &playerPos, arena, hitBox, deltaTime);
     animatedSpriteUpdate(playerPos.x, playerPos.y, playerSprite, terminal, deltaTime);
 
-    int px, py;
-    cursorSpaceToPixel(&px, &py);
-    drawSpriteXPM(mouse, terminal, px, py);
+    cursorDraw(terminal, mouse);
 }
