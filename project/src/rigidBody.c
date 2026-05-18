@@ -7,7 +7,7 @@ struct RigidBody {
 	Vec2d velocity;
 };
 
-RigidBody* rigidBodyNew(Vec2d pos, Vec2d offset, Vec2d size, int tag) {
+RigidBody* rigidBodyNew(Vec2d offset, Vec2d size, int tag) {
     RigidBody* res = malloc(sizeof(RigidBody));
     res->velocity.x = 0;
     res->velocity.y = 0;
@@ -34,6 +34,7 @@ static int moveX(RigidBody* rb, int x, Arena* arena, BoxCollider* hitBox, float 
         } else if (rb->velocity.x < 0 && x < (boxColliderGetX(colliders[i]) + boxColliderGetWidth(colliders[i]))) {
             x = boxColliderGetX(colliders[i]) + boxColliderGetWidth(colliders[i]);
         }
+
         rb->velocity.x = 0;
     }
 

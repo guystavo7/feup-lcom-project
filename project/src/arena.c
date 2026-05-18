@@ -1,11 +1,13 @@
 #include "../include/arena.h"
 #include "../include/boxCollider.h"
+#include "../include/player.h"
 
 #include <stdlib.h>
 
 struct Arena {
     int collidersN;
     BoxCollider** walls;
+	Player* player;
 };
 
 Arena* arenaNew() {
@@ -33,12 +35,17 @@ Arena* arenaNew() {
     res->walls[3] = rightWall;
     res->collidersN = 4;
 
+	Vec2d playerPos = {100, 100};
+	res->player = playerNew(playerPos);
+
     return res;
 }
 
 void arenaFree(Arena* arena) {
     for (int i = 0; i < arena->collidersN; i++) free(arena->walls[i]);
     free(arena->walls);
+	playerFree(arena->player);
+	free(arena->player);
     free(arena);
 }
 
@@ -49,11 +56,14 @@ int arenaDetectCollisions(Arena* arena, BoxCollider* box, int tag, BoxCollider**
         BoxCollider* collider = arena->walls[i];
         if (tag != boxColliderGetTag(collider)) continue;
         if (boxIsCollidingWithBox(box, collider)) {
-			printf("oi\n");
             colliders[j] = collider;
             j++;
         }
     }
 
     return j;
+}
+
+void arenaUpdate(Arena *arena, Terminal *terminal, float deltaTime)	{
+	playerUpdate(arena->player, terminal, arena, deltaTime);
 }
