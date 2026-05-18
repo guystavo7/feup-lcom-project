@@ -38,11 +38,10 @@ void cursorUpdateCoordinates(int16_t dx, int16_t dy){
   else c.y = nextY;
 }
 
-void cursorSpaceToPixel(int* px, int* py){
-
-  *px = c.center[0] + c.x;
-  *py = c.center[1] + c.y;
-
+void cursorDraw(Terminal* terminal, SpriteXPM* sprite) {
+  uint16_t px = c.center[0] + c.x;
+  uint16_t py = c.center[1] + c.y;
+  drawSpriteXPM(sprite, terminal, px, py);
 }
 
 int cursorGetX(){
