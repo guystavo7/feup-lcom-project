@@ -22,22 +22,22 @@ static Vec2d playerPos = {100, 100};
 static AnimatedSprite* playerSprite;
 
 void startGame() {
-    mouse = newSpriteXPM((xpm_map_t)abc, XPM_8_8_8, 0, 0);
+    mouse = newSpriteXPM((xpm_map_t)abc, XPM_8_8_8);
 
 	Vec2d playerSize = {16, 16};
 	Vec2d offset = {0, 0};
 	hitBox = boxColliderNew(playerPos, offset, playerSize, 0);
 
     rb = rigidBodyNew(playerPos, offset, playerSize, 0);
-    arena = arenaNew();
+    arena = arenaNewFromFile("/home/lcom/labs/project/resources/arenaTest.txt");
 
     SpriteXPM** frames = malloc(3 * sizeof(SpriteXPM*));
-	int offsetX = 0;
-	int offsetY = 0;
+	// int offsetX = 0;
+	// int offsetY = 0;
 
-    frames[0] = newSpriteXPM((xpm_map_t)coin_f3_xpm, XPM_8_8_8, offsetX, offsetY);
-    frames[1] = newSpriteXPM((xpm_map_t)coin_f2_xpm, XPM_8_8_8, offsetX, offsetY);
-    frames[2] = newSpriteXPM((xpm_map_t)coin_f4_xpm, XPM_8_8_8, offsetX, offsetY);
+    frames[0] = newSpriteXPM((xpm_map_t)coin_f3_xpm, XPM_8_8_8);
+    frames[2] = newSpriteXPM((xpm_map_t)coin_f4_xpm, XPM_8_8_8);
+    frames[1] = newSpriteXPM((xpm_map_t)coin_f2_xpm, XPM_8_8_8);
 
     playerSprite = animatedSpriteNew(1.0f, frames, 3);
 }

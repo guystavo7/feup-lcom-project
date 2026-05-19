@@ -2,11 +2,63 @@
 #include "../include/boxCollider.h"
 
 #include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
 struct Arena {
     int collidersN;
     BoxCollider** walls;
 };
+
+Arena* arenaNewFromFile(const char* filename) {
+    FILE* file = fopen(filename, "r");
+    if (!file) {
+        printf("Error: Could not open map file: %s\n", filename);
+        return NULL;
+    }
+
+    int width, height;
+    if (fscanf(file, "%d %d", &width, &height) != 2) {
+        printf("Error: Invalid map file format\n");
+        fclose(file);
+        return NULL;
+    }
+
+    char** map = malloc(height * sizeof(char*));
+    for (int i = 0; i < height; i++) {
+        map[i] = malloc(width + 1);
+        if (fscanf(file, "%s", map[i]) != 1) {
+            printf("Error: Could not read map row %d\n", i);
+            fclose(file);
+            return NULL;
+        }
+    }
+    fclose(file);
+
+    Arena* res = malloc(sizeof(Arena));
+    res->walls = malloc(sizeof(BoxCollider*) * (width * height));
+    
+    int colliderIdx = 0;
+    int tileSize = 10;
+    Vec2d offset = {0, 0};
+
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width && map[y][x] != '\0'; x++) {
+            if (map[y][x] == '#') {
+                Vec2d wallPos = {x * tileSize, y * tileSize};
+                Vec2d wallSize = {tileSize, tileSize};
+                res->walls[colliderIdx++] = boxColliderNew(wallPos, offset, wallSize, 0);
+            }
+        }
+    }
+
+    res->collidersN = colliderIdx;
+
+    for (int i = 0; i < height; i++) free(map[i]);
+    free(map);
+
+    return res;
+}
 
 Arena* arenaNew() {
     Arena* res = malloc(sizeof(Arena));
