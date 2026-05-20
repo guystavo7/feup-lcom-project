@@ -6,9 +6,7 @@
 
 typedef struct Arena Arena;
 
-Arena* arenaNewFromFile(const char* filename);
-
-Arena* arenaNew();
+Arena* arenaNewFromFile(const char* filename, int tileSize);
 
 void arenaFree(Arena* arena);
 

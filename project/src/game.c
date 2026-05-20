@@ -29,11 +29,9 @@ void startGame() {
 	hitBox = boxColliderNew(playerPos, offset, playerSize, 0);
 
     rb = rigidBodyNew(playerPos, offset, playerSize, 0);
-    arena = arenaNewFromFile("/home/lcom/labs/project/resources/arenaTest.txt");
+    arena = arenaNewFromFile("/home/lcom/labs/project/resources/arenaTest.txt", 50);
 
     SpriteXPM** frames = malloc(3 * sizeof(SpriteXPM*));
-	// int offsetX = 0;
-	// int offsetY = 0;
 
     frames[0] = newSpriteXPM((xpm_map_t)coin_f3_xpm, XPM_8_8_8);
     frames[2] = newSpriteXPM((xpm_map_t)coin_f4_xpm, XPM_8_8_8);

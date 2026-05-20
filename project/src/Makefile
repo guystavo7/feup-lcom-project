@@ -9,6 +9,7 @@ SRCS= \
 	./arena.c \
 	cursorHandler.c \
 	animatedSprite.c \
+	tile.c \
 
 OBJS = ${SRCS:.c=.o}
 
