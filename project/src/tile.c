@@ -12,6 +12,8 @@ Tile* tileNew(const char* sprite, int x, int y) {
   tile->sprite = sprite;
   tile->pos.x = x;
   tile->pos.y = y;
+
+  return tile;
 }
 
 void tileFree(Tile* tile) {
