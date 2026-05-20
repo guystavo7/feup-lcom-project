@@ -1,6 +1,6 @@
 #include "../../include/monster_path_test/mp_test.h"
 #include "../../../lab5/spriteXMP.h"
-#include "../../include/inputHandler.h"
+#include "../../include/utils/inputHandler.h"
 #include "../../resources/1.h"
 #include "../../include/data_structures/vector.h"
 #include "../../include/monster_path_test/monster.h"
@@ -25,7 +25,7 @@ void freeListOfMonsters(void* li){
  void startGame() {
     counter=-1;//initial_value;
 
-    sprite = newSpriteXPM((xpm_map_t)abc, XPM_8_8_8);
+    sprite = newSpriteXPM((xpm_map_t)abc, XPM_8_8_8, 0, 0);
     //path 1
     //pathPoints=vectorCreateWithFloatingData(4,4*2,10.0f,10.0f,450.0f,10.0f,10.0f,450.0f,450.0f,450.0f);
     // star path

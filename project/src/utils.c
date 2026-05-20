@@ -1,4 +1,4 @@
-#include "../include/utils.h"
+#include "../include/utils/utils.h"
 
 // Cut and paste this to file - only way to work
 void print_double(double a, int decimals) {

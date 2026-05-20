@@ -3,9 +3,9 @@
 #include "../../../lab4/mouse.h"
 #include "../../../lab5/terminal.h"
 
-#include "../../include/inputHandler.h"
+#include "../../include/utils/inputHandler.h"
 #include "../../include/monster_path_test/mp_test.h"
-#include "../../include/utils.h"
+#include "../../include/utils/utils.h"
 
 #include <lcom/lcf.h>
 

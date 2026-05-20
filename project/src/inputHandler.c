@@ -1,4 +1,4 @@
-#include "../include/inputHandler.h"
+#include "../include/utils/inputHandler.h"
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>

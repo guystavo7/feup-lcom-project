@@ -4,8 +4,8 @@
 #include "../../lab5/terminal.h"
 
 #include "../include/game.h"
-#include "../include/utils.h"
-#include "../include/inputHandler.h"
+#include "../include/utils/utils.h"
+#include "../include/utils/inputHandler.h"
 #include "../include/cursorHandler.h"
 
 #include <lcom/lcf.h>

@@ -1,5 +1,5 @@
-#include "../include/boxCollider.h"
-#include "../include/vec2d.h"
+#include "../include/components/boxCollider.h"
+#include "../include/utils/vec2d.h"
 #include <stdlib.h>
 
 struct BoxCollider {
@@ -65,26 +65,26 @@ int boxColliderGetTag(BoxCollider* b) {
     return b->tag;
 }
 
-int boxColliderGetHeight(BoxCollider* b) {
+float boxColliderGetHeight(BoxCollider* b) {
     return b->size.y;
 }
 
-int boxColliderGetWidth(BoxCollider* b) {
+float boxColliderGetWidth(BoxCollider* b) {
     return b->size.x;
 }
 
-int boxColliderGetX(BoxCollider* b) {
+float boxColliderGetX(BoxCollider* b) {
     return b->pos.x;
 }
 
-int boxColliderGetY(BoxCollider* b) {
+float boxColliderGetY(BoxCollider* b) {
     return b->pos.y;
 }
 
-int boxColliderGetOffsetX(BoxCollider* b) {
+float boxColliderGetOffsetX(BoxCollider* b) {
     return b->offset.x;
 }
 
-int boxColliderGetOffsetY(BoxCollider *b) {
+float boxColliderGetOffsetY(BoxCollider *b) {
 	return b->offset.y;
 }

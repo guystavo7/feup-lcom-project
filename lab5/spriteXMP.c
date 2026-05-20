@@ -38,7 +38,7 @@ static uint32_t getColorFromPixel(SpriteXPM* sprite, unsigned int bytesPerPixel,
     return color;
 }
 
-void drawSpriteXPM(SpriteXPM* sprite, Terminal* terminal, __uint16_t x, __uint16_t y) {
+void drawSpriteXPM(SpriteXPM* sprite, Terminal* terminal, int x, int y) {
     for (uint16_t i = 0; i < sprite->img->height; i++) {
         for (uint16_t j = 0; j < sprite->img->width; j++) {
             drawPixel(terminal, x + sprite->offsetX + j, y + sprite->offsetY + i, getColorFromPixel(sprite, getBytesPerPixel(terminal), j, i));

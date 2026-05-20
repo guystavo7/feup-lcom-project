@@ -1,4 +1,4 @@
-#include "../include/circleCollider.h"
+#include "../include/components/circleCollider.h"
 #include <stdlib.h>
 
 struct CircleCollider {

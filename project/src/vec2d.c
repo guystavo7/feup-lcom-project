@@ -1,4 +1,4 @@
-#include "../include/vec2d.h"
+#include "../include/utils/vec2d.h"
 
 Vec2d* vec2dCreate(float x, float y) {
     Vec2d* v = malloc(sizeof(Vec2d));

@@ -1,4 +1,4 @@
-#include "../include/animatedSprite.h"
+#include "../include/components/animatedSprite.h"
 #include <stdint.h>
 #include <stdlib.h>
 

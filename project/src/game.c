@@ -2,7 +2,6 @@
 #include "../../lab5/spriteXMP.h"
 #include "../include/arena.h"
 #include "../include/cursorHandler.h"
-#include "../include/arena.h"
 
 #include "../resources/1.h"
 

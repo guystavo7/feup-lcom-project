@@ -1,6 +1,5 @@
-
 #include "../data_structures/vector.h"
-#include "../vec2d.h"
+#include "./../utils/vec2d.h"
 
 typedef struct path Path;
 

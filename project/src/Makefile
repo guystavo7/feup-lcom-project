@@ -12,6 +12,11 @@ SRCS= \
 	./vec2d.c \
 	./player.c \
 	./utils.c \
+	./playerController.c \
+	./playerIdle.c \
+	./playerModel.c \
+	./playerState.c \
+	./playerRunning.c \
 
 OBJS = ${SRCS:.c=.o}
 

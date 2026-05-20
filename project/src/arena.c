@@ -1,6 +1,6 @@
 #include "../include/arena.h"
-#include "../include/boxCollider.h"
-#include "../include/player.h"
+#include "../include/components/boxCollider.h"
+#include "../include/player/player.h"
 
 #include <stdlib.h>
 
@@ -45,7 +45,6 @@ void arenaFree(Arena* arena) {
     for (int i = 0; i < arena->collidersN; i++) free(arena->walls[i]);
     free(arena->walls);
 	playerFree(arena->player);
-	free(arena->player);
     free(arena);
 }
 

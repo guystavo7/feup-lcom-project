@@ -1,6 +1,5 @@
-#include "../include/vec2d.h"
-#include "../include/animatedSprite.h"
-#include "arena.h"
+#include "./../utils/vec2d.h"
+#include "./../arena.h"
 
 typedef struct Player Player;
 

@@ -5,8 +5,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "../../lab5/spriteXMP.h"
-#include "../../lab5/terminal.h"
+#include "../../../lab5/spriteXMP.h"
+#include "../../../lab5/terminal.h"
 
 typedef struct AnimatedSprite AnimatedSprite;
 

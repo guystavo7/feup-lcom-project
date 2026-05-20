@@ -1,7 +1,7 @@
 #ifndef BOXCOLLIDER
 #define BOXCOLLIDER
 
-#include "vec2d.h"
+#include "../utils/vec2d.h"
 #include <stdbool.h>
 
 typedef struct BoxCollider BoxCollider; 
@@ -13,16 +13,16 @@ bool boxIsCollidingWithBox(BoxCollider* b1, BoxCollider* b2);
 bool boxIsCollidingWithPoint(BoxCollider* b1, Vec2d pos);
 
 int boxColliderGetTag(BoxCollider* b);
-int boxColliderGetWidth(BoxCollider* b);
-int boxColliderGetHeight(BoxCollider* b);
+float boxColliderGetWidth(BoxCollider* b);
+float boxColliderGetHeight(BoxCollider* b);
 
 void boxColliderSetX(BoxCollider* b, int x);
 void boxColliderSetY(BoxCollider* b, int y);
 void boxColliderSetPos(BoxCollider* b, Vec2d pos);
 
-int boxColliderGetOffsetX(BoxCollider* b);
-int boxColliderGetOffsetY(BoxCollider* b);
-int boxColliderGetX(BoxCollider* b);
-int boxColliderGetY(BoxCollider* b);
+float boxColliderGetOffsetX(BoxCollider* b);
+float boxColliderGetOffsetY(BoxCollider* b);
+float boxColliderGetX(BoxCollider* b);
+float boxColliderGetY(BoxCollider* b);
 
 #endif

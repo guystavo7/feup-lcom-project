@@ -1,7 +1,7 @@
 #ifndef ARENA
 #define ARENA
 
-#include "boxCollider.h"
+#include "./components/boxCollider.h"
 #include "../../lab5/terminal.h"
 #include <stdbool.h>
 
