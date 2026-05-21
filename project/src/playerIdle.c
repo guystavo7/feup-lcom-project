@@ -18,9 +18,8 @@ void idleOnEnter(PlayerState* state, PlayerModel* model, Terminal* terminal, Are
 }
 
 PlayerState* getIdleState() {
-	PlayerState* res = malloc(sizeof(PlayerState));
-	res->act = idleAct;
-	res->transition = idleTransition;
-	res->onEnter = idleOnEnter;
+	PlayerState* res = playerStateNew();
+	playerStateSetFunctions(res, idleAct, idleOnEnter, idleTransition);
+
 	return res;
 }

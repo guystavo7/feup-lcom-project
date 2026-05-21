@@ -1,5 +1,4 @@
 #include "../include/player/player.h"
-#include "../include/player/playerController.h"
 #include "../resources/blueWarrior/warriorRun.h"
 
 #include <stdlib.h>
@@ -28,4 +27,12 @@ void playerFree(Player* player) {
 
 void playerUpdate(Player* player, Terminal* terminal, Arena* arena, float deltaTime) {
 	playerControllerUpdate(player->controller, terminal, arena, deltaTime);
+}
+
+PlayerModel* playerGetPlayerModel(Player* player) {
+	return player->model;
+}
+
+PlayerController* playerGetPlayerController(Player* player) {
+	return player->controller;
 }

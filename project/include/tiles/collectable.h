@@ -2,6 +2,7 @@
 #define COLLECTABLE
 
 #include "../utils/vec2d.h"
+#include "../components/boxCollider.h"
 #include "../../../lab5/spriteXMP.h"
 #include <stdbool.h>
 
@@ -21,5 +22,6 @@ float collectableGetX(Collectable* c);
 float collectableGetY(Collectable* c);
 
 void collectableUpdate(Collectable* c, Terminal* terminal);
+BoxCollider* collectableGetHitBox(Collectable* c);
 
 #endif

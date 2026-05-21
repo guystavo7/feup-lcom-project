@@ -28,10 +28,7 @@ void runningOnEnter(PlayerState* state, PlayerModel* model, Terminal* terminal, 
 }
 
 PlayerState* getRunningState() {
-	PlayerState* res = malloc(sizeof(PlayerState));
-	res->act = runningAct;
-	res->transition = runningTransition;
-	res->onEnter = runningOnEnter;
-
+	PlayerState* res = playerStateNew();
+	playerStateSetFunctions(res, runningAct, runningOnEnter, runningTransition);
 	return res;
 }

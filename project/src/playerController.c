@@ -18,7 +18,7 @@ PlayerController* playerControllerNew(PlayerModel* model) {
 }
 
 void playerControllerFree(PlayerController* controller) {
-    free(controller->state);
+	playerStateFree(controller->state);
     free(controller);
 }
 
@@ -37,13 +37,14 @@ static void getInput(PlayerController* controller) {
 
 static void handleState(PlayerController* controller, Terminal* terminal, Arena* arena, float deltaTime) {
     PlayerState* state = controller->state;
-    state->act(state, controller->model, terminal, arena, deltaTime);
-    PlayerState* newState = state->transition(state, controller->model);
+
+    playerStateAct(state, controller->model, terminal, arena, deltaTime);
+    PlayerState* newState = playerStateTransition(state, controller->model);
 
     if (state != newState) {
-        free(state);
+		playerStateFree(state);
         controller->state = newState;
-        newState->onEnter(newState, controller->model, terminal, arena, deltaTime);
+        playerStateOnEnter(newState, controller->model, terminal, arena, deltaTime);
     }
 }
 

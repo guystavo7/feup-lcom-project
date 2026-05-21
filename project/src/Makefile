@@ -17,6 +17,7 @@ SRCS= \
 	./playerModel.c \
 	./playerState.c \
 	./playerRunning.c \
+	./collectable.c \
 
 OBJS = ${SRCS:.c=.o}
 
