@@ -1,27 +1,38 @@
 #include "../include/arena.h"
-#include "../include/boxCollider.h"
+#include "../include/components/boxCollider.h"
+#include "../include/player/player.h"
 #include "../include/tile.h"
-#include <stdlib.h>
-#include <stdio.h>
+#include "../include/tiles/collectable.h"
+#include "../include/cursorHandler.h"
+
+#include "../resources/1.h"
 #include "../resources/tiles/tiles.h"
-#include <string.h>
+
+#include <stdlib.h>
 
 #define MAP_WIDTH 25
 #define MAP_HEIGHT 18
+#define TILE_SIZE 32
 
 struct Arena {
     int tilesN;
     Tile** tiles;
-    int w;
-    int h;
+    int width;
+    int height;
     int tileSize;
+
+    Player* player;
+    int fruitsN;
+    Collectable** fruits;
+
+	Cursor* cursor;
 };
 
-Arena* arenaNewFromFile(const char* filename, int tileSize) {
+static void createMap(Arena* arena, const char* filename, int tileSize) {
     FILE* file = fopen(filename, "r");
     if (!file) {
         printf("Error: Could not open map file: %s\n", filename);
-        return NULL;
+		return;
     }
 
     int width = MAP_WIDTH;
@@ -31,7 +42,7 @@ Arena* arenaNewFromFile(const char* filename, int tileSize) {
     int** map = malloc(height * sizeof(int*));
     for (int i = 0; i < height; i++) {
         map[i] = malloc(width * sizeof(int));
-        
+
         if (fgets(lineBuffer, sizeof(lineBuffer), file) == NULL) {
             break;
         }
@@ -47,42 +58,58 @@ Arena* arenaNewFromFile(const char* filename, int tileSize) {
     }
     fclose(file);
 
-    Arena* res = malloc(sizeof(Arena));
-    res->tiles = malloc(sizeof(Tile*) * (width * height));
-    res->w = width;
-    res->h = height;
-    res->tileSize = tileSize;
-    res->tilesN = width * height;
-    
+    arena->tiles = malloc(sizeof(Tile*) * (width * height));
+    arena->width = width;
+    arena->height = height;
+    arena->tilesN = width * height;
+    arena->tileSize = tileSize;
+
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
             int id = map[y][x];
             char** sprite = NULL;
             int num_tiles = sizeof(tiles) / sizeof(tiles[0]);
-            
+
             if (id > 0 && id <= num_tiles) {
                 sprite = tiles[id - 1];
             }
-            res->tiles[y * width + x] = tileNew(sprite, id, x * tileSize, y * tileSize, tileSize);
+
+            arena->tiles[y * width + x] = tileNew(sprite, id, x * tileSize, y * tileSize, tileSize);
         }
     }
 
     for (int i = 0; i < height; i++) free(map[i]);
     free(map);
+}
 
+Arena* arenaNew(const char* filename) {
+    Arena* res = malloc(sizeof(Arena));
+	createMap(res, filename, TILE_SIZE);
+
+    Vec2d playerPos = {100, 100};
+    res->player = playerNew(playerPos);
+
+    res->fruitsN = 1;
+    res->fruits = malloc(sizeof(Collectable*) * res->fruitsN);
+    Vec2d fruitPos = {500, 400};
+    Vec2d fruitOffset = {0, 0};
+    Vec2d fruitSize = {32, 32};
+
+    res->fruits[0] = collectableNew(fruitPos, fruitOffset, fruitSize, abc);
     return res;
 }
 
 void arenaFree(Arena* arena) {
     for (int i = 0; i < arena->tilesN; i++) tileFree(arena->tiles[i]);
     free(arena->tiles);
+    playerFree(arena->player);
     free(arena);
 }
 
-int arenaDetectCollisions(Arena* arena, BoxCollider* box, int tag, BoxCollider** colliders) {
+int arenaDetectCollisionsWalls(Arena* arena, BoxCollider* box, int tag, BoxCollider** colliders) {
     int j = 0;
 
-    if (arena->tileSize > 0 && arena->w > 0 && arena->h > 0) {
+    if (arena->tileSize > 0 && arena->width > 0 && arena->height > 0) {
         int boxX = boxColliderGetX(box);
         int boxY = boxColliderGetY(box);
         int boxW = boxColliderGetWidth(box);
@@ -95,12 +122,12 @@ int arenaDetectCollisions(Arena* arena, BoxCollider* box, int tag, BoxCollider**
 
         if (startX < 0) startX = 0;
         if (startY < 0) startY = 0;
-        if (endX >= arena->w) endX = arena->w - 1;
-        if (endY >= arena->h) endY = arena->h - 1;
+        if (endX >= arena->width) endX = arena->width - 1;
+        if (endY >= arena->height) endY = arena->height - 1;
 
         for (int y = startY; y <= endY; y++) {
             for (int x = startX; x <= endX; x++) {
-                Tile* t = arena->tiles[y * arena->w + x];
+                Tile* t = arena->tiles[y * arena->width + x];
                 BoxCollider* collider = tileBoxCollider(t);
                 if (collider != NULL) {
                     if (tag == boxColliderGetTag(collider) && boxIsCollidingWithBox(box, collider)) {
@@ -114,8 +141,53 @@ int arenaDetectCollisions(Arena* arena, BoxCollider* box, int tag, BoxCollider**
     return j;
 }
 
-void arenaUpdade(Arena* arena, Terminal* terminal) {
+int arenaDetectCollisions(Arena* arena, BoxCollider* box, int tag, BoxCollider** colliders) {
+    int j = 0;
     for (int i = 0; i < arena->tilesN; i++) {
-        tileUpdate(arena->tiles[i], terminal);
+        BoxCollider* collider = tileBoxCollider(arena->tiles[i]);
+		if (collider == NULL) continue; 
+
+        if (tag != boxColliderGetTag(collider)) continue;
+        if (boxIsCollidingWithBox(box, collider)) {
+            colliders[j] = collider;
+            j++;
+        }
     }
+
+    return j;
+}
+
+int arenaDetectCollisions2(Arena* arena, BoxCollider* hitBox, int n, BoxCollider** colliders, BoxCollider** result) {
+    int j = 0;
+
+    for (int i = 0; i < n; i++) {
+        BoxCollider* collider = colliders[i];
+        if (boxIsCollidingWithBox(hitBox, collider)) {
+            result[j] = collider;
+            j++;
+        }
+    }
+
+    return j;
+}
+
+void arenaCollectableHandler(Arena* arena) {
+    BoxCollider* hitBox = playerModelGetHitBox(playerGetPlayerModel(arena->player));
+    BoxCollider* colliders[arena->fruitsN];
+    for (int i = 0; i < arena->fruitsN; i++) if (collectableIsActive(arena->fruits[i])) colliders[i] = collectableGetHitBox(arena->fruits[i]);
+
+    BoxCollider* collisions[arena->fruitsN];
+    int n = arenaDetectCollisions2(arena, hitBox, arena->fruitsN, colliders, collisions);
+
+    for (int i = 0; i < n; i++) {
+        collectableSetActive(arena->fruits[i], false);
+    }
+}
+
+void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
+    for (int i = 0; i < arena->fruitsN; i++) collectableUpdate(arena->fruits[i], terminal);
+    for (int i = 0; i < arena->tilesN; i++) tileUpdate(arena->tiles[i], terminal);
+
+    arenaCollectableHandler(arena);
+    playerUpdate(arena->player, terminal, arena, deltaTime);
 }

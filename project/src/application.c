@@ -4,10 +4,9 @@
 #include "../../lab5/terminal.h"
 
 #include "../include/game.h"
-#include "../include/utils.h"
-#include "../include/inputHandler.h"
+#include "../include/utils/utils.h"
+#include "../include/utils/inputHandler.h"
 #include "../include/cursorHandler.h"
-#include "../include/button.h"
 
 #include <lcom/lcf.h>
 
@@ -46,8 +45,8 @@ int(proj_main_loop)(int argc, char* argv[]) {
     timer_subscribe((uint8_t*)&hook_id_timer);
     kbcSubscribe((uint8_t*)&hook_id_kbd);
     Terminal* terminal = newTerminal(0x115);
-    cursorInit(800, 600);
-    cursorReset();
+
+    cursorReset(getCursor());
 	startGame();
     
     enableDataReport();
@@ -55,7 +54,6 @@ int(proj_main_loop)(int argc, char* argv[]) {
     
     int r, ipc_status;
     message msg;
-    bool prevLeft = false;
 
     while (!getKeyPressed(getInputHandler(), KEYCODE_ESQ)) {
         if ((r = driver_receive(ANY, &msg, &ipc_status))) {
@@ -73,6 +71,7 @@ int(proj_main_loop)(int argc, char* argv[]) {
 					float deltaTime = (float)(currFrameTime - lastFrameTime) / 60;
 
 					gameLoop(terminal, deltaTime);
+					cursorDraw(getCursor(), terminal);
                     lastFrameTime = currFrameTime;
                 }
 
@@ -82,15 +81,8 @@ int(proj_main_loop)(int argc, char* argv[]) {
                         if(!(isOverflowingX() || isOverflowingY())){
                             int16_t dx = getDeltaX();
                             int16_t dy = getDeltaY();
-                            cursorUpdateCoordinates(dx, -dy);
+                            cursorUpdateCoordinates(getCursor(), dx, -dy);
                         }
-                        bool left = pressedLeftButton();
-                        if (!left && prevLeft) {
-                            uint16_t mx, my;
-                            cursorGetPixelPosition(&mx, &my);
-                            uiManagerHandleClick(getUIManager(), mx, my);
-                        }
-                        prevLeft = left;
                         cleanBytes();
                     }
                 }
@@ -116,6 +108,7 @@ int(proj_main_loop)(int argc, char* argv[]) {
     mouseUnsubscribe(&hook_id_mouse);
     timer_unsubscribe_int();
     kbcUnsubscribe();
+	cursorFree(getCursor());
 
 	exitGame();
     freeTerminal(terminal);

@@ -1,4 +1,4 @@
-#include "../include/animatedSprite.h"
+#include "../include/components/animatedSprite.h"
 #include <stdint.h>
 #include <stdlib.h>
 
@@ -7,7 +7,7 @@ struct AnimatedSprite {
     int n;
 
     float frameSpeed;
-    int current;
+    float current;
     float elapsedTime;
 };
 
@@ -31,14 +31,10 @@ void animatedSpriteFree(AnimatedSprite* sprite) {
     free(sprite);
 }
 
-void animatedSpriteUpdate(int x, int y, AnimatedSprite* sprite, Terminal* t, float deltaTime) {
-    sprite->elapsedTime += deltaTime * sprite->frameSpeed;
-    float frameDuration = 1.0f / sprite->frameSpeed;
+void animatedSpriteUpdate(int x, int y, AnimatedSprite* sprite, Terminal* t, float deltaTime, bool isFlipped) {
+    sprite->current += deltaTime * sprite->frameSpeed;
+	if (sprite->current >= sprite->n) sprite->current = 0;
 
-    if (sprite->elapsedTime >= frameDuration) {
-        sprite->elapsedTime = 0.0f;
-        sprite->current = (sprite->current + 1) % sprite->n;
-    }
-
-    drawSpriteXPM(sprite->sprites[sprite->current], t, x, y);
+	SpriteXPM* currentFrame = sprite->sprites[(int)sprite->current];
+    drawSpriteXPM(currentFrame, t, x, y, isFlipped);
 }

@@ -58,8 +58,8 @@
 
 typedef struct InputHandler InputHandler;
 
-static InputHandler* instance;
-static bool isInstanceCreated = false;
+static InputHandler* inputHandler;
+static bool isInputHandlerCreated = false;
 
 InputHandler* getInputHandler();
 bool getKeyDown(InputHandler* inputHandler, uint16_t keycode);

@@ -86,9 +86,9 @@ int(video_test_rectangle)(uint16_t mode, uint16_t x, uint16_t y, uint16_t width,
 int(video_test_xpm)(xpm_map_t xpm, uint16_t x, uint16_t y) {
     Terminal* terminal = newTerminal(0x105);
     enum xpm_image_type type = XPM_INDEXED;
-    SpriteXPM* sprite = newSpriteXPM(xpm, type);
+    SpriteXPM* sprite = newSpriteXPM(xpm, type, 0, 0);
 
-    drawSpriteXPM(sprite, terminal, x, y);
+    drawSpriteXPM(sprite, terminal, x, y, false);
     uint8_t bit_no = 1;
     int hook_id = 1;
 

@@ -1,4 +1,4 @@
-#include "../../include/vec2d.h"
+#include "../../include/utils/vec2d.h"
 #include <stdio.h>
 
 typedef struct monster Monster;

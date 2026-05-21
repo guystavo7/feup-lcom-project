@@ -4,14 +4,21 @@
 #include <stdint.h>
 #include "../../lab5/spriteXMP.h"
 
-void cursorInit(int w, int h);
-void cursorReset();
-void cursorUpdateCoordinates(int16_t dx, int16_t dy);
-void cursorDraw(Terminal* terminal, SpriteXPM* sprite);
-void cursorGetPixelPosition(uint16_t* px, uint16_t* py);
+typedef struct Cursor Cursor;
 
-int cursorGetX();
-int cursorGetY();
+static Cursor* cursor;
+static bool isCursorCreated = false;
+
+void cursorFree(Cursor* c);
+
+Cursor* getCursor();
+void cursorReset(Cursor* c);
+void cursorUpdateCoordinates(Cursor* c, int dx, int dy);
+void cursorDraw(Cursor* c, Terminal* terminal);
+
+int cursorGetX(Cursor* c);
+int cursorGetY(Cursor* c);
+void cursorGetPixelPosition(Cursor* c, int* px, int* py);
 
 #endif
 

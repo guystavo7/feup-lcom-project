@@ -11,6 +11,15 @@ SRCS= \
 	button.c \
 	animatedSprite.c \
 	tile.c \
+	./vec2d.c \
+	./player.c \
+	./utils.c \
+	./playerController.c \
+	./playerIdle.c \
+	./playerModel.c \
+	./playerState.c \
+	./playerRunning.c \
+	./collectable.c \
 
 OBJS = ${SRCS:.c=.o}
 

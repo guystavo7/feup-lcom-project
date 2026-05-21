@@ -5,7 +5,7 @@
 
 #include "../../include/monster/path.h"
 #include "../../include/data_structures/vector.h"
-#include "../../include/vec2d.h"
+#include "../../include/utils/vec2d.h"
 
 /* test command
   gcc -g -Wall -fsanitize=address pathTest.c ../../src/monster/path.c ../../src/vec2d.c ../../src/data_structures/vector.c -o pathTest -lm

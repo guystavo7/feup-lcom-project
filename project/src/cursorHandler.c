@@ -1,59 +1,78 @@
 #include "../include/cursorHandler.h"
-#include <stdint.h>
+#include "../resources/cursor.h"
+#include <stdlib.h>
 
-struct cursor{
-  int x, y;
-  int width, height;
-  int center[2];
+struct Cursor {
+    int x, y;
+    int width, height;
+    int center[2];
+
+	SpriteXPM* sprite;
 };
 
-static struct cursor c;
+static Cursor* cursorNew(int w, int h) {
+	Cursor* res = malloc(sizeof(Cursor));
+	res->sprite = newSpriteXPM((xpm_map_t)cursor_xpm, XPM_8_8_8, 0, 0);
+	res->center[0] = w / 2; 
+	res->center[1] = h / 2; 
+	
+	res->x = 0;
+	res->y = 0;
 
-void cursorInit(int w, int h){
-  c.center[0] = w/2;
-  c.center[1] = h/2;
-  c.x = 0;
-  c.y = 0;
-  c.width = w;
-  c.height = h;
+	res->width = w;
+	res->height = h;
+	return res;
 }
 
-void cursorReset(){
-  c.x = 0;
-  c.y = 0;
+Cursor* getCursor() {
+	if (!isCursorCreated) {
+		cursor = cursorNew(800, 600);
+		isCursorCreated = true;
+	}	
+
+	return cursor;
 }
 
-void cursorUpdateCoordinates(int16_t dx, int16_t dy){
-  int nextX = c.x + dx;
-  int nextY = c.y + dy;
-
-  int px = c.center[0] + nextX;
-  if (px < 0) c.x = -c.center[0];
-  else if (px > c.width - 1) c.x = (c.width - 1) - c.center[0];
-  else c.x = nextX;
-
-  int pv = c.center[1] + nextY;
-  if (pv < 0) c.y = -c.center[1];
-  else if (pv > c.height - 1) c.y = (c.height - 1) - c.center[1];
-  else c.y = nextY;
+void cursorFree(Cursor *c) {
+	freeSpriteXPM(c->sprite);
+	free(c);
 }
 
-void cursorDraw(Terminal* terminal, SpriteXPM* sprite) {
-  uint16_t px = c.center[0] + c.x;
-  uint16_t py = c.center[1] + c.y;
-  drawSpriteXPM(sprite, terminal, px, py);
+void cursorReset(Cursor* c) {
+    c->x = 0;
+    c->y = 0;
 }
 
-void cursorGetPixelPosition(uint16_t* px, uint16_t* py) {
-  *px = c.center[0] + c.x;
-  *py = c.center[1] + c.y;
+void cursorUpdateCoordinates(Cursor* c, int dx, int dy) {
+    int nextX = c->x + dx;
+    int nextY = c->y + dy;
+
+    int px = c->center[0] + nextX;
+    if (px < 0) c->x = -c->center[0];
+    else if (px > c->width - 1) c->x = (c->width - 1) - c->center[0];
+    else c->x = nextX;
+
+    int pv = c->center[1] + nextY;
+    if (pv < 0) c->y = -c->center[1];
+    else if (pv > c->height - 1) c->y = (c->height - 1) - c->center[1];
+    else c->y = nextY;
 }
 
-int cursorGetX(){
-  return c.x;
+void cursorDraw(Cursor* c, Terminal* terminal) {
+    int px = c->center[0] + c->x;
+    int py = c->center[1] + c->y;
+    drawSpriteXPM(c->sprite, terminal, px, py, false);
 }
 
-int cursorGetY(){
-  return c.y;
+void cursorGetPixelPosition(Cursor* c, int* px, int* py) {
+    *px = c->center[0] + c->x;
+    *py = c->center[1] + c->y;
 }
 
+int cursorGetX(Cursor* c) {
+    return c->x;
+}
+
+int cursorGetY(Cursor* c) {
+    return c->y;
+}

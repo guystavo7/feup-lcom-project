@@ -1,19 +1,24 @@
-#include "spriteXMP.h"
+#include "spriteXMP.h" 
 #include "terminal.h"
 #include <stdint.h>
 
 struct SpriteXPM {
     xpm_image_t* img;
+	int offsetX;
+	int offsetY;
+
     uint8_t* pixMap;
 };
 
-SpriteXPM* newSpriteXPM(xpm_map_t map, enum xpm_image_type type) {
+SpriteXPM* newSpriteXPM(xpm_map_t map, enum xpm_image_type type, int offsetX, int offsetY) {
     xpm_image_t* img = malloc(sizeof(xpm_image_t));
     uint8_t* pixMap = xpm_load(map, type, img);
 
     SpriteXPM* sprite = malloc(sizeof(SpriteXPM));
     sprite->img = img;
     sprite->pixMap = pixMap;
+	sprite->offsetX = offsetX;
+	sprite->offsetY = offsetY;
 
     return sprite;
 }
@@ -33,12 +38,15 @@ static uint32_t getColorFromPixel(SpriteXPM* sprite, unsigned int bytesPerPixel,
     return color;
 }
 
-void drawSpriteXPM(SpriteXPM* sprite, Terminal* terminal, __uint16_t x, __uint16_t y) {
+void drawSpriteXPM(SpriteXPM* sprite, Terminal* terminal, int x, int y, bool isFlipped) {
     for (uint16_t i = 0; i < sprite->img->height; i++) {
         for (uint16_t j = 0; j < sprite->img->width; j++) {
             uint32_t color = getColorFromPixel(sprite, getBytesPerPixel(terminal), j, i);
-            if (color == xpm_transparency_color(XPM_8_8_8)) continue; //funcao dada pelo lcf
-            drawPixel(terminal, x + j, y + i, color);
+            if (color == 0 || color == xpm_transparency_color(XPM_8_8_8)) continue; 
+
+			int pixelX = isFlipped ? x + sprite->offsetX + sprite->img->width - 1 - j : x + sprite->offsetX + j;
+			int pixelY = y + sprite->offsetY + i;
+            drawPixel(terminal, pixelX, pixelY, getColorFromPixel(sprite, getBytesPerPixel(terminal), j, i));
         }
     }
 }

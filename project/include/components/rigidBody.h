@@ -3,13 +3,13 @@
 
 #include <stdbool.h>
 
-#include "arena.h"
+#include "../arena.h"
 #include "boxCollider.h"
-#include "vec2d.h"
+#include "../utils/vec2d.h"
 
 typedef struct RigidBody RigidBody;
 
-RigidBody* rigidBodyNew(Vec2d pos, Vec2d offset, Vec2d size, int tag);
+RigidBody* rigidBodyNew();
 void rigidBodyFree(RigidBody* rb);
 
 void rigidBodyUpdate(RigidBody* rb, Vec2d* pos, Arena* arena, BoxCollider* hitBox, float deltaTime);

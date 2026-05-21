@@ -1,18 +1,22 @@
 #ifndef ARENA
 #define ARENA
 
-#include "boxCollider.h"
-#include <stdbool.h>
+#include "./components/boxCollider.h"
 #include "../../lab5/terminal.h"
+
+#include <stdbool.h>
 
 typedef struct Arena Arena;
 
-Arena* arenaNewFromFile(const char* filename, int tileSize);
-
+Arena* arenaNew(const char* filename);
 void arenaFree(Arena* arena);
 
 int arenaDetectCollisions(Arena* arena, BoxCollider* box, int tag, BoxCollider** colliders);
 
-void arenaUpdade(Arena* arena, Terminal* terminal);
+void arenaCollectableHandler(Arena* arena);
+int arenaDetectCollisions2(Arena* arena, BoxCollider* hitBox, int n, BoxCollider** colliders, BoxCollider** result);
+int arenaDetectCollisionsWalls(Arena* arena, BoxCollider* box, int tag, BoxCollider** colliders);
+
+void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime);
 
 #endif

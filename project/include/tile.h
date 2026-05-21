@@ -1,10 +1,12 @@
 #ifndef TILE
 #define TILE
 
-#include "boxCollider.h"
-#include <stdbool.h>
-#include "../../lab5/terminal.h"
 #include "../../lab5/spriteXMP.h"
+#include "../../lab5/terminal.h"
+#include "./components/boxCollider.h"
+#include "./utils/vec2d.h"
+
+#include <stdbool.h>
 
 typedef struct Tile {
     SpriteXPM* sprite;
@@ -15,11 +17,8 @@ typedef struct Tile {
 } Tile;
 
 Tile* tileNew(char** sprite, int name, int x, int y, int tileSize);
-
 void tileFree(Tile* tile);
-
 void tileUpdate(Tile* tile, Terminal* terminal);
-
 BoxCollider* tileBoxCollider(Tile* tile);
 
 #endif

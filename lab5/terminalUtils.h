@@ -14,5 +14,6 @@
 #define LINEAR_FRAME_BUFFER_BIT		1 << 14
 
 int enterMode(uint16_t mode);
+int pageFlip(uint16_t yOffset);
 
 #endif
