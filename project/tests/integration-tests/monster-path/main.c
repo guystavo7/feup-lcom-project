@@ -4,7 +4,7 @@
 #include "../../../lab5/terminal.h"
 
 #include "../../include/inputHandler.h"
-#include "../../include/monster_path_test/mp_test.h"
+#include "mp_test.h"
 #include "../../include/utils.h"
 
 #include <lcom/lcf.h>

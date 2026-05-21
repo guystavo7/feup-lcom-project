@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include <math.h>
 
-#include "../../include/monster_path_test/vec2d.h" 
+#include "../../include/vec2d.h" 
 
 /* code for testing
   gcc -g -fsanitize=address vec2dTest.c vec2d.c -o vec2dTest -lm

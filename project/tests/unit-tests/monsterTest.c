@@ -3,8 +3,8 @@
 #include <stdbool.h>
 #include <math.h>
 
-#include "../../include/monster_path_test/monster.h"
-#include "../../include/monster_path_test/vec2d.h"
+#include "../../include/monster/monster.h"
+#include "../../include/vec2d.h"
 
 /*
   gcc -g -Wall -fsanitize=address monsterTest.c monster.c vec2d.c -o monsterTest -lm
