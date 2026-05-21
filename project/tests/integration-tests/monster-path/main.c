@@ -1,12 +1,13 @@
-#include "../../../lab2/timer.h"
-#include "../../../lab3/kbc.h"
-#include "../../../lab4/mouse.h"
-#include "../../../lab5/terminal.h"
+#include "../../../../lab2/timer.h"
+#include "../../../../lab3/kbc.h"
+#include "../../../../lab4/mouse.h"
+#include "../../../../lab5/terminal.h"
 
-#include "../../include/inputHandler.h"
+#include "../../../include/inputHandler.h"
+
+#include "../../../include/utils.h"
+
 #include "mp_test.h"
-#include "../../include/utils.h"
-
 #include <lcom/lcf.h>
 
 #include <stdint.h>

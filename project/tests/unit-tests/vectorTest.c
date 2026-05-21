@@ -7,6 +7,11 @@
 
 #include "../../include/data_structures/vector.h" 
 
+/* test command
+  gcc -g -Wall -fsanitize=address vectorTest.c  ../../src/data_structures/vector.c -o pathTest -lm
+  ./vectorTest
+*/
+
 /* ========================================================================== */
 /* TESTING FRAMEWORK                              */
 /* ========================================================================== */

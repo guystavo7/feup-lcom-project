@@ -1,4 +1,4 @@
-#include "../../include/monster_path_test/monster.h"
+#include "../../include/monster/monster.h"
 
 struct monster
 {

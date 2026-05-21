@@ -1,10 +1,10 @@
-#include "../../include/monster_path_test/path.h"
+#include "../../include/monster/path.h"
 
 struct path {
     float pcd; // point change distance
     Vector* points;
     Vector* sub_keys;   // subscriptor keys
-    Vector* sub_values; // subscriptor values (map to the points)
+    Vector* sub_values; // subscriptor mvalues (map to the points)
 };
 
 Path* pathCreate(float point_change_distance, Vector* points) {

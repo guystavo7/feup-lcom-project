@@ -1,12 +1,5 @@
 #include "mp_test.h"
-#include "../../../lab5/spriteXMP.h"
-#include "../../include/inputHandler.h"
-#include "../../resources/1.h"
-#include "../../include/data_structures/vector.h"
-#include "../../include/monster/monster.h"
-#include "../../include/monster/path.h"
 
-#include <stdio.h>
 
 static SpriteXPM* sprite;
 static Vector* pathPoints;

@@ -6,7 +6,7 @@
 #include "../../include/vec2d.h" 
 
 /* code for testing
-  gcc -g -fsanitize=address vec2dTest.c vec2d.c -o vec2dTest -lm
+  gcc -g -fsanitize=address vec2dTest.c ../../src/vec2d.c -o vec2dTest -lm
   ./vec2dTest
 */
 
