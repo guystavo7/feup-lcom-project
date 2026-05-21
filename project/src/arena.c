@@ -3,7 +3,11 @@
 #include "../include/tile.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include "../resources/tiles/tiles.h"
 #include <string.h>
+
+#define MAP_WIDTH 25
+#define MAP_HEIGHT 18
 
 struct Arena {
     int tilesN;
@@ -20,29 +24,26 @@ Arena* arenaNewFromFile(const char* filename, int tileSize) {
         return NULL;
     }
 
-    int width, height;
-    if (fscanf(file, "%d %d", &width, &height) != 2) {
-        printf("Error: Invalid map file format\n");
-        fclose(file);
-        return NULL;
-    }
+    int width = MAP_WIDTH;
+    int height = MAP_HEIGHT;
+    char lineBuffer[1024];
 
-    char** map = malloc(height * sizeof(char*));
+    int** map = malloc(height * sizeof(int*));
     for (int i = 0; i < height; i++) {
-        map[i] = malloc(width + 1);
-        for (int j = 0; j < width; j++) {
-            int c;
-            do {
-                c = fgetc(file);
-            } while (c == '\n' || c == '\r');
-            
-            if (c == EOF) {
-                map[i][j] = '\0';
-                break;
-            }
-            map[i][j] = (char)c;
+        map[i] = malloc(width * sizeof(int));
+        
+        if (fgets(lineBuffer, sizeof(lineBuffer), file) == NULL) {
+            break;
         }
-        map[i][width] = '\0';
+
+        char* ptr = lineBuffer;
+        for (int j = 0; j < width; j++) {
+            map[i][j] = atoi(ptr);
+            while (*ptr != '\0' && *ptr != '\n' && *ptr != '\r' && *ptr != ',') {
+                ptr++;
+            }
+            if (*ptr == ',') ptr++;
+        }
     }
     fclose(file);
 
@@ -55,11 +56,14 @@ Arena* arenaNewFromFile(const char* filename, int tileSize) {
     
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
-            if (map[y][x] == '#') {
-                res->tiles[y * width + x] = tileNew("#", "wall", x * tileSize, y * tileSize, tileSize);
-            } else {
-                res->tiles[y * width + x] = tileNew(" ", "empty", x * tileSize, y * tileSize, tileSize);
+            int id = map[y][x];
+            char** sprite = NULL;
+            int num_tiles = sizeof(tiles) / sizeof(tiles[0]);
+            
+            if (id > 0 && id <= num_tiles) {
+                sprite = tiles[id - 1];
             }
+            res->tiles[y * width + x] = tileNew(sprite, id, x * tileSize, y * tileSize, tileSize);
         }
     }
 
@@ -108,4 +112,10 @@ int arenaDetectCollisions(Arena* arena, BoxCollider* box, int tag, BoxCollider**
     }
 
     return j;
+}
+
+void arenaUpdade(Arena* arena, Terminal* terminal) {
+    for (int i = 0; i < arena->tilesN; i++) {
+        tileUpdate(arena->tiles[i], terminal);
+    }
 }

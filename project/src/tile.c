@@ -3,21 +3,23 @@
 #include <stdlib.h>
 #include <string.h>
 
-Tile* tileNew(const char* sprite, const char* name, int x, int y, int tileSize) {
+Tile* tileNew(char** sprite, int id, int x, int y, int tileSize) {
   Tile* tile = malloc(sizeof(Tile));
-  tile->sprite = sprite;
-  tile->name = name;
+
+  if (sprite != NULL) {
+      tile->sprite = newSpriteXPM((xpm_map_t)sprite, XPM_8_8_8);
+  } else {
+      tile->sprite = NULL;
+  }
+
+  tile->id = id;
   tile->pos.x = x;
   tile->pos.y = y;
   tile->size.x = tileSize;
   tile->size.y = tileSize;
 
-  if (strcmp(name, "wall") == 0) {
-      Vec2d offset = {0, 0};
-      tile->collider = boxColliderNew(tile->pos, offset, tile->size, 0);
-  } else {
-      tile->collider = NULL;
-  }
+  // Disable collisions for all map tiles
+  tile->collider = NULL;
 
   return tile;
 }
@@ -31,4 +33,10 @@ void tileFree(Tile* tile) {
 
 BoxCollider* tileBoxCollider(Tile* tile) {
   return tile->collider;
+}
+
+void tileUpdate(Tile* tile, Terminal* terminal) {
+  if (tile->sprite != NULL) {
+      drawSpriteXPM(tile->sprite, terminal, tile->pos.x, tile->pos.y);
+  }
 }

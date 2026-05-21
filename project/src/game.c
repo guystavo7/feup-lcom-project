@@ -36,7 +36,7 @@ void startGame() {
     hitBox = boxColliderNew(playerPos, offset, playerSize, 0);
 
     rb = rigidBodyNew(playerPos, offset, playerSize, 0);
-    arena = arenaNewFromFile("/home/lcom/labs/project/resources/arenaTest.txt", 50);
+    arena = arenaNewFromFile("/home/lcom/labs/project/resources/map1_TileLayer1.csv", 32);
 
     SpriteXPM** frames = malloc(3 * sizeof(SpriteXPM*));
 
@@ -80,7 +80,7 @@ void gameLoop(Terminal* terminal, float deltaTime) {
     rigidBodySetVelocity(rb, playerSpeed * dirX, playerSpeed * dirY);
     rigidBodyUpdate(rb, &playerPos, arena, hitBox, deltaTime);
     animatedSpriteUpdate(playerPos.x, playerPos.y, playerSprite, terminal, deltaTime);
-
+    arenaUpdade(arena, terminal);
     uiManagerDraw(ui, terminal);
     cursorDraw(terminal, mouse);
 }

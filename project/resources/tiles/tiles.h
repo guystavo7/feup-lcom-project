@@ -2531,7 +2531,7 @@ static char *Tilemap_color9[] = {
 };
 
 /* ===== master pointer list ===== */
-static char **all_xpms[] = {
+static char **tiles[] = {
 	Tilemap_color1,
     Tilemap_color3,
     Tilemap_color4,
