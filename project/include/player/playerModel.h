@@ -5,6 +5,7 @@
 #include "../components/rigidBody.h"
 #include "./../arena.h"
 #include "./../utils/vec2d.h"
+#include <stdbool.h>
 
 typedef struct PlayerModel PlayerModel;
 
@@ -43,5 +44,8 @@ AnimatedSprite* playerModelGetRunningSprite(PlayerModel* model);
 AnimatedSprite* playerModelGetIdleSprite(PlayerModel* model);
 
 void playerModelSetAnimatedSprite(PlayerModel* model, AnimatedSprite* sprite);
+
+bool playerModelGetIsFlipped(PlayerModel* model);
+void playerModelSetIsFlipped(PlayerModel* model, bool isFlip);
 
 #endif

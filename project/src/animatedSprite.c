@@ -31,9 +31,10 @@ void animatedSpriteFree(AnimatedSprite* sprite) {
     free(sprite);
 }
 
-void animatedSpriteUpdate(int x, int y, AnimatedSprite* sprite, Terminal* t, float deltaTime) {
+void animatedSpriteUpdate(int x, int y, AnimatedSprite* sprite, Terminal* t, float deltaTime, bool isFlipped) {
     sprite->current += deltaTime * sprite->frameSpeed;
 	if (sprite->current >= sprite->n) sprite->current = 0;
 
-    drawSpriteXPM(sprite->sprites[(int)sprite->current], t, x, y);
+	SpriteXPM* currentFrame = sprite->sprites[(int)sprite->current];
+    drawSpriteXPM(currentFrame, t, x, y, isFlipped);
 }

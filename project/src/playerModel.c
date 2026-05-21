@@ -16,6 +16,7 @@ struct PlayerModel {
     BoxCollider* hitBox;
     RigidBody* rb;
     float maxVelocity;
+	bool isFlipped;
 };
 
 static AnimatedSprite* getSprites(char** XPMs[], int n, float frameSpeed, Vec2d offset) {
@@ -28,6 +29,7 @@ PlayerModel* playerModelNew(Vec2d pos) {
     PlayerModel* res = malloc(sizeof(PlayerModel));
     res->pos.x = pos.x;
     res->pos.y = pos.y;
+	res->isFlipped = false;
 
     res->size.x = 17;
     res->size.y = 13;
@@ -149,4 +151,12 @@ AnimatedSprite* playerModelGetIdleSprite(PlayerModel* model) {
 
 void playerModelSetAnimatedSprite(PlayerModel* model, AnimatedSprite* sprite) {
 	model->sprite = sprite;
+}
+
+bool playerModelGetIsFlipped(PlayerModel* model) {
+	return model->isFlipped;
+}
+
+void playerModelSetIsFlipped(PlayerModel* model, bool isFlip) {
+	model->isFlipped = isFlip;
 }

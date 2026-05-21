@@ -23,5 +23,5 @@ void gameLoop(Terminal* terminal, float deltaTime) {
 
     int px, py;
     cursorSpaceToPixel(&px, &py);
-    drawSpriteXPM(mouse, terminal, px, py);
+    drawSpriteXPM(mouse, terminal, px, py, false);
 }

@@ -38,10 +38,13 @@ static uint32_t getColorFromPixel(SpriteXPM* sprite, unsigned int bytesPerPixel,
     return color;
 }
 
-void drawSpriteXPM(SpriteXPM* sprite, Terminal* terminal, int x, int y) {
+void drawSpriteXPM(SpriteXPM* sprite, Terminal* terminal, int x, int y, bool isFlipped) {
     for (uint16_t i = 0; i < sprite->img->height; i++) {
         for (uint16_t j = 0; j < sprite->img->width; j++) {
-            drawPixel(terminal, x + sprite->offsetX + j, y + sprite->offsetY + i, getColorFromPixel(sprite, getBytesPerPixel(terminal), j, i));
+			int pixelX = isFlipped ? x + sprite->offsetX + sprite->img->width - 1 - j : x + sprite->offsetX + j;
+			int pixelY = y + sprite->offsetY + i;
+
+            drawPixel(terminal, pixelX, pixelY, getColorFromPixel(sprite, getBytesPerPixel(terminal), j, i));
         }
     }
 }
