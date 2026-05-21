@@ -8,11 +8,12 @@ SRCS= \
 	./rigidBody.c \
 	./arena.c \
 	cursorHandler.c \
+	button.c \
 	animatedSprite.c \
 
 OBJS = ${SRCS:.c=.o}
 
-CPPFLAGS += -Iinclude -DLAB3
+CPPFLAGS += -Iinclude -I../../lab5 -DLAB3
 CFLAGS += -Wall -Wextra -Werror -pedantic -std=c11
 
 DPADD += ${LIBLCF}
@@ -20,7 +21,7 @@ LDADD += -llcf -L.
 LDADD += -L../../lab2 -ltimer
 LDADD += -L../../lab3 -lkbc
 LDADD += -L../../lab4 -lmouse
-LDADD += -L../../lab5 -lterminal 
+LDADD += -L../../lab5 -lterminal
 LDADD += -L../../lab5 -lspriteXPM
 
 all:
