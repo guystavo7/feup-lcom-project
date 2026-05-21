@@ -88,7 +88,7 @@ int(proj_main_loop)(int argc, char* argv[]) {
                         if (!left && prevLeft) {
                             uint16_t mx, my;
                             cursorGetPixelPosition(&mx, &my);
-                            buttonOnMouseClick(mx, my);
+                            uiManagerHandleClick(getUIManager(), mx, my);
                         }
                         prevLeft = left;
                         cleanBytes();

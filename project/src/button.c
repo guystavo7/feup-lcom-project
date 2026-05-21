@@ -1,65 +1,149 @@
 #include "../include/button.h"
+#include "../include/boxCollider.h"
+#include "../include/vec2d.h"
 
-#define BUTTON_X 20
-#define BUTTON_Y 20
-#define BUTTON_W 120
-#define BUTTON_H 40
+#include <stdlib.h>
 
-#define POPUP_X 250
-#define POPUP_Y 175
-#define POPUP_W 300
-#define POPUP_H 200
+#define UI_MAX_BUTTONS 8
+#define UI_MAX_POPUPS 4
 
-#define COLOR_BUTTON_FILL 0x00CCCCCC
-#define COLOR_BUTTON_BORDER 0x00FFFFFF
-#define COLOR_POPUP_FILL 0x00333333
-#define COLOR_POPUP_BORDER 0x00FFFFFF
+struct Button {
+    SpriteXPM* sprite;
+    BoxCollider* bounds;
+    uint16_t x;
+    uint16_t y;
+    ButtonClickFn onClick;
+};
 
-static bool popupVisible = false;
+struct Popup {
+    SpriteXPM* sprite;
+    BoxCollider* bounds;
+    uint16_t x;
+    uint16_t y;
+    bool visible;
+};
 
+struct UIManager {
+    Button* buttons[UI_MAX_BUTTONS];
+    unsigned int buttonCount;
+    Popup* popups[UI_MAX_POPUPS];
+    unsigned int popupCount;
+};
 
-static bool pointInRect(int px, int py, int x, int y, int w, int h) {
-    return px >= x && px < x + w && py >= y && py < y + h;
+static BoxCollider* boundsFromSprite(SpriteXPM* sprite, uint16_t x, uint16_t y) {
+    Vec2d pos = {x, y};
+    Vec2d offset = {0, 0};
+    Vec2d size = {getSpriteWidth(sprite), getSpriteHeight(sprite)};
+    return boxColliderNew(pos, offset, size, 0);
 }
 
-static void drawBorderedRect(Terminal* terminal, uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint32_t fill,
-                            uint32_t border) {
-    drawRectangle(terminal, x, y, w, h, fill);
+Button* buttonNew(xpm_map_t xpm, uint16_t x, uint16_t y, ButtonClickFn onClick) {
+    Button* b = malloc(sizeof(Button));
+    b->sprite = newSpriteXPM(xpm, XPM_8_8_8);
+    b->x = x;
+    b->y = y;
+    b->onClick = onClick;
+    b->bounds = boundsFromSprite(b->sprite, x, y);
+    return b;
+}
 
-    if (w < 2 || h < 2) return; //nao desenha borda quando é pequeno
+void buttonFree(Button* b) {
+    if (!b) return;
+    freeSpriteXPM(b->sprite);
+    boxColliderFree(b->bounds);
+    free(b);
+}
 
-    drawLine(terminal, x, y, w, border);
-    drawLine(terminal, x, y + h - 1, w, border);
+void buttonDraw(Button* b, Terminal* t) {
+    drawSpriteXPM(b->sprite, t, b->x, b->y);
+}
 
-    for (uint16_t j = y; j < y + h; j++) {
-        drawPixel(terminal, x, j, border);
-        drawPixel(terminal, x + w - 1, j, border);
+Popup* popupNew(xpm_map_t xpm, uint16_t x, uint16_t y) {
+    Popup* p = malloc(sizeof(Popup));
+    p->sprite = newSpriteXPM(xpm, XPM_8_8_8);
+    p->x = x;
+    p->y = y;
+    p->visible = false;
+    p->bounds = boundsFromSprite(p->sprite, x, y);
+    return p;
+}
+
+void popupFree(Popup* p) {
+    if (!p) return;
+    freeSpriteXPM(p->sprite);
+    boxColliderFree(p->bounds);
+    free(p);
+}
+
+void popupOpen(Popup* p) {
+    p->visible = true;
+}
+
+void popupClose(Popup* p) {
+    p->visible = false;
+}
+
+bool popupIsOpen(Popup* p) {
+    return p->visible;
+}
+
+void popupDraw(Popup* p, Terminal* t) {
+    if (!p->visible) return;
+    drawSpriteXPM(p->sprite, t, p->x, p->y);
+}
+
+UIManager* uiManagerNew(void) {
+    UIManager* ui = malloc(sizeof(UIManager));
+    ui->buttonCount = 0;
+    ui->popupCount = 0;
+    return ui;
+}
+
+void uiManagerFree(UIManager* ui) {
+    if (!ui) return;
+
+    for (unsigned int i = 0; i < ui->buttonCount; i++) buttonFree(ui->buttons[i]);
+
+    for (unsigned int i = 0; i < ui->popupCount; i++) popupFree(ui->popups[i]);
+
+    free(ui);
+}
+
+void uiManagerAddButton(UIManager* ui, Button* b) {
+    if (ui->buttonCount >= UI_MAX_BUTTONS) return;
+    ui->buttons[ui->buttonCount++] = b;
+}
+
+void uiManagerAddPopup(UIManager* ui, Popup* p) {
+    if (ui->popupCount >= UI_MAX_POPUPS) return;
+    ui->popups[ui->popupCount++] = p;
+}
+
+void uiManagerDraw(UIManager* ui, Terminal* t) {
+    for (unsigned int i = 0; i < ui->buttonCount; i++) buttonDraw(ui->buttons[i], t);
+
+    for (unsigned int i = 0; i < ui->popupCount; i++) popupDraw(ui->popups[i], t);
+}
+
+void uiManagerHandleClick(UIManager* ui, int mx, int my) {
+    Vec2d point = {mx, my};
+
+    for (unsigned int i = 0; i < ui->buttonCount; i++) {
+        Button* b = ui->buttons[i];
+        if (boxIsCollidingWithPoint(b->bounds, point)) {
+            if (b->onClick) b->onClick(b);
+            return;
+        }
     }
-}
 
-void buttonInit(void) {
-    popupVisible = false;
-}
+    for (unsigned int i = 0; i < ui->popupCount; i++) {
+        Popup* p = ui->popups[i];
+        if (!popupIsOpen(p)) continue;
 
-void buttonFree(void) {}
-
-void buttonDraw(Terminal* terminal) {
-
-    drawBorderedRect(terminal, BUTTON_X, BUTTON_Y, BUTTON_W, BUTTON_H, COLOR_BUTTON_FILL, COLOR_BUTTON_BORDER);
-
-    if (popupVisible)
-        drawBorderedRect(terminal, POPUP_X, POPUP_Y, POPUP_W, POPUP_H, COLOR_POPUP_FILL, COLOR_POPUP_BORDER);
-}
-
-void buttonOnMouseClick(int mx, int my) {
-    if (pointInRect(mx, my, BUTTON_X, BUTTON_Y, BUTTON_W, BUTTON_H)) {
-        popupVisible = true;
-        return;
+        if (boxIsCollidingWithPoint(p->bounds, point)) return;
     }
 
-    if (popupVisible && !pointInRect(mx, my, POPUP_X, POPUP_Y, POPUP_W, POPUP_H)) popupVisible = false;
-}
-
-bool buttonIsPopupOpen(void) {
-    return popupVisible;
+    for (unsigned int i = 0; i < ui->popupCount; i++) {
+        if (popupIsOpen(ui->popups[i])) popupClose(ui->popups[i]);
+    }
 }
