@@ -10,6 +10,7 @@ SRCS= \
 	cursorHandler.c \
 	button.c \
 	animatedSprite.c \
+	tile.c \
 
 OBJS = ${SRCS:.c=.o}
 
