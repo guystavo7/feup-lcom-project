@@ -1,7 +1,9 @@
 # --- Build outputs ---
 *.o
 *.a
-project/build/
+*.d
+**/build/
+build/
 
 # LCOM lab binaries (PROG= in each Makefile)
 lab1/lab1
@@ -15,18 +17,22 @@ lab5/lab5
 project/src/proj
 
 # Runtime / LCF trace and stdout captures
-trace.txt
-output.txt
+**/trace.txt
+**/output.txt
 
-# Machine-local (clangd / compiler include paths)
+# Machine-local IDE / tooling (not project source)
+.minix-src/
+**/.minix-src/
 compile_flags.txt
-**/compile_flags.txt
+**/.clangd
+**/.gdbinit
 
-# Visual Studio Code (local paths)
+# Editors
 .vscode/
 
 # Minix headers mirror for IDE only (not project source)
 .minix-src/
 
-# Debugger init (may contain local paths)
-**/.gdbinit
+# Minix crash dumps
+core
+core.*

@@ -78,9 +78,15 @@ void drawLine(Terminal *terminal, uint16_t x, uint16_t y, uint16_t width,
   }
 }
 
-void freeTerminal(Terminal *terminal) {
-  free(terminal);
-  vg_exit();
+void drawRectangle(Terminal* terminal, uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color) {
+    for (uint16_t i = y; i < y + height; i++) {
+        drawLine(terminal, x, i, width, color);
+    }
+}
+
+void freeTerminal(Terminal* terminal) {
+    free(terminal);
+    vg_exit();
 }
 
 unsigned int getBytesPerPixel(Terminal *terminal) {

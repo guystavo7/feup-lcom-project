@@ -40,7 +40,10 @@ bool boxIsCollidingWithBox(BoxCollider* b1, BoxCollider* b2) {
 }
 
 bool boxIsCollidingWithPoint(BoxCollider* b, Vec2d pos) {
-    return b->pos.x >= pos.x && b->pos.x + b->size.x <= pos.x && b->pos.y >= pos.y && b->pos.y + b->size.y <= pos.y;
+    float x = b->pos.x + b->offset.x;
+    float y = b->pos.y + b->offset.y;
+
+    return pos.x >= x && pos.x < x + b->size.x && pos.y >= y && pos.y < y + b->size.y;
 }
 
 void boxColliderUpdate(BoxCollider* b, int x, int y) {
