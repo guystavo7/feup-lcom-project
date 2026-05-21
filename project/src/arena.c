@@ -1,12 +1,12 @@
 #include "../include/arena.h"
 #include "../include/components/boxCollider.h"
 #include "../include/player/player.h"
-#include "../include/tile.h"
+#include "../include/tiles/tile.h"
 #include "../include/tiles/collectable.h"
-#include "../include/cursorHandler.h"
+#include "../include/utils/cursorHandler.h"
 
-#include "../resources/1.h"
 #include "../resources/tiles/tiles.h"
+#include "../resources/1.h"
 
 #include <stdlib.h>
 

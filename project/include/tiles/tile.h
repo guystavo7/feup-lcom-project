@@ -1,10 +1,10 @@
 #ifndef TILE
 #define TILE
 
-#include "../../lab5/spriteXMP.h"
-#include "../../lab5/terminal.h"
-#include "./components/boxCollider.h"
-#include "./utils/vec2d.h"
+#include "../../../lab5/spriteXMP.h"
+#include "../../../lab5/terminal.h"
+#include "../components/boxCollider.h"
+#include "../utils/vec2d.h"
 
 #include <stdbool.h>
 

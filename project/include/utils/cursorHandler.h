@@ -2,7 +2,7 @@
 #define CURSOR_HANDLER
 
 #include <stdint.h>
-#include "../../lab5/spriteXMP.h"
+#include "../../../lab5/spriteXMP.h"
 
 typedef struct Cursor Cursor;
 

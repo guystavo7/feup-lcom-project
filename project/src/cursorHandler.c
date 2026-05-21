@@ -1,4 +1,4 @@
-#include "../include/cursorHandler.h"
+#include "../include/utils/cursorHandler.h"
 #include "../resources/cursor.h"
 #include <stdlib.h>
 

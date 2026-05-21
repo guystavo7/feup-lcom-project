@@ -6,7 +6,7 @@
 #include "../include/game.h"
 #include "../include/utils/utils.h"
 #include "../include/utils/inputHandler.h"
-#include "../include/cursorHandler.h"
+#include "../include/utils/cursorHandler.h"
 
 #include <lcom/lcf.h>
 

@@ -1,10 +1,6 @@
 #include "../include/game.h"
 #include "../include/arena.h"
 
-#include "../resources/cursor.h"
-#include "../resources/popUp.h"
-#include "../resources/button.h"
-
 static Arena* arena;
 
 void startGame() {
