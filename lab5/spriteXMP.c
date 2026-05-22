@@ -50,6 +50,18 @@ void drawSpriteXPM(SpriteXPM* sprite, Terminal* terminal, int x, int y, bool isF
         }
     }
 }
+void generateEmptyBuffer(SpriteXPM* sprite, Terminal* terminal, int x, int y, bool isFlipped) {
+    for (uint16_t i = 0; i < sprite->img->height; i++) {
+        for (uint16_t j = 0; j < sprite->img->width; j++) {
+			int pixelX = isFlipped ? x + sprite->offsetX + sprite->img->width - 1 - j : x + sprite->offsetX + j;
+			int pixelY = y + sprite->offsetY + i;
+			
+            drawPixelInEmptyBuffer(terminal, pixelX, pixelY, getColorFromPixel(sprite, getBytesPerPixel(terminal), j, i));
+        }
+    }
+
+	free(sprite);
+}
 
 enum xpm_image_type getSpriteType(SpriteXPM* sprite) {
     return sprite->img->type;

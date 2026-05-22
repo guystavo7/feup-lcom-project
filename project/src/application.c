@@ -44,10 +44,10 @@ int(proj_main_loop)(int argc, char* argv[]) {
     mouseSubscribe(&hook_id_mouse);
     timer_subscribe((uint8_t*)&hook_id_timer);
     kbcSubscribe((uint8_t*)&hook_id_kbd);
-    Terminal* terminal = newTerminal(0x115);
+    Terminal* terminal = newTerminal(0x11B);
 
     cursorReset(getCursor());
-	startGame();
+	startGame(terminal);
     
     enableDataReport();
     int lastFrameTime = timer_get_counter();

@@ -2,7 +2,7 @@
 #include "../include/utils/vec2d.h"
 #include <stdlib.h>
 
-Tile* tileNew(char** sprite, int id, int x, int y, int tileSize) {
+Tile* tileNew(char** sprite, int id, int x, int y, int width, int height) {
     Tile* tile = malloc(sizeof(Tile));
 
     if (sprite != NULL) {
@@ -14,19 +14,18 @@ Tile* tileNew(char** sprite, int id, int x, int y, int tileSize) {
     tile->id = id;
     tile->pos.x = x;
     tile->pos.y = y;
-    tile->size.x = tileSize;
-    tile->size.y = tileSize;
+    tile->size.x = width;
+    tile->size.y = height;
 
     // Disable collisions for all map tiles
-    tile->collider = NULL;
+	Vec2d offset = {0, 0};
+    tile->collider = boxColliderNew(tile->pos, offset, tile->size, 0);
 
     return tile;
 }
 
 void tileFree(Tile* tile) {
-    if (tile->collider != NULL) {
-        boxColliderFree(tile->collider);
-    }
+    if (tile->collider != NULL) boxColliderFree(tile->collider);
     free(tile);
 }
 
@@ -35,7 +34,5 @@ BoxCollider* tileBoxCollider(Tile* tile) {
 }
 
 void tileUpdate(Tile* tile, Terminal* terminal) {
-    if (tile->sprite != NULL) {
-        drawSpriteXPM(tile->sprite, terminal, tile->pos.x, tile->pos.y, false);
-    }
+    if (tile->sprite != NULL) drawSpriteXPM(tile->sprite, terminal, tile->pos.x, tile->pos.y, false);
 }

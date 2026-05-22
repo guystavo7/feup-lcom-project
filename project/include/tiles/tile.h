@@ -16,7 +16,7 @@ typedef struct Tile {
     BoxCollider* collider;
 } Tile;
 
-Tile* tileNew(char** sprite, int name, int x, int y, int tileSize);
+Tile* tileNew(char** sprite, int name, int x, int y, int width, int height);
 void tileFree(Tile* tile);
 void tileUpdate(Tile* tile, Terminal* terminal);
 BoxCollider* tileBoxCollider(Tile* tile);

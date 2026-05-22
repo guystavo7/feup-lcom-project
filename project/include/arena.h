@@ -8,7 +8,7 @@
 
 typedef struct Arena Arena;
 
-Arena* arenaNew(const char* filename);
+Arena* arenaNew(Terminal* terminal, const char* filename);
 void arenaFree(Arena* arena);
 
 int arenaDetectCollisions(Arena* arena, BoxCollider* box, int tag, BoxCollider** colliders);

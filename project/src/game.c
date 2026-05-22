@@ -1,10 +1,12 @@
 #include "../include/game.h"
 #include "../include/arena.h"
 
+#include "../resources/map/background.h"
+
 static Arena* arena;
 
-void startGame() {
-	arena = arenaNew("/home/lcom/labs/project/resources/map1_TileLayer1.csv");
+void startGame(Terminal* terminal) {
+    arena = arenaNew(terminal, "/home/lcom/labs/project/resources/map/grid_walls.csv");
 }
 
 void exitGame() {

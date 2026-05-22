@@ -82,6 +82,14 @@ void drawPixel(Terminal* terminal, int x, int y, uint32_t color) {
     memcpy(&terminal->terminalMem[offset], &color, terminal->bytesPerPixel);
 }
 
+void drawPixelInEmptyBuffer(Terminal* terminal, int x, int y, uint32_t color) {
+    if (y < 0 || y >= terminal->vmi.YResolution || x < 0 || x >= terminal->vmi.XResolution) return;
+    long currentX = x * terminal->bytesPerPixel;
+    long offset = currentX + y * terminal->vmi.XResolution * terminal->bytesPerPixel;
+
+    memcpy(&terminal->empytyBuffer[offset], &color, terminal->bytesPerPixel);
+}
+
 void drawLine(Terminal* terminal, int x, int y, uint16_t width, uint32_t color) {
     int end = x + width;
 
