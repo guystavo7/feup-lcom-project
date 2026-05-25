@@ -125,7 +125,7 @@ Arena* arenaNew(Terminal* terminal, const char* filename) {
 	generateEmptyBuffer(backgroundSprite, terminal, 0, 0, false);
 
     SpriteXPM* arrowSprite = newSpriteXPM((xpm_map_t)abc, XPM_8_8_8, 0, 0);
-    Projectile* testProj = projectileCreate(PROJ_HOMING, 200, 200, 200, 0, arrowSprite);
+    Projectile* testProj = projectileCreate(PROJ_HOMING, 200, 200, 100, 0, arrowSprite);
     arenaAddProjectile(res, testProj);
 
     return res;

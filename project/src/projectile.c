@@ -86,8 +86,8 @@ void projectileUpdate(Projectile* p, double delta_t, Terminal* terminal) {
             
             // Aproximar a velocidade da direção do target (interpolação simples)
             float turn = p->extra_data.homing.turn_speed * delta_t;
-            float new_vel_x = current_vel_x + ndx * turn;
-            float new_vel_y = current_vel_y + ndy * turn;
+            float new_vel_x = ndx * turn;
+            float new_vel_y = ndy * turn;
             
             // Normalizar a nova velocidade para manter o speed original
             float new_speed = sqrt(new_vel_x*new_vel_x + new_vel_y*new_vel_y);
