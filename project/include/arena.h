@@ -2,6 +2,7 @@
 #define ARENA
 
 #include "./components/boxCollider.h"
+#include "./components/projectile.h"
 #include "../../lab5/terminal.h"
 
 #include <stdbool.h>
@@ -18,5 +19,8 @@ int arenaDetectCollisions2(Arena* arena, BoxCollider* hitBox, int n, BoxCollider
 int arenaDetectCollisionsWalls(Arena* arena, BoxCollider* box, int tag, BoxCollider** colliders);
 
 void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime);
+
+void arenaAddProjectile(Arena* arena, Projectile* p);
+void arenaProjectileHandler(Arena* arena, float deltaTime, Terminal* terminal);
 
 #endif

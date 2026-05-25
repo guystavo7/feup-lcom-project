@@ -1,6 +1,7 @@
 #include "../include/arena.h"
 #include "../include/components/boxCollider.h"
 #include "../include/player/player.h"
+#include "../include/components/projectile.h"
 #include "../include/tiles/collectable.h"
 #include "../include/tiles/tile.h"
 #include "../include/utils/cursorHandler.h"
@@ -27,6 +28,10 @@ struct Arena {
     Player* player;
     int fruitsN;
     Collectable** fruits;
+
+    int projectilesCapacity;
+    int projectilesCount;
+    Projectile** projectiles;
 
     Cursor* cursor;
 };
@@ -111,9 +116,17 @@ Arena* arenaNew(Terminal* terminal, const char* filename) {
 
     res->fruits[0] = collectableNew(fruitPos, fruitOffset, fruitSize, abc);
 
+    res->projectilesCapacity = 100;
+    res->projectilesCount = 0;
+    res->projectiles = malloc(sizeof(Projectile*) * res->projectilesCapacity);
+
 	// The terminal will handle the freeing
 	SpriteXPM* backgroundSprite = newSpriteXPM((xpm_map_t)background, XPM_8_8_8, 0, 0);
 	generateEmptyBuffer(backgroundSprite, terminal, 0, 0, false);
+
+    SpriteXPM* arrowSprite = newSpriteXPM((xpm_map_t)abc, XPM_8_8_8, 0, 0);
+    Projectile* testProj = projectileCreate(PROJ_HOMING, 200, 200, 200, 0, arrowSprite);
+    arenaAddProjectile(res, testProj);
 
     return res;
 }
@@ -121,6 +134,10 @@ Arena* arenaNew(Terminal* terminal, const char* filename) {
 void arenaFree(Arena* arena) {
     for (int i = 0; i < arena->tilesN; i++) tileFree(arena->tiles[i]);
     free(arena->tiles);
+    
+    for (int i = 0; i < arena->projectilesCount; i++) projectileFree(arena->projectiles[i]);
+    free(arena->projectiles);
+
     playerFree(arena->player);
     free(arena);
 }
@@ -204,10 +221,40 @@ void arenaCollectableHandler(Arena* arena) {
     }
 }
 
+void arenaAddProjectile(Arena* arena, Projectile* p) {
+    if (arena->projectilesCount >= arena->projectilesCapacity) return;
+    arena->projectiles[arena->projectilesCount++] = p;
+}
+
+void arenaProjectileHandler(Arena* arena, float deltaTime, Terminal* terminal) {
+    int activeCount = 0;
+    for (int i = 0; i < arena->projectilesCount; i++) {
+        if (projectileIsActive(arena->projectiles[i])) {
+            arena->projectiles[activeCount++] = arena->projectiles[i];
+        } else {
+            projectileFree(arena->projectiles[i]);
+        }
+    }
+    arena->projectilesCount = activeCount;
+
+    for (int i = 0; i < arena->projectilesCount; i++) {
+        Projectile* p = arena->projectiles[i];
+        projectileUpdate(p, deltaTime, terminal);
+        
+        BoxCollider* colliders[10];
+        int n = arenaDetectCollisions(arena, projectileGetCollider(p), 0, colliders);
+        if (n > 0) {
+            projectileSetActive(p, false);
+        }
+    }
+}
+
 void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
     for (int i = 0; i < arena->fruitsN; i++) collectableUpdate(arena->fruits[i], terminal);
     for (int i = 0; i < arena->tilesN; i++) tileUpdate(arena->tiles[i], terminal);
 
     arenaCollectableHandler(arena);
+    projectileUpdateHomingTarget(arena->projectiles[0], playerModelGetX(playerGetPlayerModel(arena->player)), playerModelGetY(playerGetPlayerModel(arena->player)));
+    arenaProjectileHandler(arena, deltaTime, terminal);
     playerUpdate(arena->player, terminal, arena, deltaTime);
 }
