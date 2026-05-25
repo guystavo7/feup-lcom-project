@@ -39,4 +39,6 @@ void projectileAddPierce(Projectile* p);
 
 void projectileSetMaxPierce(Projectile* p, int max);
 
+void projectileUpdadeSpeed(Projectile* p, float incX, float incY);
+
 #endif

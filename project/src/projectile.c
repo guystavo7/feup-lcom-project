@@ -106,6 +106,8 @@ void projectileUpdate(Projectile* p, double delta_t, Terminal* terminal) {
     boxColliderSetX(p->collider, vec2dGetX(p->pos));
     boxColliderSetY(p->collider, vec2dGetY(p->pos));
     
+    projectileUpdadeSpeed(p, 0.7, 0.7);
+
     if (p->sprite != NULL) {
         drawSpriteXPM(p->sprite, terminal, (int)vec2dGetX(p->pos), (int)vec2dGetY(p->pos), false);
     }
@@ -172,4 +174,9 @@ void projectileSetMaxPierce(Projectile* p, int max) {
     if (p->type == PROJ_PIERCING){
         p->extra_data.piercing.max_pierces = max;
     }
+}
+
+void projectileUpdadeSpeed(Projectile* p, float incX, float incY){
+    vec2dSetX(p->vel, vec2dGetX(p->vel) + incX);
+    vec2dSetY(p->vel, vec2dGetY(p->vel) + incY);
 }
