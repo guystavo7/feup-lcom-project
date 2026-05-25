@@ -1,4 +1,4 @@
-#include "../../include/monster/monster.h"
+/*#include "../../include/monster/monster.h"
 
 struct monster
 {
@@ -84,8 +84,9 @@ void monsterSetDirWithVec(Monster* m,Vec2d* v){
 }
 
 void monsterUpdatePos(Monster* m,double delta_t){
-  Vec2d* a=vec2dCreate(vec2dGetX(m->vel),vec2dGetY(m->vel));
-  vec2dMultiply(a,delta_t);
-  vec2dAddVec(m->pos,a);
-  vec2dFree(a);
+  struct Vec2d a={m->vel->x, m->vel->y};
+  vec2dMultiply(&a,delta_t);
+  vec2dAddVec(m->pos,&a);
+  vec2dFree(&a);
 }
+*/
