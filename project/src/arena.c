@@ -210,4 +210,5 @@ void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
 
     arenaCollectableHandler(arena);
     playerUpdate(arena->player, terminal, arena, deltaTime);
+	cursorUpdate(getCursor(), terminal);
 }

@@ -41,8 +41,8 @@
 #define MSB_MSK 				0xFF00
 #define LSB_MSK 				0x00FF
 #define DELAY 					20000
-#define TRIES	 				10
-#define DELAY					20000
+#define TRIES	 				1	
+#define MOUSE_DELAY				200
 
 int sys_inb_8b(uint32_t addr, uint8_t* output);
 
