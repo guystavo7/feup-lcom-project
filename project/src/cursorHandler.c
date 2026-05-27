@@ -61,19 +61,19 @@ void cursorUpdateData(Cursor* c, int dx, int dy, bool leftButton, bool rightButt
     c->deltaX += dx;
     c->deltaY += dy;
 
-    if (leftButton)
+    if (leftButton && c->leftButton == UP)
         c->leftButton = DOWN;
-    else
+    else if (leftButton)
         c->leftButton = UP;
 
-    if (middleButton)
+    if (middleButton && c->middleButton == UP)
         c->middleButton = DOWN;
-    else
+    else if (middleButton)
         c->middleButton = UP;
 
-    if (rightButton)
+    if (rightButton && c->rightButton == UP)
         c->rightButton = DOWN;
-    else
+    else if (rightButton)
         c->rightButton = UP;
 }
 
