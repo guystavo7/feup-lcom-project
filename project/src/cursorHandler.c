@@ -1,11 +1,17 @@
 #include "../include/utils/cursorHandler.h"
-#include "../resources/cursor.h"
+#include "../resources/cursor/cursor.h"
 #include <stdlib.h>
 
 enum keyState {
     UP,
     DOWN,
     PRESSED
+};
+
+enum MouseState {
+	DEFAULT,
+	CLICKED,
+	DENIED,
 };
 
 struct Cursor {
@@ -18,12 +24,17 @@ struct Cursor {
     enum keyState rightButton;
     enum keyState middleButton;
 
-    SpriteXPM* sprite;
+	enum MouseState currentState;
+    SpriteXPM** sprites;
 };
 
 static Cursor* cursorNew(int w, int h) {
     Cursor* res = malloc(sizeof(Cursor));
-    res->sprite = newSpriteXPM((xpm_map_t)cursor_xpm, XPM_8_8_8, 0, 0);
+
+	res->currentState = DEFAULT;
+    res->sprites = malloc(sizeof(SpriteXPM*) * 3);
+	for (int i = 0; i < 3; i++) res->sprites[i] = newSpriteXPM((xpm_map_t)cursorsXPM[i], XPM_8_8_8, 0, 0);
+
     res->center[0] = w / 2;
     res->center[1] = h / 2;
 
@@ -48,7 +59,8 @@ Cursor* getCursor() {
 }
 
 void cursorFree(Cursor* c) {
-    freeSpriteXPM(c->sprite);
+	for (int i = 0; i < 3; i++) freeSpriteXPM(c->sprites[i]);
+	free(c->sprites);
     free(c);
 }
 
@@ -61,20 +73,26 @@ void cursorUpdateData(Cursor* c, int dx, int dy, bool leftButton, bool rightButt
     c->deltaX += dx;
     c->deltaY += dy;
 
-    if (leftButton && c->leftButton == UP)
+    if (leftButton && c->leftButton == UP) {
         c->leftButton = DOWN;
-    else if (leftButton)
+		c->currentState = CLICKED;
+	} else if (leftButton) {
         c->leftButton = UP;
+	}
 
-    if (middleButton && c->middleButton == UP)
-        c->middleButton = DOWN;
-    else if (middleButton)
+    if (middleButton && c->middleButton == UP) {
+		c->middleButton = DOWN;
+	} else if (middleButton) {
         c->middleButton = UP;
+	}
 
-    if (rightButton && c->rightButton == UP)
+    if (rightButton && c->rightButton == UP) {
         c->rightButton = DOWN;
-    else if (rightButton)
+	} else if (rightButton) {
         c->rightButton = UP;
+	}
+
+	if (!leftButton) c->currentState = DEFAULT;
 }
 
 static void cursorUpdateCoordinates(Cursor* c) {
@@ -104,7 +122,7 @@ static void cursorUpdateCoordinates(Cursor* c) {
 static void cursorDraw(Cursor* c, Terminal* terminal) {
     int px = c->center[0] + c->x;
     int py = c->center[1] + c->y;
-    drawSpriteXPM(c->sprite, terminal, px, py, false);
+    drawSpriteXPM(c->sprites[c->currentState], terminal, px, py, false);
 }
 
 void cursorUpdate(Cursor* c, Terminal* terminal) {
