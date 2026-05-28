@@ -1,12 +1,13 @@
 #include "../include/buildings/basicTower.h"
-#include "../resources/building/buildings.h"
+#include "../resources/building/tower/blueTower.h"
 
 GenericTower* basicTowerNew(Vec2d position) {
-	char** XPM = Tower;	
-	Vec2d size = {43, 28};	
-	Vec2d offset = {9, 60};
+	Vec2d size = {49, 32};	
+	Vec2d offset = {0, 0};
+	SpriteXPM* lowerHalf = newSpriteXPM((xpm_map_t)blueTowerXPM[0], XPM_8_8_8, 0, 0);
+	SpriteXPM* upperHalf = newSpriteXPM((xpm_map_t)blueTowerXPM[1], XPM_8_8_8, -6, -60);
 	
-	return towerNew(XPM, position, size, offset, basicTowerUpdate);
+	return towerNew(upperHalf, lowerHalf, position, size, offset, basicTowerUpdate);
 }
 
 void basicTowerUpdate(GenericTower* tower, Terminal* terminal, Arena* arena, float deltaTime) {

@@ -151,8 +151,6 @@ void arenaBuildTower(Arena *arena, Vec2d position) {
 	arena->collidersN[WALLS_TAG]++;
 	arena->colliders[WALLS_TAG] = realloc(arena->colliders[WALLS_TAG], sizeof(BoxCollider*) * arena->collidersN[WALLS_TAG]);
 	arena->colliders[WALLS_TAG][arena->collidersN[WALLS_TAG] - 1] = towerGetHitBox(arena->towers[arena->towersN - 1]);
-
-	printf("%d\n", arena->collidersN[WALLS_TAG]);
 }
 
 void arenaFree(Arena* arena) {
@@ -201,11 +199,13 @@ static void arenaMouseObserver(Arena* arena) {
 void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
     for (int i = 0; i < arena->fruitsN; i++) collectableUpdate(arena->fruits[i], terminal);
     for (int i = 0; i < arena->tilesN; i++) tileUpdate(arena->tiles[i], terminal);
-	for (int i = 0; i < arena->towersN; i++) towerUpdate(arena->towers[i], terminal, arena, deltaTime);
+	for (int i = arena->towersN - 1; i >= 0; i--) towerUpdate(arena->towers[i], terminal, arena, deltaTime);
 
     arenaCollectableHandler(arena);
 	arenaMouseObserver(arena);
 
     playerUpdate(arena->player, terminal, arena, deltaTime);
+	for (int i = arena->towersN - 1; i >= 0; i--) towerDrawUpperHalf(arena->towers[i], terminal);
+
 	cursorUpdate(getCursor(), terminal, deltaTime);
 }
