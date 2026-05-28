@@ -1,5 +1,7 @@
 #include "../include/utils/cursorHandler.h"
-#include "../resources/cursor.h"
+#include "../resources/cursor/cursor.h"
+
+
 #include <stdlib.h>
 
 enum keyState {
@@ -8,34 +10,42 @@ enum keyState {
     PRESSED
 };
 
+enum MouseState {
+	DEFAULT,
+	CLICKED,
+	DENIED,
+};
+
 struct Cursor {
     int x, y;
     int deltaX, deltaY;
     int width, height;
-    int center[2];
 
     enum keyState leftButton;
     enum keyState rightButton;
     enum keyState middleButton;
 
-    SpriteXPM* sprite;
+	enum MouseState currentState;
+    SpriteXPM** sprites;
 };
 
 static Cursor* cursorNew(int w, int h) {
     Cursor* res = malloc(sizeof(Cursor));
-    res->sprite = newSpriteXPM((xpm_map_t)cursor_xpm, XPM_8_8_8, 0, 0);
-    res->center[0] = w / 2;
-    res->center[1] = h / 2;
+
+	res->currentState = DEFAULT;
+    res->sprites = malloc(sizeof(SpriteXPM*) * 3);
+	for (int i = 0; i < 3; i++) res->sprites[i] = newSpriteXPM((xpm_map_t)cursorsXPM[i], XPM_8_8_8, 0, 0);
 
     res->deltaX = 0;
     res->deltaY = 0;
 
-    res->x = 0;
-    res->y = 0;
+    res->x = w / 2;
+    res->y = h / 2;
 
     res->width = w;
     res->height = h;
-    return res;
+
+	return res;
 }
 
 Cursor* getCursor() {
@@ -48,7 +58,8 @@ Cursor* getCursor() {
 }
 
 void cursorFree(Cursor* c) {
-    freeSpriteXPM(c->sprite);
+	for (int i = 0; i < 3; i++) freeSpriteXPM(c->sprites[i]);
+	free(c->sprites);
     free(c);
 }
 
@@ -61,60 +72,55 @@ void cursorUpdateData(Cursor* c, int dx, int dy, bool leftButton, bool rightButt
     c->deltaX += dx;
     c->deltaY += dy;
 
-    if (leftButton && c->leftButton == UP)
+    if (leftButton && c->leftButton == UP) {
         c->leftButton = DOWN;
-    else if (leftButton)
+		c->currentState = CLICKED;
+
+	} else if (leftButton) {
         c->leftButton = UP;
+	}
 
-    if (middleButton && c->middleButton == UP)
-        c->middleButton = DOWN;
-    else if (middleButton)
+    if (middleButton && c->middleButton == UP) {
+		c->middleButton = DOWN;
+	} else if (middleButton) {
         c->middleButton = UP;
+	}
 
-    if (rightButton && c->rightButton == UP)
+    if (rightButton && c->rightButton == UP) {
         c->rightButton = DOWN;
-    else if (rightButton)
+	} else if (rightButton) {
         c->rightButton = UP;
+	}
+
+	if (!leftButton) c->currentState = DEFAULT;
 }
 
 static void cursorUpdateCoordinates(Cursor* c) {
-    int nextX = c->x + c->deltaX;
-    int nextY = c->y + c->deltaY;
+    c->x += c->deltaX;
+    c->y += c->deltaY;
 
     c->deltaX = 0;
     c->deltaY = 0;
 
-    int px = c->center[0] + nextX;
-    if (px < 0)
-        c->x = -c->center[0];
-    else if (px > c->width - 1)
-        c->x = (c->width - 1) - c->center[0];
-    else
-        c->x = nextX;
+    if (c->x < 0) c->x = 0;
+	if (c->x > c->width - 1) c->x = c->width - 1;
 
-    int pv = c->center[1] + nextY;
-    if (pv < 0)
-        c->y = -c->center[1];
-    else if (pv > c->height - 1)
-        c->y = (c->height - 1) - c->center[1];
-    else
-        c->y = nextY;
+	if (c->y < 0) c->y = 0;
+	if (c->x > c->height - 1) c->y = c->height - 1;
 }
 
-static void cursorDraw(Cursor* c, Terminal* terminal) {
-    int px = c->center[0] + c->x;
-    int py = c->center[1] + c->y;
-    drawSpriteXPM(c->sprite, terminal, px, py, false);
+static void cursorDraw(Cursor* c, Terminal* terminal, float deltaTime) {
+    drawSpriteXPM(c->sprites[c->currentState], terminal, c->x, c->y, false);
 }
 
-void cursorUpdate(Cursor* c, Terminal* terminal) {
+void cursorUpdate(Cursor* c, Terminal* terminal, float deltaTime) {
     cursorUpdateCoordinates(c);
-    cursorDraw(c, terminal);
+    cursorDraw(c, terminal, deltaTime);
 }
 
 void cursorGetPixelPosition(Cursor* c, int* px, int* py) {
-    *px = c->center[0] + c->x;
-    *py = c->center[1] + c->y;
+    *px = c->x;
+    *py = c->y;
 }
 
 int cursorGetX(Cursor* c) {

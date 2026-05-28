@@ -45,8 +45,6 @@ int(proj_main_loop)(int argc, char* argv[]) {
     timer_subscribe((uint8_t*)&hook_id_timer);
     kbcSubscribe((uint8_t*)&hook_id_kbd);
     Terminal* terminal = newTerminal(0x11B);
-
-    cursorReset(getCursor());
     startGame(terminal);
 
     enableDataReport();

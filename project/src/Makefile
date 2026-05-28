@@ -21,6 +21,9 @@ SRCS= \
 	./playerRunning.c \
 	./collectable.c \
 	./projectile.c \
+	./genericTower.c \
+	./basicTower.c \
+	./particle.c \
 
 OBJS = ${SRCS:.c=.o}
 
