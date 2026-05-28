@@ -40,7 +40,7 @@ PlayerModel* playerModelNew(Vec2d pos) {
 
     Vec2d offset = {0, 0};
 	Vec2d hitBoxOffset = {10, 33};
-    res->hitBox = boxColliderNew(pos, hitBoxOffset, res->size, 0);
+    res->hitBox = boxColliderNew(pos, hitBoxOffset, res->size, 1);
     res->rb = rigidBodyNew();
 
 	res->idleSprite = getSprites(all_idle, 8, 10, offset);
