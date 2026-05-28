@@ -25,15 +25,15 @@ static float moveX(RigidBody* rb, float x, Arena* arena, BoxCollider* hitBox, fl
     x += rb->velocity.x * deltaTime;
     boxColliderSetX(hitBox, x);
 
-    BoxCollider* colliders[10];
-    int n = arenaDetectCollisions(arena, hitBox, 0, colliders);
+    BoxCollider* colliders[128];
+    int n = arenaDetectCollisions(arena, hitBox, WALLS_TAG, colliders);
 
     for (int i = 0; i < n; i++) {
         if (rb->velocity.x > 0 && (x + xOffset + width) > (boxColliderGetX(colliders[i]) + boxColliderGetOffsetX(colliders[i]))) {
-            x = boxColliderGetX(colliders[i]) - width - xOffset;
+            x = boxColliderGetX(colliders[i]) + boxColliderGetOffsetX(colliders[i]) - width - xOffset;
 
         } else if (rb->velocity.x < 0 && (x + xOffset) < (boxColliderGetX(colliders[i]) + boxColliderGetOffsetX(colliders[i]) + boxColliderGetWidth(colliders[i]))) {
-            x = boxColliderGetX(colliders[i]) + boxColliderGetWidth(colliders[i]) - xOffset;
+            x = boxColliderGetX(colliders[i]) + boxColliderGetWidth(colliders[i]) + boxColliderGetOffsetX(colliders[i]) - xOffset;
         }
 
         rb->velocity.x = 0;
@@ -46,19 +46,18 @@ static float moveX(RigidBody* rb, float x, Arena* arena, BoxCollider* hitBox, fl
 static float moveY(RigidBody* rb, float y, Arena* arena, BoxCollider* hitBox, float deltaTime) {
     float height = boxColliderGetHeight(hitBox);
 	float yOffset = boxColliderGetOffsetY(hitBox);
-
     y += rb->velocity.y * deltaTime;
     boxColliderSetY(hitBox, y);
 
-    BoxCollider* colliders[10];
-    int n = arenaDetectCollisions(arena, hitBox, 0, colliders);
+    BoxCollider* colliders[128];
+    int n = arenaDetectCollisions(arena, hitBox, WALLS_TAG, colliders);
 
     for (int i = 0; i < n; i++) {
         if (rb->velocity.y > 0 && (y + height + yOffset) > (boxColliderGetY(colliders[i])) + boxColliderGetOffsetY(colliders[i])) {
-            y = boxColliderGetY(colliders[i]) - height - yOffset;
+            y = boxColliderGetY(colliders[i]) + boxColliderGetOffsetY(colliders[i]) - height - yOffset;
 
         } else if (rb->velocity.y < 0 && (y + yOffset) < (boxColliderGetY(colliders[i]) + boxColliderGetOffsetY(colliders[i]) + boxColliderGetHeight(colliders[i]))) {
-            y = boxColliderGetY(colliders[i]) + boxColliderGetHeight(colliders[i]) - yOffset;
+            y = boxColliderGetY(colliders[i]) + boxColliderGetHeight(colliders[i]) + boxColliderGetOffsetY(colliders[i]) - yOffset;
         }
 
         rb->velocity.y = 0;

@@ -6,6 +6,13 @@
 
 #include <stdbool.h>
 
+#define WALLS_TAG 		0
+#define PLAYER_TAG 		1
+#define MONSTER_TAG		3
+#define COLLECTABLE_TAG	4
+#define UI_TAG			5
+#define TAGS_NUM 		5
+
 typedef struct Arena Arena;
 
 Arena* arenaNew(Terminal* terminal, const char* filename);

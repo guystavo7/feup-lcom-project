@@ -20,6 +20,5 @@ void idleOnEnter(PlayerState* state, PlayerModel* model, Terminal* terminal, Are
 PlayerState* getIdleState() {
 	PlayerState* res = playerStateNew();
 	playerStateSetFunctions(res, idleAct, idleOnEnter, idleTransition);
-
 	return res;
 }

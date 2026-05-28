@@ -20,6 +20,8 @@ SRCS= \
 	./playerState.c \
 	./playerRunning.c \
 	./collectable.c \
+	./genericTower.c \
+	./basicTower.c \
 
 OBJS = ${SRCS:.c=.o}
 
