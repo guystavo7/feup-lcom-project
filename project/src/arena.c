@@ -242,7 +242,7 @@ void arenaProjectileHandler(Arena* arena, float deltaTime, Terminal* terminal) {
         projectileUpdate(p, deltaTime, terminal);
         
         BoxCollider* colliders[10];
-        int n = arenaDetectCollisions(arena, projectileGetCollider(p), 0, colliders);
+        int n = arenaDetectCollisions(arena, projectileGetCollider(p), 1, colliders);
         if (n > 0) {
             projectileSetActive(p, false);
         }

@@ -106,7 +106,6 @@ void projectileUpdate(Projectile* p, double delta_t, Terminal* terminal) {
     boxColliderSetX(p->collider, vec2dGetX(p->pos));
     boxColliderSetY(p->collider, vec2dGetY(p->pos));
     
-    projectileUpdadeSpeed(p, 0.7, 0.7);
 
     if (p->sprite != NULL) {
         drawSpriteXPM(p->sprite, terminal, (int)vec2dGetX(p->pos), (int)vec2dGetY(p->pos), false);
