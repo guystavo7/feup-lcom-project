@@ -1,8 +1,5 @@
 #include "../include/utils/cursorHandler.h"
-#include "../include/components/particle.h"
-
 #include "../resources/cursor/cursor.h"
-#include "../resources/particles/dust/dust.h"
 
 
 #include <stdlib.h>
@@ -23,7 +20,6 @@ struct Cursor {
     int x, y;
     int deltaX, deltaY;
     int width, height;
-    int center[2];
 
     enum keyState leftButton;
     enum keyState rightButton;
@@ -31,7 +27,6 @@ struct Cursor {
 
 	enum MouseState currentState;
     SpriteXPM** sprites;
-	Particle* p;
 };
 
 static Cursor* cursorNew(int w, int h) {
@@ -41,22 +36,16 @@ static Cursor* cursorNew(int w, int h) {
     res->sprites = malloc(sizeof(SpriteXPM*) * 3);
 	for (int i = 0; i < 3; i++) res->sprites[i] = newSpriteXPM((xpm_map_t)cursorsXPM[i], XPM_8_8_8, 0, 0);
 
-    res->center[0] = w / 2;
-    res->center[1] = h / 2;
-
     res->deltaX = 0;
     res->deltaY = 0;
 
-    res->x = 0;
-    res->y = 0;
+    res->x = w / 2;
+    res->y = h / 2;
 
     res->width = w;
     res->height = h;
 
-	SpriteXPM** sprites = malloc(sizeof(SpriteXPM*) * 9);
-	for (int i = 0; i < 9; i++) sprites[i] = newSpriteXPM((xpm_map_t)dustXPM[i], XPM_8_8_8, 0, 0);
-	res->p = particleNew(10, sprites, 9);
-    return res;
+	return res;
 }
 
 Cursor* getCursor() {
@@ -71,7 +60,6 @@ Cursor* getCursor() {
 void cursorFree(Cursor* c) {
 	for (int i = 0; i < 3; i++) freeSpriteXPM(c->sprites[i]);
 	free(c->sprites);
-	particleFree(c->p);
     free(c);
 }
 
@@ -87,7 +75,6 @@ void cursorUpdateData(Cursor* c, int dx, int dy, bool leftButton, bool rightButt
     if (leftButton && c->leftButton == UP) {
         c->leftButton = DOWN;
 		c->currentState = CLICKED;
-		particleStart(c->p);
 
 	} else if (leftButton) {
         c->leftButton = UP;
@@ -109,35 +96,21 @@ void cursorUpdateData(Cursor* c, int dx, int dy, bool leftButton, bool rightButt
 }
 
 static void cursorUpdateCoordinates(Cursor* c) {
-    int nextX = c->x + c->deltaX;
-    int nextY = c->y + c->deltaY;
+    c->x += c->deltaX;
+    c->y += c->deltaY;
 
     c->deltaX = 0;
     c->deltaY = 0;
 
-    int px = c->center[0] + nextX;
-    if (px < 0)
-        c->x = -c->center[0];
-    else if (px > c->width - 1)
-        c->x = (c->width - 1) - c->center[0];
-    else
-        c->x = nextX;
+    if (c->x < 0) c->x = 0;
+	if (c->x > c->width - 1) c->x = c->width - 1;
 
-    int pv = c->center[1] + nextY;
-    if (pv < 0)
-        c->y = -c->center[1];
-    else if (pv > c->height - 1)
-        c->y = (c->height - 1) - c->center[1];
-    else
-        c->y = nextY;
+	if (c->y < 0) c->y = 0;
+	if (c->x > c->height - 1) c->y = c->height - 1;
 }
 
 static void cursorDraw(Cursor* c, Terminal* terminal, float deltaTime) {
-    int px = c->center[0] + c->x;
-    int py = c->center[1] + c->y;
-    drawSpriteXPM(c->sprites[c->currentState], terminal, px, py, false);
-	particleUpdate(px, py, c->p, terminal, deltaTime, false);
-
+    drawSpriteXPM(c->sprites[c->currentState], terminal, c->x, c->y, false);
 }
 
 void cursorUpdate(Cursor* c, Terminal* terminal, float deltaTime) {
@@ -146,8 +119,8 @@ void cursorUpdate(Cursor* c, Terminal* terminal, float deltaTime) {
 }
 
 void cursorGetPixelPosition(Cursor* c, int* px, int* py) {
-    *px = c->center[0] + c->x;
-    *py = c->center[1] + c->y;
+    *px = c->x;
+    *py = c->y;
 }
 
 int cursorGetX(Cursor* c) {

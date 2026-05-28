@@ -134,21 +134,25 @@ Arena* arenaNew(Terminal* terminal, const char* filename) {
     createMap(res, filename, TILE_SIZE);
 	createPlayer(res);
 	createFruitsTest(res);
-
-	res->towersN = 1;
-	res->towers = malloc(sizeof(GenericTower*));
-	Vec2d pos = {300, 400};
-	res->towers[0] = basicTowerNew(pos);
-
-	res->collidersN[WALLS_TAG]++;
-	res->colliders[WALLS_TAG] = realloc(res->colliders[WALLS_TAG], sizeof(BoxCollider*) * res->collidersN[WALLS_TAG]);
-	res->colliders[WALLS_TAG][res->collidersN[WALLS_TAG] - 1] = towerGetHitBox(res->towers[0]);
+	res->towersN = 0;
 
 	// The terminal will handle the freeing
 	SpriteXPM* backgroundSprite = newSpriteXPM((xpm_map_t)background, XPM_8_8_8, 0, 0);
 	generateEmptyBuffer(backgroundSprite, terminal, 0, 0, false);
 
     return res;
+}
+
+void arenaBuildTower(Arena *arena, Vec2d position) {
+	arena->towersN++;
+	arena->towers = realloc(arena->towers, sizeof(GenericTower*) * arena->towersN);
+	arena->towers[arena->towersN - 1] = basicTowerNew(position);
+
+	arena->collidersN[WALLS_TAG]++;
+	arena->colliders[WALLS_TAG] = realloc(arena->colliders[WALLS_TAG], sizeof(BoxCollider*) * arena->collidersN[WALLS_TAG]);
+	arena->colliders[WALLS_TAG][arena->collidersN[WALLS_TAG] - 1] = towerGetHitBox(arena->towers[arena->towersN - 1]);
+
+	printf("%d\n", arena->collidersN[WALLS_TAG]);
 }
 
 void arenaFree(Arena* arena) {
@@ -179,12 +183,20 @@ int arenaDetectCollisions(Arena* arena, BoxCollider* box, int tag, BoxCollider**
     return j;
 }
 
-void arenaCollectableHandler(Arena* arena) {
+static void arenaCollectableHandler(Arena* arena) {
     BoxCollider* hitBox = playerModelGetHitBox(playerGetPlayerModel(arena->player));
     BoxCollider* collisions[arena->fruitsN];
     int n = arenaDetectCollisions(arena, hitBox, COLLECTABLE_TAG, collisions);
     for (int i = 0; i < n; i++) collectableSetActive(arena->fruits[i], false);
 }
+
+static void arenaMouseObserver(Arena* arena) {
+	if (cursorIsRightButtonPressedDown(getCursor())) {
+		Vec2d position = {cursorGetX(getCursor()), cursorGetY(getCursor())};
+		arenaBuildTower(arena, position);
+	}
+}
+
 
 void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
     for (int i = 0; i < arena->fruitsN; i++) collectableUpdate(arena->fruits[i], terminal);
@@ -192,6 +204,8 @@ void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
 	for (int i = 0; i < arena->towersN; i++) towerUpdate(arena->towers[i], terminal, arena, deltaTime);
 
     arenaCollectableHandler(arena);
+	arenaMouseObserver(arena);
+
     playerUpdate(arena->player, terminal, arena, deltaTime);
 	cursorUpdate(getCursor(), terminal, deltaTime);
 }
