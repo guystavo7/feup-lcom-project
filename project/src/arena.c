@@ -40,8 +40,6 @@ struct Arena {
     int tileSize;
 
     Player* player;
-    int fruitsN;
-    Collectable** fruits;
 
     int projectilesCapacity;
     int projectilesCount;
