@@ -257,4 +257,5 @@ void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
     projectileUpdateHomingTarget(arena->projectiles[0], playerModelGetX(playerGetPlayerModel(arena->player)), playerModelGetY(playerGetPlayerModel(arena->player)));
     arenaProjectileHandler(arena, deltaTime, terminal);
     playerUpdate(arena->player, terminal, arena, deltaTime);
+	cursorUpdate(getCursor(), terminal);
 }

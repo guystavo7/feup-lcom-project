@@ -7,29 +7,39 @@
   < sys_irqsetpolicy(12, 3, addr: 0xeffff7a0 [10]) -> (ret: 0)
   @timer.c:34, timer_subscribe
     sys_irqsetpolicy(TIMER0_IRQ, IRQ_REENABLE, &hookId)
+<<<<<<< HEAD
   > sys_irqsetpolicy(0, 1, addr: 0x836fadc [0])
   < sys_irqsetpolicy(0, 1, addr: 0x836fadc [11]) -> (ret: 0)
   @kbc.c:15, kbcSubscribe
     sys_irqsetpolicy(KBC1_IRQ, IRQ_REENABLE | IRQ_EXCLUSIVE, &hook_id)
   > sys_irqsetpolicy(1, 3, addr: 0x8365754 [1])
   < sys_irqsetpolicy(1, 3, addr: 0x8365754 [12]) -> (ret: 0)
+=======
+  > sys_irqsetpolicy(0, 1, addr: 0x836e46c [0])
+  < sys_irqsetpolicy(0, 1, addr: 0x836e46c [11]) -> (ret: 0)
+  @kbc.c:15, kbcSubscribe
+    sys_irqsetpolicy(KBC1_IRQ, IRQ_REENABLE | IRQ_EXCLUSIVE, &hook_id)
+  > sys_irqsetpolicy(1, 3, addr: 0x83640ec [1])
+  < sys_irqsetpolicy(1, 3, addr: 0x83640ec [12]) -> (ret: 0)
+>>>>>>> b1b8a0008adbd07e2ca8a49cf9ad66ed3ba7a819
   @terminal.c:23, newTerminal
     vbe_get_mode_info(mode, &vmi)
-  > vbe_get_mode_info(0x11b, addr: 0xeffff600)
-  < vbe_get_mode_info(0x11b, addr: 0xeffff600 [0xe0000000, 1280x1024, 8:8:8 (24) <3.75 MiB>]) -> (ret: 0)
+  > vbe_get_mode_info(0x11b, addr: 0xeffff5f0)
+  < vbe_get_mode_info(0x11b, addr: 0xeffff5f0 [0xe0000000, 1280x1024, 8:8:8 (24) <3.75 MiB>]) -> (ret: 0)
   @terminal.c:40, newTerminal
     sys_privctl(SELF, SYS_PRIV_ADD_MEM, &mr)
-  > sys_privctl(SELF, SYS_PRIV_ADD_MEM, addr: 0xeffff5f8 [0xe0000000 - 0xe0780000 <7.5 MiB>])
+  > sys_privctl(SELF, SYS_PRIV_ADD_MEM, addr: 0xeffff5e8 [0xe0000000 - 0xe0780000 <7.5 MiB>])
   < sys_privctl(SELF, SYS_PRIV_ADD_MEM, &mr) -> (ret: 0)
   @terminal.c:45, newTerminal
     vm_map_phys(SELF, (void*)mr.mr_base, total_size)
   < vm_map_phys(SELF, addr: 0xe0000000, 7.5 MiB) -> (ret: 0xef27b000)
   @./terminalUtils.c:14, enterMode
     sys_int86(&reg)
-  > sys_int86(addr: 0xeffff598 [AX: 4f02, BX: 411b, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
-  < sys_int86(addr: 0xeffff598 [AX: 004f, BX: 411b, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  > sys_int86(addr: 0xeffff588 [AX: 4f02, BX: 411b, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff588 [AX: 004f, BX: 411b, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
   @./spriteXMP.c:15, newSpriteXPM
     xpm_load(map, type, img)
+<<<<<<< HEAD
   > xpm_load(addr: 0x8364a04, XPM_8_8_8, addr: 0x8384280)
   < xpm_load(addr: 0x8364a04, XPM_8_8_8, addr: 0x8384280 [32x32 : 3072 bytes]) -> (ret: 0x8389000)
   @./spriteXMP.c:15, newSpriteXPM
@@ -400,11 +410,380 @@
     xpm_load(map, type, img)
   > xpm_load(addr: 0x8361834, XPM_8_8_8, addr: 0x8384e40)
   < xpm_load(addr: 0x8361834, XPM_8_8_8, addr: 0x8384e40 [32x32 : 3072 bytes]) -> (ret: 0x8b76000)
+=======
+  > xpm_load(addr: 0x836339c, XPM_8_8_8, addr: 0x8383270)
+  < xpm_load(addr: 0x836339c, XPM_8_8_8, addr: 0x8383270 [32x32 : 3072 bytes]) -> (ret: 0x8389000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x8383290)
+  < xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x8383290 [32x32 : 3072 bytes]) -> (ret: 0x838e000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x83832b0)
+  < xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x83832b0 [32x32 : 3072 bytes]) -> (ret: 0x8390000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x83832d0)
+  < xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x83832d0 [32x32 : 3072 bytes]) -> (ret: 0x8391000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x83832f0)
+  < xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x83832f0 [32x32 : 3072 bytes]) -> (ret: 0x8392000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x8383310)
+  < xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x8383310 [32x32 : 3072 bytes]) -> (ret: 0x8393000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x8383330)
+  < xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x8383330 [32x32 : 3072 bytes]) -> (ret: 0x8394000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x8383350)
+  < xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x8383350 [32x32 : 3072 bytes]) -> (ret: 0x8395000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x8383370)
+  < xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x8383370 [32x32 : 3072 bytes]) -> (ret: 0x8396000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x8383390)
+  < xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x8383390 [32x32 : 3072 bytes]) -> (ret: 0x8757000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x83833b0)
+  < xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x83833b0 [32x32 : 3072 bytes]) -> (ret: 0x8758000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x83833d0)
+  < xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x83833d0 [32x32 : 3072 bytes]) -> (ret: 0x8759000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x83833f0)
+  < xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x83833f0 [32x32 : 3072 bytes]) -> (ret: 0x875a000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x8383410)
+  < xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x8383410 [32x32 : 3072 bytes]) -> (ret: 0x875b000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x8383430)
+  < xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x8383430 [32x32 : 3072 bytes]) -> (ret: 0x875c000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x8383450)
+  < xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x8383450 [32x32 : 3072 bytes]) -> (ret: 0x875d000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x8383470)
+  < xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x8383470 [32x32 : 3072 bytes]) -> (ret: 0x875e000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x8383490)
+  < xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x8383490 [32x32 : 3072 bytes]) -> (ret: 0x875f000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x83834b0)
+  < xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x83834b0 [32x32 : 3072 bytes]) -> (ret: 0x8760000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x83834d0)
+  < xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x83834d0 [32x32 : 3072 bytes]) -> (ret: 0x8761000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x83834f0)
+  < xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x83834f0 [32x32 : 3072 bytes]) -> (ret: 0x8762000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x8383510)
+  < xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x8383510 [32x32 : 3072 bytes]) -> (ret: 0x8763000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x8383530)
+  < xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x8383530 [32x32 : 3072 bytes]) -> (ret: 0x8764000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x8383550)
+  < xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x8383550 [32x32 : 3072 bytes]) -> (ret: 0x8765000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x8383570)
+  < xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x8383570 [32x32 : 3072 bytes]) -> (ret: 0x8766000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x8383590)
+  < xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x8383590 [32x32 : 3072 bytes]) -> (ret: 0x8767000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x83835b0)
+  < xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x83835b0 [32x32 : 3072 bytes]) -> (ret: 0x8768000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x83835d0)
+  < xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x83835d0 [32x32 : 3072 bytes]) -> (ret: 0x8769000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x83835f0)
+  < xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x83835f0 [32x32 : 3072 bytes]) -> (ret: 0x876a000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x8383610)
+  < xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x8383610 [32x32 : 3072 bytes]) -> (ret: 0x876b000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x8383630)
+  < xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x8383630 [32x32 : 3072 bytes]) -> (ret: 0x876c000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x8383650)
+  < xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x8383650 [32x32 : 3072 bytes]) -> (ret: 0x876d000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x8383670)
+  < xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x8383670 [32x32 : 3072 bytes]) -> (ret: 0x876e000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8363128, XPM_8_8_8, addr: 0x8383690)
+  < xpm_load(addr: 0x8363128, XPM_8_8_8, addr: 0x8383690 [32x32 : 3072 bytes]) -> (ret: 0x876f000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x83836b0)
+  < xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x83836b0 [32x32 : 3072 bytes]) -> (ret: 0x8770000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8363128, XPM_8_8_8, addr: 0x83836d0)
+  < xpm_load(addr: 0x8363128, XPM_8_8_8, addr: 0x83836d0 [32x32 : 3072 bytes]) -> (ret: 0x8771000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x83836f0)
+  < xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x83836f0 [32x32 : 3072 bytes]) -> (ret: 0x8772000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x8383710)
+  < xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x8383710 [32x32 : 3072 bytes]) -> (ret: 0x8773000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8363128, XPM_8_8_8, addr: 0x8383730)
+  < xpm_load(addr: 0x8363128, XPM_8_8_8, addr: 0x8383730 [32x32 : 3072 bytes]) -> (ret: 0x8774000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x8383750)
+  < xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x8383750 [32x32 : 3072 bytes]) -> (ret: 0x8775000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x8383770)
+  < xpm_load(addr: 0x8361a40, XPM_8_8_8, addr: 0x8383770 [32x32 : 3072 bytes]) -> (ret: 0x8776000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8363128, XPM_8_8_8, addr: 0x8383790)
+  < xpm_load(addr: 0x8363128, XPM_8_8_8, addr: 0x8383790 [32x32 : 3072 bytes]) -> (ret: 0x8777000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x83837b0)
+  < xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x83837b0 [32x32 : 3072 bytes]) -> (ret: 0x8778000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x83837d0)
+  < xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x83837d0 [32x32 : 3072 bytes]) -> (ret: 0x8779000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x83837f0)
+  < xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x83837f0 [32x32 : 3072 bytes]) -> (ret: 0x877a000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x8383810)
+  < xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x8383810 [32x32 : 3072 bytes]) -> (ret: 0x877b000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x8383830)
+  < xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x8383830 [32x32 : 3072 bytes]) -> (ret: 0x877c000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x8383850)
+  < xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x8383850 [32x32 : 3072 bytes]) -> (ret: 0x877d000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x8383870)
+  < xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x8383870 [32x32 : 3072 bytes]) -> (ret: 0x877e000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x8383890)
+  < xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x8383890 [32x32 : 3072 bytes]) -> (ret: 0x877f000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x83838b0)
+  < xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x83838b0 [32x32 : 3072 bytes]) -> (ret: 0x8780000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x83838d0)
+  < xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x83838d0 [32x32 : 3072 bytes]) -> (ret: 0x8781000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x83838f0)
+  < xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x83838f0 [32x32 : 3072 bytes]) -> (ret: 0x8782000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x8383910)
+  < xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x8383910 [32x32 : 3072 bytes]) -> (ret: 0x8783000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x8383930)
+  < xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x8383930 [32x32 : 3072 bytes]) -> (ret: 0x8784000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x8383950)
+  < xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x8383950 [32x32 : 3072 bytes]) -> (ret: 0x8785000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x8383970)
+  < xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x8383970 [32x32 : 3072 bytes]) -> (ret: 0x8786000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x8383990)
+  < xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x8383990 [32x32 : 3072 bytes]) -> (ret: 0x8787000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x83839b0)
+  < xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x83839b0 [32x32 : 3072 bytes]) -> (ret: 0x8789000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x83839d0)
+  < xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x83839d0 [32x32 : 3072 bytes]) -> (ret: 0x878a000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x83839f0)
+  < xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x83839f0 [32x32 : 3072 bytes]) -> (ret: 0x878b000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x8383a10)
+  < xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x8383a10 [32x32 : 3072 bytes]) -> (ret: 0x878c000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x8383a30)
+  < xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x8383a30 [32x32 : 3072 bytes]) -> (ret: 0x878d000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x8383a50)
+  < xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x8383a50 [32x32 : 3072 bytes]) -> (ret: 0x878e000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x8383a70)
+  < xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x8383a70 [32x32 : 3072 bytes]) -> (ret: 0x878f000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x8383a90)
+  < xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x8383a90 [32x32 : 3072 bytes]) -> (ret: 0x8790000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x8383ab0)
+  < xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x8383ab0 [32x32 : 3072 bytes]) -> (ret: 0x8791000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x8383ad0)
+  < xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x8383ad0 [32x32 : 3072 bytes]) -> (ret: 0x8792000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x8383af0)
+  < xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x8383af0 [32x32 : 3072 bytes]) -> (ret: 0x8793000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x8383b10)
+  < xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x8383b10 [32x32 : 3072 bytes]) -> (ret: 0x8794000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x8383b30)
+  < xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x8383b30 [32x32 : 3072 bytes]) -> (ret: 0x8795000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x8383b50)
+  < xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x8383b50 [32x32 : 3072 bytes]) -> (ret: 0x8796000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x8383b70)
+  < xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x8383b70 [32x32 : 3072 bytes]) -> (ret: 0x8797000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x8383b90)
+  < xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x8383b90 [32x32 : 3072 bytes]) -> (ret: 0x8798000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x8383bb0)
+  < xpm_load(addr: 0x83631c4, XPM_8_8_8, addr: 0x8383bb0 [32x32 : 3072 bytes]) -> (ret: 0x8799000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8363264, XPM_8_8_8, addr: 0x8383bd0)
+  < xpm_load(addr: 0x8363264, XPM_8_8_8, addr: 0x8383bd0 [32x32 : 3072 bytes]) -> (ret: 0x879a000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x83639d0, XPM_8_8_8, addr: 0x8383c00)
+  < xpm_load(addr: 0x83639d0, XPM_8_8_8, addr: 0x8383c00 [42x44 : 5544 bytes]) -> (ret: 0x838c000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8363ab0, XPM_8_8_8, addr: 0x8383c20)
+  < xpm_load(addr: 0x8363ab0, XPM_8_8_8, addr: 0x8383c20 [42x44 : 5544 bytes]) -> (ret: 0x879b000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8363b90, XPM_8_8_8, addr: 0x8383c40)
+  < xpm_load(addr: 0x8363b90, XPM_8_8_8, addr: 0x8383c40 [42x44 : 5544 bytes]) -> (ret: 0x879d000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8363c70, XPM_8_8_8, addr: 0x8383c60)
+  < xpm_load(addr: 0x8363c70, XPM_8_8_8, addr: 0x8383c60 [42x44 : 5544 bytes]) -> (ret: 0x879f000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8363d50, XPM_8_8_8, addr: 0x8383c80)
+  < xpm_load(addr: 0x8363d50, XPM_8_8_8, addr: 0x8383c80 [42x44 : 5544 bytes]) -> (ret: 0x87a1000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8363e30, XPM_8_8_8, addr: 0x8383ca0)
+  < xpm_load(addr: 0x8363e30, XPM_8_8_8, addr: 0x8383ca0 [42x44 : 5544 bytes]) -> (ret: 0x87a3000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8363f10, XPM_8_8_8, addr: 0x8383cc0)
+  < xpm_load(addr: 0x8363f10, XPM_8_8_8, addr: 0x8383cc0 [42x44 : 5544 bytes]) -> (ret: 0x87a5000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8363ff0, XPM_8_8_8, addr: 0x8383ce0)
+  < xpm_load(addr: 0x8363ff0, XPM_8_8_8, addr: 0x8383ce0 [42x44 : 5544 bytes]) -> (ret: 0x87a7000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8363460, XPM_8_8_8, addr: 0x8383d00)
+  < xpm_load(addr: 0x8363460, XPM_8_8_8, addr: 0x8383d00 [46x46 : 6348 bytes]) -> (ret: 0x87a9000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8363548, XPM_8_8_8, addr: 0x8383d20)
+  < xpm_load(addr: 0x8363548, XPM_8_8_8, addr: 0x8383d20 [46x46 : 6348 bytes]) -> (ret: 0x87ab000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8363630, XPM_8_8_8, addr: 0x8383d40)
+  < xpm_load(addr: 0x8363630, XPM_8_8_8, addr: 0x8383d40 [46x46 : 6348 bytes]) -> (ret: 0x87ad000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8363718, XPM_8_8_8, addr: 0x8383d60)
+  < xpm_load(addr: 0x8363718, XPM_8_8_8, addr: 0x8383d60 [46x46 : 6348 bytes]) -> (ret: 0x87af000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8363800, XPM_8_8_8, addr: 0x8383d80)
+  < xpm_load(addr: 0x8363800, XPM_8_8_8, addr: 0x8383d80 [46x46 : 6348 bytes]) -> (ret: 0x87b1000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x83638e8, XPM_8_8_8, addr: 0x8383da0)
+  < xpm_load(addr: 0x83638e8, XPM_8_8_8, addr: 0x8383da0 [46x46 : 6348 bytes]) -> (ret: 0x87b3000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x83601cc, XPM_8_8_8, addr: 0x8383e00)
+  < xpm_load(addr: 0x83601cc, XPM_8_8_8, addr: 0x8383e00 [32x32 : 3072 bytes]) -> (ret: 0x838f000)
+  @./spriteXMP.c:15, newSpriteXPM
+    xpm_load(map, type, img)
+  > xpm_load(addr: 0x8360258, XPM_8_8_8, addr: 0x8383e20)
+  < xpm_load(addr: 0x8360258, XPM_8_8_8, addr: 0x8383e20 [1280x1024 : 3932160 bytes]) -> (ret: 0x87b5000)
+>>>>>>> b1b8a0008adbd07e2ca8a49cf9ad66ed3ba7a819
   @mouse.c:36, writeCmd
     sys_outb(STATUS_CMD_ADDR, REQUEST_BYTE_CMD)
   > sys_outb(0x64, 0xd4 = 0b11010100)
   @utilsMouse.c:5, sys_inb_8b
     sys_inb(addr, &byte)
+<<<<<<< HEAD
   > sys_inb(0x64, addr: 0xeffff6b8)
   < sys_inb(0x64, addr: 0xeffff6b8 [0x1d = 0b00011101])
   @mouse.c:38, writeCmd
@@ -430,17 +809,21 @@
     sys_inb(addr, &byte)
   > sys_inb(0x64, addr: 0xeffff6b8)
   < sys_inb(0x64, addr: 0xeffff6b8 [0x3d = 0b00111101])
+=======
+  > sys_inb(0x64, addr: 0xeffff6bc)
+  < sys_inb(0x64, addr: 0xeffff6bc [0x1c = 0b00011100])
+>>>>>>> b1b8a0008adbd07e2ca8a49cf9ad66ed3ba7a819
   @mouse.c:38, writeCmd
     sys_outb(INPUT_OUTPUT_ADDR, cmd)
   > sys_outb(0x60, 0xf4 = 0b11110100)
   @utilsMouse.c:5, sys_inb_8b
     sys_inb(addr, &byte)
-  > sys_inb(0x64, addr: 0xeffff6e8)
-  < sys_inb(0x64, addr: 0xeffff6e8 [0x3d = 0b00111101])
+  > sys_inb(0x64, addr: 0xeffff6e4)
+  < sys_inb(0x64, addr: 0xeffff6e4 [0x3d = 0b00111101])
   @utilsMouse.c:5, sys_inb_8b
     sys_inb(addr, &byte)
-  > sys_inb(0x60, addr: 0xeffff6e8)
-  < sys_inb(0x60, addr: 0xeffff6e8 [0xfa = 0b11111010])
+  > sys_inb(0x60, addr: 0xeffff6e4)
+  < sys_inb(0x60, addr: 0xeffff6e4 [0xfa = 0b11111010])
   @application.c:59, proj_main_loop
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
@@ -449,12 +832,13 @@
     timer_int_handler()
   @./terminalUtils.c:32, pageFlip
     sys_int86(&reg)
-  > sys_int86(addr: 0xeffff6c8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
-  < sys_int86(addr: 0xeffff6c8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
-  @application.c:79, proj_main_loop
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:78, proj_main_loop
     mouse_ih()
     @utilsMouse.c:5, sys_inb_8b
       sys_inb(addr, &byte)
+<<<<<<< HEAD
     > sys_inb(0x64, addr: 0xeffff668)
     < sys_inb(0x64, addr: 0xeffff668 [0x3d = 0b00111101])
     @utilsMouse.c:5, sys_inb_8b
@@ -1765,6 +2149,10 @@
     sys_inb(port, &res)
   > sys_inb(0x60, addr: 0xeffff700)
   < sys_inb(0x60, addr: 0xeffff700 [0x9f = 0b10011111])
+=======
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x1c = 0b00011100])
+>>>>>>> b1b8a0008adbd07e2ca8a49cf9ad66ed3ba7a819
   @application.c:59, proj_main_loop
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
@@ -1773,8 +2161,8 @@
     timer_int_handler()
   @./terminalUtils.c:32, pageFlip
     sys_int86(&reg)
-  > sys_int86(addr: 0xeffff6c8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
-  < sys_int86(addr: 0xeffff6c8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
   @application.c:59, proj_main_loop
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
@@ -1783,8 +2171,8 @@
     timer_int_handler()
   @./terminalUtils.c:32, pageFlip
     sys_int86(&reg)
-  > sys_int86(addr: 0xeffff6c8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
-  < sys_int86(addr: 0xeffff6c8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
   @application.c:59, proj_main_loop
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
@@ -1793,8 +2181,8 @@
     timer_int_handler()
   @./terminalUtils.c:32, pageFlip
     sys_int86(&reg)
-  > sys_int86(addr: 0xeffff6c8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
-  < sys_int86(addr: 0xeffff6c8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
   @application.c:59, proj_main_loop
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
@@ -1803,8 +2191,8 @@
     timer_int_handler()
   @./terminalUtils.c:32, pageFlip
     sys_int86(&reg)
-  > sys_int86(addr: 0xeffff6c8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
-  < sys_int86(addr: 0xeffff6c8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
   @application.c:59, proj_main_loop
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
@@ -1813,8 +2201,8 @@
     timer_int_handler()
   @./terminalUtils.c:32, pageFlip
     sys_int86(&reg)
-  > sys_int86(addr: 0xeffff6c8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
-  < sys_int86(addr: 0xeffff6c8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
   @application.c:59, proj_main_loop
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
@@ -1823,8 +2211,8 @@
     timer_int_handler()
   @./terminalUtils.c:32, pageFlip
     sys_int86(&reg)
-  > sys_int86(addr: 0xeffff6c8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
-  < sys_int86(addr: 0xeffff6c8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
   @application.c:59, proj_main_loop
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
@@ -1833,8 +2221,8 @@
     timer_int_handler()
   @./terminalUtils.c:32, pageFlip
     sys_int86(&reg)
-  > sys_int86(addr: 0xeffff6c8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
-  < sys_int86(addr: 0xeffff6c8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
   @application.c:59, proj_main_loop
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
@@ -1843,8 +2231,8 @@
     timer_int_handler()
   @./terminalUtils.c:32, pageFlip
     sys_int86(&reg)
-  > sys_int86(addr: 0xeffff6c8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
-  < sys_int86(addr: 0xeffff6c8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
   @application.c:59, proj_main_loop
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
@@ -1853,8 +2241,8 @@
     timer_int_handler()
   @./terminalUtils.c:32, pageFlip
     sys_int86(&reg)
-  > sys_int86(addr: 0xeffff6c8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
-  < sys_int86(addr: 0xeffff6c8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
   @application.c:59, proj_main_loop
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
@@ -1863,8 +2251,8 @@
     timer_int_handler()
   @./terminalUtils.c:32, pageFlip
     sys_int86(&reg)
-  > sys_int86(addr: 0xeffff6c8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
-  < sys_int86(addr: 0xeffff6c8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
   @application.c:59, proj_main_loop
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
@@ -1873,8 +2261,8 @@
     timer_int_handler()
   @./terminalUtils.c:32, pageFlip
     sys_int86(&reg)
-  > sys_int86(addr: 0xeffff6c8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
-  < sys_int86(addr: 0xeffff6c8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
   @application.c:59, proj_main_loop
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
@@ -1883,8 +2271,8 @@
     timer_int_handler()
   @./terminalUtils.c:32, pageFlip
     sys_int86(&reg)
-  > sys_int86(addr: 0xeffff6c8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
-  < sys_int86(addr: 0xeffff6c8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
   @application.c:59, proj_main_loop
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
@@ -1893,8 +2281,8 @@
     timer_int_handler()
   @./terminalUtils.c:32, pageFlip
     sys_int86(&reg)
-  > sys_int86(addr: 0xeffff6c8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
-  < sys_int86(addr: 0xeffff6c8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
   @application.c:59, proj_main_loop
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
@@ -1903,8 +2291,8 @@
     timer_int_handler()
   @./terminalUtils.c:32, pageFlip
     sys_int86(&reg)
-  > sys_int86(addr: 0xeffff6c8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
-  < sys_int86(addr: 0xeffff6c8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
   @application.c:59, proj_main_loop
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
@@ -1913,8 +2301,8 @@
     timer_int_handler()
   @./terminalUtils.c:32, pageFlip
     sys_int86(&reg)
-  > sys_int86(addr: 0xeffff6c8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
-  < sys_int86(addr: 0xeffff6c8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
   @application.c:59, proj_main_loop
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
@@ -1923,8 +2311,8 @@
     timer_int_handler()
   @./terminalUtils.c:32, pageFlip
     sys_int86(&reg)
-  > sys_int86(addr: 0xeffff6c8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
-  < sys_int86(addr: 0xeffff6c8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
   @application.c:59, proj_main_loop
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
@@ -1933,8 +2321,8 @@
     timer_int_handler()
   @./terminalUtils.c:32, pageFlip
     sys_int86(&reg)
-  > sys_int86(addr: 0xeffff6c8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
-  < sys_int86(addr: 0xeffff6c8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
   @application.c:59, proj_main_loop
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
@@ -1943,8 +2331,8 @@
     timer_int_handler()
   @./terminalUtils.c:32, pageFlip
     sys_int86(&reg)
-  > sys_int86(addr: 0xeffff6c8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
-  < sys_int86(addr: 0xeffff6c8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
   @application.c:59, proj_main_loop
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
@@ -1953,8 +2341,8 @@
     timer_int_handler()
   @./terminalUtils.c:32, pageFlip
     sys_int86(&reg)
-  > sys_int86(addr: 0xeffff6c8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
-  < sys_int86(addr: 0xeffff6c8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
   @application.c:59, proj_main_loop
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
@@ -1963,8 +2351,8 @@
     timer_int_handler()
   @./terminalUtils.c:32, pageFlip
     sys_int86(&reg)
-  > sys_int86(addr: 0xeffff6c8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
-  < sys_int86(addr: 0xeffff6c8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
   @application.c:59, proj_main_loop
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
@@ -1973,8 +2361,8 @@
     timer_int_handler()
   @./terminalUtils.c:32, pageFlip
     sys_int86(&reg)
-  > sys_int86(addr: 0xeffff6c8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
-  < sys_int86(addr: 0xeffff6c8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
   @application.c:59, proj_main_loop
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
@@ -1983,8 +2371,8 @@
     timer_int_handler()
   @./terminalUtils.c:32, pageFlip
     sys_int86(&reg)
-  > sys_int86(addr: 0xeffff6c8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
-  < sys_int86(addr: 0xeffff6c8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
   @application.c:59, proj_main_loop
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
@@ -1993,8 +2381,8 @@
     timer_int_handler()
   @./terminalUtils.c:32, pageFlip
     sys_int86(&reg)
-  > sys_int86(addr: 0xeffff6c8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
-  < sys_int86(addr: 0xeffff6c8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
   @application.c:59, proj_main_loop
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
@@ -2003,8 +2391,8 @@
     timer_int_handler()
   @./terminalUtils.c:32, pageFlip
     sys_int86(&reg)
-  > sys_int86(addr: 0xeffff6c8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
-  < sys_int86(addr: 0xeffff6c8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
   @application.c:59, proj_main_loop
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
@@ -2013,8 +2401,2917 @@
     timer_int_handler()
   @./terminalUtils.c:32, pageFlip
     sys_int86(&reg)
-  > sys_int86(addr: 0xeffff6c8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
-  < sys_int86(addr: 0xeffff6c8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x09 = 0b00001001])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x00 = 0b00000000])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x00 = 0b00000000])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x19 = 0b00011001])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0xff = 0b11111111])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x00 = 0b00000000])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x19 = 0b00011001])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0xff = 0b11111111])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x00 = 0b00000000])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x19 = 0b00011001])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0xff = 0b11111111])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x00 = 0b00000000])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x08 = 0b00001000])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x00 = 0b00000000])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x00 = 0b00000000])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x09 = 0b00001001])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x00 = 0b00000000])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x00 = 0b00000000])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x19 = 0b00011001])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0xff = 0b11111111])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x00 = 0b00000000])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x19 = 0b00011001])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0xff = 0b11111111])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x00 = 0b00000000])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x19 = 0b00011001])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0xff = 0b11111111])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x00 = 0b00000000])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x19 = 0b00011001])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0xff = 0b11111111])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x00 = 0b00000000])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x19 = 0b00011001])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0xff = 0b11111111])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x00 = 0b00000000])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x19 = 0b00011001])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0xff = 0b11111111])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x00 = 0b00000000])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x19 = 0b00011001])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0xff = 0b11111111])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x00 = 0b00000000])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x19 = 0b00011001])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0xff = 0b11111111])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x00 = 0b00000000])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x19 = 0b00011001])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0xff = 0b11111111])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x00 = 0b00000000])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x19 = 0b00011001])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0xff = 0b11111111])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x00 = 0b00000000])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x19 = 0b00011001])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0xff = 0b11111111])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x00 = 0b00000000])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x19 = 0b00011001])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0xff = 0b11111111])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x00 = 0b00000000])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x08 = 0b00001000])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x00 = 0b00000000])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x00 = 0b00000000])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x0a = 0b00001010])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x00 = 0b00000000])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x00 = 0b00000000])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @./arena.c:217, arenaUpdate
+    printf("Pressed R Down\n")
+    "Pressed R Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @./arena.c:217, arenaUpdate
+    printf("Pressed R Down\n")
+    "Pressed R Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @./arena.c:217, arenaUpdate
+    printf("Pressed R Down\n")
+    "Pressed R Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @./arena.c:217, arenaUpdate
+    printf("Pressed R Down\n")
+    "Pressed R Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @./arena.c:217, arenaUpdate
+    printf("Pressed R Down\n")
+    "Pressed R Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @./arena.c:217, arenaUpdate
+    printf("Pressed R Down\n")
+    "Pressed R Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @./arena.c:217, arenaUpdate
+    printf("Pressed R Down\n")
+    "Pressed R Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @./arena.c:217, arenaUpdate
+    printf("Pressed R Down\n")
+    "Pressed R Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @./arena.c:217, arenaUpdate
+    printf("Pressed R Down\n")
+    "Pressed R Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @./arena.c:217, arenaUpdate
+    printf("Pressed R Down\n")
+    "Pressed R Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @./arena.c:217, arenaUpdate
+    printf("Pressed R Down\n")
+    "Pressed R Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @./arena.c:217, arenaUpdate
+    printf("Pressed R Down\n")
+    "Pressed R Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @./arena.c:217, arenaUpdate
+    printf("Pressed R Down\n")
+    "Pressed R Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @./arena.c:217, arenaUpdate
+    printf("Pressed R Down\n")
+    "Pressed R Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @./arena.c:217, arenaUpdate
+    printf("Pressed R Down\n")
+    "Pressed R Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @./arena.c:217, arenaUpdate
+    printf("Pressed R Down\n")
+    "Pressed R Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @./arena.c:217, arenaUpdate
+    printf("Pressed R Down\n")
+    "Pressed R Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @./arena.c:217, arenaUpdate
+    printf("Pressed R Down\n")
+    "Pressed R Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @./arena.c:217, arenaUpdate
+    printf("Pressed R Down\n")
+    "Pressed R Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @./arena.c:217, arenaUpdate
+    printf("Pressed R Down\n")
+    "Pressed R Down"
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x0a = 0b00001010])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @./arena.c:217, arenaUpdate
+    printf("Pressed R Down\n")
+    "Pressed R Down"
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x01 = 0b00000001])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @./arena.c:217, arenaUpdate
+    printf("Pressed R Down\n")
+    "Pressed R Down"
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x00 = 0b00000000])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x08 = 0b00001000])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x00 = 0b00000000])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000001000000000000]>)
+  @application.c:78, proj_main_loop
+    mouse_ih()
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x64, addr: 0xeffff658)
+    < sys_inb(0x64, addr: 0xeffff658 [0x3d = 0b00111101])
+    @utilsMouse.c:5, sys_inb_8b
+      sys_inb(addr, &byte)
+    > sys_inb(0x60, addr: 0xeffff658)
+    < sys_inb(0x60, addr: 0xeffff658 [0x00 = 0b00000000])
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
+  @application.c:59, proj_main_loop
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000001]>)
+  @application.c:68, proj_main_loop
+    timer_int_handler()
+  @./terminalUtils.c:32, pageFlip
+    sys_int86(&reg)
+  > sys_int86(addr: 0xeffff6b8 [AX: 4f07, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6b8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
+  @./arena.c:215, arenaUpdate
+    printf("Pressed L Down\n")
+    "Pressed L Down"
   @application.c:59, proj_main_loop
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff750, addr: 0xeffff79c)
@@ -19993,44 +23290,53 @@
   < sys_int86(addr: 0xeffff6c8 [AX: 004f, BX: 0000, CX: 0000, DX: 0400, ES: 0000, DI: 0000]) -> (ret: 0)
   @utils.c:17, util_sys_inb
     sys_inb(port, &res)
-  > sys_inb(0x64, addr: 0xeffff700)
-  < sys_inb(0x64, addr: 0xeffff700 [0x1d = 0b00011101])
+  > sys_inb(0x64, addr: 0xeffff6f0)
+  < sys_inb(0x64, addr: 0xeffff6f0 [0x1d = 0b00011101])
   @utils.c:17, util_sys_inb
     sys_inb(port, &res)
-  > sys_inb(0x60, addr: 0xeffff700)
-  < sys_inb(0x60, addr: 0xeffff700 [0x01 = 0b00000001])
+  > sys_inb(0x60, addr: 0xeffff6f0)
+  < sys_inb(0x60, addr: 0xeffff6f0 [0x01 = 0b00000001])
   @mouse.c:36, writeCmd
     sys_outb(STATUS_CMD_ADDR, REQUEST_BYTE_CMD)
   > sys_outb(0x64, 0xd4 = 0b11010100)
   @utilsMouse.c:5, sys_inb_8b
     sys_inb(addr, &byte)
-  > sys_inb(0x64, addr: 0xeffff6b8)
-  < sys_inb(0x64, addr: 0xeffff6b8 [0x1c = 0b00011100])
+  > sys_inb(0x64, addr: 0xeffff6bc)
+  < sys_inb(0x64, addr: 0xeffff6bc [0x1c = 0b00011100])
   @mouse.c:38, writeCmd
     sys_outb(INPUT_OUTPUT_ADDR, cmd)
   > sys_outb(0x60, 0xf5 = 0b11110101)
   @utilsMouse.c:5, sys_inb_8b
     sys_inb(addr, &byte)
-  > sys_inb(0x64, addr: 0xeffff6e8)
-  < sys_inb(0x64, addr: 0xeffff6e8 [0x3d = 0b00111101])
+  > sys_inb(0x64, addr: 0xeffff6e4)
+  < sys_inb(0x64, addr: 0xeffff6e4 [0x3d = 0b00111101])
   @utilsMouse.c:5, sys_inb_8b
     sys_inb(addr, &byte)
-  > sys_inb(0x60, addr: 0xeffff6e8)
-  < sys_inb(0x60, addr: 0xeffff6e8 [0xfa = 0b11111010])
+  > sys_inb(0x60, addr: 0xeffff6e4)
+  < sys_inb(0x60, addr: 0xeffff6e4 [0xfa = 0b11111010])
   @mouse.c:10, mouseUnsubscribe
     sys_irqrmpolicy(hook_id)
   > sys_irqrmpolicy(addr: 0xeffff7a0 [10])
   < sys_irqrmpolicy(addr: 0xeffff7a0 [10]) -> (ret: 0)
-  @application.c:109, proj_main_loop
+  @application.c:108, proj_main_loop
     timer_unsubscribe_int()
     @timer.c:39, timer_unsubscribe_int
       sys_irqrmpolicy(&hookId)
+<<<<<<< HEAD
     > sys_irqrmpolicy(addr: 0x836fadc [11])
     < sys_irqrmpolicy(addr: 0x836fadc [11]) -> (ret: 0)
   @kbc.c:19, kbcUnsubscribe
     sys_irqrmpolicy(&hook_id)
   > sys_irqrmpolicy(addr: 0x8365754 [12])
   < sys_irqrmpolicy(addr: 0x8365754 [12]) -> (ret: 0)
+=======
+    > sys_irqrmpolicy(addr: 0x836e46c [11])
+    < sys_irqrmpolicy(addr: 0x836e46c [11]) -> (ret: 0)
+  @kbc.c:19, kbcUnsubscribe
+    sys_irqrmpolicy(&hook_id)
+  > sys_irqrmpolicy(addr: 0x83640ec [12])
+  < sys_irqrmpolicy(addr: 0x83640ec [12]) -> (ret: 0)
+>>>>>>> b1b8a0008adbd07e2ca8a49cf9ad66ed3ba7a819
   @terminal.c:104, freeTerminal
     vg_exit()
   < vg_exit() -> (ret: 0)

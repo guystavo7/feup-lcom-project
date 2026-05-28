@@ -2,40 +2,54 @@
 #include "../resources/cursor.h"
 #include <stdlib.h>
 
+enum keyState {
+    UP,
+    DOWN,
+    PRESSED
+};
+
 struct Cursor {
     int x, y;
+    int deltaX, deltaY;
     int width, height;
     int center[2];
 
-	SpriteXPM* sprite;
+    enum keyState leftButton;
+    enum keyState rightButton;
+    enum keyState middleButton;
+
+    SpriteXPM* sprite;
 };
 
 static Cursor* cursorNew(int w, int h) {
-	Cursor* res = malloc(sizeof(Cursor));
-	res->sprite = newSpriteXPM((xpm_map_t)cursor_xpm, XPM_8_8_8, 0, 0);
-	res->center[0] = w / 2; 
-	res->center[1] = h / 2; 
-	
-	res->x = 0;
-	res->y = 0;
+    Cursor* res = malloc(sizeof(Cursor));
+    res->sprite = newSpriteXPM((xpm_map_t)cursor_xpm, XPM_8_8_8, 0, 0);
+    res->center[0] = w / 2;
+    res->center[1] = h / 2;
 
-	res->width = w;
-	res->height = h;
-	return res;
+    res->deltaX = 0;
+    res->deltaY = 0;
+
+    res->x = 0;
+    res->y = 0;
+
+    res->width = w;
+    res->height = h;
+    return res;
 }
 
 Cursor* getCursor() {
-	if (!isCursorCreated) {
-		cursor = cursorNew(800, 600);
-		isCursorCreated = true;
-	}	
+    if (!isCursorCreated) {
+        cursor = cursorNew(1280, 1024);
+        isCursorCreated = true;
+    }
 
-	return cursor;
+    return cursor;
 }
 
-void cursorFree(Cursor *c) {
-	freeSpriteXPM(c->sprite);
-	free(c);
+void cursorFree(Cursor* c) {
+    freeSpriteXPM(c->sprite);
+    free(c);
 }
 
 void cursorReset(Cursor* c) {
@@ -43,25 +57,59 @@ void cursorReset(Cursor* c) {
     c->y = 0;
 }
 
-void cursorUpdateCoordinates(Cursor* c, int dx, int dy) {
-    int nextX = c->x + dx;
-    int nextY = c->y + dy;
+void cursorUpdateData(Cursor* c, int dx, int dy, bool leftButton, bool rightButton, bool middleButton) {
+    c->deltaX += dx;
+    c->deltaY += dy;
 
-    int px = c->center[0] + nextX;
-    if (px < 0) c->x = -c->center[0];
-    else if (px > c->width - 1) c->x = (c->width - 1) - c->center[0];
-    else c->x = nextX;
+    if (leftButton && c->leftButton == UP)
+        c->leftButton = DOWN;
+    else if (leftButton)
+        c->leftButton = UP;
 
-    int pv = c->center[1] + nextY;
-    if (pv < 0) c->y = -c->center[1];
-    else if (pv > c->height - 1) c->y = (c->height - 1) - c->center[1];
-    else c->y = nextY;
+    if (middleButton && c->middleButton == UP)
+        c->middleButton = DOWN;
+    else if (middleButton)
+        c->middleButton = UP;
+
+    if (rightButton && c->rightButton == UP)
+        c->rightButton = DOWN;
+    else if (rightButton)
+        c->rightButton = UP;
 }
 
-void cursorDraw(Cursor* c, Terminal* terminal) {
+static void cursorUpdateCoordinates(Cursor* c) {
+    int nextX = c->x + c->deltaX;
+    int nextY = c->y + c->deltaY;
+
+    c->deltaX = 0;
+    c->deltaY = 0;
+
+    int px = c->center[0] + nextX;
+    if (px < 0)
+        c->x = -c->center[0];
+    else if (px > c->width - 1)
+        c->x = (c->width - 1) - c->center[0];
+    else
+        c->x = nextX;
+
+    int pv = c->center[1] + nextY;
+    if (pv < 0)
+        c->y = -c->center[1];
+    else if (pv > c->height - 1)
+        c->y = (c->height - 1) - c->center[1];
+    else
+        c->y = nextY;
+}
+
+static void cursorDraw(Cursor* c, Terminal* terminal) {
     int px = c->center[0] + c->x;
     int py = c->center[1] + c->y;
     drawSpriteXPM(c->sprite, terminal, px, py, false);
+}
+
+void cursorUpdate(Cursor* c, Terminal* terminal) {
+    cursorUpdateCoordinates(c);
+    cursorDraw(c, terminal);
 }
 
 void cursorGetPixelPosition(Cursor* c, int* px, int* py) {
@@ -75,4 +123,55 @@ int cursorGetX(Cursor* c) {
 
 int cursorGetY(Cursor* c) {
     return c->y;
+}
+
+bool cursorIsLeftButtonPressed(Cursor* c) {
+    if (c->leftButton == DOWN) {
+        c->leftButton = PRESSED;
+    }
+
+    return c->leftButton == PRESSED;
+}
+
+bool cursorIsLeftButtonPressedDown(Cursor* c) {
+    if (c->leftButton == DOWN) {
+        c->leftButton = PRESSED;
+        return true;
+    }
+
+    return false;
+}
+
+bool cursorIsMiddleButtonPressed(Cursor* c) {
+    if (c->middleButton == DOWN) {
+        c->middleButton = PRESSED;
+    }
+
+    return c->middleButton == PRESSED;
+}
+
+bool cursorIsMiddleButtonPressedDown(Cursor* c) {
+    if (c->middleButton == DOWN) {
+        c->middleButton = PRESSED;
+        return true;
+    }
+
+    return false;
+}
+
+bool cursorIsRightButtonPressed(Cursor* c) {
+    if (c->rightButton == DOWN) {
+        c->rightButton = PRESSED;
+    }
+
+    return c->rightButton == PRESSED;
+}
+
+bool cursorIsRightButtonPressedDown(Cursor* c) {
+    if (c->rightButton == DOWN) {
+        c->rightButton = PRESSED;
+        return true;
+    }
+
+    return false;
 }
