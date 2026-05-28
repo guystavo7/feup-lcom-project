@@ -15,7 +15,7 @@ void cursorFree(Cursor* c);
 Cursor* getCursor();
 void cursorReset(Cursor* c);
 void cursorUpdateData(Cursor* c, int dx, int dy, bool leftButton, bool rightButton, bool middleButton);
-void cursorUpdate(Cursor* c, Terminal* terminal);
+void cursorUpdate(Cursor* c, Terminal* terminal, float deltaTime);
 
 int cursorGetX(Cursor* c);
 int cursorGetY(Cursor* c);

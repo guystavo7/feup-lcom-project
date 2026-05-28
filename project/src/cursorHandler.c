@@ -1,5 +1,10 @@
 #include "../include/utils/cursorHandler.h"
+#include "../include/components/particle.h"
+
 #include "../resources/cursor/cursor.h"
+#include "../resources/particles/dust/dust.h"
+
+
 #include <stdlib.h>
 
 enum keyState {
@@ -26,6 +31,7 @@ struct Cursor {
 
 	enum MouseState currentState;
     SpriteXPM** sprites;
+	Particle* p;
 };
 
 static Cursor* cursorNew(int w, int h) {
@@ -46,6 +52,10 @@ static Cursor* cursorNew(int w, int h) {
 
     res->width = w;
     res->height = h;
+
+	SpriteXPM** sprites = malloc(sizeof(SpriteXPM*) * 9);
+	for (int i = 0; i < 9; i++) sprites[i] = newSpriteXPM((xpm_map_t)dustXPM[i], XPM_8_8_8, 0, 0);
+	res->p = particleNew(10, sprites, 9);
     return res;
 }
 
@@ -61,6 +71,7 @@ Cursor* getCursor() {
 void cursorFree(Cursor* c) {
 	for (int i = 0; i < 3; i++) freeSpriteXPM(c->sprites[i]);
 	free(c->sprites);
+	particleFree(c->p);
     free(c);
 }
 
@@ -76,6 +87,8 @@ void cursorUpdateData(Cursor* c, int dx, int dy, bool leftButton, bool rightButt
     if (leftButton && c->leftButton == UP) {
         c->leftButton = DOWN;
 		c->currentState = CLICKED;
+		particleStart(c->p);
+
 	} else if (leftButton) {
         c->leftButton = UP;
 	}
@@ -119,15 +132,17 @@ static void cursorUpdateCoordinates(Cursor* c) {
         c->y = nextY;
 }
 
-static void cursorDraw(Cursor* c, Terminal* terminal) {
+static void cursorDraw(Cursor* c, Terminal* terminal, float deltaTime) {
     int px = c->center[0] + c->x;
     int py = c->center[1] + c->y;
     drawSpriteXPM(c->sprites[c->currentState], terminal, px, py, false);
+	particleUpdate(px, py, c->p, terminal, deltaTime, false);
+
 }
 
-void cursorUpdate(Cursor* c, Terminal* terminal) {
+void cursorUpdate(Cursor* c, Terminal* terminal, float deltaTime) {
     cursorUpdateCoordinates(c);
-    cursorDraw(c, terminal);
+    cursorDraw(c, terminal, deltaTime);
 }
 
 void cursorGetPixelPosition(Cursor* c, int* px, int* py) {

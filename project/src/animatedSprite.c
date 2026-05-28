@@ -8,7 +8,6 @@ struct AnimatedSprite {
 
     float frameSpeed;
     float current;
-    float elapsedTime;
 };
 
 AnimatedSprite* animatedSpriteNew(float frameSpeed, SpriteXPM** xpm, int n) {
@@ -18,7 +17,6 @@ AnimatedSprite* animatedSpriteNew(float frameSpeed, SpriteXPM** xpm, int n) {
 
     s->n = n;
     s->current = 0;
-    s->elapsedTime = 0.0f;
     return s;
 }
 
