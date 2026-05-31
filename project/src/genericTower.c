@@ -1,6 +1,7 @@
 #include "../include/buildings/genericTower.h"
 #include "../include/components/boxCollider.h"
 #include "../include/components/particle.h"
+#include "../include/data.h"
 
 #include "../resources/particles/dust/dust.h"
 #include <stdlib.h>
@@ -20,9 +21,9 @@ GenericTower* towerNew(SpriteXPM* upperHalf, SpriteXPM* lowerHalf, Vec2d positio
 	res->upperHalf = upperHalf;
 	res->lowerHalf = lowerHalf;
 
-    SpriteXPM** sprites = malloc(sizeof(SpriteXPM*) * 9);
-    for (int i = 0; i < 9; i++) sprites[i] = newSpriteXPM((xpm_map_t)dustXPM[i], XPM_8_8_8, 0, hitBoxOffset.y);
-    res->p = particleNew(10, sprites, 9);
+    SpriteXPM** sprites = malloc(sizeof(SpriteXPM*) * DUST_FRAMES);
+    for (int i = 0; i < DUST_FRAMES; i++) sprites[i] = newSpriteXPM((xpm_map_t)dustXPM[i], XPM_8_8_8, 0, hitBoxOffset.y);
+    res->p = particleNew(DUST_FRAME_SPEED, sprites, DUST_FRAMES);
     particleStart(res->p);
 
     res->hitBox = boxColliderNew(position, hitBoxOffset, size, 0);
