@@ -9,15 +9,17 @@ struct Particle {
     float frameSpeed;
     float current;
     bool active;
+    bool disapearAfterFinished;
 };
 
-Particle* particleNew(float frameSpeed, SpriteXPM** xpm_array, int n) {
+Particle* particleNew(float frameSpeed, SpriteXPM** xpm_array, int n, bool disapearAfterFinished) {
     Particle* res = malloc(sizeof(Particle) * n);
     res->sprites = xpm_array;
     res->frameSpeed = frameSpeed;
     res->current = 0;
-	res->n = n;
+    res->n = n;
     res->active = false;
+    res->disapearAfterFinished = disapearAfterFinished;
 
     return res;
 }
@@ -29,22 +31,30 @@ void particleFree(Particle* particle) {
 }
 
 void particleUpdate(int x, int y, Particle* sprite, Terminal* t, float deltaTime, bool isFlipped) {
-    if (!sprite->active) return;
+    if (sprite->active) {
+        sprite->current += deltaTime * sprite->frameSpeed;
 
-    sprite->current += deltaTime * sprite->frameSpeed;
-    if (sprite->current >= sprite->n) {
-        sprite->active = false;
-    } else {
+        if (sprite->current >= sprite->n) {
+            sprite->active = false;
+            sprite->current = sprite->n - 1;
+        }
+    }
+
+    if (sprite->active || !sprite->disapearAfterFinished) {
         SpriteXPM* currentFrame = sprite->sprites[(int)sprite->current];
         drawSpriteXPM(currentFrame, t, x, y, isFlipped);
     }
 }
 
 bool particleIsFinished(Particle* p) {
-	return !p->active;
+    return !p->active;
 }
 
-void particleStart(Particle *p) {
-	p->active = true;
+void particleStart(Particle* p) {
+    p->active = true;
+    p->current = 0;
+}
+
+void particleReset(Particle* p) {
 	p->current = 0;
 }

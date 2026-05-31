@@ -23,7 +23,7 @@ GenericTower* towerNew(SpriteXPM* upperHalf, SpriteXPM* lowerHalf, Vec2d positio
 
     SpriteXPM** sprites = malloc(sizeof(SpriteXPM*) * DUST_FRAMES);
     for (int i = 0; i < DUST_FRAMES; i++) sprites[i] = newSpriteXPM((xpm_map_t)dustXPM[i], XPM_8_8_8, 0, hitBoxOffset.y);
-    res->p = particleNew(DUST_FRAME_SPEED, sprites, DUST_FRAMES);
+    res->p = particleNew(DUST_FRAME_SPEED, sprites, DUST_FRAMES, true);
     particleStart(res->p);
 
     res->hitBox = boxColliderNew(position, hitBoxOffset, size, 0);

@@ -35,7 +35,6 @@ struct Arena {
     int tileSize;
 
     Player* player;
-    Cursor* cursor;
 };
 
 static void createMap(Arena* arena, const char* filename, int tileSize) {
@@ -196,6 +195,4 @@ void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
 
     playerUpdate(arena->player, terminal, arena, deltaTime);
     for (int i = arena->towersN - 1; i >= 0; i--) towerDrawUpperHalf(arena->towers[i], terminal);
-
-    cursorUpdate(getCursor(), terminal, deltaTime);
 }

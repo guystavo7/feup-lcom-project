@@ -47,5 +47,22 @@ static const Vec2d BASIC_UPPER_HALF_OFFSET = {0, -59};
 // Cursor
 #define CURSOR_FRAMES 3
 
+// Main Menu
+#define NEW_GAME_BUTTON_NORMAL	0
+#define NEW_GAME_BUTTON_PRESSED 1
+#define EXIT_BUTTON_NORMAL	2
+#define EXIT_BUTTON_PRESSED 3
+#define LOGO				4
+
+#define NEW_GAME_BUTTON_FRAMES 	2
+#define EXIT_BUTTON_FRAMES		2
+#define BUTTONS_FRAME_SPEED 	10
+
+static const Vec2d LOGO_POSITION = {445, 200};
+
+static const Vec2d NEW_GAME_BUTTON_POS = {499, 400};
+static const Vec2d NEW_GAME_BUTTON_SIZE = {282, 94};
+static const Vec2d EXIT_BUTTON_POS = {499, 550};
+static const Vec2d EXIT_BUTTON_SIZE = {282, 94};
 
 #endif

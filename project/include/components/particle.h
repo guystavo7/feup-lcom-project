@@ -12,11 +12,12 @@
 
 typedef struct Particle Particle;
 
-Particle* particleNew(float frameSpeed, SpriteXPM** xpm_array, int n);
+Particle* particleNew(float frameSpeed, SpriteXPM** xpm_array, int n, bool disapearAfterFinished);
 void particleFree(Particle* particle);
 void particleUpdate(int x, int y, Particle* sprite, Terminal* t, float deltaTime, bool isFlipped);
 
 bool particleIsFinished(Particle* p);
 void particleStart(Particle* p);
+void particleReset(Particle* p);
 
 #endif
