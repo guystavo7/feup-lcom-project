@@ -6,7 +6,7 @@
 static Arena* arena;
 
 void startGame(Terminal* terminal) {
-    arena = arenaNew(terminal, "/home/lcom/labs/project/resources/map/grid_walls.csv");
+    arena = arenaNew(terminal, "/home/lcom/labs/project/resources/map/grid_walls.csv", "/home/lcom/labs/project/resources/map/grid_path.csv");
 }
 
 void exitGame() {

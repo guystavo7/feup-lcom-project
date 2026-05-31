@@ -6,10 +6,12 @@
 // Tags
 #define WALLS_TAG 		0
 #define PLAYER_TAG 		1
-#define MONSTER_TAG		3
-#define COLLECTABLE_TAG	4
+#define MONSTER_TAG		2
+#define COLLECTABLE_TAG	3
+#define PATH_TAG		4
 #define UI_TAG			5
-#define TAGS_NUM 		5
+
+#define TAGS_NUM 		6
 
 // Screen configs
 #define MODE 0x11B
@@ -20,7 +22,6 @@
 #define TILE_SIZE 32
 
 static const Vec2d EMPTY_VEC2D = {0, 0};
-
 
 // Fruit
 static const Vec2d FRUIT_SIZE = {32, 32};

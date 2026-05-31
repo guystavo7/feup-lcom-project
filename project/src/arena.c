@@ -97,6 +97,55 @@ static void createMap(Arena* arena, const char* filename, int tileSize) {
     free(map);
 }
 
+static void createMonsterPathColliders(Arena* arena, const char* filename) {
+    FILE* file = fopen(filename, "r");
+    if (!file) {
+        printf("Error: Could not open map file: %s\n", filename);
+        return;
+    }
+
+    char lineBuffer[1024];
+    int** map = malloc(arena->height * sizeof(int*));
+	int num = 0;
+
+    for (int i = 0; i < arena->height; i++) {
+        map[i] = malloc(arena->width * sizeof(int));
+
+        if (fgets(lineBuffer, sizeof(lineBuffer), file) == NULL) {
+            break;
+        }
+
+        char* ptr = lineBuffer;
+        for (int j = 0; j < arena->width; j++) {
+            map[i][j] = atoi(ptr);
+			if (map[i][j] != -1) num++;
+
+            while (*ptr != '\0' && *ptr != '\n' && *ptr != '\r' && *ptr != ',') ptr++;
+            if (*ptr == ',') ptr++;
+        }
+    }
+
+    fclose(file);
+    arena->collidersN[PATH_TAG] = num; 
+    arena->colliders[PATH_TAG] = malloc(sizeof(BoxCollider*) * num);
+	int i = 0;
+
+    for (int y = 0; y < arena->height; y++) {
+        for (int x = 0; x < arena->width; x++) {
+            int id = map[y][x];
+            if (id <= 0) continue;
+
+			Vec2d position = {x * TILE_SIZE, y * TILE_SIZE};
+			Vec2d size = {TILE_SIZE, TILE_SIZE};
+            arena->colliders[PATH_TAG][i] = boxColliderNew(position, EMPTY_VEC2D, size, PATH_TAG);
+			i++;
+        }
+    }
+
+    for (int i = 0; i < arena->height; i++) free(map[i]);
+    free(map);
+}
+
 static void createPlayer(Arena* arena) {
     Vec2d playerPos = {100, 100};
     arena->player = playerNew(playerPos);
@@ -117,12 +166,13 @@ static void createFruitsTest(Arena* arena) {
     for (int i = 0; i < arena->fruitsN; i++) arena->colliders[COLLECTABLE_TAG][i] = collectableGetHitBox(arena->fruits[i]);
 }
 
-Arena* arenaNew(Terminal* terminal, const char* filename) {
+Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile) {
     Arena* res = malloc(sizeof(Arena));
     res->collidersN = malloc(sizeof(int) * TAGS_NUM);
     res->colliders = malloc(sizeof(BoxCollider*) * TAGS_NUM);
 
-    createMap(res, filename, TILE_SIZE);
+    createMap(res, tilesFile, TILE_SIZE);
+	createMonsterPathColliders(res, pathFile);
     createPlayer(res);
     createFruitsTest(res);
     res->towersN = 0;
