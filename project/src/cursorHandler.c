@@ -1,6 +1,6 @@
 #include "../include/utils/cursorHandler.h"
 #include "../resources/cursor/cursor.h"
-
+#include "../include/data.h"
 
 #include <stdlib.h>
 
@@ -33,8 +33,8 @@ static Cursor* cursorNew(int w, int h) {
     Cursor* res = malloc(sizeof(Cursor));
 
 	res->currentState = DEFAULT;
-    res->sprites = malloc(sizeof(SpriteXPM*) * 3);
-	for (int i = 0; i < 3; i++) res->sprites[i] = newSpriteXPM((xpm_map_t)cursorsXPM[i], XPM_8_8_8, 0, 0);
+    res->sprites = malloc(sizeof(SpriteXPM*) * CURSOR_FRAMES);
+	for (int i = 0; i < CURSOR_FRAMES; i++) res->sprites[i] = newSpriteXPM((xpm_map_t)cursorsXPM[i], XPM_8_8_8, 0, 0);
 
     res->deltaX = 0;
     res->deltaY = 0;
@@ -50,7 +50,7 @@ static Cursor* cursorNew(int w, int h) {
 
 Cursor* getCursor() {
     if (!isCursorCreated) {
-        cursor = cursorNew(1280, 1024);
+        cursor = cursorNew(SCREEN_WIDTH, SCREEN_HEIGHT);
         isCursorCreated = true;
     }
 
@@ -58,7 +58,7 @@ Cursor* getCursor() {
 }
 
 void cursorFree(Cursor* c) {
-	for (int i = 0; i < 3; i++) freeSpriteXPM(c->sprites[i]);
+	for (int i = 0; i < CURSOR_FRAMES; i++) freeSpriteXPM(c->sprites[i]);
 	free(c->sprites);
     free(c);
 }

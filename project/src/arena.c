@@ -2,6 +2,7 @@
 #include "../include/buildings/basicTower.h"
 #include "../include/buildings/genericTower.h"
 #include "../include/components/boxCollider.h"
+#include "../include/data.h"
 #include "../include/player/player.h"
 #include "../include/tiles/collectable.h"
 #include "../include/tiles/tile.h"
@@ -16,12 +17,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define MAP_WIDTH 40
-#define MAP_HEIGHT 32
-#define TILE_SIZE 32
-
 struct Arena {
-    // 0 - walls, 1 - player, 2 - monsters, 3 - collectables, 4 - projectiles, 5 - UI
     int* collidersN;
     BoxCollider*** colliders;
 
@@ -49,25 +45,23 @@ static void createMap(Arena* arena, const char* filename, int tileSize) {
         return;
     }
 
-    int width = MAP_WIDTH;
-    int height = MAP_HEIGHT;
     char lineBuffer[1024];
 
-    arena->tiles = malloc(sizeof(Tile*) * (width * height + 4));
-    arena->width = width;
-    arena->height = height;
+    arena->tiles = malloc(sizeof(Tile*) * (MAP_TILES_X * MAP_TILES_Y + 4));
+    arena->width = MAP_TILES_X;
+    arena->height = MAP_TILES_Y;
     arena->tileSize = tileSize;
 
-    int** map = malloc(height * sizeof(int*));
-    for (int i = 0; i < height; i++) {
-        map[i] = malloc(width * sizeof(int));
+    int** map = malloc(arena->height * sizeof(int*));
+    for (int i = 0; i < arena->height; i++) {
+        map[i] = malloc(arena->width * sizeof(int));
 
         if (fgets(lineBuffer, sizeof(lineBuffer), file) == NULL) {
             break;
         }
 
         char* ptr = lineBuffer;
-        for (int j = 0; j < width; j++) {
+        for (int j = 0; j < arena->width; j++) {
             map[i][j] = atoi(ptr);
             while (*ptr != '\0' && *ptr != '\n' && *ptr != '\r' && *ptr != ',') ptr++;
             if (*ptr == ',') ptr++;
@@ -77,8 +71,8 @@ static void createMap(Arena* arena, const char* filename, int tileSize) {
     fclose(file);
     int i = 0;
 
-    for (int y = 0; y < height; y++) {
-        for (int x = 0; x < width; x++) {
+    for (int y = 0; y < arena->height; y++) {
+        for (int x = 0; x < arena->width; x++) {
             int id = map[y][x];
             if (id <= 0) continue;
 
@@ -88,16 +82,16 @@ static void createMap(Arena* arena, const char* filename, int tileSize) {
         }
     }
 
-    arena->tiles[i] = tileNew(NULL, -1, 0, -10, MAP_WIDTH * TILE_SIZE, 10);
-    arena->tiles[i + 1] = tileNew(NULL, -1, 0, MAP_HEIGHT * TILE_SIZE, MAP_WIDTH * TILE_SIZE, 10);
-    arena->tiles[i + 2] = tileNew(NULL, -1, -10, 0, 10, MAP_HEIGHT * TILE_SIZE);
-    arena->tiles[i + 3] = tileNew(NULL, -1, MAP_WIDTH * TILE_SIZE, 0, 10, MAP_HEIGHT * TILE_SIZE);
+    arena->tiles[i] = tileNew(NULL, -1, 0, -10, MAP_TILES_X * TILE_SIZE, 10);
+    arena->tiles[i + 1] = tileNew(NULL, -1, 0, MAP_TILES_Y * TILE_SIZE, MAP_TILES_X * TILE_SIZE, 10);
+    arena->tiles[i + 2] = tileNew(NULL, -1, -10, 0, 10, MAP_TILES_Y * TILE_SIZE);
+    arena->tiles[i + 3] = tileNew(NULL, -1, MAP_TILES_X * TILE_SIZE, 0, 10, MAP_TILES_Y * TILE_SIZE);
     i += 4;
     arena->tilesN = i;
 
     arena->collidersN[WALLS_TAG] = arena->tilesN;
     arena->colliders[WALLS_TAG] = malloc(sizeof(BoxCollider*) * (i + 4));
-    for (int i = 0; i < height; i++) free(map[i]);
+    for (int i = 0; i < arena->height; i++) free(map[i]);
     for (int j = 0; j < arena->tilesN; j++) arena->colliders[WALLS_TAG][j] = tileBoxCollider(arena->tiles[j]);
 
     free(map);
@@ -116,10 +110,8 @@ static void createFruitsTest(Arena* arena) {
     arena->fruitsN = 1;
     arena->fruits = malloc(sizeof(Collectable*) * arena->fruitsN);
     Vec2d fruitPos = {500, 400};
-    Vec2d fruitOffset = {0, 0};
-    Vec2d fruitSize = {32, 32};
 
-    arena->fruits[0] = collectableNew(fruitPos, fruitOffset, fruitSize, abc);
+    arena->fruits[0] = collectableNew(fruitPos, EMPTY_VEC2D, FRUIT_SIZE, abc);
     arena->colliders[COLLECTABLE_TAG] = malloc(sizeof(BoxCollider*) * arena->fruitsN);
     arena->collidersN[COLLECTABLE_TAG] = arena->fruitsN;
     for (int i = 0; i < arena->fruitsN; i++) arena->colliders[COLLECTABLE_TAG][i] = collectableGetHitBox(arena->fruits[i]);
