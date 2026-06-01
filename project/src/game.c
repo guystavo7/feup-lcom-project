@@ -16,9 +16,9 @@ void exitGame() {
 
 bool gameLoop(Terminal* terminal, float deltaTime) {
     gameStateUpdate(state, terminal, deltaTime);
+
     GameState* newState = gameStateTransition(state, terminal);
 	if (!newState) return false;
-
     if (newState != state) {
         gameStateFree(state);
         state = newState;

@@ -119,8 +119,16 @@ static void mainMenuFree(GameState* state) {
 
 static GameState* mainMenuTransition(GameState* state, Terminal* terminal) {
     GameState* newState = state;
-    if (pressedNewGame) newState = runningGameNew(terminal);
-    if (pressedExit) newState = NULL;
+    if (pressedNewGame) {
+        newState = runningGameNew(terminal);
+        pressedNewGame = false;
+        pressedExit = false;
+
+    } else if (pressedExit) {
+        newState = NULL;
+        pressedNewGame = false;
+        pressedExit = false;
+    }
 
     return newState;
 }

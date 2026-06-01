@@ -125,6 +125,7 @@ Arena* arenaNew(Terminal* terminal, const char* filename) {
     createPlayer(res);
     createFruitsTest(res);
     res->towersN = 0;
+	res->towers = malloc(0);
 
     // The terminal will handle the freeing
     SpriteXPM* backgroundSprite = newSpriteXPM((xpm_map_t)background, XPM_8_8_8, 0, 0);

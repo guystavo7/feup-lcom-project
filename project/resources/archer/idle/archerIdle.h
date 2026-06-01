@@ -241,7 +241,7 @@ static char *Archer_Idle6[] = {
 "       .......    "
 };
 /* ===== master pointer list ===== */
-static char **all_xpms[] = {
+static char **archerIdleXPM[] = {
     Archer_Idle1,
     Archer_Idle2,
     Archer_Idle3,

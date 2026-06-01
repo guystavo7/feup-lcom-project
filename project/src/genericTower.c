@@ -8,7 +8,10 @@
 
 struct GenericTower {
     SpriteXPM* upperHalf;
+
     SpriteXPM* lowerHalf;
+	
+
     BoxCollider* hitBox;
     Vec2d position;
     Particle* p;
