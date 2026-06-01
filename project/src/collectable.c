@@ -60,7 +60,7 @@ float collectableGetY(Collectable* c) {
 }
 
 void collectableUpdate(Collectable* c, Terminal* terminal) {
-	if (!c->isActive)
+	if (!c->isActive) return;
 	drawSpriteXPM(c->sprite, terminal, c->position.x, c->position.y, false);
 }
 

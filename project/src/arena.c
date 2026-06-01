@@ -195,5 +195,5 @@ void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
     arenaMouseObserver(arena);
 
     playerUpdate(arena->player, terminal, arena, deltaTime);
-    for (int i = arena->towersN - 1; i >= 0; i--) towerDrawUpperHalf(arena->towers[i], terminal);
+    for (int i = arena->towersN - 1; i >= 0; i--) towerDrawUpperHalf(arena->towers[i], terminal, deltaTime);
 }
