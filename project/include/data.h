@@ -43,6 +43,9 @@ static const Vec2d BASIC_TOWER_SIZE = {43, 29};
 static const Vec2d BASIC_TOWER_HIT_BOX_OFFSET = {9, 0};
 static const Vec2d BASIC_UPPER_HALF_OFFSET = {0, -59};
 
+static const Vec2d BASIC_TOWER_RANGE = {50, 50};
+static const Vec2d BASIC_TOWER_RANGE_OFFSET = {21, 14};
+
 // Archer
 #define ARCHER_FRAME_SPEED 10
 #define ARCHER_IDLE_FRAMES 6

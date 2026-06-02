@@ -4,23 +4,26 @@
 #include "../include/data.h"
 
 #include "../resources/particles/dust/dust.h"
-#include "../resources/blue/archer/archerIdle.h"
 #include <stdlib.h>
 
 struct GenericTower {
     SpriteXPM* upperHalf;
-
     SpriteXPM* lowerHalf;
-	AnimatedSprite* archer;
+
+	AnimatedSprite* current;
+	AnimatedSprite* archerIdle;
+	AnimatedSprite* archerShoot;
 
     BoxCollider* hitBox;
+    BoxCollider* range;
+
     Vec2d position;
     AnimatedSprite* p;
 
     void (*towerUpdate)(GenericTower* tower, Terminal* terminal, Arena* arena, float deltaTime);
 };
 
-GenericTower* towerNew(SpriteXPM* upperHalf, SpriteXPM* lowerHalf, AnimatedSprite* archer, Vec2d position, Vec2d size, Vec2d hitBoxOffset, void (*towerUpdate)(GenericTower* tower, Terminal* terminal, Arena* arena, float deltaTime)) {
+GenericTower* towerNew(SpriteXPM* upperHalf, SpriteXPM* lowerHalf, AnimatedSprite* archerIdle, AnimatedSprite* archerShoot, Vec2d position, Vec2d size, Vec2d hitBoxOffset, Vec2d rangeSize, Vec2d rangeOffset, void (*towerUpdate)(GenericTower* tower, Terminal* terminal, Arena* arena, float deltaTime)) {
     GenericTower* res = malloc(sizeof(GenericTower));
 	res->upperHalf = upperHalf;
 	res->lowerHalf = lowerHalf;
@@ -31,8 +34,12 @@ GenericTower* towerNew(SpriteXPM* upperHalf, SpriteXPM* lowerHalf, AnimatedSprit
     animatedSpriteStart(res->p);
 
     res->hitBox = boxColliderNew(position, hitBoxOffset, size, 0);
+	res->range = boxColliderNew(position, rangeOffset, rangeSize, 0);
     res->position = position;
-	res->archer = archer;
+
+	res->archerIdle = archerIdle;
+	res->archerShoot = archerShoot;
+	res->current = archerShoot;
 
     res->towerUpdate = towerUpdate;
     return res;
@@ -46,14 +53,17 @@ void towerUpdate(GenericTower* tower, Terminal* terminal, Arena* arena, float de
 
 void towerDrawUpperHalf(GenericTower *tower, Terminal *terminal, float deltaTime) {
 	drawSpriteXPM(tower->upperHalf, terminal, tower->position.x, tower->position.y, false);
-	animatedSpriteUpdate(tower->position.x, tower->position.y, tower->archer, terminal, deltaTime, false);
+	animatedSpriteUpdate(tower->position.x, tower->position.y, tower->current, terminal, deltaTime, false);
 }
 
 void towerFree(GenericTower* tower) {
     animatedSpriteFree(tower->p);
+	animatedSpriteFree(tower->archerIdle);
+	animatedSpriteFree(tower->archerShoot);
     freeSpriteXPM(tower->lowerHalf);
     freeSpriteXPM(tower->upperHalf);
     boxColliderFree(tower->hitBox);
+	boxColliderFree(tower->range);
     free(tower);
 }
 
