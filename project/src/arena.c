@@ -1,5 +1,10 @@
 #include "../include/arena.h"
 #include "../include/buildings/basicTower.h"
+#include "../include/buildings/eletricTower.h"
+#include "../include/buildings/fastTower.h"
+#include "../include/buildings/mortarTower.h"
+#include "../include/buildings/piercingTower.h"
+
 #include "../include/buildings/genericTower.h"
 #include "../include/button.h"
 #include "../include/components/boxCollider.h"
@@ -10,7 +15,7 @@
 #include "../include/utils/cursorHandler.h"
 
 #include "../resources/1.h"
-#include "../resources/building/tower/blueTower.h"
+#include "../resources/blue/tower/blueTower.h"
 #include "../resources/map/background.h"
 #include "../resources/tiles/tiles.h"
 
@@ -49,7 +54,6 @@ struct Arena {
     int tileSize;
 
     Player* player;
-    Cursor* cursor;
 
     ArenaConstructPhase constructPhase;
     int popupX;
@@ -160,9 +164,9 @@ static void createMonsterPathColliders(Arena* arena, const char* filename) {
     }
 
     fclose(file);
-    arena->collidersN[PATH_TAG] = num; 
+    arena->collidersN[PATH_TAG] = num;
     arena->colliders[PATH_TAG] = malloc(sizeof(BoxCollider*) * num);
-	int i = 0;
+    int i = 0;
 
     for (int y = 0; y < arena->height; y++) {
         for (int x = 0; x < arena->width; x++) {
@@ -172,7 +176,7 @@ static void createMonsterPathColliders(Arena* arena, const char* filename) {
             Vec2d position = {x * TILE_SIZE, y * TILE_SIZE};
             Vec2d size = {TILE_SIZE, TILE_SIZE};
             arena->colliders[PATH_TAG][i] = boxColliderNew(position, EMPTY_VEC2D, size, PATH_TAG);
-			i++;
+            i++;
         }
     }
 
@@ -264,29 +268,29 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
     createPlayer(res);
     createFruitsTest(res);
     res->towersN = 0;
-    res->towers = NULL;
+    res->towers = malloc(sizeof(SpriteXPM*) * res->towersN);
 
     res->constructPhase = ARENA_CONSTRUCT_NORMAL;
     res->popupW = 420;
     res->popupH = 240;
     res->popupX = (SCREEN_WIDTH - res->popupW) / 2;
     res->popupY = (SCREEN_HEIGHT - res->popupH) / 2;
-    {
-        /* Anchor = canto sup.-esq. da metade inferior (igual à torre no jogo); a metade superior sobe com offset Y. */
-        int ix = res->popupX + res->popupW - TOWER_PICK_ICON_W - POPUP_ICON_MARGIN;
-        int iy = res->popupY + POPUP_ICON_MARGIN - (int)BASIC_UPPER_HALF_OFFSET.y;
-        res->towerPickAnchorX = ix;
-        res->towerPickAnchorY = iy;
-        res->towerPickUpperSprite =
-            newSpriteXPM((xpm_map_t)blueTowerXPM[1], XPM_8_8_8, BASIC_UPPER_HALF_OFFSET.x, BASIC_UPPER_HALF_OFFSET.y);
-        res->towerPickButton = buttonNew((xpm_map_t)blueTowerXPM[0], ix, iy, arenaTowerPickButtonCb);
-        {
-            float hitY = (float)(res->popupY + POPUP_ICON_MARGIN);
-            float hitH = 33.f - BASIC_UPPER_HALF_OFFSET.y;
-            res->towerPickHitbox =
-                boxColliderNew((Vec2d){(float)ix, hitY}, EMPTY_VEC2D, (Vec2d){(float)TOWER_PICK_ICON_W, hitH}, 0);
-        }
-    }
+
+    /* Anchor = canto sup.-esq. da metade inferior (igual à torre no jogo); a metade superior sobe com offset Y. */
+    int ix = res->popupX + res->popupW - TOWER_PICK_ICON_W - POPUP_ICON_MARGIN;
+    int iy = res->popupY + POPUP_ICON_MARGIN - (int)BASIC_UPPER_HALF_OFFSET.y;
+    res->towerPickAnchorX = ix;
+    res->towerPickAnchorY = iy;
+
+    res->towerPickUpperSprite = newSpriteXPM((xpm_map_t)towerXPM[1], XPM_8_8_8, BASIC_UPPER_HALF_OFFSET.x, BASIC_UPPER_HALF_OFFSET.y);
+
+	SpriteXPM** sprites = malloc(sizeof(SpriteXPM*));
+	sprites[0] = newSpriteXPM((xpm_map_t)towerXPM[0], XPM_8_8_8, 0, 0);
+    res->towerPickButton = buttonNew(ix, iy, BASIC_TOWER_SIZE.x, BASIC_TOWER_SIZE.y, animatedSpriteNew(0, sprites, 1, NORMAL), arenaTowerPickButtonCb, arenaTowerPickButtonCb);
+
+    float hitY = (float)(res->popupY + POPUP_ICON_MARGIN);
+    float hitH = 33.f - BASIC_UPPER_HALF_OFFSET.y;
+    res->towerPickHitbox = boxColliderNew((Vec2d){(float)ix, hitY}, EMPTY_VEC2D, (Vec2d){(float)TOWER_PICK_ICON_W, hitH}, 0);
 
     SpriteXPM* backgroundSprite = newSpriteXPM((xpm_map_t)background, XPM_8_8_8, 0, 0);
     generateEmptyBuffer(backgroundSprite, terminal, 0, 0, false);
@@ -324,7 +328,7 @@ void arenaBuildTower(Arena* arena, Vec2d position) {
 
     arena->towersN++;
     arena->towers = realloc(arena->towers, sizeof(GenericTower*) * arena->towersN);
-    arena->towers[arena->towersN - 1] = basicTowerNew(position);
+    arena->towers[arena->towersN - 1] = mortarTowerNew(position);
 
     arena->collidersN[WALLS_TAG]++;
     arena->colliders[WALLS_TAG] = realloc(arena->colliders[WALLS_TAG], sizeof(BoxCollider*) * arena->collidersN[WALLS_TAG]);
@@ -388,9 +392,9 @@ static void arenaCollectableHandler(Arena* arena) {
     for (int i = 0; i < n; i++) collectableSetActive(arena->fruits[i], false);
 }
 
-static void arenaDrawConstructionPopup(Arena* arena, Terminal* terminal) {
+static void arenaDrawConstructionPopup(Arena* arena, Terminal* terminal, float deltaTime) {
     drawRectangle(terminal, arena->popupX, arena->popupY, (uint16_t)arena->popupW, (uint16_t)arena->popupH, 0x202028);
-    buttonDraw(arena->towerPickButton, terminal);
+    buttonDraw(arena->towerPickButton, terminal, deltaTime, false);
     drawSpriteXPM(arena->towerPickUpperSprite, terminal, arena->towerPickAnchorX, arena->towerPickAnchorY, false);
 }
 
@@ -444,6 +448,16 @@ static void arenaHandleConstruction(Arena* arena, Terminal* terminal) {
     }
 }
 
+BoxCollider* arenaFindFirstEnemy(Arena* arena, BoxCollider* range) {
+    BoxCollider* playerHitBox = playerModelGetHitBox(playerGetPlayerModel(arena->player));
+    Vec2d position = {boxColliderGetX(playerHitBox), boxColliderGetY(playerHitBox)};
+    Vec2d size = {boxColliderGetWidth(playerHitBox), boxColliderGetHeight(playerHitBox)};
+    Vec2d center = {position.x + size.x / 2, position.y + size.y / 2};
+
+    if (boxIsCollidingWithPoint(range, center)) return playerHitBox;
+    return NULL;
+}
+
 void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
     for (int i = 0; i < arena->fruitsN; i++) collectableUpdate(arena->fruits[i], terminal);
     for (int i = 0; i < arena->tilesN; i++) tileUpdate(arena->tiles[i], terminal);
@@ -453,11 +467,10 @@ void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
     arenaHandleConstruction(arena, terminal);
 
     playerUpdate(arena->player, terminal, arena, deltaTime);
-    for (int i = arena->towersN - 1; i >= 0; i--) towerDrawUpperHalf(arena->towers[i], terminal);
-
     if (arena->constructPhase == ARENA_CONSTRUCT_PICK_TOWER) {
-        arenaDrawConstructionPopup(arena, terminal);
+        arenaDrawConstructionPopup(arena, terminal, deltaTime);
     }
 
     cursorUpdate(getCursor(), terminal, deltaTime);
+    for (int i = arena->towersN - 1; i >= 0; i--) towerDrawUpperHalf(arena->towers[i], terminal, deltaTime);
 }

@@ -3,7 +3,7 @@
 *.a
 *.d
 **/build/
-build/
+src/build/*
 
 # LCOM lab binaries (PROG= in each Makefile)
 lab1/lab1
