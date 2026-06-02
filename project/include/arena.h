@@ -17,4 +17,6 @@ int arenaDetectCollisions(Arena* arena, BoxCollider* box, int tag, BoxCollider**
 void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime);
 void arenaBuildTower(Arena* arena, Vec2d position);
 
+bool arenaCanPlaceTower(Arena* arena, Vec2d position);
+
 #endif

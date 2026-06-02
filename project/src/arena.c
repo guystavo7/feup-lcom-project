@@ -17,6 +17,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define PLACEMENT_QUERY_MAX 128
+
 struct Arena {
     int* collidersN;
     BoxCollider*** colliders;
@@ -106,7 +108,7 @@ static void createMonsterPathColliders(Arena* arena, const char* filename) {
 
     char lineBuffer[1024];
     int** map = malloc(arena->height * sizeof(int*));
-	int num = 0;
+    int num = 0;
 
     for (int i = 0; i < arena->height; i++) {
         map[i] = malloc(arena->width * sizeof(int));
@@ -118,7 +120,7 @@ static void createMonsterPathColliders(Arena* arena, const char* filename) {
         char* ptr = lineBuffer;
         for (int j = 0; j < arena->width; j++) {
             map[i][j] = atoi(ptr);
-			if (map[i][j] != -1) num++;
+            if (map[i][j] > 0) num++;
 
             while (*ptr != '\0' && *ptr != '\n' && *ptr != '\r' && *ptr != ',') ptr++;
             if (*ptr == ',') ptr++;
@@ -184,7 +186,30 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile)
     return res;
 }
 
+bool arenaCanPlaceTower(Arena* arena, Vec2d position) {
+    BoxCollider* preview = boxColliderNew(position, BASIC_TOWER_HIT_BOX_OFFSET, BASIC_TOWER_SIZE, WALLS_TAG);
+    BoxCollider* hits[PLACEMENT_QUERY_MAX];
+
+    if (arenaDetectCollisions(arena, preview, WALLS_TAG, hits) > 0) {
+        boxColliderFree(preview);
+        return false;
+    }
+    if (arenaDetectCollisions(arena, preview, PLAYER_TAG, hits) > 0) {
+        boxColliderFree(preview);
+        return false;
+    }
+    if (arenaDetectCollisions(arena, preview, PATH_TAG, hits) > 0) {
+        boxColliderFree(preview);
+        return false;
+    }
+
+    boxColliderFree(preview);
+    return true;
+}
+
 void arenaBuildTower(Arena* arena, Vec2d position) {
+    if (!arenaCanPlaceTower(arena, position)) return;
+
     arena->towersN++;
     arena->towers = realloc(arena->towers, sizeof(GenericTower*) * arena->towersN);
     arena->towers[arena->towersN - 1] = basicTowerNew(position);
