@@ -106,7 +106,7 @@ static void cursorUpdateCoordinates(Cursor* c) {
 	if (c->x > c->width - 1) c->x = c->width - 1;
 
 	if (c->y < 0) c->y = 0;
-	if (c->x > c->height - 1) c->y = c->height - 1;
+	if (c->y > c->height - 1) c->y = c->height - 1;
 }
 
 static void cursorDraw(Cursor* c, Terminal* terminal, float deltaTime) {
