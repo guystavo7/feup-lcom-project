@@ -379,7 +379,7 @@ static char *archerIdle6[] = {
 "               ..........           "
 };
 /* ===== master pointer list ===== */
-static char **yellowArcherIdleXPM[] = {
+static char **archerIdleXPM[] = {
     archerIdle1,
     archerIdle2,
     archerIdle3,

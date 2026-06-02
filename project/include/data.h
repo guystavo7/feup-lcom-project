@@ -48,6 +48,12 @@ static const Vec2d BASIC_UPPER_HALF_OFFSET = {0, -59};
 #define ARCHER_IDLE_FRAMES 6
 #define ARCHER_SHOOT_FRAMES 8
 static const Vec2d ARCHER_OFFSET = {30 - 18, -27 - 44}; // x = tower center / 2 - archer / 2, y = upper tower some height - archer height
+								
+// Monk
+#define MONK_FRAME_SPEED 6
+#define MONK_IDLE_FRAMES 6
+#define MONK_HEAL_FRAMES 12
+static const Vec2d MONK_OFFSET = {30 - 14, -27 - 34}; 
 
 // Dust
 #define DUST_FRAME_SPEED 10

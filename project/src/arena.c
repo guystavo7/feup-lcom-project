@@ -1,5 +1,10 @@
 #include "../include/arena.h"
 #include "../include/buildings/basicTower.h"
+#include "../include/buildings/eletricTower.h"
+#include "../include/buildings/fastTower.h"
+#include "../include/buildings/piercingTower.h"
+#include "../include/buildings/mortarTower.h"
+
 #include "../include/buildings/genericTower.h"
 #include "../include/components/boxCollider.h"
 #include "../include/data.h"
@@ -174,8 +179,20 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile)
 	createMonsterPathColliders(res, pathFile);
     createPlayer(res);
     createFruitsTest(res);
-    res->towersN = 0;
-	res->towers = malloc(0);
+    res->towersN = 5;
+	res->towers = malloc(sizeof(SpriteXPM*) * 5);
+
+	Vec2d pos1 = {100, 100};
+	Vec2d pos2 = {200, 100};
+	Vec2d pos3 = {300, 100};
+	Vec2d pos4 = {400, 100};
+	Vec2d pos5 = {500, 100};
+
+	res->towers[0] = basicTowerNew(pos1);
+	res->towers[1] = fastTowerNew(pos2);
+	res->towers[2] = eletrictTowerNew(pos3);
+	res->towers[3] = mortarTowerNew(pos4);
+	res->towers[4] = piercingTowerNew(pos5);
 
     // The terminal will handle the freeing
     SpriteXPM* backgroundSprite = newSpriteXPM((xpm_map_t)background, XPM_8_8_8, 0, 0);

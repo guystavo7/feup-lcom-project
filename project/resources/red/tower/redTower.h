@@ -135,7 +135,7 @@ static char *uppHalf[] = {
 "         .O.+%*****++@******&&&&&*****@@++*%%%%+.OO.        "
 };
 /* ===== master pointer list ===== */
-static char **redTowerXPM[] = {
+static char **towerXPM[] = {
     lowerHalf,
     uppHalf,
 };
