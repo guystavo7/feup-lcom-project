@@ -1,6 +1,7 @@
 #include "../include/player/playerModel.h"
 #include "../resources/blueWarrior/warriorRun.h"
 #include "../resources/blueWarrior/warriorIdle.h"
+#include "../include/data.h"
 
 struct PlayerModel {
     Vec2d pos;
@@ -31,20 +32,15 @@ PlayerModel* playerModelNew(Vec2d pos) {
     res->pos.y = pos.y;
 	res->isFlipped = false;
 
-    res->size.x = 17;
-    res->size.y = 13;
+	res->size = PLAYER_SIZE;
+    res->maxVelocity = PLAYER_MAX_VELOCITY;
+	res->dir = EMPTY_VEC2D;
 
-    res->maxVelocity = 200;
-    res->dir.x = 0;
-    res->dir.y = 0;
-
-    Vec2d offset = {0, 0};
-	Vec2d hitBoxOffset = {10, 33};
-    res->hitBox = boxColliderNew(pos, hitBoxOffset, res->size, 0);
+    res->hitBox = boxColliderNew(pos, PLAYER_HIT_BOX_OFFSET, res->size, PLAYER_TAG);
     res->rb = rigidBodyNew();
 
-	res->idleSprite = getSprites(all_idle, 8, 10, offset);
-	res->runningSprite = getSprites(all_run, 6, 10, offset);
+	res->idleSprite = getSprites(all_idle, PLAYER_IDLE_FRAMES, PLAYER_FRAME_SPEED, EMPTY_VEC2D);
+	res->runningSprite = getSprites(all_run, PLAYER_RUNNING_FRAMES, PLAYER_FRAME_SPEED, EMPTY_VEC2D);
 	res->sprite = res->idleSprite;
 
     return res;

@@ -4,9 +4,9 @@
 #include "../../lab5/terminal.h"
 
 #include "../include/game.h"
-#include "../include/utils/utils.h"
-#include "../include/utils/inputHandler.h"
 #include "../include/utils/cursorHandler.h"
+#include "../include/utils/inputHandler.h"
+#include "../include/utils/utils.h"
 
 #include <lcom/lcf.h>
 
@@ -45,13 +45,11 @@ int(proj_main_loop)(int argc, char* argv[]) {
     timer_subscribe((uint8_t*)&hook_id_timer);
     kbcSubscribe((uint8_t*)&hook_id_kbd);
     Terminal* terminal = newTerminal(0x11B);
+    startGame(terminal);
 
-    cursorReset(getCursor());
-	startGame(terminal);
-    
     enableDataReport();
     int lastFrameTime = timer_get_counter();
-    
+
     int r, ipc_status;
     message msg;
 
@@ -66,34 +64,33 @@ int(proj_main_loop)(int argc, char* argv[]) {
             case HARDWARE:
                 if (msg.m_notify.interrupts & (1 << TIMER_IRQ_LINE)) {
                     timer_int_handler();
-					refreshTerminal(terminal);
+                    refreshTerminal(terminal);
                     int currFrameTime = timer_get_counter();
-					float deltaTime = (float)(currFrameTime - lastFrameTime) / 60;
+                    float deltaTime = (float)(currFrameTime - lastFrameTime) / 60;
 
-					gameLoop(terminal, deltaTime);
-					cursorDraw(getCursor(), terminal);
+                    gameLoop(terminal, deltaTime);
                     lastFrameTime = currFrameTime;
                 }
 
                 if (msg.m_notify.interrupts & (1 << MOUSE_IRQ_LINE)) {
                     mouse_ih();
-                    if(isReady()){
-                        if(!(isOverflowingX() || isOverflowingY())){
-                            int16_t dx = getDeltaX();
-                            int16_t dy = getDeltaY();
-                            cursorUpdateCoordinates(getCursor(), dx, -dy);
+                    if (isReady()) {
+                        if (!(isOverflowingX() || isOverflowingY())) {
+                            cursorUpdateData(getCursor(), getDeltaX(), -getDeltaY(), pressedLeftButton(), pressedRightButton(), pressedMiddleButton());
                         }
+
                         cleanBytes();
                     }
                 }
 
                 if (msg.m_notify.interrupts & (1 << KBC_IRQ_LINE)) {
                     kbcIh();
-					if (kbcIsKeyReady()){
+                    if (kbcIsKeyReady()) {
                         if (!kbcIsTwoByteCode()) {
                             uint16_t keycode = (uint16_t)(kbcGetScancode() & ~(0x80));
                             readKey(getInputHandler(), keycode, kbcIsMake());
                         }
+
                         kbcResetKeys();
                     }
                 }
@@ -108,9 +105,9 @@ int(proj_main_loop)(int argc, char* argv[]) {
     mouseUnsubscribe(&hook_id_mouse);
     timer_unsubscribe_int();
     kbcUnsubscribe();
-	cursorFree(getCursor());
+    cursorFree(getCursor());
 
-	exitGame();
+    exitGame();
     freeTerminal(terminal);
     return 0;
 }

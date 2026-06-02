@@ -2,6 +2,7 @@
 #include "../include/player/playerIdle.h"
 #include "../include/player/playerState.h"
 #include "../include/utils/inputHandler.h"
+#include "../include/data.h"
 #include <stdint.h>
 
 struct PlayerController {
@@ -23,7 +24,7 @@ void playerControllerFree(PlayerController* controller) {
 }
 
 static void getInput(PlayerController* controller) {
-    Vec2d dir = {0, 0};
+    Vec2d dir = EMPTY_VEC2D;
     PlayerModel* model = controller->model;
 
     if (getKeyPressed(getInputHandler(), KEYCODE_W)) dir.y = -1.0f;

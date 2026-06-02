@@ -4,6 +4,7 @@ SRCS= \
 	application.c \
 	game.c \
 	./inputHandler.c \
+	./timer.c \
 	./boxCollider.c \
 	./rigidBody.c \
 	./arena.c \
@@ -20,6 +21,9 @@ SRCS= \
 	./playerState.c \
 	./playerRunning.c \
 	./collectable.c \
+	./genericTower.c \
+	./basicTower.c \
+	./particle.c \
 
 OBJS = ${SRCS:.c=.o}
 
