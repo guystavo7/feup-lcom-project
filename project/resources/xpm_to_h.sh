@@ -31,3 +31,4 @@ for name in $names; do
 done
 
 echo "};" >> "$OUTPUT"
+rmdir xpm_out

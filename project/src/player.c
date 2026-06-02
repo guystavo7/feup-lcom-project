@@ -1,5 +1,4 @@
 #include "../include/player/player.h"
-#include "../resources/blueWarrior/warriorRun.h"
 
 #include <stdlib.h>
 

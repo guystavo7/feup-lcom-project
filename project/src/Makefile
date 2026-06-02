@@ -23,7 +23,10 @@ SRCS= \
 	./collectable.c \
 	./genericTower.c \
 	./basicTower.c \
-	./particle.c \
+	./eletrictTower.c \
+	./mortarTower.c \
+	./fastTower.c \
+	./piercingTower.c \
 	./gameState.c \
 
 OBJS = ${SRCS:.c=.o}

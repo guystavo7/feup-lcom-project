@@ -1,12 +1,12 @@
 #include "../include/utils/timer.h"
 
 struct Timer {
-    long long int initialTime;
-    long long int counter;
+    float initialTime;
+    float counter;
     bool stopped;
 };
 
-Timer* newTimer(long long int time) {
+Timer* timerNew(float time) {
     Timer* timer = malloc(sizeof(Timer));
     timer->initialTime = time;
     timer->counter = time;
@@ -15,15 +15,15 @@ Timer* newTimer(long long int time) {
     return timer;
 }
 
-long long int timerGetInitialTime(Timer* timer) {
+float timerGetInitialTime(Timer* timer) {
     return timer->initialTime;
 }
 
-void timerSetInitialTime(Timer* timer, long long int initialTime) {
+void timerSetInitialTime(Timer* timer, float initialTime) {
     timer->initialTime = initialTime;
 }
 
-void freeTimer(Timer* timer) {
+void timerFree(Timer* timer) {
     free(timer);
 }
 
@@ -44,7 +44,7 @@ bool timerIsRunning(Timer* timer) {
     return (timer->counter > 0) && (!timer->stopped);
 }
 
-void timerUpdate(Timer* timer, long long int deltaTime) {
+void timerUpdate(Timer* timer, float deltaTime) {
     if (!timer->stopped) {
         timer->counter -= deltaTime;
     }

@@ -1,5 +1,10 @@
 #include "../include/arena.h"
 #include "../include/buildings/basicTower.h"
+#include "../include/buildings/eletricTower.h"
+#include "../include/buildings/fastTower.h"
+#include "../include/buildings/piercingTower.h"
+#include "../include/buildings/mortarTower.h"
+
 #include "../include/buildings/genericTower.h"
 #include "../include/components/boxCollider.h"
 #include "../include/data.h"
@@ -175,7 +180,7 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile)
     createPlayer(res);
     createFruitsTest(res);
     res->towersN = 0;
-	res->towers = malloc(0);
+	res->towers = malloc(sizeof(SpriteXPM*) * res->towersN);
 
     // The terminal will handle the freeing
     SpriteXPM* backgroundSprite = newSpriteXPM((xpm_map_t)background, XPM_8_8_8, 0, 0);
@@ -187,7 +192,7 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile)
 void arenaBuildTower(Arena* arena, Vec2d position) {
     arena->towersN++;
     arena->towers = realloc(arena->towers, sizeof(GenericTower*) * arena->towersN);
-    arena->towers[arena->towersN - 1] = basicTowerNew(position);
+    arena->towers[arena->towersN - 1] = mortarTowerNew(position);
 
     arena->collidersN[WALLS_TAG]++;
     arena->colliders[WALLS_TAG] = realloc(arena->colliders[WALLS_TAG], sizeof(BoxCollider*) * arena->collidersN[WALLS_TAG]);
@@ -234,6 +239,16 @@ static void arenaMouseObserver(Arena* arena) {
         Vec2d position = {cursorGetX(getCursor()), cursorGetY(getCursor())};
         arenaBuildTower(arena, position);
     }
+}
+
+BoxCollider* arenaFindFirstEnemy(Arena* arena, BoxCollider* range) {
+	BoxCollider* playerHitBox = playerModelGetHitBox(playerGetPlayerModel(arena->player));
+	Vec2d position = {boxColliderGetX(playerHitBox), boxColliderGetY(playerHitBox)};
+	Vec2d size = {boxColliderGetWidth(playerHitBox), boxColliderGetHeight(playerHitBox)};
+	Vec2d center = {position.x + size.x / 2, position.y + size.y / 2};
+
+	if (boxIsCollidingWithPoint(range, center)) return playerHitBox;
+	return NULL;
 }
 
 void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
