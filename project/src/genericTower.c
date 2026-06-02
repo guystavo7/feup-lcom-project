@@ -1,11 +1,10 @@
 #include "../include/buildings/genericTower.h"
 #include "../include/components/boxCollider.h"
-#include "../include/components/particle.h"
 #include "../include/components/animatedSprite.h"
 #include "../include/data.h"
 
 #include "../resources/particles/dust/dust.h"
-#include "../resources/archer/idle/archerIdle.h"
+#include "../resources/blue/archer/archerIdle.h"
 #include <stdlib.h>
 
 struct GenericTower {
@@ -16,27 +15,24 @@ struct GenericTower {
 
     BoxCollider* hitBox;
     Vec2d position;
-    Particle* p;
+    AnimatedSprite* p;
 
     void (*towerUpdate)(GenericTower* tower, Terminal* terminal, Arena* arena, float deltaTime);
 };
 
-GenericTower* towerNew(SpriteXPM* upperHalf, SpriteXPM* lowerHalf, Vec2d position, Vec2d size, Vec2d hitBoxOffset, void (*towerUpdate)(GenericTower* tower, Terminal* terminal, Arena* arena, float deltaTime)) {
+GenericTower* towerNew(SpriteXPM* upperHalf, SpriteXPM* lowerHalf, AnimatedSprite* archer, Vec2d position, Vec2d size, Vec2d hitBoxOffset, void (*towerUpdate)(GenericTower* tower, Terminal* terminal, Arena* arena, float deltaTime)) {
     GenericTower* res = malloc(sizeof(GenericTower));
 	res->upperHalf = upperHalf;
 	res->lowerHalf = lowerHalf;
 
     SpriteXPM** sprites = malloc(sizeof(SpriteXPM*) * DUST_FRAMES);
     for (int i = 0; i < DUST_FRAMES; i++) sprites[i] = newSpriteXPM((xpm_map_t)dustXPM[i], XPM_8_8_8, 0, hitBoxOffset.y);
-    res->p = particleNew(DUST_FRAME_SPEED, sprites, DUST_FRAMES, true);
-    particleStart(res->p);
+    res->p = animatedSpriteNew(DUST_FRAME_SPEED, sprites, DUST_FRAMES, ONE_SHOT);
+    animatedSpriteStart(res->p);
 
     res->hitBox = boxColliderNew(position, hitBoxOffset, size, 0);
     res->position = position;
-
-	SpriteXPM** archerSprites = malloc(sizeof(SpriteXPM*) * ARCHER_IDLE_FRAMES);
-	for (int i = 0; i < ARCHER_IDLE_FRAMES; i++) archerSprites[i] = newSpriteXPM((xpm_map_t)archerIdleXPM[i], XPM_8_8_8, ARCHER_OFFSET.x, ARCHER_OFFSET.y);
-	res->archer = animatedSpriteNew(ARCHER_FRAME_SPEED, archerSprites, ARCHER_IDLE_FRAMES);
+	res->archer = archer;
 
     res->towerUpdate = towerUpdate;
     return res;
@@ -45,7 +41,7 @@ GenericTower* towerNew(SpriteXPM* upperHalf, SpriteXPM* lowerHalf, Vec2d positio
 void towerUpdate(GenericTower* tower, Terminal* terminal, Arena* arena, float deltaTime) {
 	drawSpriteXPM(tower->lowerHalf, terminal, tower->position.x, tower->position.y, false);
     tower->towerUpdate(tower, terminal, arena, deltaTime);
-    particleUpdate(tower->position.x, tower->position.y, tower->p, terminal, deltaTime, false);
+    animatedSpriteUpdate(tower->position.x, tower->position.y, tower->p, terminal, deltaTime, false);
 }
 
 void towerDrawUpperHalf(GenericTower *tower, Terminal *terminal, float deltaTime) {
@@ -54,7 +50,7 @@ void towerDrawUpperHalf(GenericTower *tower, Terminal *terminal, float deltaTime
 }
 
 void towerFree(GenericTower* tower) {
-    particleFree(tower->p);
+    animatedSpriteFree(tower->p);
     freeSpriteXPM(tower->lowerHalf);
     freeSpriteXPM(tower->upperHalf);
     boxColliderFree(tower->hitBox);

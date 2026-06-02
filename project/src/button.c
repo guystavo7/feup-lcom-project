@@ -6,7 +6,7 @@
 #include <stdlib.h>
 
 struct Button {
-	Particle* sprite;
+	AnimatedSprite* sprite;
     BoxCollider* bounds;
     int x;
     int y;
@@ -18,7 +18,7 @@ struct Button {
 	bool isHovering;
 };
 
-Button* buttonNew(int x, int y, int width, int height, Particle* sprite, ButtonClickFn onClick, ButtonHoverFn onHover) {
+Button* buttonNew(int x, int y, int width, int height, AnimatedSprite* sprite, ButtonClickFn onClick, ButtonHoverFn onHover) {
     Button* b = malloc(sizeof(Button));
 	b->sprite = sprite;
     b->x = x;
@@ -39,13 +39,13 @@ Button* buttonNew(int x, int y, int width, int height, Particle* sprite, ButtonC
 
 void buttonFree(Button* b) {
     if (!b) return;
-	particleFree(b->sprite);
+	animatedSpriteFree(b->sprite);
     boxColliderFree(b->bounds);
     free(b);
 }
 
 void buttonDraw(Button* b, Terminal* t, float deltaTime, bool isFlipped) {
-	particleUpdate(b->x, b->y, b->sprite, t, deltaTime, isFlipped);
+	animatedSpriteUpdate(b->x, b->y, b->sprite, t, deltaTime, isFlipped);
 }
 
 void buttonClick(Button* button) {
@@ -62,7 +62,7 @@ void buttonReset(Button* button) {
 	button->isPressed = false;
 	button->isHovering = false;
 
-	particleReset(button->sprite);
+	animatedSpriteReset(button->sprite);
 }
 
 BoxCollider* buttonGetBoxCollider(Button* button) {
@@ -73,6 +73,10 @@ BoxCollider* buttonGetBoxCollider(Button* button) {
 void basicButtonHoverFn(Button* button) {
 	if (button->isHovering) return;
 
-	particleStart(button->sprite);
+	animatedSpriteStart(button->sprite);
 	button->isHovering = true;
+}
+
+bool buttonIsFinished(Button* button) {
+	return animatedSpriteIsFinished(button->sprite);
 }

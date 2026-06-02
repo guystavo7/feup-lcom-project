@@ -1,7 +1,6 @@
 #include "../include/gameState.h"
 #include "../include/arena.h"
 #include "../include/button.h"
-#include "../include/components/particle.h"
 #include "../include/data.h"
 #include "../include/utils/cursorHandler.h"
 #include "../include/utils/inputHandler.h"
@@ -119,12 +118,13 @@ static void mainMenuFree(GameState* state) {
 
 static GameState* mainMenuTransition(GameState* state, Terminal* terminal) {
     GameState* newState = state;
-    if (pressedNewGame) {
+	// Wait for the animation to finish first - if there is one
+    if (buttonIsFinished(state->newGameButton) && pressedNewGame) {
         newState = runningGameNew(terminal);
         pressedNewGame = false;
         pressedExit = false;
 
-    } else if (pressedExit) {
+    } else if (buttonIsFinished(state->exitButton) && pressedExit) {
         newState = NULL;
         pressedNewGame = false;
         pressedExit = false;
@@ -152,16 +152,15 @@ GameState* mainMenuNew(Terminal* terminal) {
     newGameButtons[0] = buttonNormal;
     newGameButtons[1] = buttonPressed;
 
-    res->newGameButton = buttonNew(NEW_GAME_BUTTON_POS.x, NEW_GAME_BUTTON_POS.y, NEW_GAME_BUTTON_SIZE.x, NEW_GAME_BUTTON_SIZE.y, particleNew(BUTTONS_FRAME_SPEED, newGameButtons, NEW_GAME_BUTTON_FRAMES, false), newGameFn, basicButtonHoverFn);
+    res->newGameButton = buttonNew(NEW_GAME_BUTTON_POS.x, NEW_GAME_BUTTON_POS.y, NEW_GAME_BUTTON_SIZE.x, NEW_GAME_BUTTON_SIZE.y, animatedSpriteNew(BUTTONS_FRAME_SPEED, newGameButtons, NEW_GAME_BUTTON_FRAMES, NORMAL), newGameFn, basicButtonHoverFn);
 
     // Exit Button
     buttonNormal = newSpriteXPM((xpm_map_t)mainMenuXPM[EXIT_BUTTON_NORMAL], XPM_8_8_8, 0, 0);
     buttonPressed = newSpriteXPM((xpm_map_t)mainMenuXPM[EXIT_BUTTON_PRESSED], XPM_8_8_8, 0, 0);
     exitButtons[0] = buttonNormal;
     exitButtons[1] = buttonPressed;
-    res->exitButton = buttonNew(EXIT_BUTTON_POS.x, EXIT_BUTTON_POS.y, EXIT_BUTTON_SIZE.x, EXIT_BUTTON_SIZE.y, particleNew(BUTTONS_FRAME_SPEED, exitButtons, EXIT_BUTTON_FRAMES, false), exitGameFn, basicButtonHoverFn);
+    res->exitButton = buttonNew(EXIT_BUTTON_POS.x, EXIT_BUTTON_POS.y, EXIT_BUTTON_SIZE.x, EXIT_BUTTON_SIZE.y, animatedSpriteNew(BUTTONS_FRAME_SPEED, exitButtons, EXIT_BUTTON_FRAMES, NORMAL), exitGameFn, basicButtonHoverFn);
 
 	clearEmptyBuffer(terminal);
-
     return res;
 }
