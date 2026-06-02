@@ -3,8 +3,8 @@
 
 #include "../../lab5/terminal.h"
 
-void startGame();
+void startGame(Terminal* terminal);
 void exitGame();
-void gameLoop(Terminal* terminal);
+void gameLoop(Terminal* terminal, float deltaTime);
 
 #endif

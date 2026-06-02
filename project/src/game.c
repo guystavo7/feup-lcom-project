@@ -1,31 +1,18 @@
 #include "../include/game.h"
+#include "../include/arena.h"
 
-#include "../../lab5/spriteXMP.h"
-#include "../include/inputHandler.h"
-#include "../resources/1.h"
+#include "../resources/map/background.h"
 
-static SpriteXPM* sprite;
-static int x = 50;
-static int y = 50;
+static Arena* arena;
 
-void startGame() {
-    sprite = newSpriteXPM((xpm_map_t)abc, XPM_8_8_8);
+void startGame(Terminal* terminal) {
+    arena = arenaNew(terminal, "/home/lcom/labs/project/resources/map/grid_walls.csv", "/home/lcom/labs/project/resources/map/grid_path.csv");
 }
 
 void exitGame() {
-    freeSpriteXPM(sprite);
+    arenaFree(arena);
 }
 
-void gameLoop(Terminal* terminal) {
-    if (getKeyPressed(getInputHandler(), KEYCODE_W)) y--;
-    if (getKeyPressed(getInputHandler(), KEYCODE_S)) y++;
-    if (getKeyPressed(getInputHandler(), KEYCODE_A)) x--;
-    if (getKeyPressed(getInputHandler(), KEYCODE_D)) x++;
-
-    if (x < 0) x = 0;
-    if (x > 800) x = 800;
-    if (y < 0) y = 0;
-    if (y > 600) y = 600;
-
-    drawSpriteXPM(sprite, terminal, x, y);
+void gameLoop(Terminal* terminal, float deltaTime) {
+    arenaUpdate(arena, terminal, deltaTime);
 }

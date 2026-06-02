@@ -36,7 +36,7 @@ static int writeCmd(uint8_t cmd) {
     if (sys_outb(STATUS_CMD_ADDR, REQUEST_BYTE_CMD)) return -1;
     for (int i = 0; i < TRIES; i++) {
         if (canWrite() && !sys_outb(INPUT_OUTPUT_ADDR, cmd)) return 0;
-        tickdelay(micros_to_ticks(DELAY));
+        tickdelay(micros_to_ticks(MOUSE_DELAY));
     }
 
     return -1;
@@ -45,7 +45,7 @@ static int writeCmd(uint8_t cmd) {
 static int readAckByte(uint8_t* byte) {
     for (int i = 0; i < TRIES; i++) {
         if (canRead() && !sys_inb_8b(INPUT_OUTPUT_ADDR, byte)) return 0;
-        tickdelay(micros_to_ticks(DELAY));
+        tickdelay(micros_to_ticks(MOUSE_DELAY));
     }
 
     return -1;
@@ -61,7 +61,7 @@ int enableDataReport() {
     for (int i = 0; i < TRIES; i++) {
         if (writeCmd(ENABLE_DATA_REP_CMD) || readAckByte(&ackByte)) continue;
         if (ackByte == SUCCESS_IN_ACK) return 0;
-        tickdelay(micros_to_ticks(DELAY));
+        tickdelay(micros_to_ticks(MOUSE_DELAY));
     }
 
     return -1;
@@ -72,7 +72,7 @@ int disableDataReport() {
     for (int i = 0; i < TRIES; i++) {
         if (writeCmd(DISABLE_DATA_REP_CMD) || readAckByte(&ackByte)) continue;
         if (ackByte == SUCCESS_IN_ACK) return 0;
-        tickdelay(micros_to_ticks(DELAY));
+        tickdelay(micros_to_ticks(MOUSE_DELAY));
     }
 
     return -1;
