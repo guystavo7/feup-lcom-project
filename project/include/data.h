@@ -8,14 +8,14 @@ static const char* map1 = "/home/lcom/labs/project/resources/map/grid_walls.csv"
 static const char* path1 = "/home/lcom/labs/project/resources/map/grid_path.csv";
 
 // Tags
-#define WALLS_TAG 		0
-#define PLAYER_TAG 		1
-#define MONSTER_TAG		2
-#define COLLECTABLE_TAG	3
-#define PATH_TAG		4
-#define UI_TAG			5
+#define WALLS_TAG 0
+#define PLAYER_TAG 1
+#define MONSTER_TAG 2
+#define COLLECTABLE_TAG 3
+#define PATH_TAG 4
+#define UI_TAG 5
 
-#define TAGS_NUM 		6
+#define TAGS_NUM 6
 
 // Screen configs
 #define MODE 0x11B
@@ -52,12 +52,12 @@ static const Vec2d BASIC_TOWER_RANGE_OFFSET = {(60 - 300) / 2, (11 - 300) / 2};
 #define ARCHER_IDLE_FRAMES 6
 #define ARCHER_SHOOT_FRAMES 8
 static const Vec2d ARCHER_OFFSET = {30 - 18, -27 - 44}; // x = tower center / 2 - archer / 2, y = upper tower some height - archer height
-								
+
 // Monk
 #define MONK_FRAME_SPEED 6
 #define MONK_IDLE_FRAMES 6
 #define MONK_HEAL_FRAMES 12
-static const Vec2d MONK_OFFSET = {30 - 14, -27 - 34}; 
+static const Vec2d MONK_OFFSET = {30 - 14, -27 - 34};
 
 // Dust
 #define DUST_FRAME_SPEED 10
@@ -83,5 +83,17 @@ static const Vec2d NEW_GAME_BUTTON_POS = {499, 400};
 static const Vec2d NEW_GAME_BUTTON_SIZE = {282, 94};
 static const Vec2d EXIT_BUTTON_POS = {499, 550};
 static const Vec2d EXIT_BUTTON_SIZE = {282, 94};
+
+// Paused Menu
+#define RESUME_BUTTON_INDEX 0
+#define GO_BACK_BUTTON_INDEX 1
+#define HELP_BUTTON_INDEX 2
+#define PAUSE_MENU_INDEX 3
+
+static const Vec2d PAUSE_MENU_ICON_SIZE = {63, 60};
+static const Vec2d PAUSE_MENU_BG_POS = {SCREEN_WIDTH / 2 - 295 / 2, SCREEN_HEIGHT / 2 - 200};
+static const Vec2d RESUME_POS = {SCREEN_WIDTH / 2 - 259 / 2 + 20, SCREEN_HEIGHT / 2 - 200 + 124};
+static const Vec2d HELP_POS = {SCREEN_WIDTH / 2 - 259 / 2 + 100, SCREEN_HEIGHT / 2 - 200 + 124};
+static const Vec2d GO_BACK_POS = {SCREEN_WIDTH / 2 - 259 / 2 + 170, SCREEN_HEIGHT / 2 - 200 + 124};
 
 #endif
