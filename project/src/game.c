@@ -5,8 +5,10 @@
 
 static Arena* arena;
 
+#define ARENA_MAP_DIR "/home/lcom/labs/grupo_2leic13_2/project/resources/map/"
+
 void startGame(Terminal* terminal) {
-    arena = arenaNew(terminal, "/home/lcom/labs/project/resources/map/grid_walls.csv", "/home/lcom/labs/project/resources/map/grid_path.csv");
+    arena = arenaNew(terminal, ARENA_MAP_DIR "grid_walls.csv", ARENA_MAP_DIR "grid_path.csv", ARENA_MAP_DIR "grid_water.csv");
 }
 
 void exitGame() {
