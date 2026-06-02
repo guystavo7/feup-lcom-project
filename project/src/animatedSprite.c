@@ -101,6 +101,7 @@ void animatedSpriteUpdate(int x, int y, AnimatedSprite* sprite, Terminal* t, flo
 
 void animatedSpriteStart(AnimatedSprite* sprite) {
     sprite->isActive = true;
+	sprite->isFinished = false;
     sprite->current = 0;
 }
 

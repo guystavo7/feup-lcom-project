@@ -241,6 +241,16 @@ static void arenaMouseObserver(Arena* arena) {
     }
 }
 
+BoxCollider* arenaFindFirstEnemy(Arena* arena, BoxCollider* range) {
+	BoxCollider* playerHitBox = playerModelGetHitBox(playerGetPlayerModel(arena->player));
+	Vec2d position = {boxColliderGetX(playerHitBox), boxColliderGetY(playerHitBox)};
+	Vec2d size = {boxColliderGetWidth(playerHitBox), boxColliderGetHeight(playerHitBox)};
+	Vec2d center = {position.x + size.x / 2, position.y + size.y / 2};
+
+	if (boxIsCollidingWithPoint(range, center)) return playerHitBox;
+	return NULL;
+}
+
 void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
     for (int i = 0; i < arena->fruitsN; i++) collectableUpdate(arena->fruits[i], terminal);
     for (int i = 0; i < arena->tilesN; i++) tileUpdate(arena->tiles[i], terminal);
