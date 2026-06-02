@@ -1,7 +1,6 @@
-#include "../include/inputHandler.h"
+#include "../include/utils/inputHandler.h"
 #include <stdint.h>
 #include <stdlib.h>
-#include <stdio.h>
 
 enum keyState {
     KEYUP,
@@ -19,13 +18,13 @@ static InputHandler* newInputHandler() {
 }
 
 InputHandler* getInputHandler() {
-    if (!isInstanceCreated) {
-        instance = newInputHandler();
-		for (int i = 0; i < 88; i++) instance->keys[i] = KEYUP;
-		isInstanceCreated = true;
+    if (!isInputHandlerCreated) {
+        inputHandler = newInputHandler();
+		for (int i = 0; i < 88; i++) inputHandler->keys[i] = KEYUP;
+		isInputHandlerCreated = true;
     }
 
-    return instance;
+    return inputHandler;
 }
 
 void readKey(InputHandler* inputHandler, uint16_t keycode, bool isMake) {

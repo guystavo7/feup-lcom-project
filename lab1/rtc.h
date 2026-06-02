@@ -2,6 +2,10 @@
 
 #include <stdint.h>
 
+#define RTC_SECONDS 0x00
+#define RTC_MINUTES 0x02
+#define RTC_HOURS 0x04
+
 typedef struct {
   uint8_t day;
   uint8_t month;
@@ -17,3 +21,8 @@ typedef struct {
  * configuration and perform data conversions if necessary (e.g. BCD to binary).
  */
 int rtc_read_date(rtc_date *date);
+<<<<<<< HEAD
+int rtcGetSeconds();
+=======
+int rtcGetSeconds();
+>>>>>>> 8aff819f058a6408879ece182428dc0e92b2fafb
