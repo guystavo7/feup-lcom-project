@@ -7,7 +7,7 @@
 static GameState* state;
 
 void startGame(Terminal* terminal) {
-    state = mainMenuNew();
+    state = mainMenuNew(terminal);
 }
 
 void exitGame() {

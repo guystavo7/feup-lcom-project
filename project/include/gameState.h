@@ -10,6 +10,6 @@ void gameStateFree(GameState* state);
 GameState* gameStateTransition(GameState* state, Terminal* terminal);
 
 GameState* runningGameNew(Terminal* terminal);
-GameState* mainMenuNew();
+GameState* mainMenuNew(Terminal* terminal);
 
 #endif

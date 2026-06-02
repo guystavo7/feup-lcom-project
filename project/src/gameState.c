@@ -61,7 +61,7 @@ static void runningGameFree(GameState* state) {
 
 static GameState* runningGameTransition(GameState* state, Terminal* terminal) {
     if (getKeyDown(getInputHandler(), KEYCODE_ESQ)) {
-        return mainMenuNew();
+        return mainMenuNew(terminal);
     }
 
     return state;
@@ -137,7 +137,7 @@ static void exitGameFn(Button* self) {
     pressedExit = true;
 }
 
-GameState* mainMenuNew() {
+GameState* mainMenuNew(Terminal* terminal) {
     pressedNewGame = false;
     pressedExit = false;
 
@@ -160,6 +160,8 @@ GameState* mainMenuNew() {
     exitButtons[0] = buttonNormal;
     exitButtons[1] = buttonPressed;
     res->exitButton = buttonNew(EXIT_BUTTON_POS.x, EXIT_BUTTON_POS.y, EXIT_BUTTON_SIZE.x, EXIT_BUTTON_SIZE.y, particleNew(BUTTONS_FRAME_SPEED, exitButtons, EXIT_BUTTON_FRAMES, false), exitGameFn, basicButtonHoverFn);
+
+	clearEmptyBuffer(terminal);
 
     return res;
 }
