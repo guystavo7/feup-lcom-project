@@ -54,8 +54,8 @@ Terminal* newTerminal(uint16_t mode) {
 
     Terminal* res = (Terminal*)malloc(sizeof(Terminal));
     res->empytyBuffer = malloc(sizeof(char) * vram_size);
-
     memset(res->empytyBuffer, 0, vram_size);
+
     res->vmi = vmi;
     res->mr = mr;
     res->terminalMem = terminalMem;
@@ -106,6 +106,10 @@ void freeTerminal(Terminal* terminal) {
 
 unsigned int getBytesPerPixel(Terminal* terminal) {
     return terminal->bytesPerPixel;
+}
+
+void clearEmptyBuffer(Terminal* terminal) {
+    memset(terminal->empytyBuffer, 0, terminal->vram_size);
 }
 
 void refreshTerminal(Terminal* terminal) {

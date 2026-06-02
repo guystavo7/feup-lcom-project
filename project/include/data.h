@@ -3,6 +3,10 @@
 
 #include "utils/vec2d.h"
 
+// File Paths
+static const char* map1 = "/home/lcom/labs/project/resources/map/grid_walls.csv";
+static const char* path1 = "/home/lcom/labs/project/resources/map/grid_path.csv";
+
 // Tags
 #define WALLS_TAG 		0
 #define PLAYER_TAG 		1
@@ -26,7 +30,6 @@ static const Vec2d EMPTY_VEC2D = {0, 0};
 // Fruit
 static const Vec2d FRUIT_SIZE = {32, 32};
 
-
 // Player
 #define PLAYER_MAX_VELOCITY 200
 #define PLAYER_FRAME_SPEED 10
@@ -35,11 +38,16 @@ static const Vec2d FRUIT_SIZE = {32, 32};
 static const Vec2d PLAYER_HIT_BOX_OFFSET = {10, 33};
 static const Vec2d PLAYER_SIZE = {17, 13};
 
-
 // Tower
 static const Vec2d BASIC_TOWER_SIZE = {43, 29};
 static const Vec2d BASIC_TOWER_HIT_BOX_OFFSET = {9, 0};
 static const Vec2d BASIC_UPPER_HALF_OFFSET = {0, -59};
+
+// Archer
+#define ARCHER_FRAME_SPEED 10
+#define ARCHER_IDLE_FRAMES 6
+#define ARCHER_SHOOT_FRAMES 8
+static const Vec2d ARCHER_OFFSET = {30 - 18, -27 - 44}; // x = tower center / 2 - archer / 2, y = upper tower some height - archer height
 
 // Dust
 #define DUST_FRAME_SPEED 10
@@ -48,5 +56,22 @@ static const Vec2d BASIC_UPPER_HALF_OFFSET = {0, -59};
 // Cursor
 #define CURSOR_FRAMES 3
 
+// Main Menu
+#define NEW_GAME_BUTTON_NORMAL 0
+#define NEW_GAME_BUTTON_PRESSED 1
+#define EXIT_BUTTON_NORMAL 2
+#define EXIT_BUTTON_PRESSED 3
+#define LOGO 4
+
+#define NEW_GAME_BUTTON_FRAMES 2
+#define EXIT_BUTTON_FRAMES 2
+#define BUTTONS_FRAME_SPEED 10
+
+static const Vec2d LOGO_POSITION = {445, 200};
+
+static const Vec2d NEW_GAME_BUTTON_POS = {499, 400};
+static const Vec2d NEW_GAME_BUTTON_SIZE = {282, 94};
+static const Vec2d EXIT_BUTTON_POS = {499, 550};
+static const Vec2d EXIT_BUTTON_SIZE = {282, 94};
 
 #endif

@@ -1,18 +1,28 @@
 #include "../include/game.h"
 #include "../include/arena.h"
+#include "../include/gameState.h"
 
 #include "../resources/map/background.h"
 
-static Arena* arena;
+static GameState* state;
 
 void startGame(Terminal* terminal) {
-    arena = arenaNew(terminal, "/home/lcom/labs/project/resources/map/grid_walls.csv", "/home/lcom/labs/project/resources/map/grid_path.csv");
+    state = mainMenuNew(terminal);
 }
 
 void exitGame() {
-    arenaFree(arena);
+    gameStateFree(state);
 }
 
-void gameLoop(Terminal* terminal, float deltaTime) {
-    arenaUpdate(arena, terminal, deltaTime);
+bool gameLoop(Terminal* terminal, float deltaTime) {
+    gameStateUpdate(state, terminal, deltaTime);
+
+    GameState* newState = gameStateTransition(state, terminal);
+	if (!newState) return false;
+    if (newState != state) {
+        gameStateFree(state);
+        state = newState;
+    }
+
+    return true;
 }

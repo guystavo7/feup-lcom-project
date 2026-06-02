@@ -9,5 +9,4 @@ GenericTower* basicTowerNew(Vec2d position) {
     return towerNew(upperHalf, lowerHalf, position, BASIC_TOWER_SIZE, BASIC_TOWER_HIT_BOX_OFFSET, basicTowerUpdate);
 }
 
-void basicTowerUpdate(GenericTower* tower, Terminal* terminal, Arena* arena, float deltaTime) {
-}
+void basicTowerUpdate(GenericTower* tower, Terminal* terminal, Arena* arena, float deltaTime) {}

@@ -35,7 +35,6 @@ struct Arena {
     int tileSize;
 
     Player* player;
-    Cursor* cursor;
 };
 
 static void createMap(Arena* arena, const char* filename, int tileSize) {
@@ -176,6 +175,7 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile)
     createPlayer(res);
     createFruitsTest(res);
     res->towersN = 0;
+	res->towers = malloc(0);
 
     // The terminal will handle the freeing
     SpriteXPM* backgroundSprite = newSpriteXPM((xpm_map_t)background, XPM_8_8_8, 0, 0);
@@ -245,7 +245,5 @@ void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
     arenaMouseObserver(arena);
 
     playerUpdate(arena->player, terminal, arena, deltaTime);
-    for (int i = arena->towersN - 1; i >= 0; i--) towerDrawUpperHalf(arena->towers[i], terminal);
-
-    cursorUpdate(getCursor(), terminal, deltaTime);
+    for (int i = arena->towersN - 1; i >= 0; i--) towerDrawUpperHalf(arena->towers[i], terminal, deltaTime);
 }
