@@ -31,5 +31,9 @@ bool cursorIsRightButtonPressedDown(Cursor* c);
 
 void cursorGetPixelPosition(Cursor* c, int* px, int* py);
 
+void cursorSetConstructionMode(Cursor* c, bool enabled);
+
+void cursorSetPlacementHoverValid(Cursor* c, bool valid);
+
 #endif
 

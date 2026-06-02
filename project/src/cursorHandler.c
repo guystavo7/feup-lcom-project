@@ -27,12 +27,17 @@ struct Cursor {
 
 	enum MouseState currentState;
     SpriteXPM** sprites;
+
+    bool constructionMode;
+    bool placementHoverValid;
 };
 
 static Cursor* cursorNew(int w, int h) {
     Cursor* res = malloc(sizeof(Cursor));
 
 	res->currentState = DEFAULT;
+    res->constructionMode = false;
+    res->placementHoverValid = true;
     res->sprites = malloc(sizeof(SpriteXPM*) * CURSOR_FRAMES);
 	for (int i = 0; i < CURSOR_FRAMES; i++) res->sprites[i] = newSpriteXPM((xpm_map_t)cursorsXPM[i], XPM_8_8_8, 0, 0);
 
@@ -74,8 +79,6 @@ void cursorUpdateData(Cursor* c, int dx, int dy, bool leftButton, bool rightButt
 
     if (leftButton && c->leftButton == UP) {
         c->leftButton = DOWN;
-		c->currentState = CLICKED;
-
 	} else if (leftButton) {
         c->leftButton = UP;
 	}
@@ -91,8 +94,6 @@ void cursorUpdateData(Cursor* c, int dx, int dy, bool leftButton, bool rightButt
 	} else if (rightButton) {
         c->rightButton = UP;
 	}
-
-	if (!leftButton) c->currentState = DEFAULT;
 }
 
 static void cursorUpdateCoordinates(Cursor* c) {
@@ -106,7 +107,24 @@ static void cursorUpdateCoordinates(Cursor* c) {
 	if (c->x > c->width - 1) c->x = c->width - 1;
 
 	if (c->y < 0) c->y = 0;
-	if (c->x > c->height - 1) c->y = c->height - 1;
+	if (c->y > c->height - 1) c->y = c->height - 1;
+}
+
+static void cursorApplyVisualState(Cursor* c) {
+    if (c->constructionMode) {
+        c->currentState = c->placementHoverValid ? CLICKED : DENIED;
+    } else {
+        c->currentState = DEFAULT;
+    }
+}
+
+void cursorSetConstructionMode(Cursor* c, bool enabled) {
+    c->constructionMode = enabled;
+    if (!enabled) c->placementHoverValid = true;
+}
+
+void cursorSetPlacementHoverValid(Cursor* c, bool valid) {
+    c->placementHoverValid = valid;
 }
 
 static void cursorDraw(Cursor* c, Terminal* terminal, float deltaTime) {
@@ -115,6 +133,7 @@ static void cursorDraw(Cursor* c, Terminal* terminal, float deltaTime) {
 
 void cursorUpdate(Cursor* c, Terminal* terminal, float deltaTime) {
     cursorUpdateCoordinates(c);
+    cursorApplyVisualState(c);
     cursorDraw(c, terminal, deltaTime);
 }
 
