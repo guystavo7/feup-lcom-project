@@ -42,3 +42,9 @@ void buttonFree(Button* b) {
 void buttonDraw(Button* b, Terminal* t) {
     drawSpriteXPM(b->sprite, t, b->x, b->y, false);
 }
+
+bool buttonContainsPoint(Button* b, int px, int py) {
+    if (!b) return false;
+    Vec2d p = {(float)px, (float)py};
+    return boxIsCollidingWithPoint(b->bounds, p);
+}

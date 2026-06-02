@@ -15,4 +15,6 @@ Button* buttonNew(xpm_map_t xpm, int x, int y, ButtonClickFn onClick);
 void buttonFree(Button* b);
 void buttonDraw(Button* b, Terminal* t);
 
+bool buttonContainsPoint(Button* b, int px, int py);
+
 #endif
