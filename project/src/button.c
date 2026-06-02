@@ -5,40 +5,84 @@
 
 #include <stdlib.h>
 
-#define UI_MAX_BUTTONS 8
-#define UI_MAX_POPUPS 4
-
 struct Button {
-    SpriteXPM* sprite;
+	AnimatedSprite* sprite;
     BoxCollider* bounds;
     int x;
     int y;
+
     ButtonClickFn onClick;
+	ButtonHoverFn onHover;
+
+	bool isPressed;
+	bool isHovering;
 };
 
-static BoxCollider* boundsFromSprite(SpriteXPM* sprite, int x, int y) {
-    Vec2d pos = {x, y};
-    Vec2d size = {getSpriteWidth(sprite), getSpriteHeight(sprite)};
-    return boxColliderNew(pos, EMPTY_VEC2D, size, 0);
-}
-
-Button* buttonNew(xpm_map_t xpm, int x, int y, ButtonClickFn onClick) {
+Button* buttonNew(int x, int y, int width, int height, AnimatedSprite* sprite, ButtonClickFn onClick, ButtonHoverFn onHover) {
     Button* b = malloc(sizeof(Button));
-    b->sprite = newSpriteXPM(xpm, XPM_8_8_8, 0, 0);
+	b->sprite = sprite;
     b->x = x;
     b->y = y;
     b->onClick = onClick;
-    b->bounds = boundsFromSprite(b->sprite, x, y);
+	b->onHover = onHover;
+
+	b->isPressed = false;
+	b->isHovering = false;
+
+
+	Vec2d pos = {x, y};
+	Vec2d size = {width, height};
+    b->bounds = boxColliderNew(pos, EMPTY_VEC2D, size, UI_TAG);
+
     return b;
 }
 
 void buttonFree(Button* b) {
     if (!b) return;
-    freeSpriteXPM(b->sprite);
+	animatedSpriteFree(b->sprite);
     boxColliderFree(b->bounds);
     free(b);
 }
 
-void buttonDraw(Button* b, Terminal* t) {
-    drawSpriteXPM(b->sprite, t, b->x, b->y, false);
+void buttonDraw(Button* b, Terminal* t, float deltaTime, bool isFlipped) {
+	animatedSpriteUpdate(b->x, b->y, b->sprite, t, deltaTime, isFlipped);
+}
+
+void buttonClick(Button* button) {
+	if (button->isPressed) return;
+	button->onClick(button);
+	button->isPressed = true;
+}
+
+void buttonHover(Button* button) {
+	button->onHover(button);
+}
+
+void buttonReset(Button* button) {
+	button->isPressed = false;
+	button->isHovering = false;
+
+	animatedSpriteReset(button->sprite);
+}
+
+BoxCollider* buttonGetBoxCollider(Button* button) {
+	return button->bounds;
+}
+
+// Button Hover
+void basicButtonHoverFn(Button* button) {
+	if (button->isHovering) return;
+
+	animatedSpriteStart(button->sprite);
+	button->isHovering = true;
+}
+
+bool buttonIsFinished(Button* button) {
+	return animatedSpriteIsFinished(button->sprite);
+}
+
+bool buttonContainsPoint(Button* b, int px, int py) {
+    if (!b) return false;
+    Vec2d p = {(float)px, (float)py};
+    return boxIsCollidingWithPoint(b->bounds, p);
 }

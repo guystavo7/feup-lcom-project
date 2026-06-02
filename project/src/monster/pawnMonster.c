@@ -11,7 +11,7 @@ static AnimatedSprite* pawnAnimation=NULL;
 static AnimatedSprite* getSprites_(char** XPMs[], int n, float frameSpeed, Vec2d offset) {
 	SpriteXPM** res = malloc(n * sizeof(SpriteXPM*));
     for (int i = 0; i < n; i++) res[i] = newSpriteXPM((xpm_map_t)XPMs[i], XPM_8_8_8, offset.x, offset.y);
-    return animatedSpriteNew(frameSpeed, res, n);
+    return animatedSpriteNew(frameSpeed, res, n , LOOP);
 }
 
 

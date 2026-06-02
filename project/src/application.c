@@ -52,8 +52,9 @@ int(proj_main_loop)(int argc, char* argv[]) {
 
     int r, ipc_status;
     message msg;
-
-    while (!getKeyPressed(getInputHandler(), KEYCODE_ESQ) && !getKeyPressed(getInputHandler(), KEYCODE_P)) {
+	bool isRunning = true;
+ 
+    while (isRunning) { 
         if ((r = driver_receive(ANY, &msg, &ipc_status))) {
             printf("Driver receive failed: %d\n", r);
             continue;
@@ -63,12 +64,14 @@ int(proj_main_loop)(int argc, char* argv[]) {
         switch (_ENDPOINT_P(msg.m_source)) {
             case HARDWARE:
                 if (msg.m_notify.interrupts & (1 << TIMER_IRQ_LINE)) {
+					if (getKeyPressed(getInputHandler(), KEYCODE_ENTER)) isRunning = false;
+
                     timer_int_handler();
                     refreshTerminal(terminal);
                     int currFrameTime = timer_get_counter();
                     float deltaTime = (float)(currFrameTime - lastFrameTime) / 60;
 
-                    gameLoop(terminal, deltaTime);
+                    if (!gameLoop(terminal, deltaTime)) isRunning = false;
                     lastFrameTime = currFrameTime;
                 }
 

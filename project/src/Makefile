@@ -26,15 +26,18 @@ SRCS= \
 	./collectable.c \
 	./genericTower.c \
 	./basicTower.c \
-	./particle.c \
 	monsterController.c \
 	monsterView.c \
 	monsterModel.c \
 	monster.c \
 	path.c \
 	vector.c \
-	pawnMonster.c
-
+	pawnMonster.c \
+	./eletrictTower.c \
+	./mortarTower.c \
+	./fastTower.c \
+	./piercingTower.c \
+	./gameState.c 
 
 OBJS = ${SRCS:.c=.o}
 

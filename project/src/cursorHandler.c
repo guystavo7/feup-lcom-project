@@ -1,6 +1,6 @@
 #include "../include/utils/cursorHandler.h"
-#include "../resources/cursor/cursor.h"
 #include "../include/data.h"
+#include "../resources/cursor/cursor.h"
 
 #include <stdlib.h>
 
@@ -11,9 +11,9 @@ enum keyState {
 };
 
 enum MouseState {
-	DEFAULT,
-	CLICKED,
-	DENIED,
+    DEFAULT,
+    CLICKED,
+    DENIED,
 };
 
 struct Cursor {
@@ -25,16 +25,21 @@ struct Cursor {
     enum keyState rightButton;
     enum keyState middleButton;
 
-	enum MouseState currentState;
+    enum MouseState currentState;
     SpriteXPM** sprites;
+
+    bool constructionMode;
+    bool placementHoverValid;
 };
 
 static Cursor* cursorNew(int w, int h) {
     Cursor* res = malloc(sizeof(Cursor));
 
 	res->currentState = DEFAULT;
+    res->constructionMode = false;
+    res->placementHoverValid = true;
     res->sprites = malloc(sizeof(SpriteXPM*) * CURSOR_FRAMES);
-	for (int i = 0; i < CURSOR_FRAMES; i++) res->sprites[i] = newSpriteXPM((xpm_map_t)cursorsXPM[i], XPM_8_8_8, 0, 0);
+    for (int i = 0; i < CURSOR_FRAMES; i++) res->sprites[i] = newSpriteXPM((xpm_map_t)cursorsXPM[i], XPM_8_8_8, 0, 0);
 
     res->deltaX = 0;
     res->deltaY = 0;
@@ -45,7 +50,7 @@ static Cursor* cursorNew(int w, int h) {
     res->width = w;
     res->height = h;
 
-	return res;
+    return res;
 }
 
 Cursor* getCursor() {
@@ -58,8 +63,8 @@ Cursor* getCursor() {
 }
 
 void cursorFree(Cursor* c) {
-	for (int i = 0; i < CURSOR_FRAMES; i++) freeSpriteXPM(c->sprites[i]);
-	free(c->sprites);
+    for (int i = 0; i < CURSOR_FRAMES; i++) freeSpriteXPM(c->sprites[i]);
+    free(c->sprites);
     free(c);
 }
 
@@ -74,25 +79,25 @@ void cursorUpdateData(Cursor* c, int dx, int dy, bool leftButton, bool rightButt
 
     if (leftButton && c->leftButton == UP) {
         c->leftButton = DOWN;
-		c->currentState = CLICKED;
+        c->currentState = CLICKED;
 
-	} else if (leftButton) {
+    } else if (!leftButton) {
         c->leftButton = UP;
-	}
+    }
 
     if (middleButton && c->middleButton == UP) {
-		c->middleButton = DOWN;
-	} else if (middleButton) {
+        c->middleButton = DOWN;
+    } else if (!middleButton) {
         c->middleButton = UP;
-	}
+    }
 
     if (rightButton && c->rightButton == UP) {
         c->rightButton = DOWN;
-	} else if (rightButton) {
+    } else if (!rightButton) {
         c->rightButton = UP;
-	}
+    }
 
-	if (!leftButton) c->currentState = DEFAULT;
+    if (!leftButton) c->currentState = DEFAULT;
 }
 
 static void cursorUpdateCoordinates(Cursor* c) {
@@ -103,10 +108,27 @@ static void cursorUpdateCoordinates(Cursor* c) {
     c->deltaY = 0;
 
     if (c->x < 0) c->x = 0;
-	if (c->x > c->width - 1) c->x = c->width - 1;
+    if (c->x > c->width - 1) c->x = c->width - 1;
 
 	if (c->y < 0) c->y = 0;
-	if (c->x > c->height - 1) c->y = c->height - 1;
+	if (c->y > c->height - 1) c->y = c->height - 1;
+}
+
+static void cursorApplyVisualState(Cursor* c) {
+    if (c->constructionMode) {
+        c->currentState = c->placementHoverValid ? CLICKED : DENIED;
+    } else {
+        c->currentState = DEFAULT;
+    }
+}
+
+void cursorSetConstructionMode(Cursor* c, bool enabled) {
+    c->constructionMode = enabled;
+    if (!enabled) c->placementHoverValid = true;
+}
+
+void cursorSetPlacementHoverValid(Cursor* c, bool valid) {
+    c->placementHoverValid = valid;
 }
 
 static void cursorDraw(Cursor* c, Terminal* terminal, float deltaTime) {
@@ -115,6 +137,7 @@ static void cursorDraw(Cursor* c, Terminal* terminal, float deltaTime) {
 
 void cursorUpdate(Cursor* c, Terminal* terminal, float deltaTime) {
     cursorUpdateCoordinates(c);
+    cursorApplyVisualState(c);
     cursorDraw(c, terminal, deltaTime);
 }
 

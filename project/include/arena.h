@@ -9,12 +9,15 @@
 
 typedef struct Arena Arena;
 
-Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile);
+Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile, const char* waterFile);
 void arenaFree(Arena* arena);
 
 int arenaDetectCollisions(Arena* arena, BoxCollider* box, int tag, BoxCollider** colliders);
+BoxCollider* arenaFindFirstEnemy(Arena* arena, BoxCollider* range);
 
 void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime);
 void arenaBuildTower(Arena* arena, Vec2d position);
+
+bool arenaCanPlaceTower(Arena* arena, Vec2d position);
 
 #endif
