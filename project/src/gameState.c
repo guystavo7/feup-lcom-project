@@ -72,7 +72,7 @@ GameState* runningGameNew(Terminal* terminal) {
     pressedExit = false;
 
     GameState* res = gameStateNew(runningGameAct, runningGameFree, runningGameTransition);
-    res->arena = arenaNew(terminal, "/home/lcom/labs/project/resources/map/grid_walls.csv");
+    res->arena = arenaNew(terminal, map1, path1);
 
     return res;
 }

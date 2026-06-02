@@ -3,13 +3,19 @@
 
 #include "utils/vec2d.h"
 
+// File Paths
+static const char* map1 = "/home/lcom/labs/project/resources/map/grid_walls.csv";
+static const char* path1 = "/home/lcom/labs/project/resources/map/grid_path.csv";
+
 // Tags
-#define WALLS_TAG 0
-#define PLAYER_TAG 1
-#define MONSTER_TAG 3
-#define COLLECTABLE_TAG 4
-#define UI_TAG 5
-#define TAGS_NUM 5
+#define WALLS_TAG 		0
+#define PLAYER_TAG 		1
+#define MONSTER_TAG		2
+#define COLLECTABLE_TAG	3
+#define PATH_TAG		4
+#define UI_TAG			5
+
+#define TAGS_NUM 		6
 
 // Screen configs
 #define MODE 0x11B
