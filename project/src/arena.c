@@ -22,8 +22,8 @@
 
 #define PLACEMENT_QUERY_MAX 128
 
-#define POPUP_TOWER_BTN_W 60
-#define POPUP_TOWER_BTN_H 33
+#define POPUP_ICON_MARGIN 14
+#define TOWER_PICK_ICON_W 60
 
 typedef enum {
     ARENA_CONSTRUCT_NORMAL = 0,
@@ -56,7 +56,11 @@ struct Arena {
     int popupY;
     int popupW;
     int popupH;
+    int towerPickAnchorX;
+    int towerPickAnchorY;
+    SpriteXPM* towerPickUpperSprite;
     Button* towerPickButton;
+    BoxCollider* towerPickHitbox;
 };
 
 static void arenaTowerPickButtonCb(Button* self) {
@@ -268,9 +272,20 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
     res->popupX = (SCREEN_WIDTH - res->popupW) / 2;
     res->popupY = (SCREEN_HEIGHT - res->popupH) / 2;
     {
-        int bx = res->popupX + (res->popupW - POPUP_TOWER_BTN_W) / 2;
-        int by = res->popupY + (res->popupH - POPUP_TOWER_BTN_H) / 2;
-        res->towerPickButton = buttonNew((xpm_map_t)blueTowerXPM[0], bx, by, arenaTowerPickButtonCb);
+        /* Anchor = canto sup.-esq. da metade inferior (igual à torre no jogo); a metade superior sobe com offset Y. */
+        int ix = res->popupX + res->popupW - TOWER_PICK_ICON_W - POPUP_ICON_MARGIN;
+        int iy = res->popupY + POPUP_ICON_MARGIN - (int)BASIC_UPPER_HALF_OFFSET.y;
+        res->towerPickAnchorX = ix;
+        res->towerPickAnchorY = iy;
+        res->towerPickUpperSprite =
+            newSpriteXPM((xpm_map_t)blueTowerXPM[1], XPM_8_8_8, BASIC_UPPER_HALF_OFFSET.x, BASIC_UPPER_HALF_OFFSET.y);
+        res->towerPickButton = buttonNew((xpm_map_t)blueTowerXPM[0], ix, iy, arenaTowerPickButtonCb);
+        {
+            float hitY = (float)(res->popupY + POPUP_ICON_MARGIN);
+            float hitH = 33.f - BASIC_UPPER_HALF_OFFSET.y;
+            res->towerPickHitbox =
+                boxColliderNew((Vec2d){(float)ix, hitY}, EMPTY_VEC2D, (Vec2d){(float)TOWER_PICK_ICON_W, hitH}, 0);
+        }
     }
 
     SpriteXPM* backgroundSprite = newSpriteXPM((xpm_map_t)background, XPM_8_8_8, 0, 0);
@@ -326,6 +341,8 @@ void arenaFree(Arena* arena) {
     for (int i = 0; i < arena->towersN; i++) towerFree(arena->towers[i]);
     free(arena->towers);
 
+    freeSpriteXPM(arena->towerPickUpperSprite);
+    boxColliderFree(arena->towerPickHitbox);
     buttonFree(arena->towerPickButton);
 
     for (int i = 0; i < arena->tilesN; i++) tileFree(arena->tiles[i]);
@@ -374,6 +391,7 @@ static void arenaCollectableHandler(Arena* arena) {
 static void arenaDrawConstructionPopup(Arena* arena, Terminal* terminal) {
     drawRectangle(terminal, arena->popupX, arena->popupY, (uint16_t)arena->popupW, (uint16_t)arena->popupH, 0x202028);
     buttonDraw(arena->towerPickButton, terminal);
+    drawSpriteXPM(arena->towerPickUpperSprite, terminal, arena->towerPickAnchorX, arena->towerPickAnchorY, false);
 }
 
 static void arenaHandleConstruction(Arena* arena, Terminal* terminal) {
@@ -397,7 +415,8 @@ static void arenaHandleConstruction(Arena* arena, Terminal* terminal) {
         if (cursorIsLeftButtonPressedDown(cur)) {
             int cx = cursorGetX(cur);
             int cy = cursorGetY(cur);
-            if (buttonContainsPoint(arena->towerPickButton, cx, cy)) {
+            Vec2d click = {(float)cx, (float)cy};
+            if (boxIsCollidingWithPoint(arena->towerPickHitbox, click)) {
                 arena->constructPhase = ARENA_CONSTRUCT_PLACE_TOWER;
                 return;
             }
