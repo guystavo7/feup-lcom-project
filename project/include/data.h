@@ -10,8 +10,9 @@
 #define COLLECTABLE_TAG	3
 #define PATH_TAG		4
 #define UI_TAG			5
+#define LAKE_TAG		6
 
-#define TAGS_NUM 		6
+#define TAGS_NUM 		7
 
 // Screen configs
 #define MODE 0x11B
