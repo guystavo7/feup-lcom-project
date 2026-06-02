@@ -518,7 +518,7 @@ static char *archerShoot8[] = {
 "               ...........                 "
 };
 /* ===== master pointer list ===== */
-static char **yellowArcherShootXPM[] = {
+static char **archerShootXPM[] = {
     archerShoot1,
     archerShoot2,
     archerShoot3,

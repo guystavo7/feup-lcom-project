@@ -33,7 +33,7 @@ struct GenericTower {
     void (*towerUpdate)(GenericTower* tower, Terminal* terminal, Arena* arena, float deltaTime);
 };
 
-GenericTower* towerNew(SpriteXPM* upperHalf, SpriteXPM* lowerHalf, AnimatedSprite* archerIdle, AnimatedSprite* archerShoot, Vec2d position, Vec2d size, Vec2d hitBoxOffset, Vec2d rangeSize, Vec2d rangeOffset, void (*towerUpdate)(GenericTower* tower, Terminal* terminal, Arena* arena, float deltaTime)) {
+GenericTower* towerNew(SpriteXPM* upperHalf, SpriteXPM* lowerHalf, AnimatedSprite* archerIdle, AnimatedSprite* archerShoot, Vec2d position, Vec2d size, Vec2d hitBoxOffset, Vec2d rangeSize, Vec2d rangeOffset, void (*towerUpdate)(GenericTower* tower, Terminal* terminal, Arena* arena, float deltaTime), float cooldown) {
     GenericTower* res = malloc(sizeof(GenericTower));
     res->upperHalf = upperHalf;
     res->lowerHalf = lowerHalf;
@@ -55,7 +55,7 @@ GenericTower* towerNew(SpriteXPM* upperHalf, SpriteXPM* lowerHalf, AnimatedSprit
     res->state = TOWER_IDLE;
     res->current = archerIdle;
 
-	res->cooldownTimer = timerNew(BASIC_TOWER_COOLDOWN);
+	res->cooldownTimer = timerNew(cooldown);
     return res;
 }
 
