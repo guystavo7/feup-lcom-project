@@ -19,8 +19,12 @@
 #include "../resources/map/background.h"
 #include "../resources/tiles/tiles.h"
 
+
+
 #include "../../lab5/spriteXMP.h"
 #include "../../lab5/terminal.h"
+
+#include "../include/monster/pawnMonster.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -52,6 +56,9 @@ struct Arena {
     int width;
     int height;
     int tileSize;
+
+    Monster* monster_test;
+    Path* path_test;
 
     Player* player;
 
@@ -262,6 +269,9 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
         res->colliders[t] = NULL;
     }
 
+    res->path_test=pathNew(4,vectorCreateWithFloatingData(sizeof(float),NULL,6*2, 10.0f,150.0f,  330.0f,150.0f,  380.0f,275.0f,  875.0f,275.0f,   925.0f,150.0f,  1300.0f,150.0f  ));
+    res->monster_test=pawnMonsterNew(10,150,res->path_test);
+
     createMap(res, tilesFile, TILE_SIZE);
     createMonsterPathColliders(res, pathFile);
     createLakeColliders(res, waterFile);
@@ -350,12 +360,16 @@ void arenaFree(Arena* arena) {
     buttonFree(arena->towerPickButton);
 
     for (int i = 0; i < arena->tilesN; i++) tileFree(arena->tiles[i]);
-    for (int i = 0; i < arena->fruitsN; i++) collectableFree(arena->fruits[i]);
+    for (int i = 0; i < arena->fruitsN; i++) collectableFree(arena->fruits[i]); 
+    
+    monsterFree(arena->monster_test);
+    pathFree(arena->path_test);
+ 
 
     free(arena->colliders[WALLS_TAG]);
     free(arena->colliders[PLAYER_TAG]);
     free(arena->colliders[COLLECTABLE_TAG]);
-
+ 
     free(arena->tiles);
     free(arena->fruits);
     playerFree(arena->player);
@@ -463,6 +477,10 @@ void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
     for (int i = 0; i < arena->tilesN; i++) tileUpdate(arena->tiles[i], terminal);
     for (int i = arena->towersN - 1; i >= 0; i--) towerUpdate(arena->towers[i], terminal, arena, deltaTime);
 
+
+    monsterUpdate(arena->monster_test,arena,terminal,deltaTime);
+    monsterSumHP(arena->monster_test,-100);
+    
     arenaCollectableHandler(arena);
     arenaHandleConstruction(arena, terminal);
 

@@ -1,10 +1,11 @@
+#pragma once
 #include "../data_structures/vector.h"
 #include "./../utils/vec2d.h"
 
 typedef struct path Path;
 
 
-Path* pathCreate(float point_change_distance,Vector* points);//points parameter must be a 4-byte-data-size vector with a even number (different of 0) of floats that correspont to pairs (x,y). point_change_distance should be>0
+Path* pathNew(float point_change_distance,Vector* points);//points parameter must be a 4-byte-data-size vector with a even number (different of 0) of floats that correspont to pairs (x,y). point_change_distance should be>0
 
 void pathFree(Path* p);
 
