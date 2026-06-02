@@ -1,5 +1,8 @@
 PROG=proj
 
+.PATH: monster/
+.PATH: data_structures/
+
 SRCS= \
 	application.c \
 	game.c \
@@ -24,6 +27,14 @@ SRCS= \
 	./genericTower.c \
 	./basicTower.c \
 	./particle.c \
+	monsterController.c \
+	monsterView.c \
+	monsterModel.c \
+	monster.c \
+	path.c \
+	vector.c \
+	pawnMonster.c
+
 
 OBJS = ${SRCS:.c=.o}
 

@@ -5,8 +5,11 @@
 
 static Arena* arena;
 
-void startGame(Terminal* terminal) {
-    arena = arenaNew(terminal, "/home/lcom/labs/project/resources/map/grid_walls.csv", "/home/lcom/labs/project/resources/map/grid_path.csv");
+void startGame(Terminal* terminal) { 
+    
+   // arena = arenaNew(terminal, "/home/lcom/labs/project/resources/map/grid_walls.csv", "/home/lcom/labs/project/resources/map/grid_path.csv");
+
+   arena = arenaNew(terminal, "/home/lcom/labs/grupo_2leic13_2/project/resources/map/grid_walls.csv", "/home/lcom/labs/grupo_2leic13_2/project/resources/map/grid_path.csv");
 }
 
 void exitGame() {

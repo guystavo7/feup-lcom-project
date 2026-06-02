@@ -12,7 +12,11 @@
 #include "../resources/map/background.h"
 #include "../resources/tiles/tiles.h"
 
+
+
 #include "../../lab5/spriteXMP.h"
+
+#include "../include/monster/pawnMonster.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -33,6 +37,9 @@ struct Arena {
     int width;
     int height;
     int tileSize;
+
+    Monster* monster_test;
+    Path* path_test;
 
     Player* player;
     Cursor* cursor;
@@ -171,6 +178,9 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile)
     res->collidersN = malloc(sizeof(int) * TAGS_NUM);
     res->colliders = malloc(sizeof(BoxCollider*) * TAGS_NUM);
 
+    res->path_test=pathNew(4,vectorCreateWithFloatingData(sizeof(float),NULL,6*2, 10.0f,150.0f,  330.0f,150.0f,  380.0f,275.0f,  875.0f,275.0f,   925.0f,150.0f,  1300.0f,150.0f  ));
+    res->monster_test=pawnMonsterNew(10,150,res->path_test);
+
     createMap(res, tilesFile, TILE_SIZE);
 	createMonsterPathColliders(res, pathFile);
     createPlayer(res);
@@ -198,6 +208,10 @@ void arenaFree(Arena* arena) {
     for (int i = 0; i < arena->tilesN; i++) tileFree(arena->tiles[i]);
     for (int i = 0; i < arena->fruitsN; i++) collectableFree(arena->fruits[i]);
     for (int i = 0; i < TAGS_NUM; i++) free(arena->colliders);
+
+    monsterFree(arena->monster_test);
+    pathFree(arena->path_test);
+
     free(arena->collidersN);
     free(arena->tiles);
     free(arena->fruits);
@@ -241,6 +255,10 @@ void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
     for (int i = 0; i < arena->tilesN; i++) tileUpdate(arena->tiles[i], terminal);
     for (int i = arena->towersN - 1; i >= 0; i--) towerUpdate(arena->towers[i], terminal, arena, deltaTime);
 
+
+    monsterUpdate(arena->monster_test,arena,terminal,deltaTime);
+    monsterSumHP(arena->monster_test,-100);
+    
     arenaCollectableHandler(arena);
     arenaMouseObserver(arena);
 

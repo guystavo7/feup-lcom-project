@@ -1,15 +1,16 @@
 #include "../../include/monster/monsterModel.h"
-
+ 
 
 struct monsterModel
 {
-  Vec2d vel;
-  Vec2d pos;
-  char* walkingAnimationFolderPath;
 
-  RigidBody *rb;
-  BoxCollider * bc;
-  Path * path;
+  Vec2d pos;
+  Vec2d size;
+  Vec2d vel; 
+
+
+  bool dead;
+  int hp;
 
 
 };
@@ -18,39 +19,45 @@ unsigned int monsterSizeof(){
   return sizeof(MonsterModel);
 }
 
-MonsterModel* monsterModelNew(float x,float y,float vel_x,float vel_y,char* walkingAnimationFolderPath,RigidBody *rb, BoxCollider * bc,Path * path){
+MonsterModel* monsterModelNew(float x,float y,float sizeX,float sizeY,float velX,float velY,int hp){
   MonsterModel* m=malloc(sizeof(MonsterModel));
   m->pos= (Vec2d){x,y};
-  m->vel=(Vec2d){vel_x,vel_y};
-  m->walkingAnimationFolderPath=walkingAnimationFolderPath;
-  m->rb=rb;
-  m->bc=bc;
+  m->size=(Vec2d){sizeX,sizeY};
+  m->vel=(Vec2d){velX,velY}; 
+  m->hp=hp;
+  m->dead=false;
   
   return m;
 }
 
 
-MonsterModel* monsterModelFree(MonsterModel* m){ 
-  rigidBodyFree(m->rb);
-  boxColliderFree(m->bc);
-  free(m);
-  return NULL;
+ void monsterModelFree(MonsterModel* m){  
+  free(m); 
 }
 
 
  
 
-RigidBody* monsterModelGetRigidBody(MonsterModel* m){
-  return m->rb;
+int monsterModelGetHP(MonsterModel* m){
+  return m->hp;
 }
 
-BoxCollider* monsterModelGetBoxCollider(MonsterModel* m){
-  return m->bc;
+void monsterModelSetHP(MonsterModel* m,int hp){
+   m->hp=hp;
 }
 
-Path* monsterModelGetPath(MonsterModel* m){
-  return m->path;
+void monsterModelSumHP(MonsterModel* m,int val){
+   m->hp+=val;
 }
+
+int monsterModelGetDead(MonsterModel* m){
+  return m->dead;
+}
+
+void monsterModelSetDead(MonsterModel* m,bool dead){
+   m->dead=dead;
+}
+
 
 
 float monsterModelGetX(MonsterModel* m){
@@ -109,15 +116,14 @@ void monsterModelSetVelY(MonsterModel* m,float y){
 
 
 void monsterModelSetDir(MonsterModel* m,float dx, float dy){
-  Vec2d* v=vec2dCreate(dx,dy);
-  monsterModelSetDirWithVec(m,v);
-  free(v);
+  Vec2d v={dx,dy};
+  monsterModelSetDirWithVec(m,&v); 
 }
 
 void monsterModelSetDirWithVec(MonsterModel* m,Vec2d* v){
   float dm2=vec2dModule2(v);
   float cur_m=vec2dModule(&m->vel);
-  if( (dm2>(1-EPSILON)) && ((1-EPSILON)>dm2) ){
+  if( (dm2>(1-EPSILON)) && ((1+EPSILON)>dm2) ){
     
     vec2dSetWithVec2d(&m->vel,v);
     vec2dMultiply(&m->vel,cur_m);
@@ -130,11 +136,4 @@ void monsterModelSetDirWithVec(MonsterModel* m,Vec2d* v){
   }
 }
 
-/*
-void monsterModelUpdatePos(MonsterModel* m,double delta_t){
-  struct Vec2d a={m->vel.x, m->vel.y};
-  vec2dMultiply(&a,delta_t);
-  vec2dAddVec(&m->pos,&a);
-  vec2dFree(&a);
-}
-  */
+

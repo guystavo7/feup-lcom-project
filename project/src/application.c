@@ -53,7 +53,7 @@ int(proj_main_loop)(int argc, char* argv[]) {
     int r, ipc_status;
     message msg;
 
-    while (!getKeyPressed(getInputHandler(), KEYCODE_ESQ)) {
+    while (!getKeyPressed(getInputHandler(), KEYCODE_ESQ) && !getKeyPressed(getInputHandler(), KEYCODE_P)) {
         if ((r = driver_receive(ANY, &msg, &ipc_status))) {
             printf("Driver receive failed: %d\n", r);
             continue;
