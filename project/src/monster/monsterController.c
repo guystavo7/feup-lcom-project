@@ -19,9 +19,14 @@ void monsterControllerUpdate(MonsterController* controller,float delta_t){
     
     monsterModelGetVel(m,&delta_x);
     vec2dMultiply(&delta_x,delta_t);
+
+    monsterModelGetPos(m,&monsterPos); 
+
+    vec2dAddVec(&monsterPos,&delta_x);
     
-    vec2dAddVec(,&a);
-    vec2dFree(&a);
+    
+
+    monsterModelSetPos(m,&monsterPos);
 }
 
 MonsterController* monsterControllerFree(MonsterController* controller){
