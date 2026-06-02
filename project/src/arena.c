@@ -1,6 +1,7 @@
 #include "../include/arena.h"
 #include "../include/buildings/basicTower.h"
 #include "../include/buildings/genericTower.h"
+#include "../include/button.h"
 #include "../include/components/boxCollider.h"
 #include "../include/data.h"
 #include "../include/player/player.h"
@@ -9,15 +10,26 @@
 #include "../include/utils/cursorHandler.h"
 
 #include "../resources/1.h"
+#include "../resources/building/tower/blueTower.h"
 #include "../resources/map/background.h"
 #include "../resources/tiles/tiles.h"
 
 #include "../../lab5/spriteXMP.h"
+#include "../../lab5/terminal.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 
 #define PLACEMENT_QUERY_MAX 128
+
+#define POPUP_TOWER_BTN_W 60
+#define POPUP_TOWER_BTN_H 33
+
+typedef enum {
+    ARENA_CONSTRUCT_NORMAL = 0,
+    ARENA_CONSTRUCT_PICK_TOWER,
+    ARENA_CONSTRUCT_PLACE_TOWER,
+} ArenaConstructPhase;
 
 struct Arena {
     int* collidersN;
@@ -38,7 +50,23 @@ struct Arena {
 
     Player* player;
     Cursor* cursor;
+
+    ArenaConstructPhase constructPhase;
+    int popupX;
+    int popupY;
+    int popupW;
+    int popupH;
+    Button* towerPickButton;
 };
+
+static void arenaTowerPickButtonCb(Button* self) {
+    (void)self;
+}
+
+static bool arenaPointInPopup(Arena* arena, int px, int py) {
+    return px >= arena->popupX && px < arena->popupX + arena->popupW && py >= arena->popupY &&
+           py < arena->popupY + arena->popupH;
+}
 
 static void createMap(Arena* arena, const char* filename, int tileSize) {
     FILE* file = fopen(filename, "r");
@@ -137,10 +165,59 @@ static void createMonsterPathColliders(Arena* arena, const char* filename) {
             int id = map[y][x];
             if (id <= 0) continue;
 
-			Vec2d position = {x * TILE_SIZE, y * TILE_SIZE};
-			Vec2d size = {TILE_SIZE, TILE_SIZE};
+            Vec2d position = {x * TILE_SIZE, y * TILE_SIZE};
+            Vec2d size = {TILE_SIZE, TILE_SIZE};
             arena->colliders[PATH_TAG][i] = boxColliderNew(position, EMPTY_VEC2D, size, PATH_TAG);
 			i++;
+        }
+    }
+
+    for (int i = 0; i < arena->height; i++) free(map[i]);
+    free(map);
+}
+
+static void createLakeColliders(Arena* arena, const char* filename) {
+    FILE* file = fopen(filename, "r");
+    if (!file) {
+        printf("Error: Could not open map file: %s\n", filename);
+        return;
+    }
+
+    char lineBuffer[1024];
+    int** map = malloc(arena->height * sizeof(int*));
+    int num = 0;
+
+    for (int i = 0; i < arena->height; i++) {
+        map[i] = malloc(arena->width * sizeof(int));
+
+        if (fgets(lineBuffer, sizeof(lineBuffer), file) == NULL) {
+            break;
+        }
+
+        char* ptr = lineBuffer;
+        for (int j = 0; j < arena->width; j++) {
+            map[i][j] = atoi(ptr);
+            if (map[i][j] > 0) num++;
+
+            while (*ptr != '\0' && *ptr != '\n' && *ptr != '\r' && *ptr != ',') ptr++;
+            if (*ptr == ',') ptr++;
+        }
+    }
+
+    fclose(file);
+    arena->collidersN[LAKE_TAG] = num;
+    arena->colliders[LAKE_TAG] = malloc(sizeof(BoxCollider*) * num);
+    int idx = 0;
+
+    for (int y = 0; y < arena->height; y++) {
+        for (int x = 0; x < arena->width; x++) {
+            int id = map[y][x];
+            if (id <= 0) continue;
+
+            Vec2d position = {x * TILE_SIZE, y * TILE_SIZE};
+            Vec2d size = {TILE_SIZE, TILE_SIZE};
+            arena->colliders[LAKE_TAG][idx] = boxColliderNew(position, EMPTY_VEC2D, size, LAKE_TAG);
+            idx++;
         }
     }
 
@@ -168,18 +245,34 @@ static void createFruitsTest(Arena* arena) {
     for (int i = 0; i < arena->fruitsN; i++) arena->colliders[COLLECTABLE_TAG][i] = collectableGetHitBox(arena->fruits[i]);
 }
 
-Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile) {
+Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile, const char* waterFile) {
     Arena* res = malloc(sizeof(Arena));
     res->collidersN = malloc(sizeof(int) * TAGS_NUM);
     res->colliders = malloc(sizeof(BoxCollider*) * TAGS_NUM);
+    for (int t = 0; t < TAGS_NUM; t++) {
+        res->collidersN[t] = 0;
+        res->colliders[t] = NULL;
+    }
 
     createMap(res, tilesFile, TILE_SIZE);
-	createMonsterPathColliders(res, pathFile);
+    createMonsterPathColliders(res, pathFile);
+    createLakeColliders(res, waterFile);
     createPlayer(res);
     createFruitsTest(res);
     res->towersN = 0;
+    res->towers = NULL;
 
-    // The terminal will handle the freeing
+    res->constructPhase = ARENA_CONSTRUCT_NORMAL;
+    res->popupW = 420;
+    res->popupH = 240;
+    res->popupX = (SCREEN_WIDTH - res->popupW) / 2;
+    res->popupY = (SCREEN_HEIGHT - res->popupH) / 2;
+    {
+        int bx = res->popupX + (res->popupW - POPUP_TOWER_BTN_W) / 2;
+        int by = res->popupY + (res->popupH - POPUP_TOWER_BTN_H) / 2;
+        res->towerPickButton = buttonNew((xpm_map_t)blueTowerXPM[0], bx, by, arenaTowerPickButtonCb);
+    }
+
     SpriteXPM* backgroundSprite = newSpriteXPM((xpm_map_t)background, XPM_8_8_8, 0, 0);
     generateEmptyBuffer(backgroundSprite, terminal, 0, 0, false);
 
@@ -202,6 +295,10 @@ bool arenaCanPlaceTower(Arena* arena, Vec2d position) {
         boxColliderFree(preview);
         return false;
     }
+    if (arenaDetectCollisions(arena, preview, LAKE_TAG, hits) > 0) {
+        boxColliderFree(preview);
+        return false;
+    }
 
     boxColliderFree(preview);
     return true;
@@ -220,27 +317,47 @@ void arenaBuildTower(Arena* arena, Vec2d position) {
 }
 
 void arenaFree(Arena* arena) {
+    for (int i = 0; i < arena->collidersN[PATH_TAG]; i++) boxColliderFree(arena->colliders[PATH_TAG][i]);
+    free(arena->colliders[PATH_TAG]);
+
+    for (int i = 0; i < arena->collidersN[LAKE_TAG]; i++) boxColliderFree(arena->colliders[LAKE_TAG][i]);
+    free(arena->colliders[LAKE_TAG]);
+
+    for (int i = 0; i < arena->towersN; i++) towerFree(arena->towers[i]);
+    free(arena->towers);
+
+    buttonFree(arena->towerPickButton);
+
     for (int i = 0; i < arena->tilesN; i++) tileFree(arena->tiles[i]);
     for (int i = 0; i < arena->fruitsN; i++) collectableFree(arena->fruits[i]);
-    for (int i = 0; i < TAGS_NUM; i++) free(arena->colliders);
-    free(arena->collidersN);
+
+    free(arena->colliders[WALLS_TAG]);
+    free(arena->colliders[PLAYER_TAG]);
+    free(arena->colliders[COLLECTABLE_TAG]);
+
     free(arena->tiles);
     free(arena->fruits);
     playerFree(arena->player);
+
+    free(arena->colliders);
+    free(arena->collidersN);
     free(arena);
 }
 
 int arenaDetectCollisions(Arena* arena, BoxCollider* box, int tag, BoxCollider** colliders) {
-    int j = 0;
-    BoxCollider** c = arena->colliders[tag];
+    if (tag < 0 || tag >= TAGS_NUM) return 0;
     int n = arena->collidersN[tag];
+    BoxCollider** c = arena->colliders[tag];
+    if (c == NULL || n == 0) return 0;
 
+    int j = 0;
     for (int i = 0; i < n; i++) {
         BoxCollider* collider = c[i];
         if (collider == NULL) continue;
         if (boxIsCollidingWithBox(box, collider)) {
             colliders[j] = collider;
             j++;
+            if (j >= PLACEMENT_QUERY_MAX) break;
         }
     }
 
@@ -254,10 +371,57 @@ static void arenaCollectableHandler(Arena* arena) {
     for (int i = 0; i < n; i++) collectableSetActive(arena->fruits[i], false);
 }
 
-static void arenaMouseObserver(Arena* arena) {
-    if (cursorIsRightButtonPressedDown(getCursor())) {
-        Vec2d position = {cursorGetX(getCursor()), cursorGetY(getCursor())};
-        arenaBuildTower(arena, position);
+static void arenaDrawConstructionPopup(Arena* arena, Terminal* terminal) {
+    drawRectangle(terminal, arena->popupX, arena->popupY, (uint16_t)arena->popupW, (uint16_t)arena->popupH, 0x202028);
+    buttonDraw(arena->towerPickButton, terminal);
+}
+
+static void arenaHandleConstruction(Arena* arena, Terminal* terminal) {
+    Cursor* cur = getCursor();
+    (void)terminal;
+
+    if (arena->constructPhase == ARENA_CONSTRUCT_NORMAL) {
+        cursorSetConstructionMode(cur, false);
+        if (cursorIsRightButtonPressedDown(cur)) {
+            arena->constructPhase = ARENA_CONSTRUCT_PICK_TOWER;
+        }
+        return;
+    }
+
+    if (arena->constructPhase == ARENA_CONSTRUCT_PICK_TOWER) {
+        cursorSetConstructionMode(cur, false);
+        if (cursorIsRightButtonPressedDown(cur)) {
+            arena->constructPhase = ARENA_CONSTRUCT_NORMAL;
+            return;
+        }
+        if (cursorIsLeftButtonPressedDown(cur)) {
+            int cx = cursorGetX(cur);
+            int cy = cursorGetY(cur);
+            if (buttonContainsPoint(arena->towerPickButton, cx, cy)) {
+                arena->constructPhase = ARENA_CONSTRUCT_PLACE_TOWER;
+                return;
+            }
+            if (!arenaPointInPopup(arena, cx, cy)) {
+                arena->constructPhase = ARENA_CONSTRUCT_NORMAL;
+            }
+        }
+        return;
+    }
+
+    if (arena->constructPhase == ARENA_CONSTRUCT_PLACE_TOWER) {
+        cursorSetConstructionMode(cur, true);
+        Vec2d pos = {(float)cursorGetX(cur), (float)cursorGetY(cur)};
+        bool ok = arenaCanPlaceTower(arena, pos);
+        cursorSetPlacementHoverValid(cur, ok);
+
+        if (cursorIsRightButtonPressedDown(cur)) {
+            arena->constructPhase = ARENA_CONSTRUCT_NORMAL;
+            cursorSetConstructionMode(cur, false);
+            return;
+        }
+        if (cursorIsLeftButtonPressedDown(cur) && ok) {
+            arenaBuildTower(arena, pos);
+        }
     }
 }
 
@@ -267,10 +431,14 @@ void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
     for (int i = arena->towersN - 1; i >= 0; i--) towerUpdate(arena->towers[i], terminal, arena, deltaTime);
 
     arenaCollectableHandler(arena);
-    arenaMouseObserver(arena);
+    arenaHandleConstruction(arena, terminal);
 
     playerUpdate(arena->player, terminal, arena, deltaTime);
     for (int i = arena->towersN - 1; i >= 0; i--) towerDrawUpperHalf(arena->towers[i], terminal);
+
+    if (arena->constructPhase == ARENA_CONSTRUCT_PICK_TOWER) {
+        arenaDrawConstructionPopup(arena, terminal);
+    }
 
     cursorUpdate(getCursor(), terminal, deltaTime);
 }
