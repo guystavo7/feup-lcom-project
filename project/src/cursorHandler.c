@@ -27,12 +27,17 @@ struct Cursor {
 
     enum MouseState currentState;
     SpriteXPM** sprites;
+
+    bool constructionMode;
+    bool placementHoverValid;
 };
 
 static Cursor* cursorNew(int w, int h) {
     Cursor* res = malloc(sizeof(Cursor));
 
-    res->currentState = DEFAULT;
+	res->currentState = DEFAULT;
+    res->constructionMode = false;
+    res->placementHoverValid = true;
     res->sprites = malloc(sizeof(SpriteXPM*) * CURSOR_FRAMES);
     for (int i = 0; i < CURSOR_FRAMES; i++) res->sprites[i] = newSpriteXPM((xpm_map_t)cursorsXPM[i], XPM_8_8_8, 0, 0);
 
@@ -109,12 +114,30 @@ static void cursorUpdateCoordinates(Cursor* c) {
 	if (c->y > c->height - 1) c->y = c->height - 1;
 }
 
+static void cursorApplyVisualState(Cursor* c) {
+    if (c->constructionMode) {
+        c->currentState = c->placementHoverValid ? CLICKED : DENIED;
+    } else {
+        c->currentState = DEFAULT;
+    }
+}
+
+void cursorSetConstructionMode(Cursor* c, bool enabled) {
+    c->constructionMode = enabled;
+    if (!enabled) c->placementHoverValid = true;
+}
+
+void cursorSetPlacementHoverValid(Cursor* c, bool valid) {
+    c->placementHoverValid = valid;
+}
+
 static void cursorDraw(Cursor* c, Terminal* terminal, float deltaTime) {
     drawSpriteXPM(c->sprites[c->currentState], terminal, c->x, c->y, false);
 }
 
 void cursorUpdate(Cursor* c, Terminal* terminal, float deltaTime) {
     cursorUpdateCoordinates(c);
+    cursorApplyVisualState(c);
     cursorDraw(c, terminal, deltaTime);
 }
 

@@ -28,4 +28,6 @@ BoxCollider* buttonGetBoxCollider(Button* button);
 void basicButtonHoverFn(Button* button);
 bool buttonIsFinished(Button* button);
 
+bool buttonContainsPoint(Button* b, int px, int py);
+
 #endif

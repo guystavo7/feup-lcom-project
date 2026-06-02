@@ -63,11 +63,7 @@ int rtc_read_date(rtc_date* date) {
 
 int rtcGetSeconds(){
     uint8_t sec, min, hour, day, isBDC;
-<<<<<<< HEAD
-    if (readRTC(RTC_SECONDS, &sec) || readRTC(RTC_MINUTES, &min) || readRTC(RTC_HOURS, &hour) || readRTC(RTC_REG_DAY, &day ) || readRTC(RTC_REG_B, &isBDC)) return -1;
-=======
-    if (readRTC(RTC_RG_SECONDS, &sec) || readRTC(RTC_RG_MIN, &min) || readRTC(RTC_RG_HOUR, &hour) || readRTC(RTC_REG_DAY, &day ) || readRTC(RTC_REG_B, &isBDC)) return -1;
->>>>>>> 8aff819f058a6408879ece182428dc0e92b2fafb
+    if (readRTC(RTC_RG_SECONDS, &sec) || readRTC(RTC_RG_MIN, &min) || readRTC(RTC_RG_HOUR, &hour) || readRTC(RTC_REG_DAY, &day) || readRTC(RTC_REG_B, &isBDC)) return -1;
     if (!(isBDC & RTC_DM_MSK)) {
         sec = bdc_to_bin(sec);
         min = bdc_to_bin(min);

@@ -80,3 +80,9 @@ void basicButtonHoverFn(Button* button) {
 bool buttonIsFinished(Button* button) {
 	return animatedSpriteIsFinished(button->sprite);
 }
+
+bool buttonContainsPoint(Button* b, int px, int py) {
+    if (!b) return false;
+    Vec2d p = {(float)px, (float)py};
+    return boxIsCollidingWithPoint(b->bounds, p);
+}

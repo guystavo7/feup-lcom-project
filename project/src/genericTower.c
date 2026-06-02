@@ -107,7 +107,7 @@ static enum TowerState shootTransition(GenericTower* tower, Arena* arena, float 
 
 void towerUpdate(GenericTower* tower, Terminal* terminal, Arena* arena, float deltaTime) {
     enum TowerState newState = tower->state;
-    drawRectangle(terminal, boxColliderGetX(tower->range) + boxColliderGetOffsetX(tower->range), boxColliderGetY(tower->range) + boxColliderGetOffsetY(tower->range), boxColliderGetWidth(tower->range), boxColliderGetHeight(tower->range), 0xFFFFFF);
+    //drawRectangle(terminal, boxColliderGetX(tower->range) + boxColliderGetOffsetX(tower->range), boxColliderGetY(tower->range) + boxColliderGetOffsetY(tower->range), boxColliderGetWidth(tower->range), boxColliderGetHeight(tower->range), 0xFFFFFF);
 
     switch (tower->state) {
         case TOWER_IDLE:

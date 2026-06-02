@@ -146,7 +146,7 @@ static void runningGameAct(GameState* state, Terminal* terminal, float deltaTime
 
 GameState* runningGameNew(Terminal* terminal) {
     GameState* res = gameStateNew(runningGameAct, runningGameFree, runningGameTransition);
-    res->arena = arenaNew(terminal, map1, path1);
+    res->arena = arenaNew(terminal, map1, path1, lake1);
     res->pauseMenu = newSpriteXPM((xpm_map_t)pauseMenuXPM[PAUSE_MENU_INDEX], XPM_8_8_8, 0, 0);
 
     // Resume Button
