@@ -164,19 +164,15 @@ static enum TowerState shootTransition(GenericTower* tower, Arena* arena, float 
             index = 2;
 		// First quadrant
         } else if (dir.x > 0 && dir.y < 0) {
-			printf("First\n");
             index = 1;
 		// Second quadrant
         } else if (dir.x < 0 && dir.y < 0) {
-			printf("Second\n");
             index = 3;
 		// Third quadrant
         } else if (dir.x > 0 && dir.y > 0) {
-			printf("Third\n");
             index = 7;
         } else {
 		// Forth quadrant
-			printf("Forth\n");
             index = 5;
         }
 

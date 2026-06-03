@@ -21,7 +21,6 @@ struct projectile {
     Vec2d* vel;
     SpriteXPM* sprite;
     BoxCollider* collider;
-
     union {
         struct {
             int max_pierces;
