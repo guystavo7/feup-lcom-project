@@ -1,13 +1,13 @@
 #include "../include/game.h"
-#include "../include/arena.h"
 #include "../include/gameState.h"
 
 #include "../resources/map/background.h"
 
 static GameState* state;
 
+ 
 void startGame(Terminal* terminal) {
-    state = mainMenuNew(terminal);
+    state = mainMenuNew(terminal); 
 }
 
 void exitGame() {

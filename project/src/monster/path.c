@@ -7,7 +7,7 @@ struct path {
     Vector* sub_values; // subscriptor mvalues (map to the points)
 };
 
-Path* pathCreate(float point_change_distance, Vector* points) {
+Path* pathNew(float point_change_distance, Vector* points) {
 
     if ((vectorGetDataSize(points) != 4) || (vectorGetSize(points) % 2 != 0) || (vectorGetSize(points) == 0) || (0 > point_change_distance)) {
         printf("points parameter must be a 4-byte-data-size vector with a even number (different of 0) of floats that correspont to pairs (x,y). point_change_distance should be>0");
@@ -111,3 +111,4 @@ void pathFollowingDir(Path* p, void* pointer, Vec2d* pos, Vec2d* new_dir) {
     }
     pathGetDirectionToCurPoint(p, pointer, pos, new_dir);
 }
+

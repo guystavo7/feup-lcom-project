@@ -343,7 +343,7 @@ static char *Pawn_Run6[] = {
 "            ........             "
 };
 /* ===== master pointer list ===== */
-static char **all_xpms[] = {
+static char **all_pawn_xpms[] = {
     Pawn_Run1,
     Pawn_Run2,
     Pawn_Run3,

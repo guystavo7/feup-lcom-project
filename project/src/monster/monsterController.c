@@ -1,0 +1,80 @@
+#include "../../include/monster/monsterController.h"
+
+struct monsterController
+{
+    MonsterModel* model;
+    RigidBody *rb;
+    BoxCollider * bc;
+    Path * path;
+
+
+
+};
+
+MonsterController* monsterControllerNew(MonsterModel* model,Path * path){
+  MonsterController* m=malloc(sizeof(MonsterController));
+
+  m->model=model;
+
+
+  m->rb=rigidBodyNew();
+  
+  Vec2d mPos; 
+  monsterModelGetPos(model,&mPos);
+  m->bc=boxColliderNew(mPos,(Vec2d){0,0},(Vec2d){10,10},MonsterTag);
+  m->path=path;
+  pathSubscribe(m->path,model);
+  
+  return m;
+}
+
+
+
+void monsterControllerUpdate(MonsterController* controller,Arena*arena,float delta_t){
+
+    MonsterModel *model=controller->model;
+
+    monsterModelSetDead(model, !(monsterModelGetHP(model)>0) );
+  
+    if(!monsterModelGetDead(model)){
+
+    
+    Vec2d delta_x,monsterPos;
+
+
+    monsterModelGetPos(model,&monsterPos); 
+ 
+    pathFollowingDir(controller->path,model,&monsterPos,&delta_x);
+    
+
+    monsterModelSetDirWithVec(model,&delta_x); 
+
+    monsterModelGetVel(model,&delta_x);
+    vec2dMultiply(&delta_x,delta_t); 
+
+    vec2dAddVec(&monsterPos,&delta_x);
+
+    monsterModelSetPos(model,&monsterPos);
+
+    
+    rigidBodyUpdate(controller->rb,&monsterPos,arena,controller->bc,delta_t);
+    }
+}
+
+void monsterControllerFree(MonsterController* controller){
+    rigidBodyFree(controller->rb);
+    boxColliderFree(controller->bc); 
+    free(controller);
+}
+
+RigidBody* monsterControllerGetRigidBody(MonsterController* m){
+  return m->rb;
+}
+
+BoxCollider* monsterControllerGetBoxCollider(MonsterController* m){
+  return m->bc;
+}
+
+Path* MonsterControllerGetPath(MonsterController* m){
+  return m->path;
+}
