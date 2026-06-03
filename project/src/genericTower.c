@@ -3,6 +3,7 @@
 #include "../include/components/boxCollider.h"
 #include "../include/data.h"
 #include "../include/utils/timer.h"
+#include "../include/utils/utils.h"
 
 #include "../resources/particles/dust/dust.h"
 #include <stdlib.h>
@@ -23,7 +24,7 @@ struct GenericTower {
 
     BoxCollider* hitBox;
     BoxCollider* range;
-	BoxCollider* target;
+    BoxCollider* target;
 
     Vec2d position;
     AnimatedSprite* p;
@@ -36,12 +37,13 @@ struct GenericTower {
     int projectilesCount;
     Projectile** projectiles;
 
-    SpriteXPM* arrowSprite;
+    SpriteXPM** arrowSprites;
+    int arrowSpritesN;
 
     void (*towerUpdate)(GenericTower* tower, Terminal* terminal, Arena* arena, float deltaTime);
 };
 
-GenericTower* towerNew(SpriteXPM* upperHalf, SpriteXPM* lowerHalf, AnimatedSprite* archerIdle, AnimatedSprite* archerShoot, Vec2d position, Vec2d size, Vec2d hitBoxOffset, Vec2d rangeSize, Vec2d rangeOffset, void (*towerUpdate)(GenericTower* tower, Terminal* terminal, Arena* arena, float deltaTime), float cooldown, ProjectileType projectileType, SpriteXPM* arrowSprite) {
+GenericTower* towerNew(SpriteXPM* upperHalf, SpriteXPM* lowerHalf, AnimatedSprite* archerIdle, AnimatedSprite* archerShoot, Vec2d position, Vec2d size, Vec2d hitBoxOffset, Vec2d rangeSize, Vec2d rangeOffset, void (*towerUpdate)(GenericTower* tower, Terminal* terminal, Arena* arena, float deltaTime), float cooldown, ProjectileType projectileType, SpriteXPM** arrowSprites, int n) {
     GenericTower* res = malloc(sizeof(GenericTower));
     res->upperHalf = upperHalf;
     res->lowerHalf = lowerHalf;
@@ -65,7 +67,9 @@ GenericTower* towerNew(SpriteXPM* upperHalf, SpriteXPM* lowerHalf, AnimatedSprit
 
     res->cooldownTimer = timerNew(cooldown);
     res->projectileType = projectileType;
-    res->arrowSprite = arrowSprite;
+    res->arrowSprites = arrowSprites;
+    res->arrowSpritesN = n;
+
     res->projectilesCapacity = 100;
     res->projectilesCount = 0;
     res->projectiles = malloc(sizeof(Projectile*) * res->projectilesCapacity);
@@ -88,7 +92,7 @@ static void genericTowerProjectileHandler(GenericTower* tower, float deltaTime, 
         Projectile* p = tower->projectiles[i];
         projectileUpdate(p, deltaTime, terminal);
 
-        BoxCollider* colliders[10];
+        BoxCollider* colliders[1024];
         int n = arenaDetectCollisions(arena, projectileGetCollider(p), MONSTER_TAG, colliders);
         if (n > 0) {
             projectileSetActive(p, false);
@@ -127,7 +131,7 @@ static enum TowerState idleTransition(GenericTower* tower, Arena* arena, float d
     if (!timerIsRunning(tower->cooldownTimer) && target) {
         tower->isFlipped = tower->position.x > boxColliderGetX(target);
         shootOnEnter(tower);
-		tower->target = target;
+        tower->target = target;
 
         return TOWER_SHOOT;
     }
@@ -142,13 +146,42 @@ static enum TowerState shootTransition(GenericTower* tower, Arena* arena, float 
         vec2dNormalize(&dir);
 
         Projectile* p;
-        if(dir.x > 0 && dir.y > 0) p = projectileCreate(tower->projectileType, tower->position.x, tower->position.y + ARCHER_OFFSET.y, dir.x * 500, dir.y * 500, tower->arrowSprite);
-        else if (dir.x < 0 && dir.y > 0) p = projectileCreate(tower->projectileType, tower->position.x, tower->position.y + ARCHER_OFFSET.y, dir.x * 500, dir.y * 500, tower->arrowSprite);
-        else if (dir.x < 0 && dir.y < 0) p = projectileCreate(tower->projectileType, tower->position.x, tower->position.y + ARCHER_OFFSET.y, dir.x * 500, dir.y * 500, tower->arrowSprite);
-        else p = projectileCreate(tower->projectileType, tower->position.x, tower->position.y + ARCHER_OFFSET.y, dir.x * 500, dir.y * 500, tower->arrowSprite);
+        Vec2d position = {tower->position.x, tower->position.y + ARCHER_OFFSET.y};
+        Vec2d velocity = {dir.x * 500, dir.y * 500};
+        int index = 0;
 
+		// Hozizontal+
+        if (floatModule(dir.y) < ARROW_EPSILON && dir.x > 0) {
+            index = 0;
+		// Hozizontal-
+        } else if (floatModule(dir.y) < ARROW_EPSILON && dir.x < 0) {
+            index = 4;
+		// Vertical+
+        } else if (floatModule(dir.x) < ARROW_EPSILON && dir.y > 0) {
+            index = 6;
+		// Vertical-
+        } else if (floatModule(dir.x) < ARROW_EPSILON && dir.y < 0) {
+            index = 2;
+		// First quadrant
+        } else if (dir.x > 0 && dir.y < 0) {
+			printf("First\n");
+            index = 1;
+		// Second quadrant
+        } else if (dir.x < 0 && dir.y < 0) {
+			printf("Second\n");
+            index = 3;
+		// Third quadrant
+        } else if (dir.x > 0 && dir.y > 0) {
+			printf("Third\n");
+            index = 7;
+        } else {
+		// Forth quadrant
+			printf("Forth\n");
+            index = 5;
+        }
+
+        p = projectileCreate(tower->projectileType, position.x, position.y, velocity.x, velocity.y, tower->arrowSprites[index]);
         if (!towerAddProjectile(tower, p)) projectileFree(p);
-
         return TOWER_IDLE;
     }
 
@@ -192,8 +225,9 @@ void towerFree(GenericTower* tower) {
     timerFree(tower->cooldownTimer);
 
     for (int i = 0; i < tower->projectilesCount; i++) projectileFree(tower->projectiles[i]);
+    for (int i = 0; i < tower->arrowSpritesN; i++) freeSpriteXPM(tower->arrowSprites[i]);
+    free(tower->arrowSprites);
     free(tower->projectiles);
-
     free(tower);
 }
 

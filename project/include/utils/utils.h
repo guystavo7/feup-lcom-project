@@ -3,3 +3,5 @@
 #define MOUSE_IRQ_LINE 			0x0C
 
 #include <stdio.h>
+
+float floatModule(float n);
