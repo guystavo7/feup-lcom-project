@@ -11,7 +11,8 @@
 typedef enum {
     PROJ_NORMAL,
     PROJ_PIERCING,
-    PROJ_HOMING
+    PROJ_HOMING,
+    PROJ_SKY_FALL
 } ProjectileType;
 
 typedef struct projectile Projectile;
@@ -22,6 +23,7 @@ void projectileFree(Projectile* p);
 void projectileUpdate(Projectile* p, double delta_t, Terminal* terminal);
 
 void projectileUpdateHomingTarget(Projectile* p, float target_x, float target_y);
+void projectileUpdateSkyFallTarget(Projectile* p, float target_x, float target_y);
 
 float projectileGetX(Projectile* p);
 float projectileGetY(Projectile* p);

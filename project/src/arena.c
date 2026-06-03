@@ -278,6 +278,10 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
     res->path_test=pathNew(4,vectorCreateWithFloatingData(sizeof(float),NULL,6*2, 10.0f,150.0f,  330.0f,150.0f,  380.0f,275.0f,  875.0f,275.0f,   925.0f,150.0f,  1300.0f,150.0f  ));
     res->monster_test=pawnMonsterNew(10,150,res->path_test);
 
+    res->collidersN[MONSTER_TAG] = 1;
+    res->colliders[MONSTER_TAG] = malloc(sizeof(BoxCollider*) * res->collidersN[MONSTER_TAG]);
+    res->colliders[MONSTER_TAG][0] = monsterGetBoxCollider(res->monster_test);
+
     createMap(res, tilesFile, TILE_SIZE);
     createMonsterPathColliders(res, pathFile);
     createLakeColliders(res, waterFile);
@@ -317,7 +321,7 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
     generateEmptyBuffer(backgroundSprite, terminal, 0, 0, false);
 
     SpriteXPM* arrowSprite = newSpriteXPM((xpm_map_t)abc, XPM_8_8_8, 0, 0);
-    Projectile* testProj = projectileCreate(PROJ_HOMING, 200, 200, 100, 0, arrowSprite);
+    Projectile* testProj = projectileCreate(PROJ_SKY_FALL, 200, 200, 100, 0, arrowSprite);
     arenaAddProjectile(res, testProj);
 
     return res;
@@ -384,6 +388,7 @@ void arenaFree(Arena* arena) {
     free(arena->colliders[WALLS_TAG]);
     free(arena->colliders[PLAYER_TAG]);
     free(arena->colliders[COLLECTABLE_TAG]);
+    free(arena->colliders[MONSTER_TAG]);
  
     free(arena->tiles);
     
@@ -512,7 +517,7 @@ void arenaProjectileHandler(Arena* arena, float deltaTime, Terminal* terminal) {
         projectileUpdate(p, deltaTime, terminal);
         
         BoxCollider* colliders[10];
-        int n = arenaDetectCollisions(arena, projectileGetCollider(p), 1, colliders);
+        int n = arenaDetectCollisions(arena, projectileGetCollider(p), MONSTER_TAG, colliders);
         if (n > 0) {
             projectileSetActive(p, false);
         }
@@ -530,7 +535,12 @@ void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
     
     arenaCollectableHandler(arena);
     if (arena->projectilesCount > 0) {
-        projectileUpdateHomingTarget(arena->projectiles[0], playerModelGetX(playerGetPlayerModel(arena->player)), playerModelGetY(playerGetPlayerModel(arena->player)));
+        Projectile* p = arena->projectiles[0];
+        if (projectileGetType(p) == PROJ_HOMING) {
+            projectileUpdateHomingTarget(p, playerModelGetX(playerGetPlayerModel(arena->player)), playerModelGetY(playerGetPlayerModel(arena->player)));
+        } else if (projectileGetType(p) == PROJ_SKY_FALL) {
+            projectileUpdateSkyFallTarget(p, playerModelGetX(playerGetPlayerModel(arena->player)), playerModelGetY(playerGetPlayerModel(arena->player)));
+        }
     }
     arenaProjectileHandler(arena, deltaTime, terminal);
     arenaHandleConstruction(arena, terminal);

@@ -2,6 +2,19 @@
 #include <stdlib.h>
 #include <math.h>
 
+static void drawCircle(Terminal* terminal, int xm, int ym, int r, uint32_t color) {
+    int x = -r, y = 0, err = 2-2*r;
+    do {
+        drawPixel(terminal, xm-x, ym+y, color);
+        drawPixel(terminal, xm-y, ym-x, color);
+        drawPixel(terminal, xm+x, ym-y, color);
+        drawPixel(terminal, xm+y, ym+x, color);
+        r = err;
+        if (r <= y) err += ++y*2+1;
+        if (r > x || err > y) err += ++x*2+1;
+    } while (x < 0);
+}
+
 struct projectile {
     ProjectileType type;
     Vec2d* pos;
@@ -20,6 +33,12 @@ struct projectile {
             float target_y;
             float turn_speed;
         } homing;
+
+        struct {
+            float target_x;
+            float target_y;
+            float gravity;
+        } sky_fall;
     } extra_data;
     
     bool active;
@@ -30,8 +49,13 @@ Projectile* projectileCreate(ProjectileType type, float x, float y, float vel_x,
     if (!p) return NULL;
     
     p->type = type;
-    p->pos = vec2dCreate(x, y);
-    p->vel = vec2dCreate(vel_x, vel_y);
+    if (type == PROJ_SKY_FALL) {
+        p->pos = vec2dCreate(x, y - 400.0f);
+        p->vel = vec2dCreate(0.0f, 0.0f);
+    } else {
+        p->pos = vec2dCreate(x, y);
+        p->vel = vec2dCreate(vel_x, vel_y);
+    }
     p->sprite = sprite;
     p->active = true;
     
@@ -42,7 +66,7 @@ Projectile* projectileCreate(ProjectileType type, float x, float y, float vel_x,
         h = getSpriteHeight(sprite);
     }
     
-    Vec2d pos = {x, y};
+    Vec2d pos = {vec2dGetX(p->pos), vec2dGetY(p->pos)};
     Vec2d offset = {0, 0};
     Vec2d size = {w, h};
     p->collider = boxColliderNew(pos, offset, size, 0);
@@ -54,6 +78,10 @@ Projectile* projectileCreate(ProjectileType type, float x, float y, float vel_x,
         p->extra_data.homing.target_x = x;
         p->extra_data.homing.target_y = y;
         p->extra_data.homing.turn_speed = 50.0f; 
+    } else if (type == PROJ_SKY_FALL) {
+        p->extra_data.sky_fall.target_x = x;
+        p->extra_data.sky_fall.target_y = y;
+        p->extra_data.sky_fall.gravity = 380.0f;
     }
     
     return p;
@@ -96,6 +124,15 @@ void projectileUpdate(Projectile* p, double delta_t, Terminal* terminal) {
                 vec2dSetY(p->vel, (new_vel_y / new_speed) * current_speed);
             }
         }
+    } else if (p->type == PROJ_SKY_FALL) {
+        if (vec2dGetY(p->pos) >= p->extra_data.sky_fall.target_y) {
+            p->active = false;
+            return;
+        }
+        
+        float current_vel_y = vec2dGetY(p->vel);
+        float new_vel_y = current_vel_y + p->extra_data.sky_fall.gravity * delta_t;
+        vec2dSetY(p->vel, new_vel_y);
     }
     
     Vec2d* displacement = vec2dCreate(vec2dGetX(p->vel), vec2dGetY(p->vel));
@@ -103,9 +140,27 @@ void projectileUpdate(Projectile* p, double delta_t, Terminal* terminal) {
     vec2dAddVec(p->pos, displacement);
     vec2dFree(displacement);
     
+    if (p->type == PROJ_SKY_FALL) {
+        if (vec2dGetY(p->pos) >= p->extra_data.sky_fall.target_y) {
+            vec2dSetY(p->pos, p->extra_data.sky_fall.target_y);
+            vec2dSetX(p->pos, p->extra_data.sky_fall.target_x);
+        }
+    }
+    
     boxColliderSetX(p->collider, vec2dGetX(p->pos));
     boxColliderSetY(p->collider, vec2dGetY(p->pos));
     
+    if (p->type == PROJ_SKY_FALL) {
+        int w = 16;
+        int h = 16;
+        if (p->sprite != NULL) {
+            w = getSpriteWidth(p->sprite);
+            h = getSpriteHeight(p->sprite);
+        }
+        int cx = (int)p->extra_data.sky_fall.target_x + w / 2;
+        int cy = (int)p->extra_data.sky_fall.target_y + h / 2;
+        drawCircle(terminal, cx, cy, w / 2, 0xFF0000);
+    }
 
     if (p->sprite != NULL) {
         drawSpriteXPM(p->sprite, terminal, (int)vec2dGetX(p->pos), (int)vec2dGetY(p->pos), false);
@@ -116,6 +171,14 @@ void projectileUpdateHomingTarget(Projectile* p, float target_x, float target_y)
     if (p->type == PROJ_HOMING) {
         p->extra_data.homing.target_x = target_x;
         p->extra_data.homing.target_y = target_y;
+    }
+}
+
+void projectileUpdateSkyFallTarget(Projectile* p, float target_x, float target_y) {
+    if (p->type == PROJ_SKY_FALL) {
+        p->extra_data.sky_fall.target_x = target_x;
+        p->extra_data.sky_fall.target_y = target_y;
+        vec2dSetX(p->pos, target_x);
     }
 }
 
@@ -176,6 +239,8 @@ void projectileSetMaxPierce(Projectile* p, int max) {
 }
 
 void projectileUpdadeSpeed(Projectile* p, float incX, float incY){
-    vec2dSetX(p->vel, vec2dGetX(p->vel) + incX);
-    vec2dSetY(p->vel, vec2dGetY(p->vel) + incY);
+    if (p->type == PROJ_SKY_FALL) {
+        vec2dSetX(p->vel, vec2dGetX(p->vel) + incX);
+        vec2dSetY(p->vel, vec2dGetY(p->vel) + incY);
+    }
 }
