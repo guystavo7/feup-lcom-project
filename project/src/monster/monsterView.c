@@ -7,14 +7,15 @@ struct monsterView{
 
 };
 
-MonsterView* monsterViewNew(MonsterModel* model,AnimatedSprite* animation){
+MonsterView* monsterViewNew(MonsterModel* model,AnimatedSprite* (*animationBuilder)()){
   MonsterView* view =malloc(sizeof(MonsterView));
   view->model=model; 
-  view->animation= animation; 
+  view->animation= animationBuilder(); 
   return view;
 }
 
 void monsterViewFree(MonsterView* view){ 
+  animatedSpriteFree(view->animation);
   free(view);
 }
 

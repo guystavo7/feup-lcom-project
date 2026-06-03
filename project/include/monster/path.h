@@ -31,3 +31,6 @@ void pathGetPoint(Path* p,unsigned int i,Vec2d* point);
 unsigned int pathGetNumOfPoints(Path* path);
 
 unsigned int pathGetCurPointIndex(Path* p, void* pointer);
+
+void pathSetCurPointIndex(Path* p,void* pointer,unsigned int index);
+

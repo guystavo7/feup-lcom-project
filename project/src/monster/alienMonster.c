@@ -6,7 +6,7 @@
 #define PAWN_MONSTER_IDLE_FRAMES 6
 #define PAWN_MONSTER_FRAME_SPEED 10
 
-static AnimatedSprite* pawnAnimation=NULL; 
+static AnimatedSprite* alienAnimation=NULL; 
 
 static AnimatedSprite* getSprites_(char** XPMs[], int n, float frameSpeed, Vec2d offset) {
 	SpriteXPM** res = malloc(n * sizeof(SpriteXPM*));
@@ -15,10 +15,13 @@ static AnimatedSprite* getSprites_(char** XPMs[], int n, float frameSpeed, Vec2d
 }
 
 
-Monster* alienMonsterNew(float x,float y ,Path* path){
-    if (pawnAnimation == NULL) {
-        pawnAnimation = getSprites_(all_alien_xpms, PAWN_MONSTER_IDLE_FRAMES, PAWN_MONSTER_FRAME_SPEED, (Vec2d){0,0});
-    }
-    Monster* p=monsterNew(x,y,10,10,200,10000,pawnAnimation,path);
+static AnimatedSprite* alienAnimationBuilder(){
+
+    alienAnimation = getSprites_(all_alien_xpms, PAWN_MONSTER_IDLE_FRAMES, PAWN_MONSTER_FRAME_SPEED, (Vec2d){0,0});
+    return alienAnimation;
+}
+
+Monster* alienMonsterNew(float x,float y ,Path* path){ 
+    Monster* p=monsterNew(x,y,10,10,200,10000,alienAnimationBuilder,path);
     return p;
 } 

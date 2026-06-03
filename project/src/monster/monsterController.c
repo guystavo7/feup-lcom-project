@@ -73,6 +73,11 @@ BoxCollider* monsterControllerGetBoxCollider(MonsterController* m) {
     return m->bc;
 }
 
-Path* MonsterControllerGetPath(MonsterController* m) {
+Path* monsterControllerGetPath(MonsterController* m) {
     return m->path;
+}
+
+void monsterControllerGoBackToStart(MonsterController* m){
+    pathSetCurPointIndex(m->path,m->model,0);
+    
 }

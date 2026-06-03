@@ -14,10 +14,10 @@ unsigned int monsterSizeof(){
 }
 
 
-Monster* monsterNew(float x,float y,float sizeX,float sizeY,float velocity,int hp,AnimatedSprite* animation,Path* path){
+Monster* monsterNew(float x,float y,float sizeX,float sizeY,float velocity,int hp,AnimatedSprite* (*animationBuilder)(),Path* path){
   Monster* m=malloc(sizeof(Monster));
   m->model=monsterModelNew( x, y, sizeX, sizeY, velocity,0,hp);
-  m->view=monsterViewNew(m->model,animation);
+  m->view=monsterViewNew(m->model,animationBuilder);
   m->controller= monsterControllerNew(m->model,path);
   return m;
 }
@@ -29,6 +29,10 @@ void monsterSumHP(Monster* m,int val){
 
 bool monsterIsDead(Monster* m){
   return monsterModelGetDead(m->model);
+}
+
+bool monsterGetFinishedPath(Monster* m){
+  return monsterModelGetFinishedPath(m->model);
 }
 
 void monsterUpdate(Monster* m, Arena* arena,Terminal* terminal, float delta_t){
@@ -55,3 +59,9 @@ BoxCollider* monsterGetBoxCollider(Monster* m){
   return monsterControllerGetBoxCollider(m->controller);
 }
 
+void monsterReset(Monster* m, Vec2d* pos){
+  monsterModelSetDead(m->model,false);
+  monsterModelSetFinishedPath(m->model,false);
+  monsterModelSetPos(m->model,pos);
+  monsterControllerGoBackToStart( m->controller);
+}

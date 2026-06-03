@@ -147,3 +147,13 @@ unsigned int pathGetCurPointIndex(Path* p, void* pointer) {
     
     return vectorGetVal(p->sub_values, i);
 }
+
+void pathSetCurPointIndex(Path* p,void* pointer,unsigned int index){
+    int i = vectorFind(p->sub_keys, (char*)&pointer);
+    if (i == -1) {
+        pathSubscribe(p, pointer);
+    } 
+    i = vectorFind(p->sub_keys, (char*)&pointer); 
+    
+    vectorSetVal(p->sub_values, i,index);
+}

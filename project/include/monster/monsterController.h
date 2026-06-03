@@ -13,4 +13,5 @@ void monsterControllerFree(MonsterController* controller);
 RigidBody* monsterControllerGetRigidBody(MonsterController* m);
 
 BoxCollider* monsterControllerGetBoxCollider(MonsterController* m);
-Path* MonsterControllerGetPath(MonsterController* m);
+Path* monsterControllerGetPath(MonsterController* m);
+void monsterControllerGoBackToStart(MonsterController* m);
