@@ -19,8 +19,6 @@ BoxCollider* arenaFindFirstEnemy(Arena* arena, BoxCollider* range);
 void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime);
 void arenaBuildTower(Arena* arena, Vec2d position);
 
-void arenaAddProjectile(Arena* arena, Projectile* p);
-void arenaProjectileHandler(Arena* arena, float deltaTime, Terminal* terminal);
 bool arenaCanPlaceTower(Arena* arena, Vec2d position);
 
 #endif

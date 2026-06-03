@@ -30,10 +30,18 @@ struct GenericTower {
     enum TowerState state;
 	Timer* cooldownTimer;
 
+    ProjectileType projectileType;
+    int projectilesCapacity;
+    int projectilesCount;
+    Projectile** projectiles;
+
+    SpriteXPM* arrowSprite;
+
+
     void (*towerUpdate)(GenericTower* tower, Terminal* terminal, Arena* arena, float deltaTime);
 };
 
-GenericTower* towerNew(SpriteXPM* upperHalf, SpriteXPM* lowerHalf, AnimatedSprite* archerIdle, AnimatedSprite* archerShoot, Vec2d position, Vec2d size, Vec2d hitBoxOffset, Vec2d rangeSize, Vec2d rangeOffset, void (*towerUpdate)(GenericTower* tower, Terminal* terminal, Arena* arena, float deltaTime), float cooldown) {
+GenericTower* towerNew(SpriteXPM* upperHalf, SpriteXPM* lowerHalf, AnimatedSprite* archerIdle, AnimatedSprite* archerShoot, Vec2d position, Vec2d size, Vec2d hitBoxOffset, Vec2d rangeSize, Vec2d rangeOffset, void (*towerUpdate)(GenericTower* tower, Terminal* terminal, Arena* arena, float deltaTime), float cooldown, ProjectileType projectileType, SpriteXPM* arrowSprite) {
     GenericTower* res = malloc(sizeof(GenericTower));
     res->upperHalf = upperHalf;
     res->lowerHalf = lowerHalf;
@@ -56,7 +64,37 @@ GenericTower* towerNew(SpriteXPM* upperHalf, SpriteXPM* lowerHalf, AnimatedSprit
     res->current = archerIdle;
 
 	res->cooldownTimer = timerNew(cooldown);
+    res->projectileType = projectileType;
+    res->arrowSprite = arrowSprite;
+    res->projectilesCapacity = 100;
+    res->projectilesCount = 0;
+    res->projectiles = malloc(sizeof(Projectile*) * res->projectilesCapacity);
+    
     return res;
+}
+
+
+static void genericTowerProjectileHandler(GenericTower* tower, float deltaTime, Terminal* terminal, Arena* arena) {
+    int activeCount = 0;
+    for (int i = 0; i < tower->projectilesCount; i++) {
+        if (projectileIsActive(tower->projectiles[i])) {
+            tower->projectiles[activeCount++] = tower->projectiles[i];
+        } else {
+            projectileFree(tower->projectiles[i]);
+        }
+    }
+    tower->projectilesCount = activeCount;
+
+    for (int i = 0; i < tower->projectilesCount; i++) {
+        Projectile* p = tower->projectiles[i];
+        projectileUpdate(p, deltaTime, terminal);
+        
+        BoxCollider* colliders[10];
+        int n = arenaDetectCollisions(arena, projectileGetCollider(p), MONSTER_TAG, colliders);
+        if (n > 0) {
+            projectileSetActive(p, false);
+        }
+    }
 }
 
 // State Machine
@@ -90,7 +128,14 @@ static enum TowerState idleTransition(GenericTower* tower, Arena* arena, float d
 	if (!timerIsRunning(tower->cooldownTimer) && target) {
 		tower->isFlipped = tower->position.x > boxColliderGetX(target); 
 		shootOnEnter(tower);
-		return TOWER_SHOOT;
+        
+        Projectile* p = projectileCreate(tower->projectileType, boxColliderGetX(target), boxColliderGetY(target), 200, 20, tower->arrowSprite);
+		if(!towerAddProjectile(tower, p)) {
+            projectileFree(p);
+            return TOWER_IDLE;
+        }
+        
+        return TOWER_SHOOT;
     }
 
     return tower->state;
@@ -108,7 +153,7 @@ static enum TowerState shootTransition(GenericTower* tower, Arena* arena, float 
 void towerUpdate(GenericTower* tower, Terminal* terminal, Arena* arena, float deltaTime) {
     enum TowerState newState = tower->state;
     //drawRectangle(terminal, boxColliderGetX(tower->range) + boxColliderGetOffsetX(tower->range), boxColliderGetY(tower->range) + boxColliderGetOffsetY(tower->range), boxColliderGetWidth(tower->range), boxColliderGetHeight(tower->range), 0xFFFFFF);
-
+    genericTowerProjectileHandler(tower, deltaTime, terminal, arena);
     switch (tower->state) {
         case TOWER_IDLE:
             idleAct(tower, terminal, arena, deltaTime);
@@ -140,9 +185,25 @@ void towerFree(GenericTower* tower) {
     boxColliderFree(tower->range);
 
 	timerFree(tower->cooldownTimer);
+
+    for (int i = 0; i < tower->projectilesCount; i++) {
+        projectileFree(tower->projectiles[i]);
+    }
+    free(tower->projectiles);
+    
     free(tower);
 }
 
 BoxCollider* towerGetHitBox(GenericTower* tower) {
     return tower->hitBox;
 }
+
+bool towerAddProjectile(GenericTower* tower, Projectile* projectile) {
+    if (tower->projectilesCount >= tower->projectilesCapacity) {
+        return false;
+    }
+    tower->projectiles[tower->projectilesCount] = projectile;
+    tower->projectilesCount++;
+    return true;
+}
+
