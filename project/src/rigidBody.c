@@ -1,6 +1,7 @@
 #include "../include/components/rigidBody.h"
 #include "../include/components/boxCollider.h"
 #include "../include/utils/vec2d.h"
+#include "../include/data.h"
 #include <stdlib.h>
 
 struct RigidBody {
@@ -9,8 +10,7 @@ struct RigidBody {
 
 RigidBody* rigidBodyNew() {
     RigidBody* res = malloc(sizeof(RigidBody));
-    res->velocity.x = 0;
-    res->velocity.y = 0;
+	res->velocity = EMPTY_VEC2D;
 
     return res;
 }

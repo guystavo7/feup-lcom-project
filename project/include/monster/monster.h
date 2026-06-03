@@ -1,31 +1,17 @@
-#include "../../include/utils/vec2d.h"
-#include <stdio.h>
+#include "monsterController.h"
+#include "monsterModel.h"
+#include "monsterView.h"
 
 typedef struct monster Monster;
 
-unsigned int monsterSizeof();
 
-Monster* monsterCreate(float x,float y,float vel_x,float vel_y);
+Monster* monsterNew(float x,float y,float sizeX,float sizeY,float velocity,int hp,AnimatedSprite* animation,Path* path);
+void monsterSumHP(Monster* m,int val);
 
-
-Monster* monsterFree(Monster* m);
-
-float monsterGetX(Monster* m);
-float monsterGetY(Monster* m);
-
-void monsterGetPos(Monster*m,Vec2d* pos);
-
-float monsterGetVelX(Monster* m);
-float monsterGetVelY(Monster* m);
-
-void monsterSetX(Monster* m,float x);
-void monsterSetY(Monster* m,float y);
-void monsterSetVelX(Monster* m,float vel_x);
-void monsterSetVelY(Monster* m,float vel_y);
-
-void monsterSetDir(Monster* m,float dx, float dy);
-void monsterSetDirWithVec(Monster* m,Vec2d* v);
+void monsterUpdate(Monster* m, Arena* arena,Terminal* terminal, float delta_t);
+void monsterFree(Monster* m);
 
 
+RigidBody* monsterGetRigidBody(Monster * m);
 
-void monsterUpdatePos(Monster* m,double delta_t);
+BoxCollider* monsterGetBoxCollider(Monster* m);

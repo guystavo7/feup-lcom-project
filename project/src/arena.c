@@ -1,7 +1,14 @@
 #include "../include/arena.h"
 #include "../include/buildings/basicTower.h"
+#include "../include/buildings/eletricTower.h"
+#include "../include/buildings/fastTower.h"
+#include "../include/buildings/mortarTower.h"
+#include "../include/buildings/piercingTower.h"
+
 #include "../include/buildings/genericTower.h"
+#include "../include/button.h"
 #include "../include/components/boxCollider.h"
+#include "../include/data.h"
 #include "../include/player/player.h"
 #include "../include/components/projectile.h"
 #include "../include/tiles/collectable.h"
@@ -9,20 +16,32 @@
 #include "../include/utils/cursorHandler.h"
 
 #include "../resources/1.h"
+#include "../resources/blue/tower/blueTower.h"
 #include "../resources/map/background.h"
 #include "../resources/tiles/tiles.h"
 
+
+
 #include "../../lab5/spriteXMP.h"
+#include "../../lab5/terminal.h"
+
+#include "../include/monster/pawnMonster.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 
-#define MAP_WIDTH 40
-#define MAP_HEIGHT 32
-#define TILE_SIZE 32
+#define PLACEMENT_QUERY_MAX 128
+
+#define POPUP_ICON_MARGIN 14
+#define TOWER_PICK_ICON_W 60
+
+typedef enum {
+    ARENA_CONSTRUCT_NORMAL = 0,
+    ARENA_CONSTRUCT_PICK_TOWER,
+    ARENA_CONSTRUCT_PLACE_TOWER,
+} ArenaConstructPhase;
 
 struct Arena {
-    // 0 - walls, 1 - player, 2 - monsters, 3 - collectables, 4 - projectiles, 5 - UI
     int* collidersN;
     BoxCollider*** colliders;
 
@@ -39,6 +58,9 @@ struct Arena {
     int height;
     int tileSize;
 
+    Monster* monster_test;
+    Path* path_test;
+
     Player* player;
 
     int projectilesCapacity;
@@ -46,7 +68,26 @@ struct Arena {
     Projectile** projectiles;
 
     Cursor* cursor;
+    ArenaConstructPhase constructPhase;
+    int popupX;
+    int popupY;
+    int popupW;
+    int popupH;
+    int towerPickAnchorX;
+    int towerPickAnchorY;
+    SpriteXPM* towerPickUpperSprite;
+    Button* towerPickButton;
+    BoxCollider* towerPickHitbox;
 };
+
+static void arenaTowerPickButtonCb(Button* self) {
+    (void)self;
+}
+
+static bool arenaPointInPopup(Arena* arena, int px, int py) {
+    return px >= arena->popupX && px < arena->popupX + arena->popupW && py >= arena->popupY &&
+           py < arena->popupY + arena->popupH;
+}
 
 static void createMap(Arena* arena, const char* filename, int tileSize) {
     FILE* file = fopen(filename, "r");
@@ -55,25 +96,23 @@ static void createMap(Arena* arena, const char* filename, int tileSize) {
         return;
     }
 
-    int width = MAP_WIDTH;
-    int height = MAP_HEIGHT;
     char lineBuffer[1024];
 
-    arena->tiles = malloc(sizeof(Tile*) * (width * height + 4));
-    arena->width = width;
-    arena->height = height;
+    arena->tiles = malloc(sizeof(Tile*) * (MAP_TILES_X * MAP_TILES_Y + 4));
+    arena->width = MAP_TILES_X;
+    arena->height = MAP_TILES_Y;
     arena->tileSize = tileSize;
 
-    int** map = malloc(height * sizeof(int*));
-    for (int i = 0; i < height; i++) {
-        map[i] = malloc(width * sizeof(int));
+    int** map = malloc(arena->height * sizeof(int*));
+    for (int i = 0; i < arena->height; i++) {
+        map[i] = malloc(arena->width * sizeof(int));
 
         if (fgets(lineBuffer, sizeof(lineBuffer), file) == NULL) {
             break;
         }
 
         char* ptr = lineBuffer;
-        for (int j = 0; j < width; j++) {
+        for (int j = 0; j < arena->width; j++) {
             map[i][j] = atoi(ptr);
             while (*ptr != '\0' && *ptr != '\n' && *ptr != '\r' && *ptr != ',') ptr++;
             if (*ptr == ',') ptr++;
@@ -83,8 +122,8 @@ static void createMap(Arena* arena, const char* filename, int tileSize) {
     fclose(file);
     int i = 0;
 
-    for (int y = 0; y < height; y++) {
-        for (int x = 0; x < width; x++) {
+    for (int y = 0; y < arena->height; y++) {
+        for (int x = 0; x < arena->width; x++) {
             int id = map[y][x];
             if (id <= 0) continue;
 
@@ -94,18 +133,116 @@ static void createMap(Arena* arena, const char* filename, int tileSize) {
         }
     }
 
-    arena->tiles[i] = tileNew(NULL, -1, 0, -10, MAP_WIDTH * TILE_SIZE, 10);
-    arena->tiles[i + 1] = tileNew(NULL, -1, 0, MAP_HEIGHT * TILE_SIZE, MAP_WIDTH * TILE_SIZE, 10);
-    arena->tiles[i + 2] = tileNew(NULL, -1, -10, 0, 10, MAP_HEIGHT * TILE_SIZE);
-    arena->tiles[i + 3] = tileNew(NULL, -1, MAP_WIDTH * TILE_SIZE, 0, 10, MAP_HEIGHT * TILE_SIZE);
+    arena->tiles[i] = tileNew(NULL, -1, 0, -10, MAP_TILES_X * TILE_SIZE, 10);
+    arena->tiles[i + 1] = tileNew(NULL, -1, 0, MAP_TILES_Y * TILE_SIZE, MAP_TILES_X * TILE_SIZE, 10);
+    arena->tiles[i + 2] = tileNew(NULL, -1, -10, 0, 10, MAP_TILES_Y * TILE_SIZE);
+    arena->tiles[i + 3] = tileNew(NULL, -1, MAP_TILES_X * TILE_SIZE, 0, 10, MAP_TILES_Y * TILE_SIZE);
     i += 4;
     arena->tilesN = i;
 
     arena->collidersN[WALLS_TAG] = arena->tilesN;
     arena->colliders[WALLS_TAG] = malloc(sizeof(BoxCollider*) * (i + 4));
-    for (int i = 0; i < height; i++) free(map[i]);
+    for (int i = 0; i < arena->height; i++) free(map[i]);
     for (int j = 0; j < arena->tilesN; j++) arena->colliders[WALLS_TAG][j] = tileBoxCollider(arena->tiles[j]);
 
+    free(map);
+}
+
+static void createMonsterPathColliders(Arena* arena, const char* filename) {
+    FILE* file = fopen(filename, "r");
+    if (!file) {
+        printf("Error: Could not open map file: %s\n", filename);
+        return;
+    }
+
+    char lineBuffer[1024];
+    int** map = malloc(arena->height * sizeof(int*));
+    int num = 0;
+
+    for (int i = 0; i < arena->height; i++) {
+        map[i] = malloc(arena->width * sizeof(int));
+
+        if (fgets(lineBuffer, sizeof(lineBuffer), file) == NULL) {
+            break;
+        }
+
+        char* ptr = lineBuffer;
+        for (int j = 0; j < arena->width; j++) {
+            map[i][j] = atoi(ptr);
+            if (map[i][j] > 0) num++;
+
+            while (*ptr != '\0' && *ptr != '\n' && *ptr != '\r' && *ptr != ',') ptr++;
+            if (*ptr == ',') ptr++;
+        }
+    }
+
+    fclose(file);
+    arena->collidersN[PATH_TAG] = num;
+    arena->colliders[PATH_TAG] = malloc(sizeof(BoxCollider*) * num);
+    int i = 0;
+
+    for (int y = 0; y < arena->height; y++) {
+        for (int x = 0; x < arena->width; x++) {
+            int id = map[y][x];
+            if (id <= 0) continue;
+
+            Vec2d position = {x * TILE_SIZE, y * TILE_SIZE};
+            Vec2d size = {TILE_SIZE, TILE_SIZE};
+            arena->colliders[PATH_TAG][i] = boxColliderNew(position, EMPTY_VEC2D, size, PATH_TAG);
+            i++;
+        }
+    }
+
+    for (int i = 0; i < arena->height; i++) free(map[i]);
+    free(map);
+}
+
+static void createLakeColliders(Arena* arena, const char* filename) {
+    FILE* file = fopen(filename, "r");
+    if (!file) {
+        printf("Error: Could not open map file: %s\n", filename);
+        return;
+    }
+
+    char lineBuffer[1024];
+    int** map = malloc(arena->height * sizeof(int*));
+    int num = 0;
+
+    for (int i = 0; i < arena->height; i++) {
+        map[i] = malloc(arena->width * sizeof(int));
+
+        if (fgets(lineBuffer, sizeof(lineBuffer), file) == NULL) {
+            break;
+        }
+
+        char* ptr = lineBuffer;
+        for (int j = 0; j < arena->width; j++) {
+            map[i][j] = atoi(ptr);
+            if (map[i][j] > 0) num++;
+
+            while (*ptr != '\0' && *ptr != '\n' && *ptr != '\r' && *ptr != ',') ptr++;
+            if (*ptr == ',') ptr++;
+        }
+    }
+
+    fclose(file);
+    arena->collidersN[LAKE_TAG] = num;
+    arena->colliders[LAKE_TAG] = malloc(sizeof(BoxCollider*) * num);
+    int idx = 0;
+
+    for (int y = 0; y < arena->height; y++) {
+        for (int x = 0; x < arena->width; x++) {
+            int id = map[y][x];
+            if (id <= 0) continue;
+
+            Vec2d position = {x * TILE_SIZE, y * TILE_SIZE};
+            Vec2d size = {TILE_SIZE, TILE_SIZE};
+            arena->colliders[LAKE_TAG][idx] = boxColliderNew(position, EMPTY_VEC2D, size, LAKE_TAG);
+            idx++;
+        }
+    }
+
+    for (int i = 0; i < arena->height; i++) free(map[i]);
     free(map);
 }
 
@@ -122,24 +259,54 @@ static void createFruitsTest(Arena* arena) {
     arena->fruitsN = 1;
     arena->fruits = malloc(sizeof(Collectable*) * arena->fruitsN);
     Vec2d fruitPos = {500, 400};
-    Vec2d fruitOffset = {0, 0};
-    Vec2d fruitSize = {32, 32};
 
-    arena->fruits[0] = collectableNew(fruitPos, fruitOffset, fruitSize, abc);
+    arena->fruits[0] = collectableNew(fruitPos, EMPTY_VEC2D, FRUIT_SIZE, abc);
     arena->colliders[COLLECTABLE_TAG] = malloc(sizeof(BoxCollider*) * arena->fruitsN);
     arena->collidersN[COLLECTABLE_TAG] = arena->fruitsN;
     for (int i = 0; i < arena->fruitsN; i++) arena->colliders[COLLECTABLE_TAG][i] = collectableGetHitBox(arena->fruits[i]);
 }
 
-Arena* arenaNew(Terminal* terminal, const char* filename) {
+Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile, const char* waterFile) {
     Arena* res = malloc(sizeof(Arena));
     res->collidersN = malloc(sizeof(int) * TAGS_NUM);
     res->colliders = malloc(sizeof(BoxCollider*) * TAGS_NUM);
+    for (int t = 0; t < TAGS_NUM; t++) {
+        res->collidersN[t] = 0;
+        res->colliders[t] = NULL;
+    }
 
-    createMap(res, filename, TILE_SIZE);
+    res->path_test=pathNew(4,vectorCreateWithFloatingData(sizeof(float),NULL,6*2, 10.0f,150.0f,  330.0f,150.0f,  380.0f,275.0f,  875.0f,275.0f,   925.0f,150.0f,  1300.0f,150.0f  ));
+    res->monster_test=pawnMonsterNew(10,150,res->path_test);
+
+    createMap(res, tilesFile, TILE_SIZE);
+    createMonsterPathColliders(res, pathFile);
+    createLakeColliders(res, waterFile);
     createPlayer(res);
     createFruitsTest(res);
     res->towersN = 0;
+    res->towers = malloc(sizeof(SpriteXPM*) * res->towersN);
+
+    res->constructPhase = ARENA_CONSTRUCT_NORMAL;
+    res->popupW = 420;
+    res->popupH = 240;
+    res->popupX = (SCREEN_WIDTH - res->popupW) / 2;
+    res->popupY = (SCREEN_HEIGHT - res->popupH) / 2;
+
+    /* Anchor = canto sup.-esq. da metade inferior (igual à torre no jogo); a metade superior sobe com offset Y. */
+    int ix = res->popupX + res->popupW - TOWER_PICK_ICON_W - POPUP_ICON_MARGIN;
+    int iy = res->popupY + POPUP_ICON_MARGIN - (int)BASIC_UPPER_HALF_OFFSET.y;
+    res->towerPickAnchorX = ix;
+    res->towerPickAnchorY = iy;
+
+    res->towerPickUpperSprite = newSpriteXPM((xpm_map_t)towerXPM[1], XPM_8_8_8, BASIC_UPPER_HALF_OFFSET.x, BASIC_UPPER_HALF_OFFSET.y);
+
+	SpriteXPM** sprites = malloc(sizeof(SpriteXPM*));
+	sprites[0] = newSpriteXPM((xpm_map_t)towerXPM[0], XPM_8_8_8, 0, 0);
+    res->towerPickButton = buttonNew(ix, iy, BASIC_TOWER_SIZE.x, BASIC_TOWER_SIZE.y, animatedSpriteNew(0, sprites, 1, NORMAL), arenaTowerPickButtonCb, arenaTowerPickButtonCb);
+
+    float hitY = (float)(res->popupY + POPUP_ICON_MARGIN);
+    float hitH = 33.f - BASIC_UPPER_HALF_OFFSET.y;
+    res->towerPickHitbox = boxColliderNew((Vec2d){(float)ix, hitY}, EMPTY_VEC2D, (Vec2d){(float)TOWER_PICK_ICON_W, hitH}, 0);
 
     res->projectilesCapacity = 100;
     res->projectilesCount = 0;
@@ -156,10 +323,37 @@ Arena* arenaNew(Terminal* terminal, const char* filename) {
     return res;
 }
 
+bool arenaCanPlaceTower(Arena* arena, Vec2d position) {
+    BoxCollider* preview = boxColliderNew(position, BASIC_TOWER_HIT_BOX_OFFSET, BASIC_TOWER_SIZE, WALLS_TAG);
+    BoxCollider* hits[PLACEMENT_QUERY_MAX];
+
+    if (arenaDetectCollisions(arena, preview, WALLS_TAG, hits) > 0) {
+        boxColliderFree(preview);
+        return false;
+    }
+    if (arenaDetectCollisions(arena, preview, PLAYER_TAG, hits) > 0) {
+        boxColliderFree(preview);
+        return false;
+    }
+    if (arenaDetectCollisions(arena, preview, PATH_TAG, hits) > 0) {
+        boxColliderFree(preview);
+        return false;
+    }
+    if (arenaDetectCollisions(arena, preview, LAKE_TAG, hits) > 0) {
+        boxColliderFree(preview);
+        return false;
+    }
+
+    boxColliderFree(preview);
+    return true;
+}
+
 void arenaBuildTower(Arena* arena, Vec2d position) {
+    if (!arenaCanPlaceTower(arena, position)) return;
+
     arena->towersN++;
     arena->towers = realloc(arena->towers, sizeof(GenericTower*) * arena->towersN);
-    arena->towers[arena->towersN - 1] = basicTowerNew(position);
+    arena->towers[arena->towersN - 1] = mortarTowerNew(position);
 
     arena->collidersN[WALLS_TAG]++;
     arena->colliders[WALLS_TAG] = realloc(arena->colliders[WALLS_TAG], sizeof(BoxCollider*) * arena->collidersN[WALLS_TAG]);
@@ -167,10 +361,30 @@ void arenaBuildTower(Arena* arena, Vec2d position) {
 }
 
 void arenaFree(Arena* arena) {
+    for (int i = 0; i < arena->collidersN[PATH_TAG]; i++) boxColliderFree(arena->colliders[PATH_TAG][i]);
+    free(arena->colliders[PATH_TAG]);
+
+    for (int i = 0; i < arena->collidersN[LAKE_TAG]; i++) boxColliderFree(arena->colliders[LAKE_TAG][i]);
+    free(arena->colliders[LAKE_TAG]);
+
+    for (int i = 0; i < arena->towersN; i++) towerFree(arena->towers[i]);
+    free(arena->towers);
+
+    freeSpriteXPM(arena->towerPickUpperSprite);
+    boxColliderFree(arena->towerPickHitbox);
+    buttonFree(arena->towerPickButton);
+
     for (int i = 0; i < arena->tilesN; i++) tileFree(arena->tiles[i]);
-    for (int i = 0; i < arena->fruitsN; i++) collectableFree(arena->fruits[i]);
-    for (int i = 0; i < TAGS_NUM; i++) free(arena->colliders);
-    free(arena->collidersN);
+    for (int i = 0; i < arena->fruitsN; i++) collectableFree(arena->fruits[i]); 
+    
+    monsterFree(arena->monster_test);
+    pathFree(arena->path_test);
+ 
+
+    free(arena->colliders[WALLS_TAG]);
+    free(arena->colliders[PLAYER_TAG]);
+    free(arena->colliders[COLLECTABLE_TAG]);
+ 
     free(arena->tiles);
     
     for (int i = 0; i < arena->projectilesCount; i++) projectileFree(arena->projectiles[i]);
@@ -178,20 +392,26 @@ void arenaFree(Arena* arena) {
 
     free(arena->fruits);
     playerFree(arena->player);
+
+    free(arena->colliders);
+    free(arena->collidersN);
     free(arena);
 }
 
 int arenaDetectCollisions(Arena* arena, BoxCollider* box, int tag, BoxCollider** colliders) {
-    int j = 0;
-    BoxCollider** c = arena->colliders[tag];
+    if (tag < 0 || tag >= TAGS_NUM) return 0;
     int n = arena->collidersN[tag];
+    BoxCollider** c = arena->colliders[tag];
+    if (c == NULL || n == 0) return 0;
 
+    int j = 0;
     for (int i = 0; i < n; i++) {
         BoxCollider* collider = c[i];
         if (collider == NULL) continue;
         if (boxIsCollidingWithBox(box, collider)) {
             colliders[j] = collider;
             j++;
+            if (j >= PLACEMENT_QUERY_MAX) break;
         }
     }
 
@@ -205,11 +425,70 @@ static void arenaCollectableHandler(Arena* arena) {
     for (int i = 0; i < n; i++) collectableSetActive(arena->fruits[i], false);
 }
 
-static void arenaMouseObserver(Arena* arena) {
-    if (cursorIsRightButtonPressedDown(getCursor())) {
-        Vec2d position = {cursorGetX(getCursor()), cursorGetY(getCursor())};
-        arenaBuildTower(arena, position);
+static void arenaDrawConstructionPopup(Arena* arena, Terminal* terminal, float deltaTime) {
+    drawRectangle(terminal, arena->popupX, arena->popupY, (uint16_t)arena->popupW, (uint16_t)arena->popupH, 0x202028);
+    buttonDraw(arena->towerPickButton, terminal, deltaTime, false);
+    drawSpriteXPM(arena->towerPickUpperSprite, terminal, arena->towerPickAnchorX, arena->towerPickAnchorY, false);
+}
+
+static void arenaHandleConstruction(Arena* arena, Terminal* terminal) {
+    Cursor* cur = getCursor();
+    (void)terminal;
+
+    if (arena->constructPhase == ARENA_CONSTRUCT_NORMAL) {
+        cursorSetConstructionMode(cur, false);
+        if (cursorIsRightButtonPressedDown(cur)) {
+            arena->constructPhase = ARENA_CONSTRUCT_PICK_TOWER;
+        }
+        return;
     }
+
+    if (arena->constructPhase == ARENA_CONSTRUCT_PICK_TOWER) {
+        cursorSetConstructionMode(cur, false);
+        if (cursorIsRightButtonPressedDown(cur)) {
+            arena->constructPhase = ARENA_CONSTRUCT_NORMAL;
+            return;
+        }
+        if (cursorIsLeftButtonPressedDown(cur)) {
+            int cx = cursorGetX(cur);
+            int cy = cursorGetY(cur);
+            Vec2d click = {(float)cx, (float)cy};
+            if (boxIsCollidingWithPoint(arena->towerPickHitbox, click)) {
+                arena->constructPhase = ARENA_CONSTRUCT_PLACE_TOWER;
+                return;
+            }
+            if (!arenaPointInPopup(arena, cx, cy)) {
+                arena->constructPhase = ARENA_CONSTRUCT_NORMAL;
+            }
+        }
+        return;
+    }
+
+    if (arena->constructPhase == ARENA_CONSTRUCT_PLACE_TOWER) {
+        cursorSetConstructionMode(cur, true);
+        Vec2d pos = {(float)cursorGetX(cur), (float)cursorGetY(cur)};
+        bool ok = arenaCanPlaceTower(arena, pos);
+        cursorSetPlacementHoverValid(cur, ok);
+
+        if (cursorIsRightButtonPressedDown(cur)) {
+            arena->constructPhase = ARENA_CONSTRUCT_NORMAL;
+            cursorSetConstructionMode(cur, false);
+            return;
+        }
+        if (cursorIsLeftButtonPressedDown(cur) && ok) {
+            arenaBuildTower(arena, pos);
+        }
+    }
+}
+
+BoxCollider* arenaFindFirstEnemy(Arena* arena, BoxCollider* range) {
+    BoxCollider* playerHitBox = playerModelGetHitBox(playerGetPlayerModel(arena->player));
+    Vec2d position = {boxColliderGetX(playerHitBox), boxColliderGetY(playerHitBox)};
+    Vec2d size = {boxColliderGetWidth(playerHitBox), boxColliderGetHeight(playerHitBox)};
+    Vec2d center = {position.x + size.x / 2, position.y + size.y / 2};
+
+    if (boxIsCollidingWithPoint(range, center)) return playerHitBox;
+    return NULL;
 }
 
 void arenaAddProjectile(Arena* arena, Projectile* p) {
@@ -245,13 +524,21 @@ void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
     for (int i = 0; i < arena->tilesN; i++) tileUpdate(arena->tiles[i], terminal);
     for (int i = arena->towersN - 1; i >= 0; i--) towerUpdate(arena->towers[i], terminal, arena, deltaTime);
 
+
+    monsterUpdate(arena->monster_test,arena,terminal,deltaTime);
+    monsterSumHP(arena->monster_test,-100);
+    
     arenaCollectableHandler(arena);
     projectileUpdateHomingTarget(arena->projectiles[0], playerModelGetX(playerGetPlayerModel(arena->player)), playerModelGetY(playerGetPlayerModel(arena->player)));
     arenaProjectileHandler(arena, deltaTime, terminal);
     arenaMouseObserver(arena);
+    arenaHandleConstruction(arena, terminal);
 
     playerUpdate(arena->player, terminal, arena, deltaTime);
-    for (int i = arena->towersN - 1; i >= 0; i--) towerDrawUpperHalf(arena->towers[i], terminal);
+    if (arena->constructPhase == ARENA_CONSTRUCT_PICK_TOWER) {
+        arenaDrawConstructionPopup(arena, terminal, deltaTime);
+    }
 
     cursorUpdate(getCursor(), terminal, deltaTime);
+    for (int i = arena->towersN - 1; i >= 0; i--) towerDrawUpperHalf(arena->towers[i], terminal, deltaTime);
 }

@@ -1,9 +1,13 @@
 PROG=proj
 
+.PATH: monster/
+.PATH: data_structures/
+
 SRCS= \
 	application.c \
 	game.c \
 	./inputHandler.c \
+	./timer.c \
 	./boxCollider.c \
 	./rigidBody.c \
 	./arena.c \
@@ -23,7 +27,18 @@ SRCS= \
 	./projectile.c \
 	./genericTower.c \
 	./basicTower.c \
-	./particle.c \
+	monsterController.c \
+	monsterView.c \
+	monsterModel.c \
+	monster.c \
+	path.c \
+	vector.c \
+	pawnMonster.c \
+	./eletrictTower.c \
+	./mortarTower.c \
+	./fastTower.c \
+	./piercingTower.c \
+	./gameState.c 
 
 OBJS = ${SRCS:.c=.o}
 

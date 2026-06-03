@@ -8,24 +8,19 @@
 
 #include <stdbool.h>
 
-#define WALLS_TAG 		0
-#define PLAYER_TAG 		1
-#define MONSTER_TAG		3
-#define COLLECTABLE_TAG	4
-#define UI_TAG			5
-#define TAGS_NUM 		5
-
 typedef struct Arena Arena;
 
-Arena* arenaNew(Terminal* terminal, const char* filename);
+Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile, const char* waterFile);
 void arenaFree(Arena* arena);
 
 int arenaDetectCollisions(Arena* arena, BoxCollider* box, int tag, BoxCollider** colliders);
+BoxCollider* arenaFindFirstEnemy(Arena* arena, BoxCollider* range);
 
 void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime);
 void arenaBuildTower(Arena* arena, Vec2d position);
 
 void arenaAddProjectile(Arena* arena, Projectile* p);
 void arenaProjectileHandler(Arena* arena, float deltaTime, Terminal* terminal);
+bool arenaCanPlaceTower(Arena* arena, Vec2d position);
 
 #endif

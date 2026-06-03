@@ -1,4 +1,5 @@
 #include "../include/tiles/tile.h"
+#include "../include/data.h"
 #include "../include/utils/vec2d.h"
 #include <stdlib.h>
 
@@ -18,8 +19,7 @@ Tile* tileNew(char** sprite, int id, int x, int y, int width, int height) {
     tile->size.y = height;
 
     // Disable collisions for all map tiles
-	Vec2d offset = {0, 0};
-    tile->collider = boxColliderNew(tile->pos, offset, tile->size, 0);
+    tile->collider = boxColliderNew(tile->pos, EMPTY_VEC2D, tile->size, WALLS_TAG);
 
     return tile;
 }
