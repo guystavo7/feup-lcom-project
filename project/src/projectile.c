@@ -97,6 +97,7 @@ void projectileFree(Projectile* p) {
 
 void projectileUpdate(Projectile* p, double delta_t, Terminal* terminal) {
     if (!p->active) return;
+	drawRectangle(terminal, boxColliderGetX(p->collider), boxColliderGetY(p->collider), boxColliderGetWidth(p->collider), boxColliderGetHeight(p->collider), 0xFFFFFF);
 
     if (p->type == PROJ_HOMING) {
         // logica simples de virar para o target
