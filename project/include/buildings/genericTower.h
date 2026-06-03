@@ -14,7 +14,7 @@ void towerFree(GenericTower* tower);
 BoxCollider* towerGetHitBox(GenericTower* tower);
 
 void towerUpdate(GenericTower* tower, Terminal* terminal, Arena* arena, float deltaTime);
-void towerDrawUpperHalf(GenericTower* tower, Terminal* terminal, float deltaTime);
+void towerDrawUpperHalf(GenericTower* tower, Terminal* terminal, Arena* arena, float deltaTime);
 bool towerAddProjectile(GenericTower* tower, Projectile* projectile);
 
 #endif

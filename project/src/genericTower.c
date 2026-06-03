@@ -1,8 +1,8 @@
 #include "../include/buildings/genericTower.h"
 #include "../include/components/animatedSprite.h"
 #include "../include/components/boxCollider.h"
-#include "../include/utils/timer.h"
 #include "../include/data.h"
+#include "../include/utils/timer.h"
 
 #include "../resources/particles/dust/dust.h"
 #include <stdlib.h>
@@ -23,12 +23,13 @@ struct GenericTower {
 
     BoxCollider* hitBox;
     BoxCollider* range;
+	BoxCollider* target;
 
     Vec2d position;
     AnimatedSprite* p;
 
     enum TowerState state;
-	Timer* cooldownTimer;
+    Timer* cooldownTimer;
 
     ProjectileType projectileType;
     int projectilesCapacity;
@@ -36,7 +37,6 @@ struct GenericTower {
     Projectile** projectiles;
 
     SpriteXPM* arrowSprite;
-
 
     void (*towerUpdate)(GenericTower* tower, Terminal* terminal, Arena* arena, float deltaTime);
 };
@@ -63,16 +63,15 @@ GenericTower* towerNew(SpriteXPM* upperHalf, SpriteXPM* lowerHalf, AnimatedSprit
     res->state = TOWER_IDLE;
     res->current = archerIdle;
 
-	res->cooldownTimer = timerNew(cooldown);
+    res->cooldownTimer = timerNew(cooldown);
     res->projectileType = projectileType;
     res->arrowSprite = arrowSprite;
     res->projectilesCapacity = 100;
     res->projectilesCount = 0;
     res->projectiles = malloc(sizeof(Projectile*) * res->projectilesCapacity);
-    
+
     return res;
 }
-
 
 static void genericTowerProjectileHandler(GenericTower* tower, float deltaTime, Terminal* terminal, Arena* arena) {
     int activeCount = 0;
@@ -88,7 +87,7 @@ static void genericTowerProjectileHandler(GenericTower* tower, float deltaTime, 
     for (int i = 0; i < tower->projectilesCount; i++) {
         Projectile* p = tower->projectiles[i];
         projectileUpdate(p, deltaTime, terminal);
-        
+
         BoxCollider* colliders[10];
         int n = arenaDetectCollisions(arena, projectileGetCollider(p), MONSTER_TAG, colliders);
         if (n > 0) {
@@ -101,12 +100,12 @@ static void genericTowerProjectileHandler(GenericTower* tower, float deltaTime, 
 // Idle
 static void idleOnEnter(GenericTower* tower) {
     tower->current = tower->archerIdle;
-	timerRestart(tower->cooldownTimer);
+    timerRestart(tower->cooldownTimer);
 }
 
 static void shootOnEnter(GenericTower* tower) {
-	animatedSpriteStart(tower->archerShoot);
-	tower->current = tower->archerShoot;
+    animatedSpriteStart(tower->archerShoot);
+    tower->current = tower->archerShoot;
 }
 
 static void idleAct(GenericTower* tower, Terminal* terminal, Arena* arena, float deltaTime) {
@@ -114,7 +113,7 @@ static void idleAct(GenericTower* tower, Terminal* terminal, Arena* arena, float
     tower->towerUpdate(tower, terminal, arena, deltaTime);
     animatedSpriteUpdate(tower->position.x, tower->position.y, tower->p, terminal, deltaTime, false);
 
-	timerUpdate(tower->cooldownTimer, deltaTime);
+    timerUpdate(tower->cooldownTimer, deltaTime);
 }
 
 static void shootAct(GenericTower* tower, Terminal* terminal, Arena* arena, float deltaTime) {
@@ -125,16 +124,11 @@ static void shootAct(GenericTower* tower, Terminal* terminal, Arena* arena, floa
 
 static enum TowerState idleTransition(GenericTower* tower, Arena* arena, float deltaTime) {
     BoxCollider* target = arenaFindFirstEnemy(arena, tower->range);
-	if (!timerIsRunning(tower->cooldownTimer) && target) {
-		tower->isFlipped = tower->position.x > boxColliderGetX(target); 
-		shootOnEnter(tower);
-        
-        Projectile* p = projectileCreate(tower->projectileType, boxColliderGetX(target), boxColliderGetY(target), 200, 20, tower->arrowSprite);
-		if(!towerAddProjectile(tower, p)) {
-            projectileFree(p);
-            return TOWER_IDLE;
-        }
-        
+    if (!timerIsRunning(tower->cooldownTimer) && target) {
+        tower->isFlipped = tower->position.x > boxColliderGetX(target);
+        shootOnEnter(tower);
+		tower->target = target;
+
         return TOWER_SHOOT;
     }
 
@@ -142,35 +136,41 @@ static enum TowerState idleTransition(GenericTower* tower, Arena* arena, float d
 }
 
 static enum TowerState shootTransition(GenericTower* tower, Arena* arena, float deltaTime) {
-	if (animatedSpriteIsFinished(tower->archerShoot)) {
-		idleOnEnter(tower);
-		return TOWER_IDLE;
-	}
+    if (animatedSpriteIsFinished(tower->archerShoot)) {
+        idleOnEnter(tower);
+        Vec2d dir = {boxColliderGetX(tower->target) - tower->position.x, boxColliderGetY(tower->target) - tower->position.y - ARCHER_OFFSET.y};
+        vec2dNormalize(&dir);
 
-	return tower->state;
+		Projectile* p = projectileCreate(tower->projectileType, tower->position.x, tower->position.y + ARCHER_OFFSET.y, dir.x * 500, dir.y * 500, tower->arrowSprite);
+        if (!towerAddProjectile(tower, p)) projectileFree(p);
+
+        return TOWER_IDLE;
+    }
+
+    return tower->state;
 }
 
 void towerUpdate(GenericTower* tower, Terminal* terminal, Arena* arena, float deltaTime) {
     enum TowerState newState = tower->state;
-    //drawRectangle(terminal, boxColliderGetX(tower->range) + boxColliderGetOffsetX(tower->range), boxColliderGetY(tower->range) + boxColliderGetOffsetY(tower->range), boxColliderGetWidth(tower->range), boxColliderGetHeight(tower->range), 0xFFFFFF);
-    genericTowerProjectileHandler(tower, deltaTime, terminal, arena);
+    // drawRectangle(terminal, boxColliderGetX(tower->range) + boxColliderGetOffsetX(tower->range), boxColliderGetY(tower->range) + boxColliderGetOffsetY(tower->range), boxColliderGetWidth(tower->range), boxColliderGetHeight(tower->range), 0xFFFFFF);
     switch (tower->state) {
         case TOWER_IDLE:
             idleAct(tower, terminal, arena, deltaTime);
             newState = idleTransition(tower, arena, deltaTime);
             break;
         case TOWER_SHOOT:
-			shootAct(tower, terminal, arena, deltaTime);
-			newState = shootTransition(tower, arena, deltaTime);
+            shootAct(tower, terminal, arena, deltaTime);
+            newState = shootTransition(tower, arena, deltaTime);
             break;
     }
 
     tower->state = newState;
 }
 
-void towerDrawUpperHalf(GenericTower* tower, Terminal* terminal, float deltaTime) {
+void towerDrawUpperHalf(GenericTower* tower, Terminal* terminal, Arena* arena, float deltaTime) {
     drawSpriteXPM(tower->upperHalf, terminal, tower->position.x, tower->position.y, false);
     animatedSpriteUpdate(tower->position.x, tower->position.y, tower->current, terminal, deltaTime, tower->isFlipped);
+    genericTowerProjectileHandler(tower, deltaTime, terminal, arena);
 }
 
 void towerFree(GenericTower* tower) {
@@ -184,13 +184,11 @@ void towerFree(GenericTower* tower) {
     boxColliderFree(tower->hitBox);
     boxColliderFree(tower->range);
 
-	timerFree(tower->cooldownTimer);
+    timerFree(tower->cooldownTimer);
 
-    for (int i = 0; i < tower->projectilesCount; i++) {
-        projectileFree(tower->projectiles[i]);
-    }
+    for (int i = 0; i < tower->projectilesCount; i++) projectileFree(tower->projectiles[i]);
     free(tower->projectiles);
-    
+
     free(tower);
 }
 
@@ -206,4 +204,3 @@ bool towerAddProjectile(GenericTower* tower, Projectile* projectile) {
     tower->projectilesCount++;
     return true;
 }
-
