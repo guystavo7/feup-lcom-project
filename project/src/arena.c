@@ -335,7 +335,7 @@ void arenaBuildTower(Arena* arena, Vec2d position) {
 
     arena->towersN++;
     arena->towers = realloc(arena->towers, sizeof(GenericTower*) * arena->towersN);
-    arena->towers[arena->towersN - 1] = mortarTowerNew(position);
+    arena->towers[arena->towersN - 1] = basicTowerNew(position);
 
     arena->collidersN[WALLS_TAG]++;
     arena->colliders[WALLS_TAG] = realloc(arena->colliders[WALLS_TAG], sizeof(BoxCollider*) * arena->collidersN[WALLS_TAG]);

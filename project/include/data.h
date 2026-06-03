@@ -98,7 +98,7 @@ static const Vec2d MONK_HEAL_OFFSET = {30 - 14 - 15, -27 - 34};
 #define DUST_FRAMES 9
 
 // Cursor
-#define CURSOR_FRAMES 3
+#define CURSOR_FRAMES 4
 
 // Main Menu
 #define NEW_GAME_BUTTON_NORMAL 0
