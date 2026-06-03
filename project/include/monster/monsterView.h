@@ -4,7 +4,7 @@
 typedef struct monsterView MonsterView;
 
 
-MonsterView* monsterViewNew(MonsterModel* model,AnimatedSprite* animation);
+MonsterView* monsterViewNew(MonsterModel* model,AnimatedSprite* (*animationBuilder)());
 
 void monsterViewFree(MonsterView* view);
 

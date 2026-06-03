@@ -24,6 +24,11 @@
 
 #include "../include/monster/pawnMonster.h"
 
+#include "../include/monster/alienMonster.h"
+
+
+#include "../include/monster/monsterGen.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -56,6 +61,9 @@ struct Arena {
     int tileSize;
 
     Monster* monster_test;
+
+    MonsterGen* monsterGen1;
+
     Path* path_test;
 
     Player* player;
@@ -265,9 +273,11 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
         res->collidersN[t] = 0;
         res->colliders[t] = NULL;
     }
-
-    res->path_test = pathNew(4, vectorCreateWithFloatingData(sizeof(float), NULL, 6 * 2, 10.0f, 150.0f, 330.0f, 150.0f, 380.0f, 275.0f, 875.0f, 275.0f, 925.0f, 150.0f, 1300.0f, 150.0f));
-    res->monster_test = pawnMonsterNew(10, 150, res->path_test);
+ 
+    res->path_test=pathNew(4,vectorCreateWithFloatingData(sizeof(float),NULL,7*2, 10.0f,150.0f,  330.0f,150.0f,  380.0f,275.0f,  875.0f,275.0f,   925.0f,150.0f,  1300.0f,150.0f, 1310.0f,150.0f ));
+    res->monster_test=pawnMonsterNew(10,150,res->path_test);
+    res->monsterGen1=monsterGenNew(res->path_test,defaultMonsterCreator,defaultGenTimeFunc);
+ 
 
     createMap(res, tilesFile, TILE_SIZE);
     createMonsterPathColliders(res, pathFile);
@@ -360,6 +370,10 @@ void arenaFree(Arena* arena) {
     for (int i = 0; i < arena->fruitsN; i++) collectableFree(arena->fruits[i]);
 
     monsterFree(arena->monster_test);
+
+
+    monsterGenFree(arena->monsterGen1);
+    
     pathFree(arena->path_test);
 
     free(arena->colliders[WALLS_TAG]);
@@ -474,10 +488,14 @@ void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
     for (int i = 0; i < arena->fruitsN; i++) collectableUpdate(arena->fruits[i], terminal);
     for (int i = 0; i < arena->tilesN; i++) tileUpdate(arena->tiles[i], terminal);
     for (int i = arena->towersN - 1; i >= 0; i--) towerUpdate(arena->towers[i], terminal, arena, deltaTime);
+ 
+    monsterUpdate(arena->monster_test,arena,terminal,deltaTime);
 
-    monsterUpdate(arena->monster_test, arena, terminal, deltaTime);
-    monsterSumHP(arena->monster_test, -100);
+    monsterSumHP(arena->monster_test,-100);
 
+
+    monsterGenUpdate(arena->monsterGen1,arena,terminal,deltaTime);
+     
     arenaCollectableHandler(arena);
     arenaHandleConstruction(arena, terminal);
 

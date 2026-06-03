@@ -14,11 +14,15 @@ static AnimatedSprite* getSprites_(char** XPMs[], int n, float frameSpeed, Vec2d
     return animatedSpriteNew(frameSpeed, res, n , LOOP);
 }
 
+static AnimatedSprite* pawnAnimationBuilder(){
+
+    pawnAnimation = getSprites_(all_pawn_xpms, PAWN_MONSTER_IDLE_FRAMES, PAWN_MONSTER_FRAME_SPEED, (Vec2d){0,0});
+    return pawnAnimation;
+}
+
 
 Monster* pawnMonsterNew(float x,float y ,Path* path){
-    if (pawnAnimation == NULL) {
-        pawnAnimation = getSprites_(all_pawn_xpms, PAWN_MONSTER_IDLE_FRAMES, PAWN_MONSTER_FRAME_SPEED, (Vec2d){0,0});
-    }
-    Monster* p=monsterNew(x,y,10,10,100,100000,pawnAnimation,path);
+    
+    Monster* p=monsterNew(x,y,10,10,100,100000,pawnAnimationBuilder,path);
     return p;
 } 
