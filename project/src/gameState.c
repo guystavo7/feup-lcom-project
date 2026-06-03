@@ -6,6 +6,7 @@
 #include "../include/utils/inputHandler.h"
 
 #include "../../lab5/spriteXMP.h"
+#include "../resources/icons/icons.h"
 #include "../resources/mainMenu/mainMenu.h"
 #include "../resources/pauseMenu/pauseMenu.h"
 
@@ -41,11 +42,11 @@ static void resetBools() {
     pressedExit = false;
     pressedGoBack = false;
     pressedNewGame = false;
-	pressedPause = false;
+    pressedPause = false;
 }
 
 static GameState* gameStateNew(void (*act)(GameState* state, Terminal* terminal, float deltaTimem), void (*free)(GameState* state), GameState* (*transition)(GameState* state, Terminal* terminal)) {
-	resetBools();
+    resetBools();
     GameState* res = malloc(sizeof(GameState));
     res->act = act;
     res->free = free;
@@ -92,7 +93,7 @@ static GameState* runningGameTransition(GameState* state, Terminal* terminal) {
 }
 
 static void resumeFn(Button* self) {
-	pressedPause = false;
+    pressedPause = false;
 }
 
 static void helpFn(Button* self) {
@@ -150,22 +151,31 @@ GameState* runningGameNew(Terminal* terminal) {
     res->pauseMenu = newSpriteXPM((xpm_map_t)pauseMenuXPM[PAUSE_MENU_INDEX], XPM_8_8_8, 0, 0);
 
     // Resume Button
-    SpriteXPM** resumeSprites = malloc(sizeof(SpriteXPM*));
-    SpriteXPM* buttonNormal = newSpriteXPM((xpm_map_t)pauseMenuXPM[RESUME_BUTTON_INDEX], XPM_8_8_8, 0, 0);
+    SpriteXPM** resumeSprites = malloc(sizeof(SpriteXPM*) * 2);
+    SpriteXPM* buttonNormal = newSpriteXPM((xpm_map_t)iconsXPM[RESUME_NORMAL_BUTTON_INDEX], XPM_8_8_8, 0, 0);
+    SpriteXPM* buttonPressed = newSpriteXPM((xpm_map_t)iconsXPM[RESUME_PRESSED_BUTTON_INDEX], XPM_8_8_8, 0, 0);
     resumeSprites[0] = buttonNormal;
-    res->resumeButton = buttonNew(RESUME_POS.x, RESUME_POS.y, PAUSE_MENU_ICON_SIZE.x, PAUSE_MENU_ICON_SIZE.y, animatedSpriteNew(BUTTONS_FRAME_SPEED, resumeSprites, 1, NORMAL), resumeFn, basicButtonHoverFn);
+    resumeSprites[1] = buttonPressed;
+
+    res->resumeButton = buttonNew(RESUME_POS.x, RESUME_POS.y, PAUSE_MENU_ICON_SIZE.x, PAUSE_MENU_ICON_SIZE.y, animatedSpriteNew(BUTTONS_FRAME_SPEED, resumeSprites, 2, NORMAL), resumeFn, basicButtonHoverFn);
 
     // Help button
-    SpriteXPM** helpSprites = malloc(sizeof(SpriteXPM*));
-    buttonNormal = newSpriteXPM((xpm_map_t)pauseMenuXPM[HELP_BUTTON_INDEX], XPM_8_8_8, 0, 0);
+    SpriteXPM** helpSprites = malloc(sizeof(SpriteXPM*) * 2);
+    buttonNormal = newSpriteXPM((xpm_map_t)iconsXPM[HELP_NORMAl_BUTTON_INDEX], XPM_8_8_8, 0, 0);
+    buttonPressed = newSpriteXPM((xpm_map_t)iconsXPM[HELP_PRESSED_BUTTON_INDEX], XPM_8_8_8, 0, 0);
     helpSprites[0] = buttonNormal;
-    res->helpButton = buttonNew(HELP_POS.x, HELP_POS.y, PAUSE_MENU_ICON_SIZE.x, PAUSE_MENU_ICON_SIZE.y, animatedSpriteNew(BUTTONS_FRAME_SPEED, helpSprites, 1, NORMAL), helpFn, basicButtonHoverFn);
+    helpSprites[1] = buttonPressed;
+
+    res->helpButton = buttonNew(HELP_POS.x, HELP_POS.y, PAUSE_MENU_ICON_SIZE.x, PAUSE_MENU_ICON_SIZE.y, animatedSpriteNew(BUTTONS_FRAME_SPEED, helpSprites, 2, NORMAL), helpFn, basicButtonHoverFn);
 
     // Go back button
-    SpriteXPM** goBackMainMenuSprites = malloc(sizeof(SpriteXPM*));
-    buttonNormal = newSpriteXPM((xpm_map_t)pauseMenuXPM[GO_BACK_BUTTON_INDEX], XPM_8_8_8, 0, 0);
+    SpriteXPM** goBackMainMenuSprites = malloc(sizeof(SpriteXPM*) * 2);
+    buttonNormal = newSpriteXPM((xpm_map_t)iconsXPM[GO_BACK_NORMAl_BUTTON_INDEX], XPM_8_8_8, 0, 0);
+    buttonPressed = newSpriteXPM((xpm_map_t)iconsXPM[GO_BACK_PRESSED_BUTTON_INDEX], XPM_8_8_8, 0, 0);
     goBackMainMenuSprites[0] = buttonNormal;
-    res->goBackMainMenuButton = buttonNew(GO_BACK_POS.x, GO_BACK_POS.y, PAUSE_MENU_ICON_SIZE.x, PAUSE_MENU_ICON_SIZE.y, animatedSpriteNew(BUTTONS_FRAME_SPEED, goBackMainMenuSprites, 1, NORMAL), goBackMainMenuFn, basicButtonHoverFn);
+    goBackMainMenuSprites[1] = buttonPressed;
+
+    res->goBackMainMenuButton = buttonNew(GO_BACK_POS.x, GO_BACK_POS.y, PAUSE_MENU_ICON_SIZE.x, PAUSE_MENU_ICON_SIZE.y, animatedSpriteNew(BUTTONS_FRAME_SPEED, goBackMainMenuSprites, 2, NORMAL), goBackMainMenuFn, basicButtonHoverFn);
 
     return res;
 }

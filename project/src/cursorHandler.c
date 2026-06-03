@@ -14,6 +14,7 @@ enum MouseState {
     DEFAULT,
     CLICKED,
     DENIED,
+	CONSTRUCTION,
 };
 
 struct Cursor {
@@ -116,7 +117,7 @@ static void cursorUpdateCoordinates(Cursor* c) {
 
 static void cursorApplyVisualState(Cursor* c) {
     if (c->constructionMode) {
-        c->currentState = c->placementHoverValid ? CLICKED : DENIED;
+        c->currentState = c->placementHoverValid ? CONSTRUCTION : DENIED;
     } else {
         c->currentState = DEFAULT;
     }
