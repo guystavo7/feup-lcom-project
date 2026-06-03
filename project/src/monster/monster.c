@@ -9,6 +9,11 @@ struct monster
 
 };
 
+unsigned int monsterSizeof(){
+  return sizeof(Monster);
+}
+
+
 Monster* monsterNew(float x,float y,float sizeX,float sizeY,float velocity,int hp,AnimatedSprite* animation,Path* path){
   Monster* m=malloc(sizeof(Monster));
   m->model=monsterModelNew( x, y, sizeX, sizeY, velocity,0,hp);
@@ -19,6 +24,11 @@ Monster* monsterNew(float x,float y,float sizeX,float sizeY,float velocity,int h
 
 void monsterSumHP(Monster* m,int val){
   monsterModelSumHP(m->model,val);
+}
+
+
+bool monsterIsDead(Monster* m){
+  return monsterModelGetDead(m->model);
 }
 
 void monsterUpdate(Monster* m, Arena* arena,Terminal* terminal, float delta_t){

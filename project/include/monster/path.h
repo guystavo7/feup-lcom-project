@@ -21,7 +21,13 @@ void pathGetDirectionToCurPoint(Path* p,void* pointer,Vec2d* pos,Vec2d* new_dir)
 
 void pathFollowingDir(Path* p,void* pointer,Vec2d* pos,Vec2d* new_dir);//new_dir should be initialized
 
+unsigned int pathGetPointsSize(Path* path);
 
+void pathGetPoint(Path* p,unsigned int i,Vec2d* point);
+     
 
+ 
 
+unsigned int pathGetNumOfPoints(Path* path);
 
+unsigned int pathGetCurPointIndex(Path* p, void* pointer);

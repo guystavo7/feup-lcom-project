@@ -27,7 +27,7 @@ void monsterViewUpdate (MonsterView* view, Terminal* terminal,float delta_t){
   { 
     view->flipped=true;
   }
-  if(!monsterModelGetDead(view->model)){
+  if(!monsterModelGetDead(view->model) && !monsterModelGetFinishedPath(view->model)){
    animatedSpriteUpdate(monsterModelGetX(view->model),monsterModelGetY(view->model),view->animation,terminal,delta_t,view->flipped);
   }
 }

@@ -1,80 +1,78 @@
 #include "../../include/monster/monsterController.h"
 
-struct monsterController
-{
+struct monsterController {
     MonsterModel* model;
-    RigidBody *rb;
-    BoxCollider * bc;
-    Path * path;
-
-
-
+    RigidBody* rb;
+    BoxCollider* bc;
+    Path* path;
 };
 
-MonsterController* monsterControllerNew(MonsterModel* model,Path * path){
-  MonsterController* m=malloc(sizeof(MonsterController));
+MonsterController* monsterControllerNew(MonsterModel* model, Path* path) {
+    MonsterController* m = malloc(sizeof(MonsterController));
 
-  m->model=model;
+    m->model = model;
 
+    m->rb = rigidBodyNew();
 
-  m->rb=rigidBodyNew();
-  
-  Vec2d mPos; 
-  monsterModelGetPos(model,&mPos);
-  m->bc=boxColliderNew(mPos,(Vec2d){0,0},(Vec2d){10,10},MonsterTag);
-  m->path=path;
-  pathSubscribe(m->path,model);
-  
-  return m;
+    Vec2d mPos;
+    monsterModelGetPos(model, &mPos);
+    m->bc = boxColliderNew(mPos, (Vec2d){0, 0}, (Vec2d){10, 10}, MonsterTag);
+    m->path = path;
+    pathSubscribe(m->path, m->model);
+
+    return m;
 }
 
+void monsterControllerUpdate(MonsterController* controller, Arena* arena, float delta_t) {
 
+    MonsterModel* model = controller->model;
 
-void monsterControllerUpdate(MonsterController* controller,Arena*arena,float delta_t){
-
-    MonsterModel *model=controller->model;
-
-    monsterModelSetDead(model, !(monsterModelGetHP(model)>0) );
-  
-    if(!monsterModelGetDead(model)){
+    monsterModelSetDead(model, !(monsterModelGetHP(model) > 0));
 
     
-    Vec2d delta_x,monsterPos;
-
-
-    monsterModelGetPos(model,&monsterPos); 
+    if(pathGetNumOfPoints(controller->path)-1==pathGetCurPointIndex(controller->path,controller->model)){
+      monsterModelSetFinishedPath(model,true); 
+    }
  
-    pathFollowingDir(controller->path,model,&monsterPos,&delta_x);
-    
+   // printf("\nhere1\n");
+   // printf("path index:%d",pathGetNumOfPoints(controller->path)-1);//pathGetCurPointIndex(controller->path,model)
 
-    monsterModelSetDirWithVec(model,&delta_x); 
+    if (!monsterModelGetDead(model) && !monsterModelGetFinishedPath(model)) {
 
-    monsterModelGetVel(model,&delta_x);
-    vec2dMultiply(&delta_x,delta_t); 
+        Vec2d delta_x, monsterPos;
 
-    vec2dAddVec(&monsterPos,&delta_x);
+        monsterModelGetPos(model, &monsterPos);
 
-    monsterModelSetPos(model,&monsterPos);
+        pathFollowingDir(controller->path, model, &monsterPos, &delta_x);
 
-    
-    rigidBodyUpdate(controller->rb,&monsterPos,arena,controller->bc,delta_t);
+        monsterModelSetDirWithVec(model, &delta_x);
+
+        monsterModelGetVel(model, &delta_x);
+        vec2dMultiply(&delta_x, delta_t);
+
+        vec2dAddVec(&monsterPos, &delta_x);
+
+        monsterModelSetPos(model, &monsterPos);
+
+        rigidBodyUpdate(controller->rb, &monsterPos, arena, controller->bc, delta_t);
+        // printf("\nhere2\n");
     }
 }
 
-void monsterControllerFree(MonsterController* controller){
+void monsterControllerFree(MonsterController* controller) {
     rigidBodyFree(controller->rb);
-    boxColliderFree(controller->bc); 
+    boxColliderFree(controller->bc);
     free(controller);
 }
 
-RigidBody* monsterControllerGetRigidBody(MonsterController* m){
-  return m->rb;
+RigidBody* monsterControllerGetRigidBody(MonsterController* m) {
+    return m->rb;
 }
 
-BoxCollider* monsterControllerGetBoxCollider(MonsterController* m){
-  return m->bc;
+BoxCollider* monsterControllerGetBoxCollider(MonsterController* m) {
+    return m->bc;
 }
 
-Path* MonsterControllerGetPath(MonsterController* m){
-  return m->path;
+Path* MonsterControllerGetPath(MonsterController* m) {
+    return m->path;
 }

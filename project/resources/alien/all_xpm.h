@@ -518,7 +518,7 @@ static char *alien_frame_4[] = {
 "X. c #A79D8D",
 "o. c #AAA092",
 "O. c #A2A2A3",
-"+. c gray64",
+"+. c #999999",
 "@. c #A3A2A2",
 "#. c #A8A7A7",
 "$. c #B0AFAF",

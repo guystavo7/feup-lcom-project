@@ -1,9 +1,12 @@
+#pragma once
 #include "monsterController.h"
 #include "monsterModel.h"
 #include "monsterView.h"
 
 typedef struct monster Monster;
 
+
+unsigned int monsterSizeof();
 
 Monster* monsterNew(float x,float y,float sizeX,float sizeY,float velocity,int hp,AnimatedSprite* animation,Path* path);
 void monsterSumHP(Monster* m,int val);
@@ -15,3 +18,5 @@ void monsterFree(Monster* m);
 RigidBody* monsterGetRigidBody(Monster * m);
 
 BoxCollider* monsterGetBoxCollider(Monster* m);
+
+bool monsterIsDead(Monster* m);

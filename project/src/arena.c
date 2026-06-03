@@ -28,6 +28,9 @@
 
 #include "../include/monster/alienMonster.h"
 
+
+#include "../include/monster/monsterGen.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -61,7 +64,7 @@ struct Arena {
 
     Monster* monster_test;
 
-    Monster* monster_test2;
+    MonsterGen* monsterGen1;
 
     Path* path_test;
 
@@ -274,9 +277,9 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
         res->colliders[t] = NULL;
     }
 
-    res->path_test=pathNew(4,vectorCreateWithFloatingData(sizeof(float),NULL,6*2, 10.0f,150.0f,  330.0f,150.0f,  380.0f,275.0f,  875.0f,275.0f,   925.0f,150.0f,  1300.0f,150.0f  ));
+    res->path_test=pathNew(4,vectorCreateWithFloatingData(sizeof(float),NULL,7*2, 10.0f,150.0f,  330.0f,150.0f,  380.0f,275.0f,  875.0f,275.0f,   925.0f,150.0f,  1300.0f,150.0f, 1310.0f,150.0f ));
     res->monster_test=pawnMonsterNew(10,150,res->path_test);
-    res->monster_test2=alienMonsterNew(0,175,res->path_test);
+    res->monsterGen1=monsterGenNew(res->path_test,defaultMonsterCreator,defaultGenTimeFunc);
 
     createMap(res, tilesFile, TILE_SIZE);
     createMonsterPathColliders(res, pathFile);
@@ -371,7 +374,7 @@ void arenaFree(Arena* arena) {
     monsterFree(arena->monster_test);
 
 
-    monsterFree(arena->monster_test2);
+    monsterGenFree(arena->monsterGen1);
     
     pathFree(arena->path_test);
  
@@ -490,8 +493,10 @@ void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
 
     monsterUpdate(arena->monster_test,arena,terminal,deltaTime);
 
-    monsterUpdate(arena->monster_test2,arena,terminal,deltaTime);
     monsterSumHP(arena->monster_test,-100);
+
+
+    monsterGenUpdate(arena->monsterGen1,arena,terminal,deltaTime);
     
     arenaCollectableHandler(arena);
     arenaHandleConstruction(arena, terminal);

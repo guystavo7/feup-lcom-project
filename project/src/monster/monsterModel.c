@@ -8,16 +8,13 @@ struct monsterModel
   Vec2d size;
   Vec2d vel; 
 
-
   bool dead;
   int hp;
 
+  bool finishedPath;
 
 };
 
-unsigned int monsterSizeof(){
-  return sizeof(MonsterModel);
-}
 
 MonsterModel* monsterModelNew(float x,float y,float sizeX,float sizeY,float velX,float velY,int hp){
   MonsterModel* m=malloc(sizeof(MonsterModel));
@@ -50,7 +47,7 @@ void monsterModelSumHP(MonsterModel* m,int val){
    m->hp+=val;
 }
 
-int monsterModelGetDead(MonsterModel* m){
+bool monsterModelGetDead(MonsterModel* m){
   return m->dead;
 }
 
@@ -58,7 +55,13 @@ void monsterModelSetDead(MonsterModel* m,bool dead){
    m->dead=dead;
 }
 
+bool monsterModelGetFinishedPath(MonsterModel* m){
+  return m->finishedPath;
+}
 
+void monsterModelSetFinishedPath(MonsterModel* m,bool finishedPath){
+   m->finishedPath=finishedPath;
+}
 
 float monsterModelGetX(MonsterModel* m){
   return vec2dGetX(&m->pos);
