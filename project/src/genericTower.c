@@ -141,7 +141,12 @@ static enum TowerState shootTransition(GenericTower* tower, Arena* arena, float 
         Vec2d dir = {boxColliderGetX(tower->target) - tower->position.x, boxColliderGetY(tower->target) - tower->position.y - ARCHER_OFFSET.y};
         vec2dNormalize(&dir);
 
-		Projectile* p = projectileCreate(tower->projectileType, tower->position.x, tower->position.y + ARCHER_OFFSET.y, dir.x * 500, dir.y * 500, tower->arrowSprite);
+        Projectile* p;
+        if(dir.x > 0 && dir.y > 0) p = projectileCreate(tower->projectileType, tower->position.x, tower->position.y + ARCHER_OFFSET.y, dir.x * 500, dir.y * 500, tower->arrowSprite);
+        else if (dir.x < 0 && dir.y > 0) p = projectileCreate(tower->projectileType, tower->position.x, tower->position.y + ARCHER_OFFSET.y, dir.x * 500, dir.y * 500, tower->arrowSprite);
+        else if (dir.x < 0 && dir.y < 0) p = projectileCreate(tower->projectileType, tower->position.x, tower->position.y + ARCHER_OFFSET.y, dir.x * 500, dir.y * 500, tower->arrowSprite);
+        else p = projectileCreate(tower->projectileType, tower->position.x, tower->position.y + ARCHER_OFFSET.y, dir.x * 500, dir.y * 500, tower->arrowSprite);
+
         if (!towerAddProjectile(tower, p)) projectileFree(p);
 
         return TOWER_IDLE;
