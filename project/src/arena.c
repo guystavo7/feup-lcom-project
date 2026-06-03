@@ -529,9 +529,10 @@ void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
     monsterSumHP(arena->monster_test,-100);
     
     arenaCollectableHandler(arena);
-    projectileUpdateHomingTarget(arena->projectiles[0], playerModelGetX(playerGetPlayerModel(arena->player)), playerModelGetY(playerGetPlayerModel(arena->player)));
+    if (arena->projectilesCount > 0) {
+        projectileUpdateHomingTarget(arena->projectiles[0], playerModelGetX(playerGetPlayerModel(arena->player)), playerModelGetY(playerGetPlayerModel(arena->player)));
+    }
     arenaProjectileHandler(arena, deltaTime, terminal);
-    arenaMouseObserver(arena);
     arenaHandleConstruction(arena, terminal);
 
     playerUpdate(arena->player, terminal, arena, deltaTime);

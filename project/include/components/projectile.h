@@ -2,8 +2,8 @@
 #define PROJECTILE_H
 
 #include "../utils/vec2d.h"
-#include "../../lab5/spriteXMP.h"
-#include "../../lab5/terminal.h"
+#include "../../../lab5/spriteXMP.h"
+#include "../../../lab5/terminal.h"
 #include "boxCollider.h"
 
 #include <stdbool.h>
