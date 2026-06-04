@@ -22,6 +22,6 @@ static AnimatedSprite* alienAnimationBuilder(){
 }
 
 Monster* alienMonsterNew(float x,float y ,Path* path){ 
-    Monster* p=monsterNew(x,y,10,10,200,10000,alienAnimationBuilder,path);
+    Monster* p=monsterNew(x,y,10,10,200,2000,alienAnimationBuilder,path);
     return p;
 } 

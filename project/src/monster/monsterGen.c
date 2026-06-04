@@ -21,7 +21,7 @@ int defaultGenTimeFunc(float delta){
 struct monsterGen{
     Vector* monsterList;
     Vector* availableMonsterIdStack;
-    Vector* monsterInStack;
+    Vector* deactivatedMonsterIdList;
     Path* path;
     Monster* (*monsterCreator)(Path*);
     int (*genTimeFunc)(float);
@@ -41,7 +41,7 @@ MonsterGen* monsterGenNew(Path* path,Monster* (*monsterCreator)(Path*),int (*gen
     mg->monsterList=vectorCreate(sizeof(Monster*),freeMonsterList);
     mg->availableMonsterIdStack=vectorCreate(sizeof(int),NULL);
 
-    mg->monsterInStack=vectorCreate(sizeof(bool),NULL);
+    mg->deactivatedMonsterIdList=vectorCreate(sizeof(bool),NULL);
 
     return mg;
 }
@@ -49,14 +49,14 @@ MonsterGen* monsterGenNew(Path* path,Monster* (*monsterCreator)(Path*),int (*gen
 void monsterGenFree(MonsterGen* mg){
     vectorFree(mg->monsterList);
     vectorFree(mg->availableMonsterIdStack);
-    vectorFree(mg->monsterInStack);
+    vectorFree(mg->deactivatedMonsterIdList);
     free(mg);
 }
 
 void monsterGenAddMonster(MonsterGen* mg){ 
     Monster* new_monster= mg->monsterCreator(mg->path);
     vectorPushBack(mg->monsterList,(char*)&new_monster);
-    vectorPushBackVal(mg->monsterInStack,false);
+    vectorPushBackVal(mg->deactivatedMonsterIdList,false);
 }
 
  
@@ -72,10 +72,10 @@ void monsterGenUpdate(MonsterGen* mg, Arena* arena,Terminal* terminal, float del
         monsterUpdate(m,arena,terminal,delta_t);
 
         
-        bool m_in_stack=vectorGetVal(mg->monsterInStack,i);
+        bool m_in_stack=vectorGetVal(mg->deactivatedMonsterIdList,i);
 
         if( ( monsterIsDead(m) || monsterGetFinishedPath(m) ) &&!m_in_stack){
-            vectorSetVal(mg->monsterInStack,i,true);
+            vectorSetVal(mg->deactivatedMonsterIdList,i,true);
 
             vectorPushBack(mg->availableMonsterIdStack,(char*)&i);
 
@@ -95,7 +95,7 @@ void monsterGenUpdate(MonsterGen* mg, Arena* arena,Terminal* terminal, float del
             Monster* m=*(Monster**)vectorGet(mg->monsterList,monsterId);
             monsterReset(m,&v);
             vectorPopBack(mg->availableMonsterIdStack);
-            vectorSetVal(mg->monsterInStack,monsterId,false);
+            vectorSetVal(mg->deactivatedMonsterIdList,monsterId,false);
         }
         else
         {
@@ -108,8 +108,19 @@ void monsterGenUpdate(MonsterGen* mg, Arena* arena,Terminal* terminal, float del
        n_monster_to_render--;
     }
 
-    
-
-
-
 }
+
+int monsterGenGetNextActiveMonsterIndex(MonsterGen* mg, unsigned int begin){
+    for(unsigned int i=begin;i!=vectorGetSize(mg->monsterList);i++){
+        if(!vectorGetVal(mg->deactivatedMonsterIdList,i)){
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+Monster* monsterGenGetMonster(MonsterGen* mg,unsigned int index){
+    return *(Monster**)vectorGet(mg->monsterList,index);
+}
+

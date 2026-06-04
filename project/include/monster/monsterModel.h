@@ -26,6 +26,10 @@ int monsterModelGetHP(MonsterModel* m);
 
 void monsterModelSetHP(MonsterModel* m,int hp);
 
+int monsterModelGetInitialHP(MonsterModel* m);
+
+void monsterModelSetInitialHP(MonsterModel* m,int hp);
+
 void monsterModelSumHP(MonsterModel* m,int val);
 
 bool monsterModelGetDead(MonsterModel* m);

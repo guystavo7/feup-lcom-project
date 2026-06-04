@@ -673,6 +673,28 @@ BoxCollider* arenaFindFirstEnemy(Arena* arena, BoxCollider* range) {
     return NULL;
 }
 
+void arenaHandleMonsterDamage(Arena* arena){
+
+    int monsterIterator=monsterGenGetNextActiveMonsterIndex(arena->monsterGen1,0);
+
+    while (monsterIterator!=-1)
+    {
+        Monster* monster=monsterGenGetMonster(arena->monsterGen1,monsterIterator);
+        for(unsigned int i=0;i!=vectorGetSize(arena->projectileList);i++){
+            Projectile* arrow= *(Projectile**)vectorGet(arena->projectileList,i);
+            
+            if(boxIsCollidingWithBox(projectileGetCollider(arrow),monsterGetBoxCollider(monster))){
+                monsterSumHP(monster,-1000);
+                projectileSetActive(arrow,false);
+            }
+        }
+        monsterIterator++;
+        monsterIterator=monsterGenGetNextActiveMonsterIndex(arena->monsterGen1,monsterIterator);
+    }
+    
+
+}
+
 void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
     for (int i = 0; i < arena->fruitsN; i++) collectableUpdate(arena->fruits[i], terminal);
     for (int i = 0; i < arena->tilesN; i++) tileUpdate(arena->tiles[i], terminal);
@@ -680,6 +702,7 @@ void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
  
     //monster / proj tests
 
+    arenaHandleMonsterDamage(arena);
     Vector* projIndexListToRemove=vectorCreate(sizeof(int),NULL);
 
     for(int i = vectorGetSize(arena->projectileList) - 1; i >= 0; i--){
@@ -690,20 +713,22 @@ void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
         }
     }
 
-    for(int i = vectorGetSize(projIndexListToRemove) - 1; i >= 0; i--){
-        int index=*(int*)vectorGet(arena->projectileList,i);
+    for(int i =  0; i != (int)vectorGetSize(projIndexListToRemove); i++){
+        int index=*(int*)vectorGet(projIndexListToRemove,i);
         vectorRemove(arena->projectileList,index);
     }
 
+    vectorFree(projIndexListToRemove);
+
     dummy_proj_counter++;
 
-    if(((int)dummy_proj_counter)%20==0){
+    if(((int)dummy_proj_counter)%15==0){
 
         SpriteXPM** projSpriteList = malloc(sizeof(SpriteXPM*));
         projSpriteList[0] = newSpriteXPM((xpm_map_t)Arrow2, XPM_8_8_8, 0,0);
         AnimatedSprite* projAS=animatedSpriteNew(100,projSpriteList,1,NORMAL);
  
-        Projectile* p=projectileCreate(PROJ_NORMAL,200,200,200,-200,projAS);
+        Projectile* p=projectileCreate(PROJ_NORMAL,200,400,300,-300,projAS);
         vectorPushBack(arena->projectileList,(char*)&p);
     }
 
