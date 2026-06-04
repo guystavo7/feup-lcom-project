@@ -26,3 +26,4 @@ Monster* monsterGenGetMonster(MonsterGen* mg,unsigned int index);
 
 
 unsigned int monsterGenGetNumberOfInstantFinishedMonsters(MonsterGen* mg);
+ 
