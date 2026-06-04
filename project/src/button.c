@@ -52,6 +52,7 @@ void buttonClick(Button* button) {
 	if (button->isPressed) return;
 	button->onClick(button);
 	button->isPressed = true;
+	printf("ii\n");
 }
 
 void buttonHover(Button* button) {
@@ -85,4 +86,8 @@ bool buttonContainsPoint(Button* b, int px, int py) {
     if (!b) return false;
     Vec2d p = {(float)px, (float)py};
     return boxIsCollidingWithPoint(b->bounds, p);
+}
+
+bool buttonIsPressed(Button* b) {
+	return b->isPressed;
 }

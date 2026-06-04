@@ -1,0 +1,7 @@
+ii
+Error: Could not open map file: /home/lcom/labs/grupo_2leic13_2/project/resources/map/grid_walls.csv
+Error: Could not open map file: /home/lcom/labs/grupo_2leic13_2/project/resources/map/grid_path.csv
+Error: Could not open map file: /home/lcom/labs/grupo_2leic13_2/project/resources/map/grid_water.csv
+ii
+ii
+ii
