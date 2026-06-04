@@ -670,6 +670,8 @@ void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
     arenaHandleConstruction(arena, terminal);
 
     playerUpdate(arena->player, terminal, arena, deltaTime);
+    for (int i = arena->towersN - 1; i >= 0; i--) towerDrawUpperHalf(arena->towers[i], terminal, arena, deltaTime);
+
     if (arena->upgradePhase == ARENA_UPGRADE_MENU_OPEN) {
         arenaDrawUpgradeMenu(arena, terminal, deltaTime);
     } else if (arena->constructPhase == ARENA_CONSTRUCT_PICK_TOWER) {
@@ -677,5 +679,4 @@ void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
     }
 
     cursorUpdate(getCursor(), terminal, deltaTime);
-    for (int i = arena->towersN - 1; i >= 0; i--) towerDrawUpperHalf(arena->towers[i], terminal, arena, deltaTime);
 }

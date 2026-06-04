@@ -109,13 +109,13 @@ static const Vec2d MONK_HEAL_OFFSET = {30 - 14 - 15, -27 - 34};
 // Cursor
 #define CURSOR_FRAMES 4
 
-// Tower upgrade menu (two scrolls side by side; XPM sizes from upgradeMenu.h)
+// Tower upgrade menu
 #define UPGRADE_SCROLL_W 376
 #define UPGRADE_SCROLL_H 307
 #define UPGRADE_SCROLL_GAP 16
 #define UPGRADE_SCROLL_TOTAL_W (UPGRADE_SCROLL_W + UPGRADE_SCROLL_GAP + UPGRADE_SCROLL_W)
 
-#define UPGRADE_MENU_XPM_FAST 0
+#define UPGRADE_MENU_XPM_FAST 4
 #define UPGRADE_MENU_XPM_PIERCING 1
 
 #define UPGRADE_SCROLL_ORIGIN_X ((SCREEN_WIDTH - UPGRADE_SCROLL_TOTAL_W) / 2)
@@ -123,7 +123,7 @@ static const Vec2d MONK_HEAL_OFFSET = {30 - 14 - 15, -27 - 34};
 #define UPGRADE_SCROLL_LEFT_X UPGRADE_SCROLL_ORIGIN_X
 #define UPGRADE_SCROLL_RIGHT_X (UPGRADE_SCROLL_ORIGIN_X + UPGRADE_SCROLL_W + UPGRADE_SCROLL_GAP)
 
-// Hammer button uses iconsXPM[] (Icon_01 / Icon_02)
+// Hammer button
 #define UPGRADE_HAMMER_NORMAL 0
 #define UPGRADE_HAMMER_PRESSED 1
 #define UPGRADE_HAMMER_FRAMES 2
