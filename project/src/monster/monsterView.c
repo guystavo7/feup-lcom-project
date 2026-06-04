@@ -7,14 +7,15 @@ struct monsterView{
 
 };
 
-MonsterView* monsterViewNew(MonsterModel* model,AnimatedSprite* animation){
+MonsterView* monsterViewNew(MonsterModel* model,AnimatedSprite* (*animationBuilder)()){
   MonsterView* view =malloc(sizeof(MonsterView));
   view->model=model; 
-  view->animation= animation; 
+  view->animation= animationBuilder(); 
   return view;
 }
 
 void monsterViewFree(MonsterView* view){ 
+  animatedSpriteFree(view->animation);
   free(view);
 }
 
@@ -27,7 +28,7 @@ void monsterViewUpdate (MonsterView* view, Terminal* terminal,float delta_t){
   { 
     view->flipped=true;
   }
-  if(!monsterModelGetDead(view->model)){
+  if(!monsterModelGetDead(view->model) && !monsterModelGetFinishedPath(view->model)){
    animatedSpriteUpdate(monsterModelGetX(view->model),monsterModelGetY(view->model),view->animation,terminal,delta_t,view->flipped);
   }
 }

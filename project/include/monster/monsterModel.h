@@ -14,9 +14,9 @@
 typedef struct monsterModel MonsterModel;
 
  
-unsigned int monsterSizeof();
 MonsterModel* monsterModelNew(float x,float y,float sizeX,float sizeY,float velX,float velY,int hp);
 
+ 
 
 void monsterModelFree(MonsterModel* m);
 
@@ -28,9 +28,13 @@ void monsterModelSetHP(MonsterModel* m,int hp);
 
 void monsterModelSumHP(MonsterModel* m,int val);
 
-int monsterModelGetDead(MonsterModel* m);
+bool monsterModelGetDead(MonsterModel* m);
 
 void monsterModelSetDead(MonsterModel* m,bool dead);
+
+bool monsterModelGetFinishedPath(MonsterModel* m);
+
+void monsterModelSetFinishedPath(MonsterModel* m,bool finishedPath);
 
  
 

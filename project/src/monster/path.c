@@ -47,6 +47,8 @@ void pathGoToNextPoint(Path* p, void* pointer) {
         return;
     }
     unsigned int ui = i;
+    printf("cur: %d\n",i);
+    fflush(stdout);
     unsigned int points_size = vectorGetSize(p->points) / 2;
     vectorSetVal(p->sub_values, ui, (vectorGetVal(p->sub_values, ui) + 1) % points_size);
 }
@@ -56,9 +58,9 @@ void pathGetCurPoint(Path* p, void* pointer, Vec2d* curPoint) {
     int i = vectorFind(p->sub_keys, (char*)&pointer);
     if (i == -1) {
         pathSubscribe(p, pointer);
-    } else {
-        i = vectorFind(p->sub_keys, (char*)&pointer);
-    }
+    } 
+    
+    i = vectorFind(p->sub_keys, (char*)&pointer); 
     unsigned int ui = i;
     unsigned int point_index = vectorGetVal(p->sub_values, ui) * 2;
 
@@ -101,14 +103,57 @@ void pathGetDirectionToCurPoint(Path* p, void* pointer, Vec2d* pos, Vec2d* new_d
 }
 
 void pathFollowingDir(Path* p, void* pointer, Vec2d* pos, Vec2d* new_dir) {
+ 
+    fflush(stdout);
     if (new_dir == NULL || pos == NULL) {
         printf("new_dir and pos should be initialized");
         fflush(stdout);
     }
 
+    
     if (pathCheckInPointChangeDistance(p, pointer, pos)) {
         pathGoToNextPoint(p, pointer);
     }
     pathGetDirectionToCurPoint(p, pointer, pos, new_dir);
 }
 
+unsigned int pathGetPointsSize(Path* path){
+    return vectorGetSize(path->points);
+}
+
+
+
+void pathGetPoint(Path* p,unsigned int i,Vec2d* point){
+    
+    unsigned int point_index = i * 2;
+
+    //float ppx, ppy; // path point x ,y
+    point->x = *(float*)vectorGet(p->points, point_index);
+    point->y = *(float*)vectorGet(p->points, point_index + 1);
+     
+}
+
+unsigned int pathGetNumOfPoints(Path* path){
+    return vectorGetSize(path->points)/2;
+}
+
+unsigned int pathGetCurPointIndex(Path* p, void* pointer) {
+
+    int i = vectorFind(p->sub_keys, (char*)&pointer);
+    if (i == -1) {
+        pathSubscribe(p, pointer);
+    } 
+    i = vectorFind(p->sub_keys, (char*)&pointer); 
+    
+    return vectorGetVal(p->sub_values, i);
+}
+
+void pathSetCurPointIndex(Path* p,void* pointer,unsigned int index){
+    int i = vectorFind(p->sub_keys, (char*)&pointer);
+    if (i == -1) {
+        pathSubscribe(p, pointer);
+    } 
+    i = vectorFind(p->sub_keys, (char*)&pointer); 
+    
+    vectorSetVal(p->sub_values, i,index);
+}

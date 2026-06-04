@@ -39,6 +39,8 @@ SRCS= \
 	./fastTower.c \
 	./mortarTower.c \
 	./eletrictTower.c
+	alienMonster.c \
+	monsterGen.c
 
 OBJS = ${SRCS:.c=.o}
 

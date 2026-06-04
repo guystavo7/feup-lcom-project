@@ -20,12 +20,15 @@
 #include "../resources/map/background.h"
 #include "../resources/tiles/tiles.h"
 
-
-
 #include "../../lab5/spriteXMP.h"
 #include "../../lab5/terminal.h"
 
 #include "../include/monster/pawnMonster.h"
+
+#include "../include/monster/alienMonster.h"
+
+
+#include "../include/monster/monsterGen.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -59,6 +62,9 @@ struct Arena {
     int tileSize;
 
     Monster* monster_test;
+
+    MonsterGen* monsterGen1;
+
     Path* path_test;
 
     Player* player;
@@ -81,8 +87,7 @@ static void arenaTowerPickButtonCb(Button* self) {
 }
 
 static bool arenaPointInPopup(Arena* arena, int px, int py) {
-    return px >= arena->popupX && px < arena->popupX + arena->popupW && py >= arena->popupY &&
-           py < arena->popupY + arena->popupH;
+    return px >= arena->popupX && px < arena->popupX + arena->popupW && py >= arena->popupY && py < arena->popupY + arena->popupH;
 }
 
 static void createMap(Arena* arena, const char* filename, int tileSize) {
@@ -270,9 +275,11 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
         res->collidersN[t] = 0;
         res->colliders[t] = NULL;
     }
-
-    res->path_test=pathNew(4,vectorCreateWithFloatingData(sizeof(float),NULL,6*2, 10.0f,150.0f,  330.0f,150.0f,  380.0f,275.0f,  875.0f,275.0f,   925.0f,150.0f,  1300.0f,150.0f  ));
+ 
+    res->path_test=pathNew(4,vectorCreateWithFloatingData(sizeof(float),NULL,7*2, 10.0f,150.0f,  330.0f,150.0f,  380.0f,275.0f,  875.0f,275.0f,   925.0f,150.0f,  1300.0f,150.0f, 1310.0f,150.0f ));
     res->monster_test=pawnMonsterNew(10,150,res->path_test);
+    res->monsterGen1=monsterGenNew(res->path_test,defaultMonsterCreator,defaultGenTimeFunc);
+ 
 
     res->collidersN[MONSTER_TAG] = 1;
     res->colliders[MONSTER_TAG] = malloc(sizeof(BoxCollider*) * res->collidersN[MONSTER_TAG]);
@@ -300,8 +307,8 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
 
     res->towerPickUpperSprite = newSpriteXPM((xpm_map_t)towerXPM[1], XPM_8_8_8, BASIC_UPPER_HALF_OFFSET.x, BASIC_UPPER_HALF_OFFSET.y);
 
-	SpriteXPM** sprites = malloc(sizeof(SpriteXPM*));
-	sprites[0] = newSpriteXPM((xpm_map_t)towerXPM[0], XPM_8_8_8, 0, 0);
+    SpriteXPM** sprites = malloc(sizeof(SpriteXPM*));
+    sprites[0] = newSpriteXPM((xpm_map_t)towerXPM[0], XPM_8_8_8, 0, 0);
     res->towerPickButton = buttonNew(ix, iy, BASIC_TOWER_SIZE.x, BASIC_TOWER_SIZE.y, animatedSpriteNew(0, sprites, 1, NORMAL), arenaTowerPickButtonCb, arenaTowerPickButtonCb);
 
     float hitY = (float)(res->popupY + POPUP_ICON_MARGIN);
@@ -345,7 +352,7 @@ void arenaBuildTower(Arena* arena, Vec2d position) {
 
     arena->towersN++;
     arena->towers = realloc(arena->towers, sizeof(GenericTower*) * arena->towersN);
-    arena->towers[arena->towersN - 1] = mortarTowerNew(position);
+    arena->towers[arena->towersN - 1] = basicTowerNew(position);
 
     arena->collidersN[WALLS_TAG]++;
     arena->colliders[WALLS_TAG] = realloc(arena->colliders[WALLS_TAG], sizeof(BoxCollider*) * arena->collidersN[WALLS_TAG]);
@@ -367,17 +374,18 @@ void arenaFree(Arena* arena) {
     buttonFree(arena->towerPickButton);
 
     for (int i = 0; i < arena->tilesN; i++) tileFree(arena->tiles[i]);
-    for (int i = 0; i < arena->fruitsN; i++) collectableFree(arena->fruits[i]); 
-    
+    for (int i = 0; i < arena->fruitsN; i++) collectableFree(arena->fruits[i]);
+
     monsterFree(arena->monster_test);
+
+
+    monsterGenFree(arena->monsterGen1);
+    
     pathFree(arena->path_test);
- 
 
     free(arena->colliders[WALLS_TAG]);
     free(arena->colliders[PLAYER_TAG]);
     free(arena->colliders[COLLECTABLE_TAG]);
-    free(arena->colliders[MONSTER_TAG]);
- 
     free(arena->tiles);
 
     free(arena->fruits);
@@ -467,6 +475,8 @@ static void arenaHandleConstruction(Arena* arena, Terminal* terminal) {
         }
         if (cursorIsLeftButtonPressedDown(cur) && ok) {
             arenaBuildTower(arena, pos);
+            cursorSetConstructionMode(cur, false);
+            arena->constructPhase = ARENA_CONSTRUCT_NORMAL;
         }
     }
 }
@@ -485,11 +495,14 @@ void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
     for (int i = 0; i < arena->fruitsN; i++) collectableUpdate(arena->fruits[i], terminal);
     for (int i = 0; i < arena->tilesN; i++) tileUpdate(arena->tiles[i], terminal);
     for (int i = arena->towersN - 1; i >= 0; i--) towerUpdate(arena->towers[i], terminal, arena, deltaTime);
-
-
+ 
     monsterUpdate(arena->monster_test,arena,terminal,deltaTime);
+
     monsterSumHP(arena->monster_test,-100);
-    
+
+
+    monsterGenUpdate(arena->monsterGen1,arena,terminal,deltaTime);
+     
     arenaCollectableHandler(arena);
 
     arenaHandleConstruction(arena, terminal);
