@@ -10,13 +10,14 @@
 #include "../include/button.h"
 #include "../include/components/boxCollider.h"
 #include "../include/data.h"
+#include "../include/fruit.h"
 #include "../include/player/player.h"
 #include "../include/tiles/collectable.h"
 #include "../include/tiles/tile.h"
 #include "../include/utils/cursorHandler.h"
 
-#include "../resources/1.h"
 #include "../resources/blue/tower/blueTower.h"
+#include "../resources/fruits/fruits.h"
 #include "../resources/icons/icons.h"
 #include "../resources/map/background.h"
 #include "../resources/tiles/tiles.h"
@@ -48,6 +49,12 @@ typedef enum {
     ARENA_UPGRADE_MENU_OPEN,
 } ArenaUpgradePhase;
 
+typedef struct {
+    Collectable* collectable;
+    FruitKind kind;
+    float timeToLive;
+} ArenaFruit;
+
 struct Arena {
     int* collidersN;
     BoxCollider*** colliders;
@@ -56,7 +63,7 @@ struct Arena {
     Tile** tiles;
 
     int fruitsN;
-    Collectable** fruits;
+    ArenaFruit* fruits;
 
     int towersN;
     GenericTower** towers;
@@ -94,6 +101,53 @@ struct Arena {
     Button* upgradeHammerLeft;
     Button* upgradeHammerRight;
 };
+
+static char** arena_fruit_xpm_for_kind(FruitKind kind) {
+    switch (kind) {
+        case FRUIT_BANANA:
+            return banana;
+        case FRUIT_ABACATE:
+            return abacate;
+        case FRUIT_CEREJA:
+            return cereja;
+        case FRUIT_CENOURA:
+            return cenoura;
+        default:
+            return banana;
+    }
+}
+
+static void arena_fruits_sync_colliders(Arena* arena) {
+    int n = arena->fruitsN;
+    arena->collidersN[COLLECTABLE_TAG] = n;
+    if (n == 0) {
+        free(arena->colliders[COLLECTABLE_TAG]);
+        arena->colliders[COLLECTABLE_TAG] = NULL;
+        return;
+    }
+    BoxCollider** next = realloc(arena->colliders[COLLECTABLE_TAG], sizeof(BoxCollider*) * (size_t)n);
+    if (next == NULL) return;
+    arena->colliders[COLLECTABLE_TAG] = next;
+    for (int i = 0; i < n; i++) {
+        next[i] = collectableGetHitBox(arena->fruits[i].collectable);
+    }
+}
+
+static void arena_fruit_push(Arena* arena, Vec2d position, FruitKind kind, float ttl_sec) {
+    int idx = arena->fruitsN;
+    arena->fruitsN++;
+    ArenaFruit* grown = realloc(arena->fruits, sizeof(ArenaFruit) * (size_t)arena->fruitsN);
+    if (grown == NULL) {
+        arena->fruitsN--;
+        return;
+    }
+    arena->fruits = grown;
+    Collectable* c = collectableNew(position, EMPTY_VEC2D, FRUIT_SIZE, arena_fruit_xpm_for_kind(kind));
+    arena->fruits[idx].collectable = c;
+    arena->fruits[idx].kind = kind;
+    arena->fruits[idx].timeToLive = ttl_sec;
+    arena_fruits_sync_colliders(arena);
+}
 
 static void arenaTowerPickButtonCb(Button* self) {
     (void)self;
@@ -380,14 +434,8 @@ static void createPlayer(Arena* arena) {
 }
 
 static void createFruitsTest(Arena* arena) {
-    arena->fruitsN = 1;
-    arena->fruits = malloc(sizeof(Collectable*) * arena->fruitsN);
     Vec2d fruitPos = {500, 400};
-
-    arena->fruits[0] = collectableNew(fruitPos, EMPTY_VEC2D, FRUIT_SIZE, abc);
-    arena->colliders[COLLECTABLE_TAG] = malloc(sizeof(BoxCollider*) * arena->fruitsN);
-    arena->collidersN[COLLECTABLE_TAG] = arena->fruitsN;
-    for (int i = 0; i < arena->fruitsN; i++) arena->colliders[COLLECTABLE_TAG][i] = collectableGetHitBox(arena->fruits[i]);
+    arena_fruit_push(arena, fruitPos, FRUIT_ABACATE, FRUIT_TIME_ON_SCREEN_SEC);
 }
 
 Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile, const char* waterFile) {
@@ -398,7 +446,10 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
         res->collidersN[t] = 0;
         res->colliders[t] = NULL;
     }
- 
+
+    res->fruits = NULL;
+    res->fruitsN = 0;
+
     res->path_test=pathNew(4,vectorCreateWithFloatingData(sizeof(float),NULL,7*2, 10.0f,150.0f,  330.0f,150.0f,  380.0f,275.0f,  875.0f,275.0f,   925.0f,150.0f,  1300.0f,150.0f, 1310.0f,150.0f ));
     res->monster_test=pawnMonsterNew(10,150,res->path_test);
     res->monsterGen1=monsterGenNew(res->path_test,defaultMonsterCreator,defaultGenTimeFunc);
@@ -526,7 +577,8 @@ void arenaFree(Arena* arena) {
     buttonFree(arena->towerPickButton);
 
     for (int i = 0; i < arena->tilesN; i++) tileFree(arena->tiles[i]);
-    for (int i = 0; i < arena->fruitsN; i++) collectableFree(arena->fruits[i]);
+    for (int i = 0; i < arena->fruitsN; i++) collectableFree(arena->fruits[i].collectable);
+    free(arena->fruits);
 
     monsterFree(arena->monster_test);
 
@@ -570,9 +622,16 @@ int arenaDetectCollisions(Arena* arena, BoxCollider* box, int tag, BoxCollider**
 
 static void arenaCollectableHandler(Arena* arena) {
     BoxCollider* hitBox = playerModelGetHitBox(playerGetPlayerModel(arena->player));
-    BoxCollider* collisions[arena->fruitsN];
+    BoxCollider* collisions[PLACEMENT_QUERY_MAX];
     int n = arenaDetectCollisions(arena, hitBox, COLLECTABLE_TAG, collisions);
-    for (int i = 0; i < n; i++) collectableSetActive(arena->fruits[i], false);
+    for (int k = 0; k < n; k++) {
+        for (int i = 0; i < arena->fruitsN; i++) {
+            if (collectableGetHitBox(arena->fruits[i].collectable) == collisions[k]) {
+                collectableSetActive(arena->fruits[i].collectable, false);
+                break;
+            }
+        }
+    }
 }
 
 static void arenaDrawConstructionPopup(Arena* arena, Terminal* terminal, float deltaTime) {
@@ -651,7 +710,7 @@ BoxCollider* arenaFindFirstEnemy(Arena* arena, BoxCollider* range) {
 }
 
 void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
-    for (int i = 0; i < arena->fruitsN; i++) collectableUpdate(arena->fruits[i], terminal);
+    for (int i = 0; i < arena->fruitsN; i++) collectableUpdate(arena->fruits[i].collectable, terminal);
     for (int i = 0; i < arena->tilesN; i++) tileUpdate(arena->tiles[i], terminal);
     for (int i = arena->towersN - 1; i >= 0; i--) towerUpdate(arena->towers[i], terminal, arena, deltaTime);
  

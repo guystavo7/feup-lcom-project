@@ -36,6 +36,7 @@ static const Vec2d EMPTY_VEC2D = {0, 0};
 
 // Fruit
 static const Vec2d FRUIT_SIZE = {32, 32};
+#define FRUIT_TIME_ON_SCREEN_SEC 15.0f
 
 // Player
 #define PLAYER_MAX_VELOCITY 200
