@@ -15,7 +15,13 @@
 #define TAGS_NUM 		7
 
 // File Paths
-static const char* map1 = "/home/lcom/labs/grupo_2leic13_2/project/resources/map/grid_walls.csv";
+/*
+static const char* map1 = "/home/lcom/labs/project/resources/map/grid_walls.csv";
+static const char* path1 = "/home/lcom/labs/project/resources/map/grid_path.csv";
+static const char* lake1 = "/home/lcom/labs/project/resources/map/grid_water.csv";*/
+
+
+static const char* map1 =  "/home/lcom/labs/grupo_2leic13_2/project/resources/map/grid_walls.csv";
 static const char* path1 = "/home/lcom/labs/grupo_2leic13_2/project/resources/map/grid_path.csv";
 static const char* lake1 = "/home/lcom/labs/grupo_2leic13_2/project/resources/map/grid_water.csv";
 
@@ -50,7 +56,10 @@ static const Vec2d BASIC_TOWER_RANGE = {300, 300};
 static const Vec2d BASIC_TOWER_RANGE_OFFSET = {(60 - 300) / 2, (11 - 300) / 2};
 #define BASIC_TOWER_COOLDOWN 0.5
 #define BASIC_TOWER_SHOOT_SPEED 10 
-
+#define ARROW_FRAMES 8
+#define ARROW_EPSILON 0.2f
+#define ARROW_SPEED 500
+#define SKY_FALL_ARROW_SPEED 700
 
 // Fast Tower
 static const Vec2d FAST_TOWER_RANGE = {350, 350};

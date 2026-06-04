@@ -19,7 +19,7 @@ typedef enum {
     TOWER_KIND_ELETRICT,
 } TowerKind;
 
-GenericTower* towerNew(SpriteXPM* upperHalf, SpriteXPM* lowerHalf, AnimatedSprite* archerIdle, AnimatedSprite* archerShoot, Vec2d position, Vec2d size, Vec2d hitBoxOffset, Vec2d rangeSize, Vec2d rangeOffset, void (*towerUpdate)(GenericTower* tower, Terminal* terminal, Arena* arena, float deltaTime), float cooldown, TowerKind kind);
+GenericTower* towerNew(SpriteXPM* upperHalf, SpriteXPM* lowerHalf, AnimatedSprite* archerIdle, AnimatedSprite* archerShoot, Vec2d position, Vec2d size, Vec2d hitBoxOffset, Vec2d rangeSize, Vec2d rangeOffset, void (*towerUpdate)(GenericTower* tower, Terminal* terminal, Arena* arena, float deltaTime), float cooldown, ProjectileType projectileType, SpriteXPM** arrowSprites, int n, TowerKind kind);
 void towerFree(GenericTower* tower);
 BoxCollider* towerGetHitBox(GenericTower* tower);
 
@@ -28,6 +28,7 @@ TowerKind towerGetKind(GenericTower* tower);
 bool towerIsBasic(GenericTower* tower);
 
 void towerUpdate(GenericTower* tower, Terminal* terminal, Arena* arena, float deltaTime);
-void towerDrawUpperHalf(GenericTower* tower, Terminal* terminal, float deltaTime);
+void towerDrawUpperHalf(GenericTower* tower, Terminal* terminal, Arena* arena, float deltaTime);
+bool towerAddProjectile(GenericTower* tower, Projectile* projectile);
 
 #endif

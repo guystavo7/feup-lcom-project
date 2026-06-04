@@ -1,5 +1,10 @@
 #include "../include/utils/utils.h"
 
+float floatModule(float n) {
+	if (n < 0) n = -n;
+	return n;
+}
+
 // Cut and paste this to file - only way to work
 void print_double(double a, int decimals) {
     int factor = 1;

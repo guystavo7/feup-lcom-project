@@ -3,6 +3,7 @@
 #include "../resources/purple/tower/purpleTower.h"
 #include "../resources/purple/archer/archerIdle.h"
 #include "../resources/purple/archer/archerShoot.h"
+#include "../resources/arrow/arrow.h"
 
 GenericTower* piercingTowerNew(Vec2d position) {
     SpriteXPM* lowerHalf = newSpriteXPM((xpm_map_t)towerXPM[0], XPM_8_8_8, 0, 0);
@@ -16,7 +17,10 @@ GenericTower* piercingTowerNew(Vec2d position) {
 	for (int i = 0; i < ARCHER_SHOOT_FRAMES; i++) archerShoot[i] = newSpriteXPM((xpm_map_t)archerShootXPM[i], XPM_8_8_8, ARCHER_OFFSET.x, ARCHER_OFFSET.y);
 	AnimatedSprite* shoot = animatedSpriteNew(PIERCING_TOWER_SHOOT_SPEED, archerShoot, ARCHER_SHOOT_FRAMES, NORMAL);
 
-    return towerNew(upperHalf, lowerHalf, idle, shoot, position, BASIC_TOWER_SIZE, BASIC_TOWER_HIT_BOX_OFFSET, PIERCING_TOWER_RANGE, PIERCING_TOWER_RANGE_OFFSET, piercingTowerUpdate, PIERCING_TOWER_COOLDOWN, TOWER_KIND_PIERCING);
+	SpriteXPM** projectileSprite = malloc(sizeof(SpriteXPM*) * ARROW_FRAMES); 
+	for (int i = 0; i < ARROW_FRAMES; i++) projectileSprite[i] = newSpriteXPM((xpm_map_t)arrowXPM[i], XPM_8_8_8, 0, 0);
+
+    return towerNew(upperHalf, lowerHalf, idle, shoot, position, BASIC_TOWER_SIZE, BASIC_TOWER_HIT_BOX_OFFSET, PIERCING_TOWER_RANGE, PIERCING_TOWER_RANGE_OFFSET, piercingTowerUpdate, PIERCING_TOWER_COOLDOWN, PROJ_PIERCING, projectileSprite, ARROW_FRAMES, TOWER_KIND_PIERCING);
 }
 
 void piercingTowerUpdate(GenericTower* tower, Terminal* terminal, Arena* arena, float deltaTime) {}
