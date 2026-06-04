@@ -25,6 +25,7 @@ struct monsterGen{
     Path* path;
     Monster* (*monsterCreator)(Path*);
     int (*genTimeFunc)(float);
+    unsigned int numberOfInstantFinishedMonsters;
 };
 
 void freeMonsterList(void* m){
@@ -42,6 +43,8 @@ MonsterGen* monsterGenNew(Path* path,Monster* (*monsterCreator)(Path*),int (*gen
     mg->availableMonsterIdStack=vectorCreate(sizeof(int),NULL);
 
     mg->deactivatedMonsterIdList=vectorCreate(sizeof(bool),NULL);
+
+    mg->numberOfInstantFinishedMonsters=0;
 
     return mg;
 }
@@ -65,6 +68,8 @@ void monsterGenAddMonster(MonsterGen* mg){
 void monsterGenUpdate(MonsterGen* mg, Arena* arena,Terminal* terminal, float delta_t){
     int n_monster_to_render=mg->genTimeFunc(delta_t);
 
+    mg->numberOfInstantFinishedMonsters=0;
+
 
     for(unsigned int i=0;i<vectorGetSize(mg->monsterList) ; i++){
 
@@ -74,10 +79,14 @@ void monsterGenUpdate(MonsterGen* mg, Arena* arena,Terminal* terminal, float del
         
         bool m_in_stack=vectorGetVal(mg->deactivatedMonsterIdList,i);
 
+
         if( ( monsterIsDead(m) || monsterGetFinishedPath(m) ) &&!m_in_stack){
             vectorSetVal(mg->deactivatedMonsterIdList,i,true);
-
             vectorPushBack(mg->availableMonsterIdStack,(char*)&i);
+            
+            if( !(monsterIsDead(m))){
+                mg->numberOfInstantFinishedMonsters++;
+            }
 
         } 
 
@@ -122,5 +131,10 @@ int monsterGenGetNextActiveMonsterIndex(MonsterGen* mg, unsigned int begin){
 
 Monster* monsterGenGetMonster(MonsterGen* mg,unsigned int index){
     return *(Monster**)vectorGet(mg->monsterList,index);
+}
+
+unsigned int monsterGenGetNumberOfInstantFinishedMonsters(MonsterGen* mg){
+
+    return mg->numberOfInstantFinishedMonsters;
 }
 
