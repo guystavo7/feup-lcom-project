@@ -112,3 +112,11 @@ bool animatedSpriteIsFinished(AnimatedSprite* sprite) {
 void animatedSpriteReset(AnimatedSprite* sprite) {
 	sprite->current = 0;
 }
+
+int animatedSpriteGetWidth(AnimatedSprite* sprite) {
+	return getSpriteWidth(sprite->sprites[(int)sprite->current]);
+}
+
+int animatedSpriteGetHeight(AnimatedSprite* sprite) {
+	return getSpriteHeight(sprite->sprites[(int)sprite->current]);
+}

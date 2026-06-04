@@ -4,13 +4,13 @@
 #include "../include/buildings/fastTower.h"
 #include "../include/buildings/mortarTower.h"
 #include "../include/buildings/piercingTower.h"
+#include "../include/buildings/basicLongTower.h"
 
 #include "../include/buildings/genericTower.h"
 #include "../include/button.h"
 #include "../include/components/boxCollider.h"
 #include "../include/data.h"
 #include "../include/player/player.h"
-#include "../include/components/projectile.h"
 #include "../include/tiles/collectable.h"
 #include "../include/tiles/tile.h"
 #include "../include/utils/cursorHandler.h"
@@ -26,10 +26,7 @@
 #include "../../lab5/terminal.h"
 
 #include "../include/monster/pawnMonster.h"
-
 #include "../include/monster/alienMonster.h"
-
-
 #include "../include/monster/monsterGen.h"
 
 #include <stdio.h>
@@ -500,7 +497,7 @@ void arenaBuildTower(Arena* arena, Vec2d position) {
 
     arena->towersN++;
     arena->towers = realloc(arena->towers, sizeof(GenericTower*) * arena->towersN);
-    arena->towers[arena->towersN - 1] = basicTowerNew(position);
+    arena->towers[arena->towersN - 1] = basicLongTowerNew(position);
 
     arena->collidersN[WALLS_TAG]++;
     arena->colliders[WALLS_TAG] = realloc(arena->colliders[WALLS_TAG], sizeof(BoxCollider*) * arena->collidersN[WALLS_TAG]);
@@ -664,9 +661,7 @@ void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
 
 
     monsterGenUpdate(arena->monsterGen1,arena,terminal,deltaTime);
-     
     arenaCollectableHandler(arena);
-
     arenaHandleConstruction(arena, terminal);
 
     playerUpdate(arena->player, terminal, arena, deltaTime);

@@ -142,51 +142,90 @@ static enum TowerState idleTransition(GenericTower* tower, Arena* arena, float d
     return tower->state;
 }
 
+static void createNormalProjectile(GenericTower* tower) {
+    Vec2d dir = {boxColliderGetX(tower->target) - tower->position.x, boxColliderGetY(tower->target) - tower->position.y - ARCHER_OFFSET.y};
+    vec2dNormalize(&dir);
+
+    Projectile* p;
+    Vec2d position = {tower->position.x, tower->position.y + ARCHER_OFFSET.y};
+    int index = 0;
+
+    // Hozizontal+
+    if (floatModule(dir.y) < ARROW_EPSILON && dir.x > 0) {
+        index = 0;
+        // Hozizontal-
+    } else if (floatModule(dir.y) < ARROW_EPSILON && dir.x < 0) {
+        index = 4;
+        // Vertical+
+    } else if (floatModule(dir.x) < ARROW_EPSILON && dir.y > 0) {
+        index = 6;
+        // Vertical-
+    } else if (floatModule(dir.x) < ARROW_EPSILON && dir.y < 0) {
+        index = 2;
+        // First quadrant
+    } else if (dir.x > 0 && dir.y < 0) {
+        index = 1;
+        // Second quadrant
+    } else if (dir.x < 0 && dir.y < 0) {
+        index = 3;
+        // Third quadrant
+    } else if (dir.x > 0 && dir.y > 0) {
+        index = 7;
+    } else {
+        // Forth quadrant
+        index = 5;
+    }
+
+    float maxVelocity = ARROW_SPEED;
+    Vec2d velocity = {dir.x * maxVelocity, dir.y * maxVelocity};
+
+    SpriteXPM** sprites = malloc(sizeof(SpriteXPM*));
+    sprites[0] = tower->arrowSprites[index];
+    AnimatedSprite* animatedSprite = animatedSpriteNew(ARROW_FRAME_SPEED, sprites, 1, NORMAL);
+
+    p = projectileCreate(tower->projectileType, position.x, position.y, velocity.x, velocity.y, animatedSprite);
+    if (!towerAddProjectile(tower, p)) projectileFree(p);
+}
+
+static void createSkyFallProjectile(GenericTower* tower) {
+    Projectile* p;
+    Vec2d position = (Vec2d){boxColliderGetX(tower->target) - ASTEROID_SIZE.x / 2 + 20, boxColliderGetY(tower->target) - ASTEROID_SIZE.y / 2 + 20};
+    float maxVelocity = SKY_FALL_ARROW_SPEED;
+    Vec2d velocity = {0, maxVelocity};
+
+    AnimatedSprite* animatedSprite = animatedSpriteNew(ASTEROID_FRAME_SPEED, tower->arrowSprites, ASTEROID_FRAMES, LOOP);
+    p = projectileCreate(tower->projectileType, position.x, position.y, velocity.x, velocity.y, animatedSprite);
+    if (!towerAddProjectile(tower, p)) projectileFree(p);
+}
+
+static void createNearProjectile(GenericTower* tower) {
+    Projectile* p;
+    Vec2d position = (Vec2d){boxColliderGetX(tower->target) - LIGHTNING_SIZE.x / 2, boxColliderGetY(tower->target) - LIGHTNING_SIZE.y / 2};
+    Vec2d velocity = EMPTY_VEC2D;
+
+    AnimatedSprite* animatedSprite = animatedSpriteNew(LIGHTNING_SPEED, tower->arrowSprites, LIGHTNING_FRAMES, ONE_SHOT);
+    animatedSpriteStart(animatedSprite);
+    p = projectileCreate(tower->projectileType, position.x, position.y, velocity.x, velocity.y, animatedSprite);
+    if (!towerAddProjectile(tower, p)) projectileFree(p);
+}
+
 static enum TowerState shootTransition(GenericTower* tower, Arena* arena, float deltaTime) {
     if (animatedSpriteIsFinished(tower->archerShoot)) {
         idleOnEnter(tower);
-        Vec2d dir = {boxColliderGetX(tower->target) - tower->position.x, boxColliderGetY(tower->target) - tower->position.y - ARCHER_OFFSET.y};
-        vec2dNormalize(&dir);
-
-        Projectile* p;
-        Vec2d position = {tower->position.x, tower->position.y + ARCHER_OFFSET.y};
-        int index = 0;
-
-		// Hozizontal+
-        if (floatModule(dir.y) < ARROW_EPSILON && dir.x > 0) {
-            index = 0;
-		// Hozizontal-
-        } else if (floatModule(dir.y) < ARROW_EPSILON && dir.x < 0) {
-            index = 4;
-		// Vertical+
-        } else if (floatModule(dir.x) < ARROW_EPSILON && dir.y > 0) {
-            index = 6;
-		// Vertical-
-        } else if (floatModule(dir.x) < ARROW_EPSILON && dir.y < 0) {
-            index = 2;
-		// First quadrant
-        } else if (dir.x > 0 && dir.y < 0) {
-            index = 1;
-		// Second quadrant
-        } else if (dir.x < 0 && dir.y < 0) {
-            index = 3;
-		// Third quadrant
-        } else if (dir.x > 0 && dir.y > 0) {
-            index = 7;
-        } else {
-		// Forth quadrant
-            index = 5;
+        switch (tower->projectileType) {
+            case PROJ_NORMAL:
+                createNormalProjectile(tower);
+                break;
+            case PROJ_SKY_FALL:
+                createSkyFallProjectile(tower);
+                break;
+            case PROJ_NEAR:
+                createNearProjectile(tower);
+                break;
+            default:
+                break;
         }
 
-		float maxVelocity = ARROW_SPEED;
-		if (tower->projectileType == PROJ_SKY_FALL) {
-			position = (Vec2d){boxColliderGetX(tower->target), boxColliderGetY(tower->target)};
-			maxVelocity = SKY_FALL_ARROW_SPEED;
-		}
-
-        Vec2d velocity = {dir.x * maxVelocity, dir.y * maxVelocity};
-        p = projectileCreate(tower->projectileType, position.x, position.y, velocity.x, velocity.y, tower->arrowSprites[index]);
-        if (!towerAddProjectile(tower, p)) projectileFree(p);
         return TOWER_IDLE;
     }
 
@@ -231,8 +270,8 @@ void towerFree(GenericTower* tower) {
 
     for (int i = 0; i < tower->projectilesCount; i++) projectileFree(tower->projectiles[i]);
     for (int i = 0; i < tower->arrowSpritesN; i++) freeSpriteXPM(tower->arrowSprites[i]);
-    free(tower->arrowSprites);
     free(tower->projectiles);
+    free(tower->arrowSprites);
     free(tower);
 }
 
