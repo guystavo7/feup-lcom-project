@@ -23,9 +23,9 @@
 #include "../resources/blue/tower/blueTower.h"
 #include "../resources/fruits/fruits.h"
 #include "../resources/icons/icons.h"
+#include "../resources/map/background.h"
 #include "../resources/tiles/tiles.h"
 #include "../resources/upgradeMenu/upgradeMenu.h"
-#include "../resources/maps/map1/map1.h"
 
 #include "../../lab5/spriteXMP.h"
 #include "../../lab5/terminal.h"
@@ -105,6 +105,8 @@ struct Arena {
     Button* upgradeHammerRightLong;
 
     TowerKind towerType;
+
+    float carrotSpawnCooldown;
 };
 
 static char** arena_fruit_xpm_for_kind(FruitKind kind) {
@@ -165,6 +167,40 @@ void arenaDeathFruit(Arena* arena, Vec2d position) {
     if (arena == NULL) return;
     if ((rand() % 100) >= FRUIT_MONSTER_DROP_PERCENT) return;
     arena_fruit_push(arena, position, arena_roll_monster_drop_fruit_kind(), FRUIT_TIME_ON_SCREEN_SEC);
+}
+
+static bool arena_carrot_probe_valid(Arena* arena, BoxCollider* probe) {
+    BoxCollider* hits[PLACEMENT_QUERY_MAX];
+    if (arenaDetectCollisions(arena, probe, PATH_TAG, hits) > 0) return false;
+    if (arenaDetectCollisions(arena, probe, LAKE_TAG, hits) > 0) return false;
+    if (arena->collidersN[TOWER_TAG] > 0 && arena->colliders[TOWER_TAG] != NULL) {
+        if (arenaDetectCollisions(arena, probe, TOWER_TAG, hits) > 0) return false;
+    }
+    return true;
+}
+
+static void arena_carrot_spawn_try(Arena* arena) {
+    int spanW = MAP_TILES_X * TILE_SIZE - (int)FRUIT_SIZE.x;
+    int spanH = MAP_TILES_Y * TILE_SIZE - (int)FRUIT_SIZE.y;
+    if (spanW <= 0 || spanH <= 0) return;
+    for (int k = 0; k < FRUIT_CARROT_SAMPLE_TRIES; k++) {
+        Vec2d pos = {(float)(rand() % spanW), (float)(rand() % spanH)};
+        BoxCollider* probe = boxColliderNew(pos, EMPTY_VEC2D, FRUIT_SIZE, 0);
+        bool ok = arena_carrot_probe_valid(arena, probe);
+        boxColliderFree(probe);
+        if (ok) {
+            arena_fruit_push(arena, pos, FRUIT_CENOURA, FRUIT_TIME_ON_SCREEN_SEC);
+            return;
+        }
+    }
+}
+
+static void arena_carrot_spawn_tick(Arena* arena, float deltaTime) {
+    if (arena == NULL) return;
+    arena->carrotSpawnCooldown -= deltaTime;
+    if (arena->carrotSpawnCooldown > 0.0f) return;
+    arena->carrotSpawnCooldown = FRUIT_CARROT_SPAWN_INTERVAL_SEC;
+    arena_carrot_spawn_try(arena);
 }
 
 static void arena_fruit_remove_at(Arena* arena, int index) {
@@ -570,7 +606,7 @@ static void createLakeColliders(Arena* arena, const char* filename) {
 }
 
 static void createPlayer(Arena* arena) {
-    Vec2d playerPos = {100, 300};
+    Vec2d playerPos = {100, 100};
     arena->player = playerNew(playerPos);
 
     arena->colliders[PLAYER_TAG] = malloc(sizeof(BoxCollider*));
@@ -628,6 +664,7 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
     res->monsterGen1 = monsterGenNew(res->path_test, defaultMonsterCreator, defaultGenTimeFunc);
     res->fruits = NULL;
     res->fruitsN = 0;
+    res->carrotSpawnCooldown = FRUIT_CARROT_SPAWN_INTERVAL_SEC * 0.5f;
 
     res->collidersN[MONSTER_TAG] = 1;
     res->colliders[MONSTER_TAG] = malloc(sizeof(BoxCollider*) * res->collidersN[MONSTER_TAG]);
@@ -646,7 +683,7 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
     res->upgradeTargetIndex = -1;
     createUpgradeUI(res);
 
-	SpriteXPM* backgroundSprite = newSpriteXPM((xpm_map_t)background1, XPM_8_8_8, 0, 0);
+    SpriteXPM* backgroundSprite = newSpriteXPM((xpm_map_t)background, XPM_8_8_8, 0, 0);
     generateEmptyBuffer(backgroundSprite, terminal, 0, 0, false);
     res->HeroHP = 10;
     res->healthBar = healthBarNew(res->HeroHP);
@@ -897,7 +934,7 @@ void arenaHandleMonsterDamage(Arena* arena) {
             int projCount = towerGetProjectilesCount(tower);
             for (int i = 0; i < projCount; i++) {
                 Projectile* arrow = towerGetProjectile(tower, i);
-                if (!projectileIsActive(arrow) || !projectileCanDealDamage(arrow)) continue;
+                if (!projectileIsActive(arrow)) continue;
 
                 if (boxIsCollidingWithBox(projectileGetCollider(arrow), monsterGetBoxCollider(monster))) {
                     monsterSumHP(monster, -1000);
@@ -913,6 +950,7 @@ void arenaHandleMonsterDamage(Arena* arena) {
 
 void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
     arena_fruits_tick_time_to_live(arena, deltaTime);
+    arena_carrot_spawn_tick(arena, deltaTime);
     for (int i = 0; i < arena->fruitsN; i++) collectableUpdate(arena->fruits[i].collectable, terminal);
     for (int i = 0; i < arena->tilesN; i++) tileUpdate(arena->tiles[i], terminal);
     for (int i = arena->towersN - 1; i >= 0; i--) towerUpdate(arena->towers[i], terminal, arena, deltaTime);

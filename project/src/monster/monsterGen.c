@@ -27,7 +27,6 @@ struct monsterGen{
     Vector* monsterList;
     Vector* availableMonsterIdStack;
     Vector* deactivatedMonsterIdList;
-    Vector* activeMonsterIdSorted; //sorted by decreasing order of which monster is closer to the end of its path (the first is the closest)
     Path* path;
     Monster* (*monsterCreator)(Path*);
     int (*genTimeFunc)(float);
@@ -48,8 +47,6 @@ MonsterGen* monsterGenNew(Path* path,Monster* (*monsterCreator)(Path*),int (*gen
     mg->monsterList=vectorCreate(sizeof(Monster*),freeMonsterList);
     mg->availableMonsterIdStack=vectorCreate(sizeof(int),NULL);
 
-    mg->activeMonsterIdSorted=vectorCreate(sizeof(int),NULL);
-
     mg->deactivatedMonsterIdList=vectorCreate(sizeof(bool),NULL);
 
     mg->numberOfInstantFinishedMonsters=0;
@@ -61,7 +58,6 @@ void monsterGenFree(MonsterGen* mg){
     vectorFree(mg->monsterList);
     vectorFree(mg->availableMonsterIdStack);
     vectorFree(mg->deactivatedMonsterIdList);
-    vectorFree(mg->activeMonsterIdSorted);
     free(mg);
 }
 
@@ -69,8 +65,6 @@ void monsterGenAddMonster(MonsterGen* mg){
     Monster* new_monster= mg->monsterCreator(mg->path);
     vectorPushBack(mg->monsterList,(char*)&new_monster);
     vectorPushBackVal(mg->deactivatedMonsterIdList,false);
-    
-    vectorPushBackVal(mg->activeMonsterIdSorted,vectorGetSize(mg->monsterList)-1);
 }
 
  
@@ -112,19 +106,6 @@ void monsterGenUpdate(MonsterGen* mg, Arena* arena,Terminal* terminal, float del
 
     }
 
-    unsigned int new_size=0;
-    for(unsigned int i=0;i<vectorGetSize(mg->activeMonsterIdSorted) ; i++){
-        int monsterId=vectorGetVal(mg->activeMonsterIdSorted,i);
-        if(!vectorGetVal(mg->deactivatedMonsterIdList,monsterId)){
-            vectorSetVal(mg->activeMonsterIdSorted,new_size,monsterId);
-            new_size++;
-        } 
-    }
-    unsigned int n_removes=vectorGetSize(mg->activeMonsterIdSorted)-new_size;
-    
-    for(unsigned int i=0;i<n_removes ; i++){
-        vectorPopBack(mg->activeMonsterIdSorted);
-    }
     int stackSize; 
     int monsterId;
     Vec2d v={10,10};
@@ -138,7 +119,6 @@ void monsterGenUpdate(MonsterGen* mg, Arena* arena,Terminal* terminal, float del
             monsterReset(m,&v);
             vectorPopBack(mg->availableMonsterIdStack);
             vectorSetVal(mg->deactivatedMonsterIdList,monsterId,false);
-            vectorPushBackVal(mg->activeMonsterIdSorted, monsterId);
         }
         else
         {
@@ -153,15 +133,16 @@ void monsterGenUpdate(MonsterGen* mg, Arena* arena,Terminal* terminal, float del
 
 }
 
-int monsterGenGetNextActiveMonsterIndex(MonsterGen* mg, unsigned int i){
-   if(vectorGetSize(mg->activeMonsterIdSorted)==0 || i >=vectorGetSize(mg->activeMonsterIdSorted)){
-        return -1;
+int monsterGenGetNextActiveMonsterIndex(MonsterGen* mg, unsigned int begin){
+    for(unsigned int i=begin;i!=vectorGetSize(mg->monsterList);i++){
+        if(!vectorGetVal(mg->deactivatedMonsterIdList,i)){
+            return i;
+        }
     }
-    else{
-        return vectorGetVal(mg->activeMonsterIdSorted,i);
-    }
+
+    return -1;
 }
- 
+
 Monster* monsterGenGetMonster(MonsterGen* mg,unsigned int index){
     return *(Monster**)vectorGet(mg->monsterList,index);
 }
