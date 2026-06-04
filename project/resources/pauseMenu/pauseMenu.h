@@ -6,7 +6,7 @@ static char *pausedMenuBackground[] = {
 /* columns rows colors chars-per-pixel */
 "295 252 20 1 ",
 "  c None",
-". c #000000",
+". c #161C2E",
 "X c #161C2E",
 "o c #53373C",
 "O c #654848",

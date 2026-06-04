@@ -35,6 +35,7 @@ ProjectileType projectileGetType(Projectile* p);
 
 bool projectileIsActive(Projectile* p);
 void projectileSetActive(Projectile* p, bool active);
+bool projectileCanDealDamage(Projectile* p);
 
 BoxCollider* projectileGetCollider(Projectile* p);
 

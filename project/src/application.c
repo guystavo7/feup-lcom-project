@@ -7,6 +7,7 @@
 #include "../include/utils/cursorHandler.h"
 #include "../include/utils/inputHandler.h"
 #include "../include/utils/utils.h"
+#include "../include/data.h"
 
 #include <lcom/lcf.h>
 
@@ -53,7 +54,7 @@ int(proj_main_loop)(int argc, char* argv[]) {
     mouseSubscribe(&hook_id_mouse);
     timer_subscribe((uint8_t*)&hook_id_timer);
     kbcSubscribe((uint8_t*)&hook_id_kbd);
-    Terminal* terminal = newTerminal(0x11B);
+    Terminal* terminal = newTerminal(MODE);
     startGame(terminal);
 
     enableDataReport();
