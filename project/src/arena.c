@@ -22,9 +22,9 @@
 #include "../resources/1.h"
 #include "../resources/blue/tower/blueTower.h"
 #include "../resources/icons/icons.h"
+#include "../resources/maps/map1/map1.h"
 #include "../resources/tiles/tiles.h"
 #include "../resources/upgradeMenu/upgradeMenu.h"
-#include "../resources/maps/map1/map1.h"
 
 #include "../../lab5/spriteXMP.h"
 #include "../../lab5/terminal.h"
@@ -73,11 +73,11 @@ struct Arena {
 
     Player* player;
     Cursor* cursor;
- 
+
     int HeroHP;
 
-	// UI
-    
+    // UI
+
     HealthBar* healthBar;
     StatsBar* statsBar;
     BuildMenu* basicTowerBuildMenu;
@@ -527,7 +527,7 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
         res->colliders[t] = NULL;
     }
 
-    res->path_test = pathNew(4, vectorCreateWithFloatingData(sizeof(float), NULL, 7 * 2, 10.0f, 150.0f, 330.0f, 150.0f, 380.0f, 275.0f, 875.0f, 275.0f, 925.0f, 150.0f, 1300.0f, 150.0f, 1310.0f, 150.0f));
+    res->path_test = pathNew(4, vectorCreateWithFloatingData(sizeof(float), NULL, 32 * 2, 0.0, 256.0, 32.0, 256.0, 64.0, 256.0, 96.0, 256.0, 128.0, 256.0, 160.0, 256.0, 192.0, 256.0, 224.0, 256.0, 256.0, 256.0, 256.0, 288.0, 288.0, 288.0, 320.0, 288.0, 352.0, 288.0, 384.0, 288.0, 384.0, 256.0, 416.0, 256.0, 416.0, 224.0, 448.0, 224.0, 480.0, 224.0, 512.0, 224.0, 544.0, 224.0, 544.0, 256.0, 576.0, 256.0, 576.0, 288.0, 576.0, 320.0, 608.0, 320.0, 640.0, 320.0, 672.0, 320.0, 704.0, 320.0, 736.0, 320.0, 768.0, 320.0, 850.0, 320.0));
     res->monster_test = pawnMonsterNew(10, 150, res->path_test);
     res->monsterGen1 = monsterGenNew(res->path_test, defaultMonsterCreator, defaultGenTimeFunc);
 
@@ -548,14 +548,14 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
     res->upgradeTargetIndex = -1;
     createUpgradeUI(res);
 
-	SpriteXPM* backgroundSprite = newSpriteXPM((xpm_map_t)background1, XPM_8_8_8, 0, 0);
+    SpriteXPM* backgroundSprite = newSpriteXPM((xpm_map_t)background1, XPM_8_8_8, 0, 0);
     generateEmptyBuffer(backgroundSprite, terminal, 0, 0, false);
- 
-    res->HeroHP=10;
-	res->healthBar = healthBarNew(res->HeroHP);
-	res->statsBar = statsBarNew(); 
+
+    res->HeroHP = 10;
+    res->healthBar = healthBarNew(res->HeroHP);
+    res->statsBar = statsBarNew();
     res->basicTowerBuildMenu = buildMenuNew(TOWER_KIND_BASIC);
-    res->longTowerBuildMenu = buildMenuNew(TOWER_KIND_LONG); 
+    res->longTowerBuildMenu = buildMenuNew(TOWER_KIND_LONG);
 
     return res;
 }
@@ -821,16 +821,15 @@ void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
         buildMenuUpdate(arena->basicTowerBuildMenu, terminal, arena, deltaTime);
         buildMenuUpdate(arena->longTowerBuildMenu, terminal, arena, deltaTime);
     }
- 
-    
-    arena->HeroHP-=monsterGenGetNumberOfInstantFinishedMonsters(arena->monsterGen1);
-    if(!(arena->HeroHP>0)){
-        arena->HeroHP=0;
+
+    arena->HeroHP -= monsterGenGetNumberOfInstantFinishedMonsters(arena->monsterGen1);
+    if (!(arena->HeroHP > 0)) {
+        arena->HeroHP = 0;
     }
 
-    healthBarSetHealth(arena->healthBar,arena->HeroHP);
-	healthBarUpdate(arena->healthBar, terminal, arena);
-	statsBarUpdate(arena->statsBar, terminal, arena); 
+    healthBarSetHealth(arena->healthBar, arena->HeroHP);
+    healthBarUpdate(arena->healthBar, terminal, arena);
+    statsBarUpdate(arena->statsBar, terminal, arena);
 
     cursorUpdate(getCursor(), terminal, deltaTime);
 }
