@@ -614,11 +614,6 @@ static void createPlayer(Arena* arena) {
     arena->collidersN[PLAYER_TAG] = 1;
 }
 
-static void createFruitsTest(Arena* arena) {
-    Vec2d fruitPos = {500, 400};
-    arena_fruit_push(arena, fruitPos, FRUIT_ABACATE, FRUIT_TIME_ON_SCREEN_SEC);
-}
-
 static void createUpgradeUI(Arena* res) {
     res->upgradeScrollLeftBasic = newSpriteXPM((xpm_map_t)upgradeMenuXPM[UPGRADE_MENU_XPM_FAST], XPM_8_8_8, 0, 0);
     res->upgradeScrollRightBasic = newSpriteXPM((xpm_map_t)upgradeMenuXPM[UPGRADE_MENU_XPM_PIERCING], XPM_8_8_8, 0, 0);
@@ -674,7 +669,6 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
     createMonsterPathColliders(res, pathFile);
     createLakeColliders(res, waterFile);
     createPlayer(res);
-    createFruitsTest(res);
     res->towersN = 0;
     res->towers = malloc(sizeof(GenericTower*) * res->towersN);
 
