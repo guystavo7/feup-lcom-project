@@ -1,8 +1,6 @@
 #include "../include/game.h"
 #include "../include/gameState.h"
 
-#include "../resources/map/background.h"
-
 static GameState* state;
 
  
