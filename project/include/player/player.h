@@ -1,6 +1,5 @@
 #include "./../utils/vec2d.h"
 #include "./../arena.h"
-#include "./../fruit.h"
 #include "playerModel.h"
 #include "playerController.h"
 
@@ -12,6 +11,3 @@ void playerUpdate(Player* player, Terminal* terminal, Arena* arena, float deltaT
 
 PlayerModel* playerGetPlayerModel(Player* player);
 PlayerController* playerGetPlayerController(Player* player);
-
-void playerAddFruit(Player* player, FruitKind kind);
-unsigned playerGetFruitCount(const Player* player, FruitKind kind);

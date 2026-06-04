@@ -235,14 +235,23 @@ static void arena_fruits_tick_time_to_live(Arena* arena, float deltaTime) {
     }
 }
 
-static void arena_sync_fruit_stats_bar(Arena* arena) {
-    const Player* p = arena->player;
-    StatsBar* sb = arena->statsBar;
-    if (p == NULL || sb == NULL) return;
-    statsBarSetBanana(sb, (int)playerGetFruitCount(p, FRUIT_BANANA));
-    statsBarSetAvocado(sb, (int)playerGetFruitCount(p, FRUIT_ABACATE));
-    statsBarSetCherry(sb, (int)playerGetFruitCount(p, FRUIT_CEREJA));
-    statsBarSetCarrot(sb, (int)playerGetFruitCount(p, FRUIT_CENOURA));
+static void arena_pickup_add_fruit_to_stats_bar(StatsBar* sb, FruitKind kind) {
+    switch (kind) {
+        case FRUIT_BANANA:
+            statsBarAddBanana(sb, 1);
+            break;
+        case FRUIT_ABACATE:
+            statsBarAddAvocado(sb, 1);
+            break;
+        case FRUIT_CEREJA:
+            statsBarAddCherry(sb, 1);
+            break;
+        case FRUIT_CENOURA:
+            statsBarAddCarrot(sb, 1);
+            break;
+        default:
+            break;
+    }
 }
 
 static Arena* s_arena_upgrade_button_ctx;
@@ -685,7 +694,10 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
     res->statsBar = statsBarNew();
     res->basicTowerBuildMenu = buildMenuNew(TOWER_KIND_BASIC);
     res->longTowerBuildMenu = buildMenuNew(TOWER_KIND_LONG);
-    arena_sync_fruit_stats_bar(res);
+    statsBarSetBanana(res->statsBar, 5);
+    statsBarSetAvocado(res->statsBar, 5);
+    statsBarSetCherry(res->statsBar, 0);
+    statsBarSetCarrot(res->statsBar, 0);
 
     return res;
 }
@@ -818,9 +830,8 @@ static void arenaCollectableHandler(Arena* arena) {
             }
         }
         if (found < 0) break;
-        playerAddFruit(arena->player, arena->fruits[found].kind);
+        arena_pickup_add_fruit_to_stats_bar(arena->statsBar, arena->fruits[found].kind);
         arena_fruit_remove_at(arena, found);
-        arena_sync_fruit_stats_bar(arena);
     }
 }
 
@@ -979,7 +990,6 @@ void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
 
     healthBarSetHealth(arena->healthBar, arena->HeroHP);
     healthBarUpdate(arena->healthBar, terminal, arena);
-    arena_sync_fruit_stats_bar(arena);
     statsBarUpdate(arena->statsBar, terminal, arena);
 
     cursorUpdate(getCursor(), terminal, deltaTime);
