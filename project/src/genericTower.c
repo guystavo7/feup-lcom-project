@@ -5,6 +5,7 @@
 #include "../include/data.h"
 
 #include "../resources/particles/dust/dust.h"
+#include <stdbool.h>
 #include <stdlib.h>
 
 enum TowerState {
@@ -31,9 +32,11 @@ struct GenericTower {
 	Timer* cooldownTimer;
 
     void (*towerUpdate)(GenericTower* tower, Terminal* terminal, Arena* arena, float deltaTime);
+
+    TowerKind kind;
 };
 
-GenericTower* towerNew(SpriteXPM* upperHalf, SpriteXPM* lowerHalf, AnimatedSprite* archerIdle, AnimatedSprite* archerShoot, Vec2d position, Vec2d size, Vec2d hitBoxOffset, Vec2d rangeSize, Vec2d rangeOffset, void (*towerUpdate)(GenericTower* tower, Terminal* terminal, Arena* arena, float deltaTime), float cooldown) {
+GenericTower* towerNew(SpriteXPM* upperHalf, SpriteXPM* lowerHalf, AnimatedSprite* archerIdle, AnimatedSprite* archerShoot, Vec2d position, Vec2d size, Vec2d hitBoxOffset, Vec2d rangeSize, Vec2d rangeOffset, void (*towerUpdate)(GenericTower* tower, Terminal* terminal, Arena* arena, float deltaTime), float cooldown, TowerKind kind) {
     GenericTower* res = malloc(sizeof(GenericTower));
     res->upperHalf = upperHalf;
     res->lowerHalf = lowerHalf;
@@ -56,6 +59,7 @@ GenericTower* towerNew(SpriteXPM* upperHalf, SpriteXPM* lowerHalf, AnimatedSprit
     res->current = archerIdle;
 
 	res->cooldownTimer = timerNew(cooldown);
+    res->kind = kind;
     return res;
 }
 
@@ -145,4 +149,16 @@ void towerFree(GenericTower* tower) {
 
 BoxCollider* towerGetHitBox(GenericTower* tower) {
     return tower->hitBox;
+}
+
+Vec2d towerGetPosition(GenericTower* tower) {
+    return tower->position;
+}
+
+TowerKind towerGetKind(GenericTower* tower) {
+    return tower->kind;
+}
+
+bool towerIsBasic(GenericTower* tower) {
+    return tower->kind == TOWER_KIND_BASIC;
 }

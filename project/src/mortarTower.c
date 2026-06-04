@@ -16,7 +16,7 @@ GenericTower* mortarTowerNew(Vec2d position) {
     for (int i = 0; i < MONK_HEAL_FRAMES; i++) archerShoot[i] = newSpriteXPM((xpm_map_t)monkHealXPM[i], XPM_8_8_8, MONK_HEAL_OFFSET.x, MONK_HEAL_OFFSET.y);
     AnimatedSprite* shoot = animatedSpriteNew(MORTAR_TOWER_SHOOT_SPEED, archerShoot, MONK_HEAL_FRAMES, NORMAL);
 
-    return towerNew(upperHalf, lowerHalf, idle, shoot, position, BASIC_TOWER_SIZE, BASIC_TOWER_HIT_BOX_OFFSET, MORTAR_TOWER_RANGE, MORTAR_TOWER_RANGE_OFFSET, mortarTowerUpdate, MORTAR_COOLDOWN);
+    return towerNew(upperHalf, lowerHalf, idle, shoot, position, BASIC_TOWER_SIZE, BASIC_TOWER_HIT_BOX_OFFSET, MORTAR_TOWER_RANGE, MORTAR_TOWER_RANGE_OFFSET, mortarTowerUpdate, MORTAR_COOLDOWN, TOWER_KIND_MORTAR);
 }
 
 void mortarTowerUpdate(GenericTower* tower, Terminal* terminal, Arena* arena, float deltaTime) {}

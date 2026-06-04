@@ -16,7 +16,7 @@ GenericTower* eletrictTowerNew(Vec2d position) {
     for (int i = 0; i < ARCHER_SHOOT_FRAMES; i++) archerShoot[i] = newSpriteXPM((xpm_map_t)archerShootXPM[i], XPM_8_8_8, ARCHER_OFFSET.x, ARCHER_OFFSET.y);
     AnimatedSprite* shoot = animatedSpriteNew(ELETRICT_TOWER_SHOOT_SPEED, archerShoot, ARCHER_SHOOT_FRAMES, NORMAL);
 
-    return towerNew(upperHalf, lowerHalf, idle, shoot, position, BASIC_TOWER_SIZE, BASIC_TOWER_HIT_BOX_OFFSET, ELETRICT_TOWER_RANGE, ELETRICT_TOWER_RANGE_OFFSET, eletrictTowerUpdate, ELETRICT_COOLDOWN);
+    return towerNew(upperHalf, lowerHalf, idle, shoot, position, BASIC_TOWER_SIZE, BASIC_TOWER_HIT_BOX_OFFSET, ELETRICT_TOWER_RANGE, ELETRICT_TOWER_RANGE_OFFSET, eletrictTowerUpdate, ELETRICT_COOLDOWN, TOWER_KIND_ELETRICT);
 }
 
 void eletrictTowerUpdate(GenericTower* tower, Terminal* terminal, Arena* arena, float deltaTime) {}
