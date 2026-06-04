@@ -44,7 +44,8 @@ SRCS= \
 	monsterGen.c \
 	./healthBar.c \
 	./statsBar.c \
-	./numbers.c
+	./numbers.c \
+	./buildMenu.c \
 
 OBJS = ${SRCS:.c=.o}
 

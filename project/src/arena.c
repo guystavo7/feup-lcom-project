@@ -3,9 +3,9 @@
 #include "../include/buildings/basicTower.h"
 #include "../include/buildings/eletricTower.h"
 #include "../include/buildings/fastTower.h"
+#include "../include/buildings/genericTower.h"
 #include "../include/buildings/mortarTower.h"
 #include "../include/buildings/piercingTower.h"
-#include "../include/buildings/genericTower.h"
 
 #include "../include/button.h"
 #include "../include/components/boxCollider.h"
@@ -14,8 +14,8 @@
 #include "../include/tiles/collectable.h"
 #include "../include/tiles/tile.h"
 #include "../include/utils/cursorHandler.h"
-#include "../include/utils/inputHandler.h"
 
+#include "../include/ui/buildMenu.h"
 #include "../include/ui/healthBar.h"
 #include "../include/ui/statsBar.h"
 
@@ -76,21 +76,13 @@ struct Arena {
     Player* player;
     Cursor* cursor;
 
-	// UI
+    // UI
     HealthBar* healthBar;
-	StatsBar* statsBar;
+    StatsBar* statsBar;
+    BuildMenu* basicTowerBuildMenu;
+    BuildMenu* longTowerBuildMenu;
 
     ArenaConstructPhase constructPhase;
-    int popupX;
-    int popupY;
-    int popupW;
-    int popupH;
-    int towerPickAnchorX;
-    int towerPickAnchorY;
-    SpriteXPM* towerPickUpperSprite;
-    Button* towerPickButton;
-    BoxCollider* towerPickHitbox;
-
     ArenaUpgradePhase upgradePhase;
     int upgradeTargetIndex;
     SpriteXPM* upgradeScrollLeft;
@@ -99,11 +91,9 @@ struct Arena {
     BoxCollider* upgradeScrollRightHitbox;
     Button* upgradeHammerLeft;
     Button* upgradeHammerRight;
-};
 
-static void arenaTowerPickButtonCb(Button* self) {
-    (void)self;
-}
+    TowerKind towerType;
+};
 
 static Arena* s_arena_upgrade_button_ctx;
 
@@ -114,9 +104,23 @@ static void arenaCloseUpgradeMenu(Arena* arena) {
     buttonReset(arena->upgradeHammerRight);
 }
 
+static bool buyTower(Arena* arena, TowerKind newKind) {
+    bool canBuy = true;
+    const int* cost = TOWER_COST[newKind];
+    if (statsBarGetBanana(arena->statsBar) < cost[0] || statsBarGetAvocado(arena->statsBar) < cost[1] || statsBarGetCherry(arena->statsBar) < cost[2] || statsBarGetCarrot(arena->statsBar) < cost[3]) canBuy = false;
+
+    if (canBuy) {
+        statsBarAddBanana(arena->statsBar, -cost[0]);
+        statsBarAddAvocado(arena->statsBar, -cost[1]);
+        statsBarAddCherry(arena->statsBar, -cost[2]);
+        statsBarAddCarrot(arena->statsBar, -cost[3]);
+    }
+    return canBuy;
+}
+
 static void arenaReplaceTargetTower(Arena* arena, TowerKind newKind) {
     int i = arena->upgradeTargetIndex;
-    if (i < 0 || i >= arena->towersN) return;
+    if (i < 0 || i >= arena->towersN || !buyTower(arena, newKind)) return;
     GenericTower* old = arena->towers[i];
     if (!towerIsBasic(old)) return;
 
@@ -213,10 +217,6 @@ static void arenaDrawUpgradeMenu(Arena* arena, Terminal* terminal, float deltaTi
     drawSpriteXPM(arena->upgradeScrollRight, terminal, UPGRADE_SCROLL_RIGHT_X, UPGRADE_SCROLL_ORIGIN_Y, false);
     buttonDraw(arena->upgradeHammerLeft, terminal, deltaTime, false);
     buttonDraw(arena->upgradeHammerRight, terminal, deltaTime, false);
-}
-
-static bool arenaPointInPopup(Arena* arena, int px, int py) {
-    return px >= arena->popupX && px < arena->popupX + arena->popupW && py >= arena->popupY && py < arena->popupY + arena->popupH;
 }
 
 static void createMap(Arena* arena, const char* filename, int tileSize) {
@@ -422,27 +422,6 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
     res->towers = malloc(sizeof(GenericTower*) * res->towersN);
 
     res->constructPhase = ARENA_CONSTRUCT_NORMAL;
-    res->popupW = 420;
-    res->popupH = 240;
-    res->popupX = (SCREEN_WIDTH - res->popupW) / 2;
-    res->popupY = (SCREEN_HEIGHT - res->popupH) / 2;
-
-    /* Anchor = canto sup.-esq. da metade inferior (igual à torre no jogo); a metade superior sobe com offset Y. */
-    int ix = res->popupX + res->popupW - TOWER_PICK_ICON_W - POPUP_ICON_MARGIN;
-    int iy = res->popupY + POPUP_ICON_MARGIN - (int)BASIC_UPPER_HALF_OFFSET.y;
-    res->towerPickAnchorX = ix;
-    res->towerPickAnchorY = iy;
-
-    res->towerPickUpperSprite = newSpriteXPM((xpm_map_t)towerXPM[1], XPM_8_8_8, BASIC_UPPER_HALF_OFFSET.x, BASIC_UPPER_HALF_OFFSET.y);
-
-    SpriteXPM** sprites = malloc(sizeof(SpriteXPM*));
-    sprites[0] = newSpriteXPM((xpm_map_t)towerXPM[0], XPM_8_8_8, 0, 0);
-    res->towerPickButton = buttonNew(ix, iy, BASIC_TOWER_SIZE.x, BASIC_TOWER_SIZE.y, animatedSpriteNew(0, sprites, 1, NORMAL), arenaTowerPickButtonCb, arenaTowerPickButtonCb);
-
-    float hitY = (float)(res->popupY + POPUP_ICON_MARGIN);
-    float hitH = 33.f - BASIC_UPPER_HALF_OFFSET.y;
-    res->towerPickHitbox = boxColliderNew((Vec2d){(float)ix, hitY}, EMPTY_VEC2D, (Vec2d){(float)TOWER_PICK_ICON_W, hitH}, 0);
-
     res->upgradePhase = ARENA_UPGRADE_IDLE;
     res->upgradeTargetIndex = -1;
     res->upgradeScrollLeft = newSpriteXPM((xpm_map_t)upgradeMenuXPM[UPGRADE_MENU_XPM_FAST], XPM_8_8_8, 0, 0);
@@ -467,8 +446,10 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
     SpriteXPM* backgroundSprite = newSpriteXPM((xpm_map_t)background, XPM_8_8_8, 0, 0);
     generateEmptyBuffer(backgroundSprite, terminal, 0, 0, false);
 
-	res->healthBar = healthBarNew(10);
-	res->statsBar = statsBarNew();
+    res->healthBar = healthBarNew(10);
+    res->statsBar = statsBarNew();
+    res->basicTowerBuildMenu = buildMenuNew(TOWER_KIND_BASIC);
+    res->longTowerBuildMenu = buildMenuNew(TOWER_KIND_LONG);
 
     return res;
 }
@@ -507,7 +488,12 @@ void arenaBuildTower(Arena* arena, Vec2d position) {
 
     arena->towersN++;
     arena->towers = realloc(arena->towers, sizeof(GenericTower*) * arena->towersN);
-    arena->towers[arena->towersN - 1] = basicLongTowerNew(position);
+
+    if (arena->towerType == TOWER_KIND_BASIC) {
+        arena->towers[arena->towersN - 1] = basicTowerNew(position);
+    } else {
+        arena->towers[arena->towersN - 1] = basicLongTowerNew(position);
+    }
 
     arena->collidersN[TOWER_TAG]++;
     arena->colliders[TOWER_TAG] = realloc(arena->colliders[TOWER_TAG], sizeof(BoxCollider*) * arena->collidersN[TOWER_TAG]);
@@ -531,10 +517,6 @@ void arenaFree(Arena* arena) {
     buttonFree(arena->upgradeHammerLeft);
     buttonFree(arena->upgradeHammerRight);
 
-    freeSpriteXPM(arena->towerPickUpperSprite);
-    boxColliderFree(arena->towerPickHitbox);
-    buttonFree(arena->towerPickButton);
-
     for (int i = 0; i < arena->tilesN; i++) tileFree(arena->tiles[i]);
     for (int i = 0; i < arena->fruitsN; i++) collectableFree(arena->fruits[i]);
 
@@ -553,9 +535,9 @@ void arenaFree(Arena* arena) {
 
     free(arena->colliders);
     free(arena->collidersN);
-	healthBarFree(arena->healthBar);
-	statsBarFree(arena->statsBar);
-	
+    healthBarFree(arena->healthBar);
+    statsBarFree(arena->statsBar);
+
     free(arena);
 }
 
@@ -586,14 +568,10 @@ static void arenaCollectableHandler(Arena* arena) {
     for (int i = 0; i < n; i++) collectableSetActive(arena->fruits[i], false);
 }
 
-static void arenaDrawConstructionPopup(Arena* arena, Terminal* terminal, float deltaTime) {
-    drawRectangle(terminal, arena->popupX, arena->popupY, (uint16_t)arena->popupW, (uint16_t)arena->popupH, 0x202028);
-    buttonDraw(arena->towerPickButton, terminal, deltaTime, false);
-    drawSpriteXPM(arena->towerPickUpperSprite, terminal, arena->towerPickAnchorX, arena->towerPickAnchorY, false);
-}
-
 static void arenaHandleConstruction(Arena* arena, Terminal* terminal) {
     Cursor* cur = getCursor();
+    Vec2d mousePos = {cursorGetX(cur), cursorGetY(cur)};
+
     (void)terminal;
 
     if (arena->upgradePhase == ARENA_UPGRADE_MENU_OPEN) {
@@ -607,6 +585,7 @@ static void arenaHandleConstruction(Arena* arena, Terminal* terminal) {
             arena->constructPhase = ARENA_CONSTRUCT_PICK_TOWER;
             return;
         }
+
         arenaTryOpenUpgradeFromTowerClick(arena);
         return;
     }
@@ -617,17 +596,26 @@ static void arenaHandleConstruction(Arena* arena, Terminal* terminal) {
             arena->constructPhase = ARENA_CONSTRUCT_NORMAL;
             return;
         }
-        if (cursorIsLeftButtonPressedDown(cur)) {
-            int cx = cursorGetX(cur);
-            int cy = cursorGetY(cur);
-            Vec2d click = {(float)cx, (float)cy};
-            if (boxIsCollidingWithPoint(arena->towerPickHitbox, click)) {
+
+        if (cursorIsLeftButtonPressed(cur)) {
+            if (!boxIsCollidingWithPoint(arena->upgradeScrollLeftHitbox, mousePos) && !boxIsCollidingWithPoint(arena->upgradeScrollRightHitbox, mousePos)) {
+				arena->constructPhase = ARENA_CONSTRUCT_NORMAL;
+				return;
+            }
+
+
+            if (buildMenuIsPressed(arena->basicTowerBuildMenu) && buyTower(arena, TOWER_KIND_BASIC)) {
+                arena->towerType = TOWER_KIND_BASIC;
+                buildMenuReset(arena->basicTowerBuildMenu);
                 arena->constructPhase = ARENA_CONSTRUCT_PLACE_TOWER;
-                return;
+
+            } else if (buildMenuIsPressed(arena->longTowerBuildMenu) && buyTower(arena, TOWER_KIND_LONG)) {
+                arena->towerType = TOWER_KIND_LONG;
+                buildMenuReset(arena->longTowerBuildMenu);
+                arena->constructPhase = ARENA_CONSTRUCT_PLACE_TOWER;
             }
-            if (!arenaPointInPopup(arena, cx, cy)) {
-                arena->constructPhase = ARENA_CONSTRUCT_NORMAL;
-            }
+
+            if (cursorIsRightButtonPressedDown(getCursor())) arena->constructPhase = ARENA_CONSTRUCT_NORMAL;
         }
         return;
     }
@@ -715,6 +703,7 @@ void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
     //monster / proj tests
  
     arenaCollectableHandler(arena);
+
     arenaHandleConstruction(arena, terminal);
 
     playerUpdate(arena->player, terminal, arena, deltaTime);
@@ -723,11 +712,12 @@ void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
     if (arena->upgradePhase == ARENA_UPGRADE_MENU_OPEN) {
         arenaDrawUpgradeMenu(arena, terminal, deltaTime);
     } else if (arena->constructPhase == ARENA_CONSTRUCT_PICK_TOWER) {
-        arenaDrawConstructionPopup(arena, terminal, deltaTime);
+        buildMenuUpdate(arena->basicTowerBuildMenu, terminal, arena, deltaTime);
+        buildMenuUpdate(arena->longTowerBuildMenu, terminal, arena, deltaTime);
     }
 
-	healthBarUpdate(arena->healthBar, terminal, arena);
-	statsBarUpdate(arena->statsBar, terminal, arena);
+    healthBarUpdate(arena->healthBar, terminal, arena);
+    statsBarUpdate(arena->statsBar, terminal, arena);
 
     cursorUpdate(getCursor(), terminal, deltaTime);
 }
