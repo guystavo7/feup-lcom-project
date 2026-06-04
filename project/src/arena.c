@@ -778,7 +778,7 @@ void arenaHandleMonsterDamage(Arena* arena) {
             int projCount = towerGetProjectilesCount(tower);
             for (int i = 0; i < projCount; i++) {
                 Projectile* arrow = towerGetProjectile(tower, i);
-                if (!projectileIsActive(arrow)) continue;
+                if (!projectileIsActive(arrow) || !projectileCanDealDamage(arrow)) continue;
 
                 if (boxIsCollidingWithBox(projectileGetCollider(arrow), monsterGetBoxCollider(monster))) {
                     monsterSumHP(monster, -1000);

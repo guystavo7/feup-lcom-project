@@ -89,7 +89,7 @@ static void genericTowerProjectileHandler(GenericTower* tower, float deltaTime, 
 
         if (!projectileIsActive(p)) continue;
 
-        if (projectileGetType(p) != PROJ_SKY_FALL) {
+        if (projectileGetType(p) != PROJ_SKY_FALL && projectileGetType(p) != PROJ_NEAR) {
             BoxCollider* colliders[1024];
             int n_walls = arenaDetectCollisions(arena, projectileGetCollider(p), WALLS_TAG, colliders);
             if (n_walls > 0) {
@@ -236,7 +236,7 @@ static void createNearProjectile(GenericTower* tower) {
     }
 
     if (!p) {
-        AnimatedSprite* animatedSprite = animatedSpriteNew(LIGHTNING_SPEED, tower->arrowSprites, LIGHTNING_FRAMES, LOOP);
+        AnimatedSprite* animatedSprite = animatedSpriteNew(LIGHTNING_SPEED, tower->arrowSprites, LIGHTNING_FRAMES, ONE_SHOT);
         animatedSpriteStart(animatedSprite);
         p = projectileCreate(tower->projectileType, position.x, position.y, velocity.x, velocity.y, animatedSprite);
         if (p) {
