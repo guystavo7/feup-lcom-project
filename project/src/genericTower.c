@@ -327,6 +327,10 @@ bool towerIsBasic(GenericTower* tower) {
     return tower->kind == TOWER_KIND_BASIC;
 }
 
+bool towerIsLong(GenericTower* tower) {
+    return tower->kind == TOWER_KIND_LONG;
+}
+
 bool towerAddProjectile(GenericTower* tower, Projectile* projectile) {
     if (tower->projectilesCount >= tower->projectilesCapacity) {
         return false;

@@ -5,3 +5,6 @@ Error: Could not open map file: /home/lcom/labs/grupo_2leic13_2/project/resource
 ii
 ii
 ii
+ii
+ii
+ii
