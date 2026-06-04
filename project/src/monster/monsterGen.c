@@ -1,5 +1,10 @@
 #include "../../include/monster/monsterGen.h"
 
+#include "../../include/arena.h"
+#include "../../include/data.h"
+
+#include <stdlib.h>
+
 Monster* defaultMonsterCreator(Path* path){
     return alienMonsterNew(10,10,path);
 }
@@ -78,6 +83,15 @@ void monsterGenUpdate(MonsterGen* mg, Arena* arena,Terminal* terminal, float del
             vectorSetVal(mg->deactivatedMonsterIdList,i,true);
 
             vectorPushBack(mg->availableMonsterIdStack,(char*)&i);
+
+            if (arena != NULL && monsterIsDead(m)) {
+                BoxCollider* bc = monsterGetBoxCollider(m);
+                float ax = boxColliderGetX(bc) + boxColliderGetOffsetX(bc);
+                float ay = boxColliderGetY(bc) + boxColliderGetOffsetY(bc);
+                Vec2d pos = {ax + boxColliderGetWidth(bc) * 0.5f - FRUIT_SIZE.x * 0.5f,
+                             ay + boxColliderGetHeight(bc) * 0.5f - FRUIT_SIZE.y * 0.5f};
+                arenaDeathFruit(arena, pos);
+            }
 
         } 
 
