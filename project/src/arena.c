@@ -575,6 +575,7 @@ static void arenaHandleConstruction(Arena* arena, Terminal* terminal) {
             arena->constructPhase = ARENA_CONSTRUCT_PICK_TOWER;
             return;
         }
+
         arenaTryOpenUpgradeFromTowerClick(arena);
         return;
     }
@@ -593,12 +594,12 @@ static void arenaHandleConstruction(Arena* arena, Terminal* terminal) {
             }
 
 
-            if (buildMenuIsPressed(arena->basicTowerBuildMenu)) {
+            if (buildMenuIsPressed(arena->basicTowerBuildMenu) && buyTower(arena, TOWER_KIND_BASIC)) {
                 arena->towerType = TOWER_KIND_BASIC;
                 buildMenuReset(arena->basicTowerBuildMenu);
                 arena->constructPhase = ARENA_CONSTRUCT_PLACE_TOWER;
 
-            } else if (buildMenuIsPressed(arena->longTowerBuildMenu)) {
+            } else if (buildMenuIsPressed(arena->longTowerBuildMenu) && buyTower(arena, TOWER_KIND_LONG)) {
                 arena->towerType = TOWER_KIND_LONG;
                 buildMenuReset(arena->longTowerBuildMenu);
                 arena->constructPhase = ARENA_CONSTRUCT_PLACE_TOWER;
