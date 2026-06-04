@@ -234,7 +234,7 @@ static void createNearProjectile(GenericTower* tower) {
     }
 
     if (!p) {
-        AnimatedSprite* animatedSprite = animatedSpriteNew(LIGHTNING_SPEED, tower->arrowSprites, LIGHTNING_FRAMES, ONE_SHOT);
+        AnimatedSprite* animatedSprite = animatedSpriteNew(LIGHTNING_SPEED, tower->arrowSprites, LIGHTNING_FRAMES, LOOP);
         animatedSpriteStart(animatedSprite);
         p = projectileCreate(tower->projectileType, position.x, position.y, velocity.x, velocity.y, animatedSprite);
         if (p) {

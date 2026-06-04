@@ -73,8 +73,11 @@ struct Arena {
 
     Player* player;
     Cursor* cursor;
+ 
+    int HeroHP;
 
-    // UI
+	// UI
+    
     HealthBar* healthBar;
     StatsBar* statsBar;
     BuildMenu* basicTowerBuildMenu;
@@ -547,11 +550,12 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
 
     SpriteXPM* backgroundSprite = newSpriteXPM((xpm_map_t)background, XPM_8_8_8, 0, 0);
     generateEmptyBuffer(backgroundSprite, terminal, 0, 0, false);
-
-    res->healthBar = healthBarNew(10);
-    res->statsBar = statsBarNew();
+ 
+    res->HeroHP=10;
+	res->healthBar = healthBarNew(res->HeroHP);
+	res->statsBar = statsBarNew(); 
     res->basicTowerBuildMenu = buildMenuNew(TOWER_KIND_BASIC);
-    res->longTowerBuildMenu = buildMenuNew(TOWER_KIND_LONG);
+    res->longTowerBuildMenu = buildMenuNew(TOWER_KIND_LONG); 
 
     return res;
 }
@@ -817,9 +821,16 @@ void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
         buildMenuUpdate(arena->basicTowerBuildMenu, terminal, arena, deltaTime);
         buildMenuUpdate(arena->longTowerBuildMenu, terminal, arena, deltaTime);
     }
+ 
+    
+    arena->HeroHP-=monsterGenGetNumberOfInstantFinishedMonsters(arena->monsterGen1);
+    if(!(arena->HeroHP>0)){
+        arena->HeroHP=0;
+    }
 
-    healthBarUpdate(arena->healthBar, terminal, arena);
-    statsBarUpdate(arena->statsBar, terminal, arena);
+    healthBarSetHealth(arena->healthBar,arena->HeroHP);
+	healthBarUpdate(arena->healthBar, terminal, arena);
+	statsBarUpdate(arena->statsBar, terminal, arena); 
 
     cursorUpdate(getCursor(), terminal, deltaTime);
 }

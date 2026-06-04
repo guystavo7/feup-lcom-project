@@ -24,3 +24,5 @@ int defaultGenTimeFunc(float delta);
 int monsterGenGetNextActiveMonsterIndex(MonsterGen* mg, unsigned int begin);
 Monster* monsterGenGetMonster(MonsterGen* mg,unsigned int index);
 
+
+unsigned int monsterGenGetNumberOfInstantFinishedMonsters(MonsterGen* mg);
