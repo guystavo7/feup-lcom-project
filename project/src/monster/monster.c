@@ -59,3 +59,7 @@ void monsterReset(Monster* m, Vec2d* pos) {
     monsterModelSetPos(m->model, pos);
     monsterControllerGoBackToStart(m->controller);
 }
+
+Vec2d monsterGetFutureDisplacement(Monster* m,float delta_t){
+  return monsterControllerGetFutureDisplacement(m->controller,delta_t);
+}

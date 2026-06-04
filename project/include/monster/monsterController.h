@@ -1,5 +1,6 @@
 #pragma once
 #include "monsterModel.h"
+#include "../data.h"
 
 typedef struct monsterController MonsterController;
  
@@ -15,3 +16,6 @@ RigidBody* monsterControllerGetRigidBody(MonsterController* m);
 BoxCollider* monsterControllerGetBoxCollider(MonsterController* m);
 Path* monsterControllerGetPath(MonsterController* m);
 void monsterControllerGoBackToStart(MonsterController* m);
+
+
+Vec2d monsterControllerGetFutureDisplacement(MonsterController* controller,float delta_t);

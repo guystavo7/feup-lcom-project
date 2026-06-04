@@ -52,7 +52,6 @@ void buttonClick(Button* button) {
 	if (button->isPressed) return;
 	button->onClick(button);
 	button->isPressed = true;
-	printf("ii\n");
 }
 
 void buttonHover(Button* button) {
