@@ -27,6 +27,7 @@ BoxCollider* towerGetHitBox(GenericTower* tower);
 Vec2d towerGetPosition(GenericTower* tower);
 TowerKind towerGetKind(GenericTower* tower);
 bool towerIsBasic(GenericTower* tower);
+bool towerIsLong(GenericTower* tower);
 
 void towerUpdate(GenericTower* tower, Terminal* terminal, Arena* arena, float deltaTime);
 void towerDrawUpperHalf(GenericTower* tower, Terminal* terminal, Arena* arena, float deltaTime);
