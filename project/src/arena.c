@@ -76,6 +76,8 @@ struct Arena {
     Player* player;
     Cursor* cursor;
 
+    int HeroHP;
+
 	// UI
     HealthBar* healthBar;
 	StatsBar* statsBar;
@@ -467,7 +469,8 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
     SpriteXPM* backgroundSprite = newSpriteXPM((xpm_map_t)background, XPM_8_8_8, 0, 0);
     generateEmptyBuffer(backgroundSprite, terminal, 0, 0, false);
 
-	res->healthBar = healthBarNew(10);
+    res->HeroHP=10;
+	res->healthBar = healthBarNew(res->HeroHP);
 	res->statsBar = statsBarNew();
 
     return res;
@@ -726,6 +729,13 @@ void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
         arenaDrawConstructionPopup(arena, terminal, deltaTime);
     }
 
+    
+    arena->HeroHP-=monsterGenGetNumberOfInstantFinishedMonsters(arena->monsterGen1);
+    if(!(arena->HeroHP>0)){
+        arena->HeroHP=0;
+    }
+
+    healthBarSetHealth(arena->healthBar,arena->HeroHP);
 	healthBarUpdate(arena->healthBar, terminal, arena);
 	statsBarUpdate(arena->statsBar, terminal, arena);
 
