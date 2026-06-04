@@ -27,3 +27,6 @@ BoxCollider* monsterGetBoxCollider(Monster* m);
 
 
 void monsterReset(Monster* m, Vec2d* pos);
+
+Vec2d monsterGetFutureDisplacement(Monster* m,float delta_t);
+
