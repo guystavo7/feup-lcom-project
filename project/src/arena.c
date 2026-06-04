@@ -50,12 +50,6 @@ typedef enum {
 } ArenaUpgradePhase;
 
 
-static float dummy_proj_counter=1;
-
-void projectileListFree(void* proj){
-    Projectile* p=*(Projectile**)proj;
-    projectileFree(p);
-}
 
 struct Arena {
     int* collidersN;
@@ -76,9 +70,6 @@ struct Arena {
 
     Monster* monster_test;
     MonsterGen* monsterGen1; 
-
-    Vector* projectileList;
-    Projectile* projectile_test;
  
     Path* path_test;
 
@@ -131,10 +122,10 @@ static void arenaReplaceTargetTower(Arena* arena, TowerKind newKind) {
 
     Vec2d pos = towerGetPosition(old);
     BoxCollider* oldHit = towerGetHitBox(old);
-    int wallN = arena->collidersN[WALLS_TAG];
+    int wallN = arena->collidersN[TOWER_TAG];
     int j;
     for (j = 0; j < wallN; j++) {
-        if (arena->colliders[WALLS_TAG][j] == oldHit) break;
+        if (arena->colliders[TOWER_TAG][j] == oldHit) break;
     }
     if (j >= wallN) return;
 
@@ -147,7 +138,7 @@ static void arenaReplaceTargetTower(Arena* arena, TowerKind newKind) {
         return;
 
     arena->towers[i] = neu;
-    arena->colliders[WALLS_TAG][j] = towerGetHitBox(neu);
+    arena->colliders[TOWER_TAG][j] = towerGetHitBox(neu);
     towerFree(old);
     arenaCloseUpgradeMenu(arena);
 }
@@ -418,14 +409,6 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
     res->monster_test=pawnMonsterNew(10,150,res->path_test);
     res->monsterGen1=monsterGenNew(res->path_test,defaultMonsterCreator,defaultGenTimeFunc);
 
-    SpriteXPM** projSpriteList = malloc(sizeof(SpriteXPM*));
-    projSpriteList[0] = newSpriteXPM((xpm_map_t)Arrow2, XPM_8_8_8, 0,0);
-    AnimatedSprite* projAS=animatedSpriteNew(100,projSpriteList,1,NORMAL);
-
-    res->projectile_test=projectileCreate(PROJ_NORMAL,200,200,200,-200,projAS);
-
-    res->projectileList=vectorCreate(sizeof(Projectile*),projectileListFree);
-  
     res->collidersN[MONSTER_TAG] = 1;
     res->colliders[MONSTER_TAG] = malloc(sizeof(BoxCollider*) * res->collidersN[MONSTER_TAG]);
     res->colliders[MONSTER_TAG][0] = monsterGetBoxCollider(res->monster_test);
@@ -491,10 +474,14 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
 }
 
 bool arenaCanPlaceTower(Arena* arena, Vec2d position) {
-    BoxCollider* preview = boxColliderNew(position, BASIC_TOWER_HIT_BOX_OFFSET, BASIC_TOWER_SIZE, WALLS_TAG);
+    BoxCollider* preview = boxColliderNew(position, BASIC_TOWER_HIT_BOX_OFFSET, BASIC_TOWER_SIZE, TOWER_TAG);
     BoxCollider* hits[PLACEMENT_QUERY_MAX];
 
     if (arenaDetectCollisions(arena, preview, WALLS_TAG, hits) > 0) {
+        boxColliderFree(preview);
+        return false;
+    }
+    if (arenaDetectCollisions(arena, preview, TOWER_TAG, hits) > 0) {
         boxColliderFree(preview);
         return false;
     }
@@ -522,9 +509,9 @@ void arenaBuildTower(Arena* arena, Vec2d position) {
     arena->towers = realloc(arena->towers, sizeof(GenericTower*) * arena->towersN);
     arena->towers[arena->towersN - 1] = basicLongTowerNew(position);
 
-    arena->collidersN[WALLS_TAG]++;
-    arena->colliders[WALLS_TAG] = realloc(arena->colliders[WALLS_TAG], sizeof(BoxCollider*) * arena->collidersN[WALLS_TAG]);
-    arena->colliders[WALLS_TAG][arena->collidersN[WALLS_TAG] - 1] = towerGetHitBox(arena->towers[arena->towersN - 1]);
+    arena->collidersN[TOWER_TAG]++;
+    arena->colliders[TOWER_TAG] = realloc(arena->colliders[TOWER_TAG], sizeof(BoxCollider*) * arena->collidersN[TOWER_TAG]);
+    arena->colliders[TOWER_TAG][arena->collidersN[TOWER_TAG] - 1] = towerGetHitBox(arena->towers[arena->towersN - 1]);
 }
 
 void arenaFree(Arena* arena) {
@@ -555,9 +542,8 @@ void arenaFree(Arena* arena) {
     monsterGenFree(arena->monsterGen1);
     pathFree(arena->path_test);
 
-    projectileFree(arena->projectile_test);
-
     free(arena->colliders[WALLS_TAG]);
+    free(arena->colliders[TOWER_TAG]);
     free(arena->colliders[PLAYER_TAG]);
     free(arena->colliders[COLLECTABLE_TAG]);
     free(arena->tiles);
@@ -666,12 +652,21 @@ static void arenaHandleConstruction(Arena* arena, Terminal* terminal) {
 }
 
 BoxCollider* arenaFindFirstEnemy(Arena* arena, BoxCollider* range) {
-    BoxCollider* playerHitBox = playerModelGetHitBox(playerGetPlayerModel(arena->player));
-    Vec2d position = {boxColliderGetX(playerHitBox), boxColliderGetY(playerHitBox)};
-    Vec2d size = {boxColliderGetWidth(playerHitBox), boxColliderGetHeight(playerHitBox)};
-    Vec2d center = {position.x + size.x / 2, position.y + size.y / 2};
+    int monsterIterator = monsterGenGetNextActiveMonsterIndex(arena->monsterGen1, 0);
+    while (monsterIterator != -1) {
+        Monster* monster = monsterGenGetMonster(arena->monsterGen1, monsterIterator);
+        BoxCollider* monsterCollider = monsterGetBoxCollider(monster);
+        Vec2d position = {boxColliderGetX(monsterCollider), boxColliderGetY(monsterCollider)};
+        Vec2d size = {boxColliderGetWidth(monsterCollider), boxColliderGetHeight(monsterCollider)};
+        Vec2d center = {position.x + size.x / 2, position.y + size.y / 2};
 
-    if (boxIsCollidingWithPoint(range, center)) return playerHitBox;
+        if (boxIsCollidingWithPoint(range, center)) {
+            return monsterCollider;
+        }
+        monsterIterator++;
+        monsterIterator = monsterGenGetNextActiveMonsterIndex(arena->monsterGen1, monsterIterator);
+    }
+
     return NULL;
 }
 
@@ -682,19 +677,25 @@ void arenaHandleMonsterDamage(Arena* arena){
     while (monsterIterator!=-1)
     {
         Monster* monster=monsterGenGetMonster(arena->monsterGen1,monsterIterator);
-        for(unsigned int i=0;i!=vectorGetSize(arena->projectileList);i++){
-            Projectile* arrow= *(Projectile**)vectorGet(arena->projectileList,i);
-            
-            if(boxIsCollidingWithBox(projectileGetCollider(arrow),monsterGetBoxCollider(monster))){
-                monsterSumHP(monster,-1000);
-                projectileSetActive(arrow,false);
+        
+
+        for(int t=0; t<arena->towersN; t++){
+            GenericTower* tower = arena->towers[t];
+            int projCount = towerGetProjectilesCount(tower);
+            for(int i=0; i<projCount; i++){
+                Projectile* arrow = towerGetProjectile(tower, i);
+                if (!projectileIsActive(arrow)) continue;
+                
+                if(boxIsCollidingWithBox(projectileGetCollider(arrow),monsterGetBoxCollider(monster))){
+                    monsterSumHP(monster,-1000);
+                    projectileAddPierce(arrow);
+                }
             }
         }
+
         monsterIterator++;
         monsterIterator=monsterGenGetNextActiveMonsterIndex(arena->monsterGen1,monsterIterator);
     }
-    
-
 }
 
 void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
@@ -705,39 +706,9 @@ void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
     //monster / proj tests
 
     arenaHandleMonsterDamage(arena);
-    Vector* projIndexListToRemove=vectorCreate(sizeof(int),NULL);
-
-    for(int i = vectorGetSize(arena->projectileList) - 1; i >= 0; i--){
-        Projectile* p=*(Projectile**)vectorGet(arena->projectileList,i);
-        projectileUpdate(p,deltaTime,terminal); 
-        if(!projectileIsActive(p)){
-            vectorPushBack(projIndexListToRemove,(char*)&i);
-        }
-    }
-
-    for(int i =  0; i != (int)vectorGetSize(projIndexListToRemove); i++){
-        int index=*(int*)vectorGet(projIndexListToRemove,i);
-        vectorRemove(arena->projectileList,index);
-    }
-
-    vectorFree(projIndexListToRemove);
-
-    dummy_proj_counter++;
-
-    if(((int)dummy_proj_counter)%15==0){
-
-        SpriteXPM** projSpriteList = malloc(sizeof(SpriteXPM*));
-        projSpriteList[0] = newSpriteXPM((xpm_map_t)Arrow2, XPM_8_8_8, 0,0);
-        AnimatedSprite* projAS=animatedSpriteNew(100,projSpriteList,1,NORMAL);
- 
-        Projectile* p=projectileCreate(PROJ_NORMAL,200,400,300,-300,projAS);
-        vectorPushBack(arena->projectileList,(char*)&p);
-    }
-
     
 
     monsterUpdate(arena->monster_test,arena,terminal,deltaTime); 
-    projectileUpdate(arena->projectile_test,deltaTime,terminal);
 
     monsterGenUpdate(arena->monsterGen1,arena,terminal,deltaTime);
 

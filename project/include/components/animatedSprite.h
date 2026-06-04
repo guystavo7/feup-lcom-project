@@ -17,7 +17,9 @@ enum AnimatedSpriteType {
 
 AnimatedSprite* animatedSpriteNew(float frameSpeed, SpriteXPM** xpm_array, int n, enum AnimatedSpriteType type);
 void animatedSpriteFree(AnimatedSprite* sprite);
+void animatedSpriteFreeSpritesArrayOnly(AnimatedSprite* sprite);
 void animatedSpriteUpdate(int x, int y, AnimatedSprite* sprite, Terminal* t, float deltaTime, bool isFlipped);
+void animatedSpriteSetSpriteAtIndex(AnimatedSprite* sprite, int index, SpriteXPM* xpm);
 
 void animatedSpriteStart(AnimatedSprite* sprite);
 bool animatedSpriteIsFinished(AnimatedSprite* sprite);
