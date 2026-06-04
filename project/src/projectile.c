@@ -143,7 +143,7 @@ void projectileFree(Projectile* p) {
     vec2dFree(p->vel);
     boxColliderFree(p->collider);
     // The sprites are stored in the tower so calling animatedSpriteFree will destroy everything
-        free(p->sprite);
+    free(p->sprite);
     free(p);
 }
 
