@@ -19,6 +19,7 @@ typedef enum {
 typedef struct projectile Projectile;
 
 Projectile* projectileCreate(ProjectileType type, float x, float y, float vel_x, float vel_y, AnimatedSprite* sprite);
+void projectileReset(Projectile* p, ProjectileType type, float x, float y, float vel_x, float vel_y, SpriteXPM** arrowSprites, int index);
 void projectileFree(Projectile* p);
 
 void projectileUpdate(Projectile* p, double delta_t, Terminal* terminal);

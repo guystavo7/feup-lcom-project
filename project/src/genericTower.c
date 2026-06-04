@@ -81,24 +81,25 @@ GenericTower* towerNew(SpriteXPM* upperHalf, SpriteXPM* lowerHalf, AnimatedSprit
 }
 
 static void genericTowerProjectileHandler(GenericTower* tower, float deltaTime, Terminal* terminal, Arena* arena) {
-    int activeCount = 0;
-    for (int i = 0; i < tower->projectilesCount; i++) {
-        if (projectileIsActive(tower->projectiles[i])) {
-            tower->projectiles[activeCount++] = tower->projectiles[i];
-        } else {
-            projectileFree(tower->projectiles[i]);
-        }
-    }
-    tower->projectilesCount = activeCount;
-
     for (int i = 0; i < tower->projectilesCount; i++) {
         Projectile* p = tower->projectiles[i];
+        if (!projectileIsActive(p)) continue;
+
         projectileUpdate(p, deltaTime, terminal);
+
+        if (!projectileIsActive(p)) continue;
 
         BoxCollider* colliders[1024];
         int n = arenaDetectCollisions(arena, projectileGetCollider(p), MONSTER_TAG, colliders);
         if (n > 0) {
-            projectileSetActive(p, false);
+            projectileAddPierce(p);
+        }
+
+        if (projectileIsActive(p)) {
+            int n_walls = arenaDetectCollisions(arena, projectileGetCollider(p), WALLS_TAG, colliders);
+            if (n_walls > 0) {
+                projectileSetActive(p, false);
+            }
         }
     }
 }
@@ -146,7 +147,6 @@ static void createNormalProjectile(GenericTower* tower) {
     Vec2d dir = {boxColliderGetX(tower->target) - tower->position.x, boxColliderGetY(tower->target) - tower->position.y - ARCHER_OFFSET.y};
     vec2dNormalize(&dir);
 
-    Projectile* p;
     Vec2d position = {tower->position.x, tower->position.y + ARCHER_OFFSET.y};
     int index = 0;
 
@@ -179,34 +179,77 @@ static void createNormalProjectile(GenericTower* tower) {
     float maxVelocity = ARROW_SPEED;
     Vec2d velocity = {dir.x * maxVelocity, dir.y * maxVelocity};
 
-    SpriteXPM** sprites = malloc(sizeof(SpriteXPM*));
-    sprites[0] = tower->arrowSprites[index];
-    AnimatedSprite* animatedSprite = animatedSpriteNew(ARROW_FRAME_SPEED, sprites, 1, NORMAL);
+    Projectile* p = NULL;
+    for (int i = 0; i < tower->projectilesCount; i++) {
+        if (!projectileIsActive(tower->projectiles[i])) {
+            p = tower->projectiles[i];
+            projectileReset(p, tower->projectileType, position.x, position.y, velocity.x, velocity.y, tower->arrowSprites, index);
+            break;
+        }
+    }
 
-    p = projectileCreate(tower->projectileType, position.x, position.y, velocity.x, velocity.y, animatedSprite);
-    if (!towerAddProjectile(tower, p)) projectileFree(p);
+    if (!p) {
+        SpriteXPM** sprites = malloc(sizeof(SpriteXPM*));
+        sprites[0] = tower->arrowSprites[index];
+        AnimatedSprite* animatedSprite = animatedSpriteNew(ARROW_FRAME_SPEED, sprites, 1, NORMAL);
+
+        p = projectileCreate(tower->projectileType, position.x, position.y, velocity.x, velocity.y, animatedSprite);
+        if (p) {
+            if (!towerAddProjectile(tower, p)) {
+                projectileFree(p);
+            }
+        }
+    }
 }
 
 static void createSkyFallProjectile(GenericTower* tower) {
-    Projectile* p;
     Vec2d position = (Vec2d){boxColliderGetX(tower->target) - ASTEROID_SIZE.x / 2 + 20, boxColliderGetY(tower->target) - ASTEROID_SIZE.y / 2 + 20};
     float maxVelocity = SKY_FALL_ARROW_SPEED;
     Vec2d velocity = {0, maxVelocity};
 
-    AnimatedSprite* animatedSprite = animatedSpriteNew(ASTEROID_FRAME_SPEED, tower->arrowSprites, ASTEROID_FRAMES, LOOP);
-    p = projectileCreate(tower->projectileType, position.x, position.y, velocity.x, velocity.y, animatedSprite);
-    if (!towerAddProjectile(tower, p)) projectileFree(p);
+    Projectile* p = NULL;
+    for (int i = 0; i < tower->projectilesCount; i++) {
+        if (!projectileIsActive(tower->projectiles[i])) {
+            p = tower->projectiles[i];
+            projectileReset(p, tower->projectileType, position.x, position.y, velocity.x, velocity.y, tower->arrowSprites, 0);
+            break;
+        }
+    }
+
+    if (!p) {
+        AnimatedSprite* animatedSprite = animatedSpriteNew(ASTEROID_FRAME_SPEED, tower->arrowSprites, ASTEROID_FRAMES, LOOP);
+        p = projectileCreate(tower->projectileType, position.x, position.y, velocity.x, velocity.y, animatedSprite);
+        if (p) {
+            if (!towerAddProjectile(tower, p)) {
+                projectileFree(p);
+            }
+        }
+    }
 }
 
 static void createNearProjectile(GenericTower* tower) {
-    Projectile* p;
     Vec2d position = (Vec2d){boxColliderGetX(tower->target) - LIGHTNING_SIZE.x / 2, boxColliderGetY(tower->target) - LIGHTNING_SIZE.y / 2};
     Vec2d velocity = EMPTY_VEC2D;
 
-    AnimatedSprite* animatedSprite = animatedSpriteNew(LIGHTNING_SPEED, tower->arrowSprites, LIGHTNING_FRAMES, ONE_SHOT);
-    animatedSpriteStart(animatedSprite);
-    p = projectileCreate(tower->projectileType, position.x, position.y, velocity.x, velocity.y, animatedSprite);
-    if (!towerAddProjectile(tower, p)) projectileFree(p);
+    Projectile* p = NULL;
+    for (int i = 0; i < tower->projectilesCount; i++) {
+        if (!projectileIsActive(tower->projectiles[i])) {
+            p = tower->projectiles[i];
+            projectileReset(p, tower->projectileType, position.x, position.y, velocity.x, velocity.y, tower->arrowSprites, 0);
+            break;
+        }
+    }
+
+    if (!p) {
+        AnimatedSprite* animatedSprite = animatedSpriteNew(LIGHTNING_SPEED, tower->arrowSprites, LIGHTNING_FRAMES, ONE_SHOT);
+        animatedSpriteStart(animatedSprite);
+        p = projectileCreate(tower->projectileType, position.x, position.y, velocity.x, velocity.y, animatedSprite);
+        if (p) {
+            if (!towerAddProjectile(tower, p)) {
+                projectileFree(p);
+            }
+        }
+    }
 }
 
 static enum TowerState shootTransition(GenericTower* tower, Arena* arena, float deltaTime) {
