@@ -147,7 +147,6 @@ static enum TowerState shootTransition(GenericTower* tower, Arena* arena, float 
 
         Projectile* p;
         Vec2d position = {tower->position.x, tower->position.y + ARCHER_OFFSET.y};
-        Vec2d velocity = {dir.x * 500, dir.y * 500};
         int index = 0;
 
 		// Hozizontal+
@@ -176,6 +175,13 @@ static enum TowerState shootTransition(GenericTower* tower, Arena* arena, float 
             index = 5;
         }
 
+		float maxVelocity = ARROW_SPEED;
+		if (tower->projectileType == PROJ_SKY_FALL) {
+			position = (Vec2d){boxColliderGetX(tower->target), boxColliderGetY(tower->target)};
+			maxVelocity = SKY_FALL_ARROW_SPEED;
+		}
+
+        Vec2d velocity = {dir.x * maxVelocity, dir.y * maxVelocity};
         p = projectileCreate(tower->projectileType, position.x, position.y, velocity.x, velocity.y, tower->arrowSprites[index]);
         if (!towerAddProjectile(tower, p)) projectileFree(p);
         return TOWER_IDLE;

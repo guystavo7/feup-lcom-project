@@ -34,7 +34,11 @@ SRCS= \
 	path.c \
 	vector.c \
 	pawnMonster.c \
-	./gameState.c 
+	./gameState.c \
+	./piercingTower.c \
+	./fastTower.c \
+	./mortarTower.c \
+	./eletrictTower.c
 
 OBJS = ${SRCS:.c=.o}
 
