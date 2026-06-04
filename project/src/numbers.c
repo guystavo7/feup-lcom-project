@@ -11,6 +11,7 @@ struct Number {
 
 static void generateNumbers(Number* n, int number) {
     int digits = 0;
+	if (number > 100) number = 99;
     while (number > 0) {
         digits++;
         number /= 10;

@@ -14,6 +14,7 @@
 #include "../include/tiles/collectable.h"
 #include "../include/tiles/tile.h"
 #include "../include/utils/cursorHandler.h"
+#include "../include/utils/inputHandler.h"
 
 #include "../include/ui/healthBar.h"
 #include "../include/ui/statsBar.h"
