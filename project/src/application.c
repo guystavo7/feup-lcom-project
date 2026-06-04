@@ -72,18 +72,6 @@ int(proj_main_loop)(int argc, char* argv[]) {
         if (!is_ipc_notify(ipc_status)) continue;
         switch (_ENDPOINT_P(msg.m_source)) {
             case HARDWARE:
-                if (msg.m_notify.interrupts & (1 << TIMER_IRQ_LINE)) {
-					if (getKeyPressed(getInputHandler(), KEYCODE_ENTER)) isRunning = false;
-
-                    timer_int_handler();
-                    refreshTerminal(terminal);
-                    int currFrameTime = timer_get_counter();
-                    float deltaTime = (float)(currFrameTime - lastFrameTime) / 60;
-
-                    if (!gameLoop(terminal, deltaTime)) isRunning = false;
-                    lastFrameTime = currFrameTime;
-                }
-
                 if (msg.m_notify.interrupts & (1 << MOUSE_IRQ_LINE)) {
                     mouse_ih();
                     if (isReady()) {
@@ -105,6 +93,18 @@ int(proj_main_loop)(int argc, char* argv[]) {
 
                         kbcResetKeys();
                     }
+                }
+
+                if (msg.m_notify.interrupts & (1 << TIMER_IRQ_LINE)) {
+                    if (getKeyPressed(getInputHandler(), KEYCODE_ENTER)) isRunning = false;
+
+                    timer_int_handler();
+                    refreshTerminal(terminal);
+                    int currFrameTime = timer_get_counter();
+                    float deltaTime = (float)(currFrameTime - lastFrameTime) / 60;
+
+                    if (!gameLoop(terminal, deltaTime)) isRunning = false;
+                    lastFrameTime = currFrameTime;
                 }
 
                 break;
