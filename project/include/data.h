@@ -15,23 +15,17 @@
 
 #define TAGS_NUM 		8
 
-// File Paths
-/*
-static const char* map1 = "/home/lcom/labs/project/resources/map/grid_walls.csv";
-static const char* path1 = "/home/lcom/labs/project/resources/map/grid_path.csv";
-static const char* lake1 = "/home/lcom/labs/project/resources/map/grid_water.csv";
-*/
+// File Paths (map1: resources/maps/map1 — alinhar com MAP_TILES_* e background em map1.h)
+static const char* map1 = "/home/lcom/labs/grupo_2leic13_2/project/resources/maps/map1/walls.csv";
+static const char* path1 = "/home/lcom/labs/grupo_2leic13_2/project/resources/maps/map1/path.csv";
+static const char* lake1 = "/home/lcom/labs/grupo_2leic13_2/project/resources/maps/map1/water.csv";
 
- static const char* map1 =  "/home/lcom/labs/grupo_2leic13_2/project/resources/map/grid_walls.csv";
- static const char* path1 = "/home/lcom/labs/grupo_2leic13_2/project/resources/map/grid_path.csv";
- static const char* lake1 = "/home/lcom/labs/grupo_2leic13_2/project/resources/map/grid_water.csv";
-
-// Screen configs
-#define MODE 0x11B
-#define SCREEN_WIDTH 1280
-#define SCREEN_HEIGHT 1024
-#define MAP_TILES_X 40
-#define MAP_TILES_Y 32
+// Screen configs (800x600 / 25x19 tiles — mesmo tamanho que o XPM background1 em map1.h)
+#define MODE 0x115
+#define SCREEN_WIDTH 800
+#define SCREEN_HEIGHT 600
+#define MAP_TILES_X 25
+#define MAP_TILES_Y 19
 #define TILE_SIZE 32
 
 #define PLACEMENT_QUERY_MAX 128
@@ -182,11 +176,11 @@ static const Vec2d MONK_HEAL_OFFSET = {30 - 14 - 15, -27 - 34};
 #define EXIT_BUTTON_FRAMES 2
 #define BUTTONS_FRAME_SPEED 10
 
-static const Vec2d LOGO_POSITION = {445, 200};
+static const Vec2d LOGO_POSITION = {400 - 194, 100};
 
-static const Vec2d NEW_GAME_BUTTON_POS = {499, 400};
+static const Vec2d NEW_GAME_BUTTON_POS = {400 - 282 / 2, 300};
 static const Vec2d NEW_GAME_BUTTON_SIZE = {282, 94};
-static const Vec2d EXIT_BUTTON_POS = {499, 550};
+static const Vec2d EXIT_BUTTON_POS = {400 - 282 / 2, 450};
 static const Vec2d EXIT_BUTTON_SIZE = {282, 94};
 
 // Paused Menu
@@ -202,10 +196,10 @@ static const Vec2d EXIT_BUTTON_SIZE = {282, 94};
 #define PAUSE_MENU_INDEX 0
 
 static const Vec2d PAUSE_MENU_ICON_SIZE = {63, 60};
-static const Vec2d PAUSE_MENU_BG_POS = {SCREEN_WIDTH / 2 - 295 / 2, SCREEN_HEIGHT / 2 - 200};
-static const Vec2d RESUME_POS = {SCREEN_WIDTH / 2 - 259 / 2 + 20, SCREEN_HEIGHT / 2 - 200 + 124};
-static const Vec2d HELP_POS = {SCREEN_WIDTH / 2 - 259 / 2 + 100, SCREEN_HEIGHT / 2 - 200 + 124};
-static const Vec2d GO_BACK_POS = {SCREEN_WIDTH / 2 - 259 / 2 + 170, SCREEN_HEIGHT / 2 - 200 + 124};
+static const Vec2d PAUSE_MENU_BG_POS = {SCREEN_WIDTH / 2 - 295 / 2, SCREEN_HEIGHT / 2 - 252 / 2};
+static const Vec2d RESUME_POS = {SCREEN_WIDTH / 2 - 259 / 2 + 20, SCREEN_HEIGHT / 2 - 252 / 2 + 124};
+static const Vec2d HELP_POS = {SCREEN_WIDTH / 2 - 259 / 2 + 100, SCREEN_HEIGHT / 2 - 252 / 2 + 124};
+static const Vec2d GO_BACK_POS = {SCREEN_WIDTH / 2 - 259 / 2 + 170, SCREEN_HEIGHT / 2 - 252 / 2 + 124};
 
 // UI
 #define HEALTH_BAR_INDEX 0
