@@ -78,6 +78,18 @@ float monsterModelGetX(MonsterModel* m){
 }
 float monsterModelGetY(MonsterModel* m){
   return vec2dGetY(&m->pos);
+  
+}
+
+float monsterModelGetSizeX(MonsterModel* m){
+  return vec2dGetX(&m->size);
+}
+float monsterModelGetSizeY(MonsterModel* m){
+  return vec2dGetY(&m->size);
+}
+
+Vec2d monsterModelGetSize(MonsterModel* m){
+  return  m->size;
 }
 
 float monsterModelGetVelX(MonsterModel* m){
@@ -148,5 +160,3 @@ void monsterModelSetDirWithVec(MonsterModel* m,Vec2d* v){
     vec2dMultiply(&m->vel,cur_m);
   }
 }
-
-
