@@ -29,5 +29,6 @@ void basicButtonHoverFn(Button* button);
 bool buttonIsFinished(Button* button);
 
 bool buttonContainsPoint(Button* b, int px, int py);
+bool buttonIsPressed(Button* b);
 
 #endif
