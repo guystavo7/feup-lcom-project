@@ -39,6 +39,10 @@ struct projectile {
             float target_y;
             float gravity;
         } sky_fall;
+
+        struct {
+            bool damage_dealt;
+        } near;
     } extra_data;
 
     bool active;
@@ -82,6 +86,8 @@ Projectile* projectileCreate(ProjectileType type, float x, float y, float vel_x,
         p->extra_data.sky_fall.target_x = x;
         p->extra_data.sky_fall.target_y = y;
         p->extra_data.sky_fall.gravity = 380.0f;
+    } else if (type == PROJ_NEAR) {
+        p->extra_data.near.damage_dealt = false;
     }
 
     return p;
@@ -126,6 +132,8 @@ void projectileReset(Projectile* p, ProjectileType type, float x, float y, float
         p->extra_data.sky_fall.target_x = x;
         p->extra_data.sky_fall.target_y = y;
         p->extra_data.sky_fall.gravity = 380.0f;
+    } else if (type == PROJ_NEAR) {
+        p->extra_data.near.damage_dealt = false;
     }
 }
 
@@ -177,11 +185,6 @@ void skyFallUpdate(Projectile* p, double delta_t, Terminal* terminal) {
     float new_vel_y = current_vel_y + p->extra_data.sky_fall.gravity * delta_t;
     vec2dSetY(p->vel, new_vel_y);
 
-    if (vec2dGetY(p->pos) >= p->extra_data.sky_fall.target_y) {
-        vec2dSetY(p->pos, p->extra_data.sky_fall.target_y);
-        vec2dSetX(p->pos, p->extra_data.sky_fall.target_x);
-    }
-
     int w = 16;
     int h = 16;
     if (p->sprite != NULL) {
@@ -212,6 +215,9 @@ void projectileUpdate(Projectile* p, double delta_t, Terminal* terminal) {
 
     if (p->sprite != NULL) {
         animatedSpriteUpdate((int)p->pos->x, (int)p->pos->y, p->sprite, terminal, delta_t, false);
+        if (p->type == PROJ_NEAR && animatedSpriteIsFinished(p->sprite)) {
+            p->active = false;
+        }
     }
 }
 
@@ -258,6 +264,13 @@ void projectileSetActive(Projectile* p, bool active) {
     p->active = active;
 }
 
+bool projectileCanDealDamage(Projectile* p) {
+    if (p->type == PROJ_NEAR) {
+        return !p->extra_data.near.damage_dealt;
+    }
+    return true;
+}
+
 BoxCollider* projectileGetCollider(Projectile* p) {
     return p->collider;
 }
@@ -275,6 +288,8 @@ void projectileAddPierce(Projectile* p) {
         if (p->extra_data.piercing.current_pierces >= p->extra_data.piercing.max_pierces) {
             p->active = false;
         }
+    } else if (p->type == PROJ_NEAR) {
+        p->extra_data.near.damage_dealt = true;
     } else {
         p->active = false;
     }

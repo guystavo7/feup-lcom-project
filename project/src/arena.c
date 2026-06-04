@@ -23,9 +23,9 @@
 #include "../resources/blue/tower/blueTower.h"
 #include "../resources/fruits/fruits.h"
 #include "../resources/icons/icons.h"
-#include "../resources/map/background.h"
 #include "../resources/tiles/tiles.h"
 #include "../resources/upgradeMenu/upgradeMenu.h"
+#include "../resources/maps/map1/map1.h"
 
 #include "../../lab5/spriteXMP.h"
 #include "../../lab5/terminal.h"
@@ -570,7 +570,7 @@ static void createLakeColliders(Arena* arena, const char* filename) {
 }
 
 static void createPlayer(Arena* arena) {
-    Vec2d playerPos = {100, 100};
+    Vec2d playerPos = {100, 300};
     arena->player = playerNew(playerPos);
 
     arena->colliders[PLAYER_TAG] = malloc(sizeof(BoxCollider*));
@@ -646,7 +646,7 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
     res->upgradeTargetIndex = -1;
     createUpgradeUI(res);
 
-    SpriteXPM* backgroundSprite = newSpriteXPM((xpm_map_t)background, XPM_8_8_8, 0, 0);
+	SpriteXPM* backgroundSprite = newSpriteXPM((xpm_map_t)background1, XPM_8_8_8, 0, 0);
     generateEmptyBuffer(backgroundSprite, terminal, 0, 0, false);
     res->HeroHP = 10;
     res->healthBar = healthBarNew(res->HeroHP);
@@ -897,7 +897,7 @@ void arenaHandleMonsterDamage(Arena* arena) {
             int projCount = towerGetProjectilesCount(tower);
             for (int i = 0; i < projCount; i++) {
                 Projectile* arrow = towerGetProjectile(tower, i);
-                if (!projectileIsActive(arrow)) continue;
+                if (!projectileIsActive(arrow) || !projectileCanDealDamage(arrow)) continue;
 
                 if (boxIsCollidingWithBox(projectileGetCollider(arrow), monsterGetBoxCollider(monster))) {
                     monsterSumHP(monster, -1000);

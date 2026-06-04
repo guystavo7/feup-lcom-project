@@ -45,6 +45,11 @@ void monsterModelSetFinishedPath(MonsterModel* m,bool finishedPath);
 float monsterModelGetX(MonsterModel* m);
 float monsterModelGetY(MonsterModel* m);
 
+
+float monsterModelGetSizeX(MonsterModel* m);
+float monsterModelGetSizeY(MonsterModel* m);
+Vec2d monsterModelGetSize(MonsterModel* m);
+
 float monsterModelGetVelX(MonsterModel* m);
 float monsterModelGetVelY(MonsterModel* m);
 
@@ -66,6 +71,8 @@ void monsterModelSetVel(MonsterModel* m,Vec2d* pos);
 void monsterModelSetX(MonsterModel* m,float x);
 void monsterModelSetY(MonsterModel* m,float y);
 
+
+
 void monsterModelSetVelX(MonsterModel* m,float x);
 void monsterModelSetVelY(MonsterModel* m,float y);
 
@@ -73,3 +80,4 @@ void monsterModelSetVelY(MonsterModel* m,float y);
 
 void monsterModelSetDir(MonsterModel* m,float dx, float dy);
 void monsterModelSetDirWithVec(MonsterModel* m,Vec2d* v);
+
