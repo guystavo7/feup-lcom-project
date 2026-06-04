@@ -21,7 +21,7 @@ GenericTower* basicTowerNew(Vec2d position) {
 	SpriteXPM** projectileSprite = malloc(sizeof(SpriteXPM*) * ARROW_FRAMES); 
 	for (int i = 0; i < ARROW_FRAMES; i++) projectileSprite[i] = newSpriteXPM((xpm_map_t)arrowXPM[i], XPM_8_8_8, 0, 0);
 
-    return towerNew(upperHalf, lowerHalf, idle, shoot, position, BASIC_TOWER_SIZE, BASIC_TOWER_HIT_BOX_OFFSET, BASIC_TOWER_RANGE, BASIC_TOWER_RANGE_OFFSET, basicTowerUpdate, BASIC_TOWER_COOLDOWN, PROJ_NORMAL, projectileSprite, ARROW_FRAMES);
+    return towerNew(upperHalf, lowerHalf, idle, shoot, position, BASIC_TOWER_SIZE, BASIC_TOWER_HIT_BOX_OFFSET, BASIC_TOWER_RANGE, BASIC_TOWER_RANGE_OFFSET, basicTowerUpdate, BASIC_TOWER_COOLDOWN, PROJ_NORMAL, projectileSprite, ARROW_FRAMES, TOWER_KIND_BASIC);
 }
 
 void basicTowerUpdate(GenericTower* tower, Terminal* terminal, Arena* arena, float deltaTime) {}

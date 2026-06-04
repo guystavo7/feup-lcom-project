@@ -6,6 +6,7 @@
 #include "../include/utils/utils.h"
 
 #include "../resources/particles/dust/dust.h"
+#include <stdbool.h>
 #include <stdlib.h>
 
 enum TowerState {
@@ -41,9 +42,11 @@ struct GenericTower {
     int arrowSpritesN;
 
     void (*towerUpdate)(GenericTower* tower, Terminal* terminal, Arena* arena, float deltaTime);
+
+    TowerKind kind;
 };
 
-GenericTower* towerNew(SpriteXPM* upperHalf, SpriteXPM* lowerHalf, AnimatedSprite* archerIdle, AnimatedSprite* archerShoot, Vec2d position, Vec2d size, Vec2d hitBoxOffset, Vec2d rangeSize, Vec2d rangeOffset, void (*towerUpdate)(GenericTower* tower, Terminal* terminal, Arena* arena, float deltaTime), float cooldown, ProjectileType projectileType, SpriteXPM** arrowSprites, int n) {
+GenericTower* towerNew(SpriteXPM* upperHalf, SpriteXPM* lowerHalf, AnimatedSprite* archerIdle, AnimatedSprite* archerShoot, Vec2d position, Vec2d size, Vec2d hitBoxOffset, Vec2d rangeSize, Vec2d rangeOffset, void (*towerUpdate)(GenericTower* tower, Terminal* terminal, Arena* arena, float deltaTime), float cooldown, ProjectileType projectileType, SpriteXPM** arrowSprites, int n, TowerKind kind) {
     GenericTower* res = malloc(sizeof(GenericTower));
     res->upperHalf = upperHalf;
     res->lowerHalf = lowerHalf;
@@ -69,11 +72,11 @@ GenericTower* towerNew(SpriteXPM* upperHalf, SpriteXPM* lowerHalf, AnimatedSprit
     res->projectileType = projectileType;
     res->arrowSprites = arrowSprites;
     res->arrowSpritesN = n;
+    res->kind = kind;
 
     res->projectilesCapacity = 100;
     res->projectilesCount = 0;
     res->projectiles = malloc(sizeof(Projectile*) * res->projectilesCapacity);
-
     return res;
 }
 
@@ -235,6 +238,18 @@ void towerFree(GenericTower* tower) {
 
 BoxCollider* towerGetHitBox(GenericTower* tower) {
     return tower->hitBox;
+}
+
+Vec2d towerGetPosition(GenericTower* tower) {
+    return tower->position;
+}
+
+TowerKind towerGetKind(GenericTower* tower) {
+    return tower->kind;
+}
+
+bool towerIsBasic(GenericTower* tower) {
+    return tower->kind == TOWER_KIND_BASIC;
 }
 
 bool towerAddProjectile(GenericTower* tower, Projectile* projectile) {

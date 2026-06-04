@@ -17,8 +17,10 @@
 
 #include "../resources/1.h"
 #include "../resources/blue/tower/blueTower.h"
+#include "../resources/icons/icons.h"
 #include "../resources/map/background.h"
 #include "../resources/tiles/tiles.h"
+#include "../resources/upgradeMenu/upgradeMenu.h"
 
 #include "../../lab5/spriteXMP.h"
 #include "../../lab5/terminal.h"
@@ -43,6 +45,11 @@ typedef enum {
     ARENA_CONSTRUCT_PICK_TOWER,
     ARENA_CONSTRUCT_PLACE_TOWER,
 } ArenaConstructPhase;
+
+typedef enum {
+    ARENA_UPGRADE_IDLE = 0,
+    ARENA_UPGRADE_MENU_OPEN,
+} ArenaUpgradePhase;
 
 struct Arena {
     int* collidersN;
@@ -80,10 +87,129 @@ struct Arena {
     SpriteXPM* towerPickUpperSprite;
     Button* towerPickButton;
     BoxCollider* towerPickHitbox;
+
+    ArenaUpgradePhase upgradePhase;
+    int upgradeTargetIndex;
+    SpriteXPM* upgradeScrollLeft;
+    SpriteXPM* upgradeScrollRight;
+    BoxCollider* upgradeScrollLeftHitbox;
+    BoxCollider* upgradeScrollRightHitbox;
+    Button* upgradeHammerLeft;
+    Button* upgradeHammerRight;
 };
 
 static void arenaTowerPickButtonCb(Button* self) {
     (void)self;
+}
+
+static Arena* s_arena_upgrade_button_ctx;
+
+static void arenaCloseUpgradeMenu(Arena* arena) {
+    arena->upgradePhase = ARENA_UPGRADE_IDLE;
+    arena->upgradeTargetIndex = -1;
+    buttonReset(arena->upgradeHammerLeft);
+    buttonReset(arena->upgradeHammerRight);
+}
+
+static void arenaReplaceTargetTower(Arena* arena, TowerKind newKind) {
+    int i = arena->upgradeTargetIndex;
+    if (i < 0 || i >= arena->towersN) return;
+    GenericTower* old = arena->towers[i];
+    if (!towerIsBasic(old)) return;
+
+    Vec2d pos = towerGetPosition(old);
+    BoxCollider* oldHit = towerGetHitBox(old);
+    int wallN = arena->collidersN[WALLS_TAG];
+    int j;
+    for (j = 0; j < wallN; j++) {
+        if (arena->colliders[WALLS_TAG][j] == oldHit) break;
+    }
+    if (j >= wallN) return;
+
+    GenericTower* neu = NULL;
+    if (newKind == TOWER_KIND_FAST)
+        neu = fastTowerNew(pos);
+    else if (newKind == TOWER_KIND_PIERCING)
+        neu = piercingTowerNew(pos);
+    else
+        return;
+
+    arena->towers[i] = neu;
+    arena->colliders[WALLS_TAG][j] = towerGetHitBox(neu);
+    towerFree(old);
+    arenaCloseUpgradeMenu(arena);
+}
+
+static void arenaUpgradeConfirmFastCb(Button* self) {
+    (void)self;
+    if (s_arena_upgrade_button_ctx) arenaReplaceTargetTower(s_arena_upgrade_button_ctx, TOWER_KIND_FAST);
+}
+
+static void arenaUpgradeConfirmPiercingCb(Button* self) {
+    (void)self;
+    if (s_arena_upgrade_button_ctx) arenaReplaceTargetTower(s_arena_upgrade_button_ctx, TOWER_KIND_PIERCING);
+}
+
+static void arenaTryOpenUpgradeFromTowerClick(Arena* arena) {
+    if (arena->constructPhase != ARENA_CONSTRUCT_NORMAL || arena->upgradePhase != ARENA_UPGRADE_IDLE) return;
+    Cursor* cur = getCursor();
+    if (!cursorIsLeftButtonPressedDown(cur)) return;
+
+    int cx = cursorGetX(cur);
+    int cy = cursorGetY(cur);
+    Vec2d click = {(float)cx, (float)cy};
+
+    for (int ti = arena->towersN - 1; ti >= 0; ti--) {
+        GenericTower* t = arena->towers[ti];
+        if (!towerIsBasic(t)) continue;
+        if (!boxIsCollidingWithPoint(towerGetHitBox(t), click)) continue;
+        arena->upgradePhase = ARENA_UPGRADE_MENU_OPEN;
+        arena->upgradeTargetIndex = ti;
+        buttonReset(arena->upgradeHammerLeft);
+        buttonReset(arena->upgradeHammerRight);
+        return;
+    }
+}
+
+static void arenaHandleUpgradeUi(Arena* arena) {
+    s_arena_upgrade_button_ctx = arena;
+    Cursor* cur = getCursor();
+    Vec2d mousePos = {(float)cursorGetX(cur), (float)cursorGetY(cur)};
+    bool leftClick = cursorIsLeftButtonPressedDown(cur);
+    int mx = (int)mousePos.x;
+    int my = (int)mousePos.y;
+
+    if (buttonContainsPoint(arena->upgradeHammerLeft, mx, my)) {
+        if (leftClick) buttonClick(arena->upgradeHammerLeft);
+        buttonHover(arena->upgradeHammerLeft);
+    } else {
+        buttonReset(arena->upgradeHammerLeft);
+    }
+
+    if (buttonContainsPoint(arena->upgradeHammerRight, mx, my)) {
+        if (leftClick) buttonClick(arena->upgradeHammerRight);
+        buttonHover(arena->upgradeHammerRight);
+    } else {
+        buttonReset(arena->upgradeHammerRight);
+    }
+
+    if (leftClick) {
+        if (buttonContainsPoint(arena->upgradeHammerLeft, mx, my) || buttonContainsPoint(arena->upgradeHammerRight, mx, my)) {
+            s_arena_upgrade_button_ctx = NULL;
+            return;
+        }
+        if (!boxIsCollidingWithPoint(arena->upgradeScrollLeftHitbox, mousePos) && !boxIsCollidingWithPoint(arena->upgradeScrollRightHitbox, mousePos))
+            arenaCloseUpgradeMenu(arena);
+    }
+
+    s_arena_upgrade_button_ctx = NULL;
+}
+
+static void arenaDrawUpgradeMenu(Arena* arena, Terminal* terminal, float deltaTime) {
+    drawSpriteXPM(arena->upgradeScrollLeft, terminal, UPGRADE_SCROLL_LEFT_X, UPGRADE_SCROLL_ORIGIN_Y, false);
+    drawSpriteXPM(arena->upgradeScrollRight, terminal, UPGRADE_SCROLL_RIGHT_X, UPGRADE_SCROLL_ORIGIN_Y, false);
+    buttonDraw(arena->upgradeHammerLeft, terminal, deltaTime, false);
+    buttonDraw(arena->upgradeHammerRight, terminal, deltaTime, false);
 }
 
 static bool arenaPointInPopup(Arena* arena, int px, int py) {
@@ -291,7 +417,7 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
     createPlayer(res);
     createFruitsTest(res);
     res->towersN = 0;
-    res->towers = malloc(sizeof(SpriteXPM*) * res->towersN);
+    res->towers = malloc(sizeof(GenericTower*) * res->towersN);
 
     res->constructPhase = ARENA_CONSTRUCT_NORMAL;
     res->popupW = 420;
@@ -315,7 +441,29 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
     float hitH = 33.f - BASIC_UPPER_HALF_OFFSET.y;
     res->towerPickHitbox = boxColliderNew((Vec2d){(float)ix, hitY}, EMPTY_VEC2D, (Vec2d){(float)TOWER_PICK_ICON_W, hitH}, 0);
 
-    // The terminal will handle the freeing
+    res->upgradePhase = ARENA_UPGRADE_IDLE;
+    res->upgradeTargetIndex = -1;
+    res->upgradeScrollLeft = newSpriteXPM((xpm_map_t)upgradeMenuXPM[UPGRADE_MENU_XPM_FAST], XPM_8_8_8, 0, 0);
+    res->upgradeScrollRight = newSpriteXPM((xpm_map_t)upgradeMenuXPM[UPGRADE_MENU_XPM_PIERCING], XPM_8_8_8, 0, 0);
+    res->upgradeScrollLeftHitbox = boxColliderNew((Vec2d){(float)UPGRADE_SCROLL_LEFT_X, (float)UPGRADE_SCROLL_ORIGIN_Y}, EMPTY_VEC2D,
+                                                    (Vec2d){(float)UPGRADE_SCROLL_W, (float)UPGRADE_SCROLL_H}, UI_TAG);
+    res->upgradeScrollRightHitbox = boxColliderNew((Vec2d){(float)UPGRADE_SCROLL_RIGHT_X, (float)UPGRADE_SCROLL_ORIGIN_Y}, EMPTY_VEC2D,
+                                                     (Vec2d){(float)UPGRADE_SCROLL_W, (float)UPGRADE_SCROLL_H}, UI_TAG);
+
+    SpriteXPM** hammerSpritesLeft = malloc(sizeof(SpriteXPM*) * UPGRADE_HAMMER_FRAMES);
+    hammerSpritesLeft[0] = newSpriteXPM((xpm_map_t)iconsXPM[UPGRADE_HAMMER_NORMAL], XPM_8_8_8, 0, 0);
+    hammerSpritesLeft[1] = newSpriteXPM((xpm_map_t)iconsXPM[UPGRADE_HAMMER_PRESSED], XPM_8_8_8, 0, 0);
+    res->upgradeHammerLeft =
+        buttonNew(UPGRADE_HAMMER_LEFT_X, UPGRADE_HAMMER_LEFT_Y, UPGRADE_HAMMER_W, UPGRADE_HAMMER_H,
+                  animatedSpriteNew((float)UPGRADE_HAMMER_FRAME_SPEED, hammerSpritesLeft, UPGRADE_HAMMER_FRAMES, NORMAL), arenaUpgradeConfirmFastCb, basicButtonHoverFn);
+
+    SpriteXPM** hammerSpritesRight = malloc(sizeof(SpriteXPM*) * UPGRADE_HAMMER_FRAMES);
+    hammerSpritesRight[0] = newSpriteXPM((xpm_map_t)iconsXPM[UPGRADE_HAMMER_NORMAL], XPM_8_8_8, 0, 0);
+    hammerSpritesRight[1] = newSpriteXPM((xpm_map_t)iconsXPM[UPGRADE_HAMMER_PRESSED], XPM_8_8_8, 0, 0);
+    res->upgradeHammerRight =
+        buttonNew(UPGRADE_HAMMER_RIGHT_X, UPGRADE_HAMMER_RIGHT_Y, UPGRADE_HAMMER_W, UPGRADE_HAMMER_H,
+                  animatedSpriteNew((float)UPGRADE_HAMMER_FRAME_SPEED, hammerSpritesRight, UPGRADE_HAMMER_FRAMES, NORMAL), arenaUpgradeConfirmPiercingCb, basicButtonHoverFn);
+
     SpriteXPM* backgroundSprite = newSpriteXPM((xpm_map_t)background, XPM_8_8_8, 0, 0);
     generateEmptyBuffer(backgroundSprite, terminal, 0, 0, false);
 
@@ -368,6 +516,13 @@ void arenaFree(Arena* arena) {
 
     for (int i = 0; i < arena->towersN; i++) towerFree(arena->towers[i]);
     free(arena->towers);
+
+    freeSpriteXPM(arena->upgradeScrollLeft);
+    freeSpriteXPM(arena->upgradeScrollRight);
+    boxColliderFree(arena->upgradeScrollLeftHitbox);
+    boxColliderFree(arena->upgradeScrollRightHitbox);
+    buttonFree(arena->upgradeHammerLeft);
+    buttonFree(arena->upgradeHammerRight);
 
     freeSpriteXPM(arena->towerPickUpperSprite);
     boxColliderFree(arena->towerPickHitbox);
@@ -433,11 +588,18 @@ static void arenaHandleConstruction(Arena* arena, Terminal* terminal) {
     Cursor* cur = getCursor();
     (void)terminal;
 
+    if (arena->upgradePhase == ARENA_UPGRADE_MENU_OPEN) {
+        arenaHandleUpgradeUi(arena);
+        return;
+    }
+
     if (arena->constructPhase == ARENA_CONSTRUCT_NORMAL) {
         cursorSetConstructionMode(cur, false);
         if (cursorIsRightButtonPressedDown(cur)) {
             arena->constructPhase = ARENA_CONSTRUCT_PICK_TOWER;
+            return;
         }
+        arenaTryOpenUpgradeFromTowerClick(arena);
         return;
     }
 
@@ -508,10 +670,13 @@ void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
     arenaHandleConstruction(arena, terminal);
 
     playerUpdate(arena->player, terminal, arena, deltaTime);
-    if (arena->constructPhase == ARENA_CONSTRUCT_PICK_TOWER) {
+    for (int i = arena->towersN - 1; i >= 0; i--) towerDrawUpperHalf(arena->towers[i], terminal, arena, deltaTime);
+
+    if (arena->upgradePhase == ARENA_UPGRADE_MENU_OPEN) {
+        arenaDrawUpgradeMenu(arena, terminal, deltaTime);
+    } else if (arena->constructPhase == ARENA_CONSTRUCT_PICK_TOWER) {
         arenaDrawConstructionPopup(arena, terminal, deltaTime);
     }
 
     cursorUpdate(getCursor(), terminal, deltaTime);
-    for (int i = arena->towersN - 1; i >= 0; i--) towerDrawUpperHalf(arena->towers[i], terminal, arena, deltaTime);
 }
