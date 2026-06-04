@@ -122,10 +122,10 @@ static void arenaReplaceTargetTower(Arena* arena, TowerKind newKind) {
 
     Vec2d pos = towerGetPosition(old);
     BoxCollider* oldHit = towerGetHitBox(old);
-    int wallN = arena->collidersN[WALLS_TAG];
+    int wallN = arena->collidersN[TOWER_TAG];
     int j;
     for (j = 0; j < wallN; j++) {
-        if (arena->colliders[WALLS_TAG][j] == oldHit) break;
+        if (arena->colliders[TOWER_TAG][j] == oldHit) break;
     }
     if (j >= wallN) return;
 
@@ -138,7 +138,7 @@ static void arenaReplaceTargetTower(Arena* arena, TowerKind newKind) {
         return;
 
     arena->towers[i] = neu;
-    arena->colliders[WALLS_TAG][j] = towerGetHitBox(neu);
+    arena->colliders[TOWER_TAG][j] = towerGetHitBox(neu);
     towerFree(old);
     arenaCloseUpgradeMenu(arena);
 }
@@ -474,10 +474,14 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
 }
 
 bool arenaCanPlaceTower(Arena* arena, Vec2d position) {
-    BoxCollider* preview = boxColliderNew(position, BASIC_TOWER_HIT_BOX_OFFSET, BASIC_TOWER_SIZE, WALLS_TAG);
+    BoxCollider* preview = boxColliderNew(position, BASIC_TOWER_HIT_BOX_OFFSET, BASIC_TOWER_SIZE, TOWER_TAG);
     BoxCollider* hits[PLACEMENT_QUERY_MAX];
 
     if (arenaDetectCollisions(arena, preview, WALLS_TAG, hits) > 0) {
+        boxColliderFree(preview);
+        return false;
+    }
+    if (arenaDetectCollisions(arena, preview, TOWER_TAG, hits) > 0) {
         boxColliderFree(preview);
         return false;
     }
@@ -505,9 +509,9 @@ void arenaBuildTower(Arena* arena, Vec2d position) {
     arena->towers = realloc(arena->towers, sizeof(GenericTower*) * arena->towersN);
     arena->towers[arena->towersN - 1] = basicLongTowerNew(position);
 
-    arena->collidersN[WALLS_TAG]++;
-    arena->colliders[WALLS_TAG] = realloc(arena->colliders[WALLS_TAG], sizeof(BoxCollider*) * arena->collidersN[WALLS_TAG]);
-    arena->colliders[WALLS_TAG][arena->collidersN[WALLS_TAG] - 1] = towerGetHitBox(arena->towers[arena->towersN - 1]);
+    arena->collidersN[TOWER_TAG]++;
+    arena->colliders[TOWER_TAG] = realloc(arena->colliders[TOWER_TAG], sizeof(BoxCollider*) * arena->collidersN[TOWER_TAG]);
+    arena->colliders[TOWER_TAG][arena->collidersN[TOWER_TAG] - 1] = towerGetHitBox(arena->towers[arena->towersN - 1]);
 }
 
 void arenaFree(Arena* arena) {
@@ -539,6 +543,7 @@ void arenaFree(Arena* arena) {
     pathFree(arena->path_test);
 
     free(arena->colliders[WALLS_TAG]);
+    free(arena->colliders[TOWER_TAG]);
     free(arena->colliders[PLAYER_TAG]);
     free(arena->colliders[COLLECTABLE_TAG]);
     free(arena->tiles);

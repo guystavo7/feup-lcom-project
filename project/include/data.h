@@ -11,8 +11,9 @@
 #define PATH_TAG		4
 #define UI_TAG			5
 #define LAKE_TAG		6
+#define TOWER_TAG       7
 
-#define TAGS_NUM 		7
+#define TAGS_NUM 		8
 
 // File Paths
 /*
