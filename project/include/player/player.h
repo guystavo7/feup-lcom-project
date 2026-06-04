@@ -14,4 +14,4 @@ PlayerModel* playerGetPlayerModel(Player* player);
 PlayerController* playerGetPlayerController(Player* player);
 
 void playerAddFruit(Player* player, FruitKind kind);
-void playerPrintFruitInventory(const Player* player);
+unsigned playerGetFruitCount(const Player* player, FruitKind kind);

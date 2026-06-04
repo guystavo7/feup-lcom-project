@@ -1,6 +1,5 @@
 #include "../include/player/player.h"
 
-#include <stdio.h>
 #include <stdlib.h>
 
 struct Player {
@@ -44,15 +43,7 @@ void playerAddFruit(Player* player, FruitKind kind) {
 	player->fruitCount[kind]++;
 }
 
-void playerPrintFruitInventory(const Player* player) {
-	unsigned total = 0;
-	for (int i = 0; i < FRUIT_KIND_COUNT; i++) total += player->fruitCount[i];
-	printf(
-	    "Frutas: banana=%u abacate=%u cereja=%u cenoura=%u (total=%u)\n",
-	    player->fruitCount[FRUIT_BANANA],
-	    player->fruitCount[FRUIT_ABACATE],
-	    player->fruitCount[FRUIT_CEREJA],
-	    player->fruitCount[FRUIT_CENOURA],
-	    total);
-	fflush(stdout);
+unsigned playerGetFruitCount(const Player* player, FruitKind kind) {
+	if ((unsigned)kind >= (unsigned)FRUIT_KIND_COUNT) return 0;
+	return player->fruitCount[kind];
 }

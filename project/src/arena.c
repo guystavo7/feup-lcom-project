@@ -150,6 +150,16 @@ static void arena_fruit_push(Arena* arena, Vec2d position, FruitKind kind, float
     arena_fruits_sync_colliders(arena);
 }
 
+static void arena_sync_fruit_stats_bar(Arena* arena) {
+    const Player* p = arena->player;
+    StatsBar* sb = arena->statsBar;
+    if (p == NULL || sb == NULL) return;
+    statsBarSetBanana(sb, (int)playerGetFruitCount(p, FRUIT_BANANA));
+    statsBarSetAvocado(sb, (int)playerGetFruitCount(p, FRUIT_ABACATE));
+    statsBarSetCherry(sb, (int)playerGetFruitCount(p, FRUIT_CEREJA));
+    statsBarSetCarrot(sb, (int)playerGetFruitCount(p, FRUIT_CENOURA));
+}
+
 static void arenaTowerPickButtonCb(Button* self) {
     (void)self;
 }
@@ -732,6 +742,7 @@ void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
     }
 
 	healthBarUpdate(arena->healthBar, terminal, arena);
+	arena_sync_fruit_stats_bar(arena);
 	statsBarUpdate(arena->statsBar, terminal, arena);
 
     cursorUpdate(getCursor(), terminal, deltaTime);
