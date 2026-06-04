@@ -38,7 +38,7 @@ SRCS= \
 	./piercingTower.c \
 	./fastTower.c \
 	./mortarTower.c \
-	./eletrictTower.c
+	./eletrictTower.c \
 	alienMonster.c \
 	monsterGen.c
 
