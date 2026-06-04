@@ -19,7 +19,8 @@ struct projectile {
     ProjectileType type;
     Vec2d* pos;
     Vec2d* vel;
-    SpriteXPM* sprite;
+	AnimatedSprite* sprite;
+    //SpriteXPM* sprite;
     BoxCollider* collider;
     union {
         struct {
@@ -43,7 +44,7 @@ struct projectile {
     bool active;
 };
 
-Projectile* projectileCreate(ProjectileType type, float x, float y, float vel_x, float vel_y, SpriteXPM* sprite) {
+Projectile* projectileCreate(ProjectileType type, float x, float y, float vel_x, float vel_y, AnimatedSprite* sprite) {
     Projectile* p = malloc(sizeof(Projectile));
     if (!p) return NULL;
 
@@ -61,8 +62,8 @@ Projectile* projectileCreate(ProjectileType type, float x, float y, float vel_x,
     int w = 16;
     int h = 16;
     if (sprite != NULL) {
-        w = getSpriteWidth(sprite);
-        h = getSpriteHeight(sprite);
+        w = animatedSpriteGetWidth(sprite);
+        h = animatedSpriteGetHeight(sprite);
     }
 
     Vec2d pos = {p->pos->x, p->pos->y};
@@ -91,6 +92,8 @@ void projectileFree(Projectile* p) {
     vec2dFree(p->pos);
     vec2dFree(p->vel);
     boxColliderFree(p->collider);
+	// The sprites are stored in the tower so calling animatedSpriteFree will destroy everything
+	free(p->sprite);
     free(p);
 }
 
@@ -154,8 +157,8 @@ void projectileUpdate(Projectile* p, double delta_t, Terminal* terminal) {
         int w = 16;
         int h = 16;
         if (p->sprite != NULL) {
-            w = getSpriteWidth(p->sprite);
-            h = getSpriteHeight(p->sprite);
+            w = animatedSpriteGetWidth(p->sprite);
+            h = animatedSpriteGetHeight(p->sprite);
         }
         int cx = (int)p->extra_data.sky_fall.target_x + w / 2;
         int cy = (int)p->extra_data.sky_fall.target_y + h / 2;
@@ -163,7 +166,7 @@ void projectileUpdate(Projectile* p, double delta_t, Terminal* terminal) {
     }
 
     if (p->sprite != NULL) {
-        drawSpriteXPM(p->sprite, terminal, (int)vec2dGetX(p->pos), (int)vec2dGetY(p->pos), false);
+		animatedSpriteUpdate((int)p->pos->x, (int)p->pos->y, p->sprite, terminal, delta_t, false);
     }
 }
 

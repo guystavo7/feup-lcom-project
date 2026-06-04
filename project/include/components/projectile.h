@@ -2,9 +2,9 @@
 #define PROJECTILE_H
 
 #include "../utils/vec2d.h"
-#include "../../../lab5/spriteXMP.h"
 #include "../../../lab5/terminal.h"
 #include "boxCollider.h"
+#include "animatedSprite.h"
 
 #include <stdbool.h>
 
@@ -17,7 +17,7 @@ typedef enum {
 
 typedef struct projectile Projectile;
 
-Projectile* projectileCreate(ProjectileType type, float x, float y, float vel_x, float vel_y, SpriteXPM* sprite);
+Projectile* projectileCreate(ProjectileType type, float x, float y, float vel_x, float vel_y, AnimatedSprite* sprite);
 void projectileFree(Projectile* p);
 
 void projectileUpdate(Projectile* p, double delta_t, Terminal* terminal);

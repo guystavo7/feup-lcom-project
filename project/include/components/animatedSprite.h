@@ -22,5 +22,7 @@ void animatedSpriteUpdate(int x, int y, AnimatedSprite* sprite, Terminal* t, flo
 void animatedSpriteStart(AnimatedSprite* sprite);
 bool animatedSpriteIsFinished(AnimatedSprite* sprite);
 void animatedSpriteReset(AnimatedSprite* sprite);
+int animatedSpriteGetWidth(AnimatedSprite* sprite);
+int animatedSpriteGetHeight(AnimatedSprite* sprite);
 
 #endif
