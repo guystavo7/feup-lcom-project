@@ -30,5 +30,7 @@ bool towerIsBasic(GenericTower* tower);
 void towerUpdate(GenericTower* tower, Terminal* terminal, Arena* arena, float deltaTime);
 void towerDrawUpperHalf(GenericTower* tower, Terminal* terminal, Arena* arena, float deltaTime);
 bool towerAddProjectile(GenericTower* tower, Projectile* projectile);
+int towerGetProjectilesCount(GenericTower* tower);
+Projectile* towerGetProjectile(GenericTower* tower, int index);
 
 #endif

@@ -27,6 +27,7 @@ static float moveX(RigidBody* rb, float x, Arena* arena, BoxCollider* hitBox, fl
 
     BoxCollider* colliders[128];
     int n = arenaDetectCollisions(arena, hitBox, WALLS_TAG, colliders);
+    n += arenaDetectCollisions(arena, hitBox, TOWER_TAG, colliders + n);
 
     for (int i = 0; i < n; i++) {
         if (rb->velocity.x > 0 && (x + xOffset + width) > (boxColliderGetX(colliders[i]) + boxColliderGetOffsetX(colliders[i]))) {
@@ -51,6 +52,7 @@ static float moveY(RigidBody* rb, float y, Arena* arena, BoxCollider* hitBox, fl
 
     BoxCollider* colliders[128];
     int n = arenaDetectCollisions(arena, hitBox, WALLS_TAG, colliders);
+    n += arenaDetectCollisions(arena, hitBox, TOWER_TAG, colliders + n);
 
     for (int i = 0; i < n; i++) {
         if (rb->velocity.y > 0 && (y + height + yOffset) > (boxColliderGetY(colliders[i])) + boxColliderGetOffsetY(colliders[i])) {

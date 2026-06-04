@@ -87,13 +87,55 @@ Projectile* projectileCreate(ProjectileType type, float x, float y, float vel_x,
     return p;
 }
 
+void projectileReset(Projectile* p, ProjectileType type, float x, float y, float vel_x, float vel_y, SpriteXPM** arrowSprites, int index) {
+    if (!p) return;
+
+    p->type = type;
+    p->active = true;
+
+    if (type == PROJ_SKY_FALL) {
+        vec2dSetX(p->pos, x);
+        vec2dSetY(p->pos, y - 400.0f);
+        vec2dSetX(p->vel, 0.0f);
+        vec2dSetY(p->vel, 0.0f);
+    } else {
+        vec2dSetX(p->pos, x);
+        vec2dSetY(p->pos, y);
+        vec2dSetX(p->vel, vel_x);
+        vec2dSetY(p->vel, vel_y);
+    }
+
+    if (p->sprite) {
+        if (type == PROJ_NORMAL || type == PROJ_PIERCING) {
+            animatedSpriteSetSpriteAtIndex(p->sprite, 0, arrowSprites[index]);
+        }
+        animatedSpriteStart(p->sprite);
+    }
+
+    boxColliderSetX(p->collider, vec2dGetX(p->pos));
+    boxColliderSetY(p->collider, vec2dGetY(p->pos));
+
+    if (type == PROJ_PIERCING) {
+        p->extra_data.piercing.max_pierces = 2;
+        p->extra_data.piercing.current_pierces = 0;
+    } else if (type == PROJ_HOMING) {
+        p->extra_data.homing.target_x = x;
+        p->extra_data.homing.target_y = y;
+        p->extra_data.homing.turn_speed = 50.0f;
+    } else if (type == PROJ_SKY_FALL) {
+        p->extra_data.sky_fall.target_x = x;
+        p->extra_data.sky_fall.target_y = y;
+        p->extra_data.sky_fall.gravity = 380.0f;
+    }
+}
+
 void projectileFree(Projectile* p) {
     if (!p) return;
     vec2dFree(p->pos);
     vec2dFree(p->vel);
     boxColliderFree(p->collider);
     // The sprites are stored in the tower so calling animatedSpriteFree will destroy everything
-    free(p->sprite);
+        free(p->sprite);
     free(p);
 }
 
@@ -153,7 +195,6 @@ void skyFallUpdate(Projectile* p, double delta_t, Terminal* terminal) {
 
 void projectileUpdate(Projectile* p, double delta_t, Terminal* terminal) {
     if (!p->active) return;
-    // drawRectangle(terminal, boxColliderGetX(p->collider), boxColliderGetY(p->collider), boxColliderGetWidth(p->collider), boxColliderGetHeight(p->collider), 0xFFFFFF);
 
     if (p->type == PROJ_HOMING) {
         homingProjectileUpdate(p, delta_t, terminal);

@@ -48,6 +48,12 @@ void animatedSpriteFree(AnimatedSprite* sprite) {
     free(sprite);
 }
 
+void animatedSpriteFreeSpritesArrayOnly(AnimatedSprite* sprite) {
+    if (sprite) {
+        free(sprite->sprites);
+    }
+}
+
 // Updates
 static void loopUpdate(int x, int y, AnimatedSprite* sprite, Terminal* t, float deltaTime, bool isFlipped) {
     sprite->current += deltaTime * sprite->frameSpeed;
@@ -119,4 +125,10 @@ int animatedSpriteGetWidth(AnimatedSprite* sprite) {
 
 int animatedSpriteGetHeight(AnimatedSprite* sprite) {
 	return getSpriteHeight(sprite->sprites[(int)sprite->current]);
+}
+
+void animatedSpriteSetSpriteAtIndex(AnimatedSprite* sprite, int index, SpriteXPM* xpm) {
+    if (sprite && index >= 0 && index < sprite->n) {
+        sprite->sprites[index] = xpm;
+    }
 }
