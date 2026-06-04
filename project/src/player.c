@@ -54,3 +54,15 @@ unsigned playerGetFruitCount(const Player* player, FruitKind kind) {
 	if ((unsigned)kind >= (unsigned)FRUIT_KIND_COUNT) return 0;
 	return player->fruitCount[kind];
 }
+
+bool playerTrySpendFruits(Player* player, const int* cost) {
+	if (player == NULL || cost == NULL) return false;
+	for (int i = 0; i < FRUIT_KIND_COUNT; i++) {
+		if (cost[i] < 0) return false;
+		if (player->fruitCount[i] < (unsigned)cost[i]) return false;
+	}
+	for (int i = 0; i < FRUIT_KIND_COUNT; i++) {
+		player->fruitCount[i] -= (unsigned)cost[i];
+	}
+	return true;
+}

@@ -15,3 +15,5 @@ PlayerController* playerGetPlayerController(Player* player);
 
 void playerAddFruit(Player* player, FruitKind kind);
 unsigned playerGetFruitCount(const Player* player, FruitKind kind);
+
+bool playerTrySpendFruits(Player* player, const int* cost);

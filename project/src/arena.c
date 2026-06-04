@@ -257,17 +257,9 @@ static void arenaCloseUpgradeMenu(Arena* arena) {
 }
 
 static bool buyTower(Arena* arena, TowerKind newKind) {
-    bool canBuy = true;
+    if (arena->player == NULL) return false;
     const int* cost = TOWER_COST[newKind];
-    if (statsBarGetBanana(arena->statsBar) < cost[0] || statsBarGetAvocado(arena->statsBar) < cost[1] || statsBarGetCherry(arena->statsBar) < cost[2] || statsBarGetCarrot(arena->statsBar) < cost[3]) canBuy = false;
-
-    if (canBuy) {
-        statsBarAddBanana(arena->statsBar, -cost[0]);
-        statsBarAddAvocado(arena->statsBar, -cost[1]);
-        statsBarAddCherry(arena->statsBar, -cost[2]);
-        statsBarAddCarrot(arena->statsBar, -cost[3]);
-    }
-    return canBuy;
+    return playerTrySpendFruits(arena->player, cost);
 }
 
 static void arenaReplaceTargetTower(Arena* arena, TowerKind newKind) {
@@ -614,11 +606,6 @@ static void createPlayer(Arena* arena) {
     arena->collidersN[PLAYER_TAG] = 1;
 }
 
-static void createFruitsTest(Arena* arena) {
-    Vec2d fruitPos = {500, 400};
-    arena_fruit_push(arena, fruitPos, FRUIT_ABACATE, FRUIT_TIME_ON_SCREEN_SEC);
-}
-
 static void createUpgradeUI(Arena* res) {
     res->upgradeScrollLeftBasic = newSpriteXPM((xpm_map_t)upgradeMenuXPM[UPGRADE_MENU_XPM_FAST], XPM_8_8_8, 0, 0);
     res->upgradeScrollRightBasic = newSpriteXPM((xpm_map_t)upgradeMenuXPM[UPGRADE_MENU_XPM_PIERCING], XPM_8_8_8, 0, 0);
@@ -674,7 +661,6 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
     createMonsterPathColliders(res, pathFile);
     createLakeColliders(res, waterFile);
     createPlayer(res);
-    createFruitsTest(res);
     res->towersN = 0;
     res->towers = malloc(sizeof(GenericTower*) * res->towersN);
 
