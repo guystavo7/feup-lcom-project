@@ -89,10 +89,12 @@ static void genericTowerProjectileHandler(GenericTower* tower, float deltaTime, 
 
         if (!projectileIsActive(p)) continue;
 
-        BoxCollider* colliders[1024];
-        int n_walls = arenaDetectCollisions(arena, projectileGetCollider(p), WALLS_TAG, colliders);
-        if (n_walls > 0) {
-            projectileSetActive(p, false);
+        if (projectileGetType(p) != PROJ_SKY_FALL) {
+            BoxCollider* colliders[1024];
+            int n_walls = arenaDetectCollisions(arena, projectileGetCollider(p), WALLS_TAG, colliders);
+            if (n_walls > 0) {
+                projectileSetActive(p, false);
+            }
         }
     }
 }

@@ -177,11 +177,6 @@ void skyFallUpdate(Projectile* p, double delta_t, Terminal* terminal) {
     float new_vel_y = current_vel_y + p->extra_data.sky_fall.gravity * delta_t;
     vec2dSetY(p->vel, new_vel_y);
 
-    if (vec2dGetY(p->pos) >= p->extra_data.sky_fall.target_y) {
-        vec2dSetY(p->pos, p->extra_data.sky_fall.target_y);
-        vec2dSetX(p->pos, p->extra_data.sky_fall.target_x);
-    }
-
     int w = 16;
     int h = 16;
     if (p->sprite != NULL) {
