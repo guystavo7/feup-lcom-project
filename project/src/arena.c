@@ -150,6 +150,38 @@ static void arena_fruit_push(Arena* arena, Vec2d position, FruitKind kind, float
     arena_fruits_sync_colliders(arena);
 }
 
+static void arena_fruit_remove_at(Arena* arena, int index) {
+    if (index < 0 || index >= arena->fruitsN) return;
+    collectableFree(arena->fruits[index].collectable);
+    int last = arena->fruitsN - 1;
+    if (index != last) arena->fruits[index] = arena->fruits[last];
+    arena->fruitsN--;
+    if (arena->fruitsN == 0) {
+        free(arena->fruits);
+        arena->fruits = NULL;
+    } else {
+        ArenaFruit* shrunk = realloc(arena->fruits, sizeof(ArenaFruit) * (size_t)arena->fruitsN);
+        if (shrunk != NULL) arena->fruits = shrunk;
+    }
+    arena_fruits_sync_colliders(arena);
+}
+
+static void arena_fruits_tick_time_to_live(Arena* arena, float deltaTime) {
+    for (int i = 0; i < arena->fruitsN;) {
+        Collectable* c = arena->fruits[i].collectable;
+        if (!collectableIsActive(c)) {
+            arena_fruit_remove_at(arena, i);
+            continue;
+        }
+        arena->fruits[i].timeToLive -= deltaTime;
+        if (arena->fruits[i].timeToLive <= 0.0f) {
+            arena_fruit_remove_at(arena, i);
+            continue;
+        }
+        i++;
+    }
+}
+
 static void arena_sync_fruit_stats_bar(Arena* arena) {
     const Player* p = arena->player;
     StatsBar* sb = arena->statsBar;
@@ -636,12 +668,17 @@ static void arenaCollectableHandler(Arena* arena) {
     BoxCollider* collisions[PLACEMENT_QUERY_MAX];
     int n = arenaDetectCollisions(arena, hitBox, COLLECTABLE_TAG, collisions);
     for (int k = 0; k < n; k++) {
+        int found = -1;
         for (int i = 0; i < arena->fruitsN; i++) {
-            if (collectableGetHitBox(arena->fruits[i].collectable) == collisions[k]) {
-                collectableSetActive(arena->fruits[i].collectable, false);
+            if (collectableGetHitBox(arena->fruits[i].collectable) == collisions[0]) {
+                found = i;
                 break;
             }
         }
+        if (found < 0) break;
+        playerAddFruit(arena->player, arena->fruits[found].kind);
+        arena_fruit_remove_at(arena, found);
+        arena_sync_fruit_stats_bar(arena);
     }
 }
 
@@ -721,6 +758,7 @@ BoxCollider* arenaFindFirstEnemy(Arena* arena, BoxCollider* range) {
 }
 
 void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
+    arena_fruits_tick_time_to_live(arena, deltaTime);
     for (int i = 0; i < arena->fruitsN; i++) collectableUpdate(arena->fruits[i].collectable, terminal);
     for (int i = 0; i < arena->tilesN; i++) tileUpdate(arena->tiles[i], terminal);
     for (int i = arena->towersN - 1; i >= 0; i--) towerUpdate(arena->towers[i], terminal, arena, deltaTime);
