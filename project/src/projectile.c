@@ -19,8 +19,8 @@ struct projectile {
     ProjectileType type;
     Vec2d* pos;
     Vec2d* vel;
-	AnimatedSprite* sprite;
-    //SpriteXPM* sprite;
+    AnimatedSprite* sprite;
+    // SpriteXPM* sprite;
     BoxCollider* collider;
     union {
         struct {
@@ -92,50 +92,73 @@ void projectileFree(Projectile* p) {
     vec2dFree(p->pos);
     vec2dFree(p->vel);
     boxColliderFree(p->collider);
-	// The sprites are stored in the tower so calling animatedSpriteFree will destroy everything
-	free(p->sprite);
+    // The sprites are stored in the tower so calling animatedSpriteFree will destroy everything
+    free(p->sprite);
     free(p);
+}
+
+static void homingProjectileUpdate(Projectile* p, double delta_t, Terminal* terminal) {
+    // logica simples de virar para o target
+    float dx = p->extra_data.homing.target_x - vec2dGetX(p->pos);
+    float dy = p->extra_data.homing.target_y - vec2dGetY(p->pos);
+    float dist = sqrt(dx * dx + dy * dy);
+
+    if (dist > EPSILON) {
+        float ndx = dx / dist;
+        float ndy = dy / dist;
+
+        float current_vel_x = vec2dGetX(p->vel);
+        float current_vel_y = vec2dGetY(p->vel);
+        float current_speed = sqrt(current_vel_x * current_vel_x + current_vel_y * current_vel_y);
+
+        // Aproximar a velocidade da direção do target (interpolação simples)
+        float turn = p->extra_data.homing.turn_speed * delta_t;
+        float new_vel_x = ndx * turn;
+        float new_vel_y = ndy * turn;
+
+        // Normalizar a nova velocidade para manter o speed original
+        float new_speed = sqrt(new_vel_x * new_vel_x + new_vel_y * new_vel_y);
+        if (new_speed > EPSILON) {
+            vec2dSetX(p->vel, (new_vel_x / new_speed) * current_speed);
+            vec2dSetY(p->vel, (new_vel_y / new_speed) * current_speed);
+        }
+    }
+}
+
+void skyFallUpdate(Projectile* p, double delta_t, Terminal* terminal) {
+    if (vec2dGetY(p->pos) >= p->extra_data.sky_fall.target_y) {
+        p->active = false;
+        return;
+    }
+
+    float current_vel_y = vec2dGetY(p->vel);
+    float new_vel_y = current_vel_y + p->extra_data.sky_fall.gravity * delta_t;
+    vec2dSetY(p->vel, new_vel_y);
+
+    if (vec2dGetY(p->pos) >= p->extra_data.sky_fall.target_y) {
+        vec2dSetY(p->pos, p->extra_data.sky_fall.target_y);
+        vec2dSetX(p->pos, p->extra_data.sky_fall.target_x);
+    }
+
+    int w = 16;
+    int h = 16;
+    if (p->sprite != NULL) {
+        w = animatedSpriteGetWidth(p->sprite);
+        h = animatedSpriteGetHeight(p->sprite);
+    }
+    int cx = (int)p->extra_data.sky_fall.target_x + w / 2;
+    int cy = (int)p->extra_data.sky_fall.target_y + h / 2;
+    drawCircle(terminal, cx, cy, w / 2, 0xFF0000);
 }
 
 void projectileUpdate(Projectile* p, double delta_t, Terminal* terminal) {
     if (!p->active) return;
-	drawRectangle(terminal, boxColliderGetX(p->collider), boxColliderGetY(p->collider), boxColliderGetWidth(p->collider), boxColliderGetHeight(p->collider), 0xFFFFFF);
+    // drawRectangle(terminal, boxColliderGetX(p->collider), boxColliderGetY(p->collider), boxColliderGetWidth(p->collider), boxColliderGetHeight(p->collider), 0xFFFFFF);
 
     if (p->type == PROJ_HOMING) {
-        // logica simples de virar para o target
-        float dx = p->extra_data.homing.target_x - vec2dGetX(p->pos);
-        float dy = p->extra_data.homing.target_y - vec2dGetY(p->pos);
-        float dist = sqrt(dx * dx + dy * dy);
-
-        if (dist > EPSILON) {
-            float ndx = dx / dist;
-            float ndy = dy / dist;
-
-            float current_vel_x = vec2dGetX(p->vel);
-            float current_vel_y = vec2dGetY(p->vel);
-            float current_speed = sqrt(current_vel_x * current_vel_x + current_vel_y * current_vel_y);
-
-            // Aproximar a velocidade da direção do target (interpolação simples)
-            float turn = p->extra_data.homing.turn_speed * delta_t;
-            float new_vel_x = ndx * turn;
-            float new_vel_y = ndy * turn;
-
-            // Normalizar a nova velocidade para manter o speed original
-            float new_speed = sqrt(new_vel_x * new_vel_x + new_vel_y * new_vel_y);
-            if (new_speed > EPSILON) {
-                vec2dSetX(p->vel, (new_vel_x / new_speed) * current_speed);
-                vec2dSetY(p->vel, (new_vel_y / new_speed) * current_speed);
-            }
-        }
+        homingProjectileUpdate(p, delta_t, terminal);
     } else if (p->type == PROJ_SKY_FALL) {
-        if (vec2dGetY(p->pos) >= p->extra_data.sky_fall.target_y) {
-            p->active = false;
-            return;
-        }
-
-        float current_vel_y = vec2dGetY(p->vel);
-        float new_vel_y = current_vel_y + p->extra_data.sky_fall.gravity * delta_t;
-        vec2dSetY(p->vel, new_vel_y);
+        skyFallUpdate(p, delta_t, terminal);
     }
 
     Vec2d* displacement = vec2dCreate(vec2dGetX(p->vel), vec2dGetY(p->vel));
@@ -143,30 +166,11 @@ void projectileUpdate(Projectile* p, double delta_t, Terminal* terminal) {
     vec2dAddVec(p->pos, displacement);
     vec2dFree(displacement);
 
-    if (p->type == PROJ_SKY_FALL) {
-        if (vec2dGetY(p->pos) >= p->extra_data.sky_fall.target_y) {
-            vec2dSetY(p->pos, p->extra_data.sky_fall.target_y);
-            vec2dSetX(p->pos, p->extra_data.sky_fall.target_x);
-        }
-    }
-
     boxColliderSetX(p->collider, vec2dGetX(p->pos));
     boxColliderSetY(p->collider, vec2dGetY(p->pos));
 
-    if (p->type == PROJ_SKY_FALL) {
-        int w = 16;
-        int h = 16;
-        if (p->sprite != NULL) {
-            w = animatedSpriteGetWidth(p->sprite);
-            h = animatedSpriteGetHeight(p->sprite);
-        }
-        int cx = (int)p->extra_data.sky_fall.target_x + w / 2;
-        int cy = (int)p->extra_data.sky_fall.target_y + h / 2;
-        drawCircle(terminal, cx, cy, w / 2, 0xFF0000);
-    }
-
     if (p->sprite != NULL) {
-		animatedSpriteUpdate((int)p->pos->x, (int)p->pos->y, p->sprite, terminal, delta_t, false);
+        animatedSpriteUpdate((int)p->pos->x, (int)p->pos->y, p->sprite, terminal, delta_t, false);
     }
 }
 

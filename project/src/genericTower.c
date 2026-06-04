@@ -177,7 +177,7 @@ static void createNormalProjectile(GenericTower* tower) {
     Vec2d velocity = {dir.x * maxVelocity, dir.y * maxVelocity};
 
 	SpriteXPM** sprites = malloc(sizeof(SpriteXPM*));
-	sprites[0] = tower->arrowSprites[0];
+	sprites[0] = tower->arrowSprites[index];
 	AnimatedSprite* animatedSprite = animatedSpriteNew(ARROW_FRAME_SPEED, sprites, 1, NORMAL);
 
     p = projectileCreate(tower->projectileType, position.x, position.y, velocity.x, velocity.y, animatedSprite);
@@ -195,6 +195,17 @@ static void createSkyFallProjectile(GenericTower* tower) {
     if (!towerAddProjectile(tower, p)) projectileFree(p);
 }
 
+static void createNearProjectile(GenericTower* tower) {
+    Projectile* p;
+    Vec2d position = (Vec2d){boxColliderGetX(tower->target) - LIGHTNING_SIZE.x / 2, boxColliderGetY(tower->target) - LIGHTNING_SIZE.y / 2};
+    Vec2d velocity = EMPTY_VEC2D;
+
+	AnimatedSprite* animatedSprite = animatedSpriteNew(LIGHTNING_SPEED, tower->arrowSprites, LIGHTNING_FRAMES, ONE_SHOT);
+	animatedSpriteStart(animatedSprite);
+    p = projectileCreate(tower->projectileType, position.x, position.y, velocity.x, velocity.y, animatedSprite);
+    if (!towerAddProjectile(tower, p)) projectileFree(p);
+}
+
 static enum TowerState shootTransition(GenericTower* tower, Arena* arena, float deltaTime) {
     if (animatedSpriteIsFinished(tower->archerShoot)) {
         idleOnEnter(tower);
@@ -205,6 +216,9 @@ static enum TowerState shootTransition(GenericTower* tower, Arena* arena, float 
             case PROJ_SKY_FALL:
                 createSkyFallProjectile(tower);
                 break;
+			case PROJ_NEAR:
+				createNearProjectile(tower);
+				break;
             default:
                 break;
         }

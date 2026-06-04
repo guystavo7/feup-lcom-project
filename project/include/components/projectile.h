@@ -12,7 +12,8 @@ typedef enum {
     PROJ_NORMAL,
     PROJ_PIERCING,
     PROJ_HOMING,
-    PROJ_SKY_FALL
+    PROJ_SKY_FALL,
+	PROJ_NEAR
 } ProjectileType;
 
 typedef struct projectile Projectile;
