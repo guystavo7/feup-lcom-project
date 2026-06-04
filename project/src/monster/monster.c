@@ -60,6 +60,8 @@ BoxCollider* monsterGetBoxCollider(Monster* m){
 }
 
 void monsterReset(Monster* m, Vec2d* pos){
+  monsterModelSetHP(m->model,monsterModelGetInitialHP(m->model));
+  
   monsterModelSetDead(m->model,false);
   monsterModelSetFinishedPath(m->model,false);
   monsterModelSetPos(m->model,pos);

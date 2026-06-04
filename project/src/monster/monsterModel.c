@@ -10,6 +10,7 @@ struct monsterModel
 
   bool dead;
   int hp;
+  int initialHP;
 
   bool finishedPath;
 
@@ -21,7 +22,8 @@ MonsterModel* monsterModelNew(float x,float y,float sizeX,float sizeY,float velX
   m->pos= (Vec2d){x,y};
   m->size=(Vec2d){sizeX,sizeY};
   m->vel=(Vec2d){velX,velY}; 
-  m->hp=hp;
+  m->hp=hp; 
+  m->initialHP=hp;
   m->dead=false;
   
   return m;
@@ -41,6 +43,14 @@ int monsterModelGetHP(MonsterModel* m){
 
 void monsterModelSetHP(MonsterModel* m,int hp){
    m->hp=hp;
+}
+
+int monsterModelGetInitialHP(MonsterModel* m){
+  return m->initialHP;
+}
+
+void monsterModelSetInitialHP(MonsterModel* m,int hp){
+   m->initialHP=hp;
 }
 
 void monsterModelSumHP(MonsterModel* m,int val){

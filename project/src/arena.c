@@ -33,6 +33,8 @@
 #include "../include/monster/monsterGen.h"
 #include "../include/monster/pawnMonster.h"
 
+#include "../resources/arrow/arrow.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -46,6 +48,14 @@ typedef enum {
     ARENA_UPGRADE_IDLE = 0,
     ARENA_UPGRADE_MENU_OPEN,
 } ArenaUpgradePhase;
+
+
+static float dummy_proj_counter=1;
+
+void projectileListFree(void* proj){
+    Projectile* p=*(Projectile**)proj;
+    projectileFree(p);
+}
 
 struct Arena {
     int* collidersN;
@@ -65,7 +75,11 @@ struct Arena {
     int tileSize;
 
     Monster* monster_test;
-    MonsterGen* monsterGen1;
+    MonsterGen* monsterGen1; 
+
+    Vector* projectileList;
+    Projectile* projectile_test;
+ 
     Path* path_test;
 
     Player* player;
@@ -398,12 +412,20 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
     for (int t = 0; t < TAGS_NUM; t++) {
         res->collidersN[t] = 0;
         res->colliders[t] = NULL;
-    }
+    } 
+ 
+    res->path_test=pathNew(4,vectorCreateWithFloatingData(sizeof(float),NULL,7*2, 10.0f,150.0f,  330.0f,150.0f,  380.0f,275.0f,  875.0f,275.0f,   925.0f,150.0f,  1300.0f,150.0f, 1310.0f,150.0f ));
+    res->monster_test=pawnMonsterNew(10,150,res->path_test);
+    res->monsterGen1=monsterGenNew(res->path_test,defaultMonsterCreator,defaultGenTimeFunc);
 
-    res->path_test = pathNew(4, vectorCreateWithFloatingData(sizeof(float), NULL, 7 * 2, 10.0f, 150.0f, 330.0f, 150.0f, 380.0f, 275.0f, 875.0f, 275.0f, 925.0f, 150.0f, 1300.0f, 150.0f, 1310.0f, 150.0f));
-    res->monster_test = pawnMonsterNew(10, 150, res->path_test);
-    res->monsterGen1 = monsterGenNew(res->path_test, defaultMonsterCreator, defaultGenTimeFunc);
+    SpriteXPM** projSpriteList = malloc(sizeof(SpriteXPM*));
+    projSpriteList[0] = newSpriteXPM((xpm_map_t)Arrow2, XPM_8_8_8, 0,0);
+    AnimatedSprite* projAS=animatedSpriteNew(100,projSpriteList,1,NORMAL);
 
+    res->projectile_test=projectileCreate(PROJ_NORMAL,200,200,200,-200,projAS);
+
+    res->projectileList=vectorCreate(sizeof(Projectile*),projectileListFree);
+  
     res->collidersN[MONSTER_TAG] = 1;
     res->colliders[MONSTER_TAG] = malloc(sizeof(BoxCollider*) * res->collidersN[MONSTER_TAG]);
     res->colliders[MONSTER_TAG][0] = monsterGetBoxCollider(res->monster_test);
@@ -533,6 +555,8 @@ void arenaFree(Arena* arena) {
     monsterGenFree(arena->monsterGen1);
     pathFree(arena->path_test);
 
+    projectileFree(arena->projectile_test);
+
     free(arena->colliders[WALLS_TAG]);
     free(arena->colliders[PLAYER_TAG]);
     free(arena->colliders[COLLECTABLE_TAG]);
@@ -651,15 +675,74 @@ BoxCollider* arenaFindFirstEnemy(Arena* arena, BoxCollider* range) {
     return NULL;
 }
 
+void arenaHandleMonsterDamage(Arena* arena){
+
+    int monsterIterator=monsterGenGetNextActiveMonsterIndex(arena->monsterGen1,0);
+
+    while (monsterIterator!=-1)
+    {
+        Monster* monster=monsterGenGetMonster(arena->monsterGen1,monsterIterator);
+        for(unsigned int i=0;i!=vectorGetSize(arena->projectileList);i++){
+            Projectile* arrow= *(Projectile**)vectorGet(arena->projectileList,i);
+            
+            if(boxIsCollidingWithBox(projectileGetCollider(arrow),monsterGetBoxCollider(monster))){
+                monsterSumHP(monster,-1000);
+                projectileSetActive(arrow,false);
+            }
+        }
+        monsterIterator++;
+        monsterIterator=monsterGenGetNextActiveMonsterIndex(arena->monsterGen1,monsterIterator);
+    }
+    
+
+}
+
 void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
     for (int i = 0; i < arena->fruitsN; i++) collectableUpdate(arena->fruits[i], terminal);
     for (int i = 0; i < arena->tilesN; i++) tileUpdate(arena->tiles[i], terminal);
-    for (int i = arena->towersN - 1; i >= 0; i--) towerUpdate(arena->towers[i], terminal, arena, deltaTime);
+    for (int i = arena->towersN - 1; i >= 0; i--) towerUpdate(arena->towers[i], terminal, arena, deltaTime); 
+ 
+    //monster / proj tests
 
-    monsterUpdate(arena->monster_test, arena, terminal, deltaTime);
-    monsterSumHP(arena->monster_test, -100);
+    arenaHandleMonsterDamage(arena);
+    Vector* projIndexListToRemove=vectorCreate(sizeof(int),NULL);
 
-    monsterGenUpdate(arena->monsterGen1, arena, terminal, deltaTime);
+    for(int i = vectorGetSize(arena->projectileList) - 1; i >= 0; i--){
+        Projectile* p=*(Projectile**)vectorGet(arena->projectileList,i);
+        projectileUpdate(p,deltaTime,terminal); 
+        if(!projectileIsActive(p)){
+            vectorPushBack(projIndexListToRemove,(char*)&i);
+        }
+    }
+
+    for(int i =  0; i != (int)vectorGetSize(projIndexListToRemove); i++){
+        int index=*(int*)vectorGet(projIndexListToRemove,i);
+        vectorRemove(arena->projectileList,index);
+    }
+
+    vectorFree(projIndexListToRemove);
+
+    dummy_proj_counter++;
+
+    if(((int)dummy_proj_counter)%15==0){
+
+        SpriteXPM** projSpriteList = malloc(sizeof(SpriteXPM*));
+        projSpriteList[0] = newSpriteXPM((xpm_map_t)Arrow2, XPM_8_8_8, 0,0);
+        AnimatedSprite* projAS=animatedSpriteNew(100,projSpriteList,1,NORMAL);
+ 
+        Projectile* p=projectileCreate(PROJ_NORMAL,200,400,300,-300,projAS);
+        vectorPushBack(arena->projectileList,(char*)&p);
+    }
+
+    
+
+    monsterUpdate(arena->monster_test,arena,terminal,deltaTime); 
+    projectileUpdate(arena->projectile_test,deltaTime,terminal);
+
+    monsterGenUpdate(arena->monsterGen1,arena,terminal,deltaTime);
+
+    //monster / proj tests
+ 
     arenaCollectableHandler(arena);
     arenaHandleConstruction(arena, terminal);
 
