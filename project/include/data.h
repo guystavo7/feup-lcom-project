@@ -95,12 +95,20 @@ static const Vec2d MORTAR_TOWER_RANGE_OFFSET = {(60 - 600) / 2, (11 - 600) / 2};
 #define MORTAR_TOWER_SHOOT_SPEED 10 
 
 
-// Eletrict Tower
+// Eletric Tower
 static const Vec2d ELETRICT_TOWER_RANGE = {300, 300};
 static const Vec2d ELETRICT_TOWER_RANGE_OFFSET = {(60 - 300) / 2, (11 - 300) / 2};
 #define ELETRICT_COOLDOWN 0.3
 #define ELETRICT_TOWER_SHOOT_SPEED 15 
 
+// Cost
+static const int BASIC_TOWER_COST[4] = {3, 0, 0, 0};
+static const int LONG_TOWER_COST[4] = {1, 1, 0, 0};
+static const int FAST_TOWER_COST[4] = {0, 3, 2, 0};
+static const int PIERCING_TOWER_COST[4] = {0, 2, 1, 0};
+static const int MORTAR_TOWER_COST[4] = {0, 0, 1, 1};
+static const int ELETRICT_TOWER_COST[4] = {0, 2, 0, 1};
+static const int* TOWER_COST[6] = {BASIC_TOWER_COST, FAST_TOWER_COST, PIERCING_TOWER_COST, MORTAR_TOWER_COST, ELETRICT_TOWER_COST, LONG_TOWER_COST};
 
 // Archer
 #define ARCHER_FRAME_SPEED 10

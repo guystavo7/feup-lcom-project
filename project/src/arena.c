@@ -3,9 +3,9 @@
 #include "../include/buildings/basicTower.h"
 #include "../include/buildings/eletricTower.h"
 #include "../include/buildings/fastTower.h"
+#include "../include/buildings/genericTower.h"
 #include "../include/buildings/mortarTower.h"
 #include "../include/buildings/piercingTower.h"
-#include "../include/buildings/genericTower.h"
 
 #include "../include/button.h"
 #include "../include/components/boxCollider.h"
@@ -14,7 +14,6 @@
 #include "../include/tiles/collectable.h"
 #include "../include/tiles/tile.h"
 #include "../include/utils/cursorHandler.h"
-#include "../include/utils/inputHandler.h"
 
 #include "../include/ui/healthBar.h"
 #include "../include/ui/statsBar.h"
@@ -71,9 +70,9 @@ struct Arena {
     Player* player;
     Cursor* cursor;
 
-	// UI
+    // UI
     HealthBar* healthBar;
-	StatsBar* statsBar;
+    StatsBar* statsBar;
 
     ArenaConstructPhase constructPhase;
     int popupX;
@@ -109,9 +108,23 @@ static void arenaCloseUpgradeMenu(Arena* arena) {
     buttonReset(arena->upgradeHammerRight);
 }
 
+static bool buyTower(Arena* arena, TowerKind newKind) {
+    bool canBuy = true;
+    const int* cost = TOWER_COST[newKind];
+	if (statsBarGetBanana(arena->statsBar) < cost[0] || statsBarGetAvocado(arena->statsBar) < cost[1] || statsBarGetCherry(arena->statsBar) < cost[2] || statsBarGetCarrot(arena->statsBar) < cost[3]) canBuy = false;
+
+	if (canBuy) {
+		statsBarAddBanana(arena->statsBar, -cost[0]);
+		statsBarAddAvocado(arena->statsBar, -cost[1]);
+		statsBarAddCherry(arena->statsBar, -cost[2]);
+		statsBarAddCarrot(arena->statsBar, -cost[3]);
+	}
+    return canBuy;
+}
+
 static void arenaReplaceTargetTower(Arena* arena, TowerKind newKind) {
     int i = arena->upgradeTargetIndex;
-    if (i < 0 || i >= arena->towersN) return;
+    if (i < 0 || i >= arena->towersN || !buyTower(arena, newKind)) return;
     GenericTower* old = arena->towers[i];
     if (!towerIsBasic(old)) return;
 
@@ -462,8 +475,8 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
     SpriteXPM* backgroundSprite = newSpriteXPM((xpm_map_t)background, XPM_8_8_8, 0, 0);
     generateEmptyBuffer(backgroundSprite, terminal, 0, 0, false);
 
-	res->healthBar = healthBarNew(10);
-	res->statsBar = statsBarNew();
+    res->healthBar = healthBarNew(10);
+    res->statsBar = statsBarNew();
 
     return res;
 }
@@ -498,7 +511,7 @@ void arenaBuildTower(Arena* arena, Vec2d position) {
 
     arena->towersN++;
     arena->towers = realloc(arena->towers, sizeof(GenericTower*) * arena->towersN);
-    arena->towers[arena->towersN - 1] = basicLongTowerNew(position);
+    arena->towers[arena->towersN - 1] = basicTowerNew(position);
 
     arena->collidersN[WALLS_TAG]++;
     arena->colliders[WALLS_TAG] = realloc(arena->colliders[WALLS_TAG], sizeof(BoxCollider*) * arena->collidersN[WALLS_TAG]);
@@ -543,9 +556,9 @@ void arenaFree(Arena* arena) {
 
     free(arena->colliders);
     free(arena->collidersN);
-	healthBarFree(arena->healthBar);
-	statsBarFree(arena->statsBar);
-	
+    healthBarFree(arena->healthBar);
+    statsBarFree(arena->statsBar);
+
     free(arena);
 }
 
@@ -672,8 +685,8 @@ void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
         arenaDrawConstructionPopup(arena, terminal, deltaTime);
     }
 
-	healthBarUpdate(arena->healthBar, terminal, arena);
-	statsBarUpdate(arena->statsBar, terminal, arena);
+    healthBarUpdate(arena->healthBar, terminal, arena);
+    statsBarUpdate(arena->statsBar, terminal, arena);
 
     cursorUpdate(getCursor(), terminal, deltaTime);
 }

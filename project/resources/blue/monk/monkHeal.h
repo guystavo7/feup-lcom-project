@@ -588,8 +588,6 @@ static char *Heal9[] = {
 /* ===== master pointer list ===== */
 static char **monkHealXPM[] = {
     Heal1,
-    Heal10,
-    Heal11,
     Heal2,
     Heal3,
     Heal4,
@@ -598,4 +596,6 @@ static char **monkHealXPM[] = {
     Heal7,
     Heal8,
     Heal9,
+    Heal10,
+    Heal11,
 };
