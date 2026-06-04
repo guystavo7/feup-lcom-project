@@ -20,7 +20,7 @@ GenericTower* eletrictTowerNew(Vec2d position) {
 	SpriteXPM** projectileSprite = malloc(sizeof(SpriteXPM*) * LIGHTNING_FRAMES); 
 	for (int i = 0; i < LIGHTNING_FRAMES; i++) projectileSprite[i] = newSpriteXPM((xpm_map_t)lightningXPM[i], XPM_8_8_8, 0, 0);
 
-    return towerNew(upperHalf, lowerHalf, idle, shoot, position, BASIC_TOWER_SIZE, BASIC_TOWER_HIT_BOX_OFFSET, ELETRICT_TOWER_RANGE, ELETRICT_TOWER_RANGE_OFFSET, eletrictTowerUpdate, ELETRICT_COOLDOWN, PROJ_NEAR, projectileSprite, LIGHTNING_FRAMES);
+    return towerNew(upperHalf, lowerHalf, idle, shoot, position, BASIC_TOWER_SIZE, BASIC_TOWER_HIT_BOX_OFFSET, ELETRICT_TOWER_RANGE, ELETRICT_TOWER_RANGE_OFFSET, eletrictTowerUpdate, ELETRICT_COOLDOWN, PROJ_NEAR, projectileSprite, LIGHTNING_FRAMES, TOWER_KIND_ELETRICT);
 }
 
 void eletrictTowerUpdate(GenericTower* tower, Terminal* terminal, Arena* arena, float deltaTime) {}

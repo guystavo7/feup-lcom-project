@@ -20,7 +20,7 @@ GenericTower* mortarTowerNew(Vec2d position) {
     SpriteXPM** projectileSprite = malloc(sizeof(SpriteXPM*) * ASTEROID_FRAMES);
     for (int i = 0; i < ASTEROID_FRAMES; i++) projectileSprite[i] = newSpriteXPM((xpm_map_t)asteroidXPM[i], XPM_8_8_8, 0, 0);
 
-    return towerNew(upperHalf, lowerHalf, idle, shoot, position, BASIC_TOWER_SIZE, BASIC_TOWER_HIT_BOX_OFFSET, MORTAR_TOWER_RANGE, MORTAR_TOWER_RANGE_OFFSET, mortarTowerUpdate, MORTAR_COOLDOWN, PROJ_SKY_FALL, projectileSprite, ASTEROID_FRAMES);
+    return towerNew(upperHalf, lowerHalf, idle, shoot, position, BASIC_TOWER_SIZE, BASIC_TOWER_HIT_BOX_OFFSET, MORTAR_TOWER_RANGE, MORTAR_TOWER_RANGE_OFFSET, mortarTowerUpdate, MORTAR_COOLDOWN, PROJ_SKY_FALL, projectileSprite, ASTEROID_FRAMES, TOWER_KIND_MORTAR);
 }
 
 void mortarTowerUpdate(GenericTower* tower, Terminal* terminal, Arena* arena, float deltaTime) {}

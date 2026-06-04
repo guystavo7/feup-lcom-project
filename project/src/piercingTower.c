@@ -20,8 +20,7 @@ GenericTower* piercingTowerNew(Vec2d position) {
 	SpriteXPM** projectileSprite = malloc(sizeof(SpriteXPM*) * ARROW_FRAMES); 
 	for (int i = 0; i < ARROW_FRAMES; i++) projectileSprite[i] = newSpriteXPM((xpm_map_t)arrowXPM[i], XPM_8_8_8, 0, 0);
 
-
-    return towerNew(upperHalf, lowerHalf, idle, shoot, position, BASIC_TOWER_SIZE, BASIC_TOWER_HIT_BOX_OFFSET, PIERCING_TOWER_RANGE, PIERCING_TOWER_RANGE_OFFSET, piercingTowerUpdate, PIERCING_TOWER_COOLDOWN, PROJ_PIERCING, projectileSprite, ARROW_FRAMES);
+    return towerNew(upperHalf, lowerHalf, idle, shoot, position, BASIC_TOWER_SIZE, BASIC_TOWER_HIT_BOX_OFFSET, PIERCING_TOWER_RANGE, PIERCING_TOWER_RANGE_OFFSET, piercingTowerUpdate, PIERCING_TOWER_COOLDOWN, PROJ_PIERCING, projectileSprite, ARROW_FRAMES, TOWER_KIND_PIERCING);
 }
 
 void piercingTowerUpdate(GenericTower* tower, Terminal* terminal, Arena* arena, float deltaTime) {}
