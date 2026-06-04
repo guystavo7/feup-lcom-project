@@ -10,6 +10,7 @@
 #include "../include/components/boxCollider.h"
 #include "../include/data.h"
 #include "../include/player/player.h"
+#include "../include/components/projectile.h"
 #include "../include/tiles/collectable.h"
 #include "../include/tiles/tile.h"
 #include "../include/utils/cursorHandler.h"
@@ -68,6 +69,7 @@ struct Arena {
 
     Player* player;
 
+    Cursor* cursor;
     ArenaConstructPhase constructPhase;
     int popupX;
     int popupY;
@@ -279,6 +281,10 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
     res->monsterGen1=monsterGenNew(res->path_test,defaultMonsterCreator,defaultGenTimeFunc);
  
 
+    res->collidersN[MONSTER_TAG] = 1;
+    res->colliders[MONSTER_TAG] = malloc(sizeof(BoxCollider*) * res->collidersN[MONSTER_TAG]);
+    res->colliders[MONSTER_TAG][0] = monsterGetBoxCollider(res->monster_test);
+
     createMap(res, tilesFile, TILE_SIZE);
     createMonsterPathColliders(res, pathFile);
     createLakeColliders(res, waterFile);
@@ -309,6 +315,7 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
     float hitH = 33.f - BASIC_UPPER_HALF_OFFSET.y;
     res->towerPickHitbox = boxColliderNew((Vec2d){(float)ix, hitY}, EMPTY_VEC2D, (Vec2d){(float)TOWER_PICK_ICON_W, hitH}, 0);
 
+    // The terminal will handle the freeing
     SpriteXPM* backgroundSprite = newSpriteXPM((xpm_map_t)background, XPM_8_8_8, 0, 0);
     generateEmptyBuffer(backgroundSprite, terminal, 0, 0, false);
 
@@ -379,8 +386,8 @@ void arenaFree(Arena* arena) {
     free(arena->colliders[WALLS_TAG]);
     free(arena->colliders[PLAYER_TAG]);
     free(arena->colliders[COLLECTABLE_TAG]);
-
     free(arena->tiles);
+
     free(arena->fruits);
     playerFree(arena->player);
 
@@ -497,6 +504,7 @@ void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
     monsterGenUpdate(arena->monsterGen1,arena,terminal,deltaTime);
      
     arenaCollectableHandler(arena);
+
     arenaHandleConstruction(arena, terminal);
 
     playerUpdate(arena->player, terminal, arena, deltaTime);
@@ -505,5 +513,5 @@ void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
     }
 
     cursorUpdate(getCursor(), terminal, deltaTime);
-    for (int i = arena->towersN - 1; i >= 0; i--) towerDrawUpperHalf(arena->towers[i], terminal, deltaTime);
+    for (int i = arena->towersN - 1; i >= 0; i--) towerDrawUpperHalf(arena->towers[i], terminal, arena, deltaTime);
 }

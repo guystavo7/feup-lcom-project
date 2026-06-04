@@ -24,6 +24,7 @@ SRCS= \
 	./playerState.c \
 	./playerRunning.c \
 	./collectable.c \
+	./projectile.c \
 	./genericTower.c \
 	./basicTower.c \
 	monsterController.c \
@@ -33,11 +34,11 @@ SRCS= \
 	path.c \
 	vector.c \
 	pawnMonster.c \
-	./eletrictTower.c \
-	./mortarTower.c \
-	./fastTower.c \
-	./piercingTower.c \
 	./gameState.c \
+	./piercingTower.c \
+	./fastTower.c \
+	./mortarTower.c \
+	./eletrictTower.c \
 	alienMonster.c \
 	monsterGen.c
 

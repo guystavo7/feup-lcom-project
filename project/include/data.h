@@ -56,7 +56,10 @@ static const Vec2d BASIC_TOWER_RANGE = {300, 300};
 static const Vec2d BASIC_TOWER_RANGE_OFFSET = {(60 - 300) / 2, (11 - 300) / 2};
 #define BASIC_TOWER_COOLDOWN 0.5
 #define BASIC_TOWER_SHOOT_SPEED 10 
-
+#define ARROW_FRAMES 8
+#define ARROW_EPSILON 0.2f
+#define ARROW_SPEED 500
+#define SKY_FALL_ARROW_SPEED 700
 
 // Fast Tower
 static const Vec2d FAST_TOWER_RANGE = {350, 350};

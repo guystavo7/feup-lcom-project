@@ -2,6 +2,7 @@
 #define ARENA
 
 #include "./components/boxCollider.h"
+#include "./components/projectile.h"
 #include "../../lab5/terminal.h"
 #include "utils/vec2d.h"
 
