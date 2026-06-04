@@ -32,6 +32,10 @@ static const char* lake1 = "/home/lcom/labs/project/resources/map/grid_water.csv
 #define MAP_TILES_Y 32
 #define TILE_SIZE 32
 
+#define PLACEMENT_QUERY_MAX 128
+#define POPUP_ICON_MARGIN 14
+#define TOWER_PICK_ICON_W 60
+
 static const Vec2d EMPTY_VEC2D = {0, 0};
 
 // Fruit
@@ -181,5 +185,21 @@ static const Vec2d PAUSE_MENU_BG_POS = {SCREEN_WIDTH / 2 - 295 / 2, SCREEN_HEIGH
 static const Vec2d RESUME_POS = {SCREEN_WIDTH / 2 - 259 / 2 + 20, SCREEN_HEIGHT / 2 - 200 + 124};
 static const Vec2d HELP_POS = {SCREEN_WIDTH / 2 - 259 / 2 + 100, SCREEN_HEIGHT / 2 - 200 + 124};
 static const Vec2d GO_BACK_POS = {SCREEN_WIDTH / 2 - 259 / 2 + 170, SCREEN_HEIGHT / 2 - 200 + 124};
+
+// UI
+#define HEALTH_BAR_INDEX 0
+#define STATS_BAR_INDEX 1
+
+static const Vec2d HEALTH_BAR_POSITION = {SCREEN_WIDTH - 162, 10};
+static const Vec2d HEALTH_VALUE_POSITION = {SCREEN_WIDTH - 162 / 2, 20};
+
+static const Vec2d STATS_BAR_POSITION = {SCREEN_WIDTH - 115, 20 + 52};
+static const Vec2d BANANA_STATS_POSITION = {SCREEN_WIDTH - 115 + 60, 20 + 52 + 7};
+static const Vec2d AVOCADO_STATS_POSITION = {SCREEN_WIDTH - 115 + 60, 20 + 52 + 39};
+static const Vec2d CHERRY_STATS_POSITION = {SCREEN_WIDTH - 115 + 60, 20 + 52 + 74};
+static const Vec2d CARROT_STATS_POSITION = {SCREEN_WIDTH - 115 + 60, 20 + 52 + 112};
+
+// Numbers
+#define NUMBER_WIDTH 14
 
 #endif
