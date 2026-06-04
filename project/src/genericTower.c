@@ -90,16 +90,9 @@ static void genericTowerProjectileHandler(GenericTower* tower, float deltaTime, 
         if (!projectileIsActive(p)) continue;
 
         BoxCollider* colliders[1024];
-        int n = arenaDetectCollisions(arena, projectileGetCollider(p), MONSTER_TAG, colliders);
-        if (n > 0) {
-            projectileAddPierce(p);
-        }
-
-        if (projectileIsActive(p)) {
-            int n_walls = arenaDetectCollisions(arena, projectileGetCollider(p), WALLS_TAG, colliders);
-            if (n_walls > 0) {
-                projectileSetActive(p, false);
-            }
+        int n_walls = arenaDetectCollisions(arena, projectileGetCollider(p), WALLS_TAG, colliders);
+        if (n_walls > 0) {
+            projectileSetActive(p, false);
         }
     }
 }
@@ -341,4 +334,15 @@ bool towerAddProjectile(GenericTower* tower, Projectile* projectile) {
     tower->projectiles[tower->projectilesCount] = projectile;
     tower->projectilesCount++;
     return true;
+}
+
+int towerGetProjectilesCount(GenericTower* tower) {
+    return tower->projectilesCount;
+}
+
+Projectile* towerGetProjectile(GenericTower* tower, int index) {
+    if (index >= 0 && index < tower->projectilesCount) {
+        return tower->projectiles[index];
+    }
+    return NULL;
 }
