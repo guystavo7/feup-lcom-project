@@ -695,8 +695,8 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
     res->longTowerBuildMenu = buildMenuNew(TOWER_KIND_LONG);
     statsBarSetBanana(res->statsBar, 5);
     statsBarSetAvocado(res->statsBar, 5);
-    statsBarSetCherry(res->statsBar, 0);
-    statsBarSetCarrot(res->statsBar, 0);
+    statsBarSetCherry(res->statsBar, 5);
+    statsBarSetCarrot(res->statsBar, 5);
 
     return res;
 }
@@ -941,8 +941,11 @@ void arenaHandleMonsterDamage(Arena* arena) {
                 if (!projectileIsActive(arrow)) continue;
 
                 if (boxIsCollidingWithBox(projectileGetCollider(arrow), monsterGetBoxCollider(monster))) {
-                    monsterSumHP(monster, -1000);
-                    projectileAddPierce(arrow);
+                    if (!projectileHasHit(arrow, monsterGetBoxCollider(monster))) {
+                        monsterSumHP(monster, -1000);
+                        projectileAddPierce(arrow);
+                        projectileAddHit(arrow, monsterGetBoxCollider(monster));
+                    }
                 }
             }
         }

@@ -45,6 +45,9 @@ struct projectile {
         } near;
     } extra_data;
 
+    BoxCollider* hit_enemies[16];
+    int hit_count;
+
     bool active;
 };
 
@@ -62,6 +65,7 @@ Projectile* projectileCreate(ProjectileType type, float x, float y, float vel_x,
     }
     p->sprite = sprite;
     p->active = true;
+    p->hit_count = 0;
 
     int w = 16;
     int h = 16;
@@ -98,6 +102,7 @@ void projectileReset(Projectile* p, ProjectileType type, float x, float y, float
 
     p->type = type;
     p->active = true;
+    p->hit_count = 0;
 
     if (type == PROJ_SKY_FALL) {
         vec2dSetX(p->pos, x);
@@ -290,6 +295,8 @@ void projectileAddPierce(Projectile* p) {
         }
     } else if (p->type == PROJ_NEAR) {
         p->extra_data.near.damage_dealt = true;
+    } else if (p->type == PROJ_SKY_FALL) {
+        // Do not deactivate sky fall projectiles on hit
     } else {
         p->active = false;
     }
@@ -305,5 +312,18 @@ void projectileUpdadeSpeed(Projectile* p, float incX, float incY) {
     if (p->type == PROJ_SKY_FALL) {
         vec2dSetX(p->vel, vec2dGetX(p->vel) + incX);
         vec2dSetY(p->vel, vec2dGetY(p->vel) + incY);
+    }
+}
+
+bool projectileHasHit(Projectile* p, BoxCollider* enemy) {
+    for (int i = 0; i < p->hit_count; i++) {
+        if (p->hit_enemies[i] == enemy) return true;
+    }
+    return false;
+}
+
+void projectileAddHit(Projectile* p, BoxCollider* enemy) {
+    if (p->hit_count < 16) {
+        p->hit_enemies[p->hit_count++] = enemy;
     }
 }
