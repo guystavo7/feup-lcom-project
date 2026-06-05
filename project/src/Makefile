@@ -48,6 +48,7 @@ SRCS= \
 	./statsBar.c \
 	./numbers.c \
 	./buildMenu.c \
+	./waveFunctions.c
 
 OBJS = ${SRCS:.c=.o}
 
