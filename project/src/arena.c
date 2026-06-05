@@ -23,9 +23,9 @@
 #include "../resources/blue/tower/blueTower.h"
 #include "../resources/fruits/smallFruit.h"
 #include "../resources/icons/icons.h"
-#include "../resources/maps/map1/map1.h"
 #include "../resources/tiles/tiles.h"
 #include "../resources/upgradeMenu/upgradeMenu.h"
+
 
 #include "../../lab5/spriteXMP.h"
 #include "../../lab5/terminal.h"
@@ -653,7 +653,7 @@ static void createUpgradeUI(Arena* res) {
     res->upgradeHammerRightLong = buttonNew(UPGRADE_HAMMER_RIGHT_X, UPGRADE_HAMMER_RIGHT_Y, UPGRADE_HAMMER_W, UPGRADE_HAMMER_H, animatedSpriteNew((float)UPGRADE_HAMMER_FRAME_SPEED, hammerSpritesRight, UPGRADE_HAMMER_FRAMES, NORMAL), arenaUpgradeConfirmEletrictCb, basicButtonHoverFn);
 }
 
-Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile, const char* waterFile) {
+Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile, const char* waterFile, char** background) {
     Arena* res = malloc(sizeof(Arena));
     res->collidersN = malloc(sizeof(int) * TAGS_NUM);
     res->colliders = malloc(sizeof(BoxCollider*) * TAGS_NUM);
@@ -685,7 +685,7 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
     res->upgradeTargetIndex = -1;
     createUpgradeUI(res);
 
-    SpriteXPM* backgroundSprite = newSpriteXPM((xpm_map_t)background1, XPM_8_8_8, 0, 0);
+    SpriteXPM* backgroundSprite = newSpriteXPM((xpm_map_t)background, XPM_8_8_8, 0, 0);
     generateEmptyBuffer(backgroundSprite, terminal, 0, 0, false);
 
     res->HeroHP = 10;
