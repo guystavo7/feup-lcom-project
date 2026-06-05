@@ -1,4 +1,6 @@
 #include "../include/components/projectile.h"
+#include "../include/data.h"
+#include "../resources/particles/dust/dust.h"
 #include <math.h>
 #include <stdlib.h>
 
@@ -38,6 +40,8 @@ struct projectile {
             float target_x;
             float target_y;
             float gravity;
+            bool landed;
+            AnimatedSprite* landing_sprites[3];
         } sky_fall;
 
         struct {
@@ -89,7 +93,20 @@ Projectile* projectileCreate(ProjectileType type, float x, float y, float vel_x,
     } else if (type == PROJ_SKY_FALL) {
         p->extra_data.sky_fall.target_x = x;
         p->extra_data.sky_fall.target_y = y;
-        p->extra_data.sky_fall.gravity = 1000.0f;
+        p->extra_data.sky_fall.gravity = 380.0f;
+        p->extra_data.sky_fall.landed = false;
+
+        SpriteXPM** sprites1 = malloc(sizeof(SpriteXPM*) * DUST_FRAMES);
+        SpriteXPM** sprites2 = malloc(sizeof(SpriteXPM*) * DUST_FRAMES);
+        SpriteXPM** sprites3 = malloc(sizeof(SpriteXPM*) * DUST_FRAMES);
+        for (int i = 0; i < DUST_FRAMES; i++) {
+            sprites1[i] = newSpriteXPM((xpm_map_t)dustXPM[i], XPM_8_8_8, 0, 0);
+            sprites2[i] = newSpriteXPM((xpm_map_t)dustXPM[i], XPM_8_8_8, 0, 0);
+            sprites3[i] = newSpriteXPM((xpm_map_t)dustXPM[i], XPM_8_8_8, 0, 0);
+        }
+        p->extra_data.sky_fall.landing_sprites[0] = animatedSpriteNew(DUST_FRAME_SPEED, sprites1, DUST_FRAMES, ONE_SHOT);
+        p->extra_data.sky_fall.landing_sprites[1] = animatedSpriteNew(DUST_FRAME_SPEED, sprites2, DUST_FRAMES, ONE_SHOT);
+        p->extra_data.sky_fall.landing_sprites[2] = animatedSpriteNew(DUST_FRAME_SPEED, sprites3, DUST_FRAMES, ONE_SHOT);
     } else if (type == PROJ_NEAR) {
         p->extra_data.near.damage_dealt = false;
     }
@@ -137,6 +154,10 @@ void projectileReset(Projectile* p, ProjectileType type, float x, float y, float
         p->extra_data.sky_fall.target_x = x;
         p->extra_data.sky_fall.target_y = y;
         p->extra_data.sky_fall.gravity = 380.0f;
+        p->extra_data.sky_fall.landed = false;
+        for (int i = 0; i < 3; i++) {
+            animatedSpriteStart(p->extra_data.sky_fall.landing_sprites[i]);
+        }
     } else if (type == PROJ_NEAR) {
         p->extra_data.near.damage_dealt = false;
     }
@@ -147,6 +168,13 @@ void projectileFree(Projectile* p) {
     vec2dFree(p->pos);
     vec2dFree(p->vel);
     boxColliderFree(p->collider);
+    if (p->type == PROJ_SKY_FALL) {
+        for (int i = 0; i < 3; i++) {
+            if (p->extra_data.sky_fall.landing_sprites[i]) {
+                animatedSpriteFree(p->extra_data.sky_fall.landing_sprites[i]);
+            }
+        }
+    }
     // The sprites are stored in the tower so calling animatedSpriteFree will destroy everything
     free(p->sprite);
     free(p);
@@ -181,8 +209,24 @@ static void homingProjectileUpdate(Projectile* p, double delta_t, Terminal* term
 }
 
 void skyFallUpdate(Projectile* p, double delta_t, Terminal* terminal) {
+    if (p->extra_data.sky_fall.landed) {
+        if (animatedSpriteIsFinished(p->extra_data.sky_fall.landing_sprites[0])) {
+            p->active = false;
+        } else {
+            int cx = (int)p->extra_data.sky_fall.target_x + 38;
+            int cy = (int)p->extra_data.sky_fall.target_y + 100;
+            animatedSpriteUpdate(cx, cy, p->extra_data.sky_fall.landing_sprites[0], terminal, delta_t, false);
+            animatedSpriteUpdate(cx - 60, cy - 20, p->extra_data.sky_fall.landing_sprites[1], terminal, delta_t, false);
+            animatedSpriteUpdate(cx + 60, cy - 20, p->extra_data.sky_fall.landing_sprites[2], terminal, delta_t, false);
+        }
+        return;
+    }
+
     if (vec2dGetY(p->pos) >= p->extra_data.sky_fall.target_y) {
-        p->active = false;
+        p->extra_data.sky_fall.landed = true;
+        for (int i = 0; i < 3; i++) {
+            animatedSpriteStart(p->extra_data.sky_fall.landing_sprites[i]);
+        }
         return;
     }
 
@@ -218,7 +262,7 @@ void projectileUpdate(Projectile* p, double delta_t, Terminal* terminal) {
     boxColliderSetX(p->collider, vec2dGetX(p->pos));
     boxColliderSetY(p->collider, vec2dGetY(p->pos));
 
-    if (p->sprite != NULL) {
+    if (p->sprite != NULL && !(p->type == PROJ_SKY_FALL && p->extra_data.sky_fall.landed)) {
         animatedSpriteUpdate((int)p->pos->x, (int)p->pos->y, p->sprite, terminal, delta_t, false);
         if (p->type == PROJ_NEAR && animatedSpriteIsFinished(p->sprite)) {
             p->active = false;

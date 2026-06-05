@@ -940,6 +940,7 @@ BoxCollider* arenaFindFirstEnemy(Arena* arena, BoxCollider* range) {
 void arenaHandleMonsterDamage(Arena* arena) {
     for (int t = 0; t < arena->towersN; t++) {
         GenericTower* tower = arena->towers[t];
+        TowerKind kind = towerGetKind(tower);
         int projCount = towerGetProjectilesCount(tower);
         for (int i = 0; i < projCount; i++) {
             Projectile* arrow = towerGetProjectile(tower, i);
@@ -957,9 +958,15 @@ void arenaHandleMonsterDamage(Arena* arena) {
                 if (boxIsCollidingWithBox(projCollider, monsterGetBoxCollider(monster))) {
                     if (!projectileHasHit(arrow, monsterGetBoxCollider(monster))) {
                         if (projectileGetType(arrow) == PROJ_SKY_FALL) {
-                            monsterSumHP(monster, -10000);
+                            monsterSumHP(monster, -SKY_FALL_DAMAGE);
+                        } else if (projectileGetType(arrow) == PROJ_NEAR) {
+                            monsterSumHP(monster, -NEAR_DAMAGE);
+                        } else if (kind == TOWER_KIND_PIERCING) {
+                            monsterSumHP(monster, -PIERCING_DAMAGE);
+                        } else if (kind == TOWER_KIND_FAST) {
+                            monsterSumHP(monster, -FAST_DAMAGE);
                         } else {
-                            monsterSumHP(monster, -1000);
+                            monsterSumHP(monster, -NORMAL_DAMAGE);
                         }
                         projectileAddPierce(arrow);
                         projectileAddHit(arrow, monsterGetBoxCollider(monster));

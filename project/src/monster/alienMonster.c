@@ -18,6 +18,6 @@ static AnimatedSprite* alienAnimationBuilder() {
 }
 
 Monster* alienMonsterNew(float x, float y, Path* path) {
-    Monster* p = monsterNew(x, y, 50, 50, 200, 2000, alienAnimationBuilder, path);
+    Monster* p = monsterNew(x, y, 50, 50, 75, 2000, alienAnimationBuilder, path);
     return p;
 }

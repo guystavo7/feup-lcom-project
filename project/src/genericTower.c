@@ -252,6 +252,7 @@ static enum TowerState shootTransition(GenericTower* tower, Arena* arena, float 
         idleOnEnter(tower);
         switch (tower->projectileType) {
             case PROJ_NORMAL:
+            case PROJ_PIERCING:
                 createNormalProjectile(tower);
                 break;
             case PROJ_SKY_FALL:
