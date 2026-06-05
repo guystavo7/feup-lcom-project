@@ -1,6 +1,8 @@
 /* Auto-generated XPM bundle */
 
 /* ===== map3 ===== */
+
+#include "smallMap3.h"
 /* XPM */
 static char *background3[] = {
 /* columns rows colors chars-per-pixel */
@@ -630,5 +632,5 @@ static char *background3[] = {
 };
 /* ===== master pointer list ===== */
 static char **all_xpms[] = {
-    map3,
+     background3
 };
