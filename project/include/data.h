@@ -2,6 +2,8 @@
 #define DATA
 
 #include "utils/vec2d.h"
+#include "../resources/maps/map1/map1.h"
+#include "../resources/maps/map2/map2.h"
 
 // Tags
 #define WALLS_TAG 0
@@ -48,6 +50,27 @@ static const char* lake2 = "/home/lcom/labs/grupo_2leic13_2/project/resources/ma
 
 static const Vec2d EMPTY_VEC2D = {0, 0};
 static const Vec2d PLAYER_POS = {100, 300};
+
+// Level selector
+#define MAX_LVL 2
+#define FULL_IMAGE_INDEX 0
+#define SMALL_IMAGE_INDEX 1
+
+#define LVL_SELECT_PLAY_NORMAL 0
+#define LVL_SELECT_PLAY_PRESSED 1
+#define LVL_SELECT_BTN_NORMAL 2
+#define LVL_SELECT_BTN_PRESSED 3
+#define LVL_SELECT_LOGO 4
+
+static const Vec2d LEVEL_SELECTOR_POS = {SCREEN_WIDTH / 2 - 318 / 2, 10};
+static const Vec2d LEVEL_DISPLAY_POS = {SCREEN_WIDTH / 2 - 395 / 2, 150};
+
+static const Vec2d PLAY_BUTTON_POS = {SCREEN_WIDTH / 2 - 283 / 2, 500};
+static const Vec2d PLAY_BUTTON_SIZE = {283, 94};
+
+static const Vec2d LEFT_SWITCH_BUTTON_POS = {10, SCREEN_HEIGHT / 2 - 96 / 2};
+static const Vec2d RIGHT_SWITCH_BUTTON_POS = {SCREEN_WIDTH - 100, SCREEN_HEIGHT / 2 - 96 / 2};
+static const Vec2d RED_BUTTON_SIZE = {100, 96};
 
 // Fruit
 static const Vec2d FRUIT_SIZE = {32, 32};
@@ -206,6 +229,7 @@ static const Vec2d EXIT_BUTTON_SIZE = {282, 94};
 #define HELP_PRESSED_BUTTON_INDEX 7
 
 #define PAUSE_MENU_INDEX 0
+static const Vec2d HOW_TO_PLAY_POSITION = {400 - 440 / 2, 100};
 
 // Game over
 #define GAME_OVER_EXIT_NORMAL 0
@@ -216,7 +240,7 @@ static const Vec2d EXIT_BUTTON_SIZE = {282, 94};
 
 #define GAME_OVER_EXIT_FRAMES 2
 #define GAME_OVER_RESTART_FRAMES 2
-static const Vec2d GAME_OVER_POSITION = {400 - 283 / 2, 100};
+static const Vec2d GAME_OVER_POSITION = {400 - 283 / 2, 200};
 
 static const Vec2d PAUSE_MENU_ICON_SIZE = {63, 60};
 static const Vec2d PAUSE_MENU_BG_POS = {SCREEN_WIDTH / 2 - 295 / 2, SCREEN_HEIGHT / 2 - 252 / 2};
