@@ -1,6 +1,7 @@
 #include "../../include/monster/monsterGen.h"
 #include "../../include/monster/spearManMonster.h"
 #include "../../include/monster/pawnMonster.h"
+#include "../../include/monster/bossMonster.h"
 
 #include "../../include/arena.h"
 #include "../../include/data.h"
@@ -26,6 +27,23 @@ Monster* pawnMonsterCreator(Path* path) {
     pathGetPoint(path,0,&startPos);
 
     return pawnMonsterNew(startPos.x,startPos.y, path);
+}
+
+Monster* bossMonsterCreator(Path* path) {
+    Vec2d startPos;
+    pathGetPoint(path,0,&startPos);
+
+    return bossMonsterNew(startPos.x,startPos.y, path);
+}
+
+int singleSpawnGenTimeFunc(float totalTimeElapsed, Timer* genTimer) {
+    timerSetInitialTime(genTimer, 999999);
+    int res = 0;
+    if (!timerIsRunning(genTimer)) {
+        timerRestart(genTimer);
+        res = 1;
+    }
+    return res;
 }
  
 int constantSlowGenTimeFunc(float totalTimeElapsed,Timer* genTimer) { 

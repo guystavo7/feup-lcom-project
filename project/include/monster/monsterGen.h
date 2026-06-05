@@ -8,11 +8,13 @@ typedef struct monsterGen MonsterGen;
 
 Monster* defaultMonsterCreator(Path* path);
 Monster* pawnMonsterCreator(Path* path);
+Monster* bossMonsterCreator(Path* path);
 
 
 
 int defaultGenTimeFunc(float delta,Timer*);
-int constantSlowGenTimeFunc(float totalTimeElapsed,Timer* genTimer) ;
+int constantSlowGenTimeFunc(float totalTimeElapsed,Timer* genTimer);
+int singleSpawnGenTimeFunc(float totalTimeElapsed, Timer* genTimer);
 
 
 void freeMonsterList(void* m);

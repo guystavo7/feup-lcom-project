@@ -703,10 +703,10 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
     res->basicTowerBuildMenu = buildMenuNew(TOWER_KIND_BASIC);
     res->longTowerBuildMenu = buildMenuNew(TOWER_KIND_LONG); 
 
-    statsBarSetBanana(res->statsBar, BANANA_START);
-    statsBarSetAvocado(res->statsBar, 0);
-    statsBarSetCherry(res->statsBar, 0);
-    statsBarSetCarrot(res->statsBar, 0); 
+    statsBarSetBanana(res->statsBar, 99);
+    statsBarSetAvocado(res->statsBar, 99);
+    statsBarSetCherry(res->statsBar, 99);
+    statsBarSetCarrot(res->statsBar, 99); 
 
     return res;
 }
@@ -1040,4 +1040,11 @@ void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
 
 bool arenaIsGameOver(Arena* arena) {
     return arena->HeroHP <= 0;
+}
+
+void arenaSpawnBoss(Arena* arena) {
+    if (!arena || !arena->pathList || vectorGetSize(arena->pathList) == 0) return;
+    Path* path = *(Path**)vectorGet(arena->pathList, 0);
+    MonsterGen* mg = monsterGenNew(path, bossMonsterCreator, singleSpawnGenTimeFunc);
+    vectorPushBack(arena->monsterGenList, (char*)&mg);
 }
