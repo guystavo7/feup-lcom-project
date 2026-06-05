@@ -15,6 +15,7 @@
 #include "../resources/levelSelector/levelSelector.h"
 #include "../resources/mainMenu/mainMenu.h"
 #include "../resources/pauseMenu/pauseMenu.h"
+#include "../resources/winMenu/winMenu.h"
 
 #include "../resources/maps/map1/map1.h"
 #include "../resources/maps/map2/map2.h"
@@ -99,6 +100,9 @@ struct GameState {
     Button* leftSwitchButton;
     Button* rightSwitchButton;
     Button* playButton;
+
+    // Win menu
+    SpriteXPM* winMenu;
 };
 
 static void resetBools() {
@@ -261,7 +265,7 @@ static void levelSelectorAct(GameState* state, Terminal* terminal, float deltaTi
 }
 
 static void levelSelectorFree(GameState* state) {
-    free(state->levelSelectLogo);
+    freeSpriteXPM(state->levelSelectLogo);
     for (int i = 0; i < MAX_LVL; i++) freeSpriteXPM(state->levels[i]);
     free(state->levels);
     buttonFree(state->leftSwitchButton);
@@ -325,6 +329,58 @@ static GameState* levelSelectorNew(Terminal* terminal) {
     return state;
 }
 
+// Win Menu
+static void winButtonHandler(GameState* state) {
+    Vec2d mousePos = {cursorGetX(getCursor()), cursorGetY(getCursor())};
+    bool leftClick = cursorIsLeftButtonPressedDown(getCursor());
+
+    if (boxIsCollidingWithPoint(buttonGetBoxCollider(state->goBackMainMenuButton), mousePos)) {
+        if (leftClick) buttonClick(state->goBackMainMenuButton);
+        buttonHover(state->goBackMainMenuButton);
+
+    } else {
+        buttonReset(state->goBackMainMenuButton);
+    }
+}
+
+static void winMenuAct(GameState* state, Terminal* terminal, float deltaTime) {
+    drawSpriteXPM(state->winMenu, terminal, WIN_INFO_POSITION.x, WIN_INFO_POSITION.y, false);
+    buttonDraw(state->goBackMainMenuButton, terminal, deltaTime, false);
+    winButtonHandler(state);
+}
+
+static void winMenuFree(GameState* state) {
+    freeSpriteXPM(state->winMenu);
+    buttonFree(state->goBackMainMenuButton);
+    free(state);
+}
+
+static GameState* winMenuTransition(GameState* state, Terminal* terminal) {
+    GameState* newState = state;
+
+    if (buttonIsFinished(state->goBackMainMenuButton) && pressedGoBack) {
+        newState = mainMenuNew(terminal);
+        resetBools();
+    }
+
+    return newState;
+}
+
+static GameState* winMenuNew(Terminal* terminal) {
+    GameState* state = gameStateNew(winMenuAct, winMenuFree, winMenuTransition);
+    state->winMenu = newSpriteXPM((xpm_map_t)winMenuXPM[WIN_BACKGROUND], XPM_8_8_8, 0, 0);
+    SpriteXPM** goBackButton = malloc(sizeof(SpriteXPM*) * 2);
+
+    SpriteXPM* buttonNormal = newSpriteXPM((xpm_map_t)winMenuXPM[WIN_BUTTON_NORMAL], XPM_8_8_8, 0, 0);
+    SpriteXPM* buttonPressed = newSpriteXPM((xpm_map_t)winMenuXPM[WIN_BUTTON_PRESSED], XPM_8_8_8, 0, 0);
+    goBackButton[0] = buttonNormal;
+    goBackButton[1] = buttonPressed;
+    state->goBackMainMenuButton = buttonNew(WIN_BUTTON_POSITION.x, WIN_BUTTON_POSITION.y, GO_BACK_POS.x, GO_BACK_POS.y, animatedSpriteNew(BUTTONS_FRAME_SPEED, goBackButton, 2, NORMAL), goBackMainMenuFn, basicButtonHoverFn);
+
+	clearEmptyBuffer(terminal);
+    return state;
+}
+
 // GameLoop
 static void runningGameFree(GameState* state) {
     buttonFree(state->resumeButton);
@@ -343,9 +399,14 @@ static GameState* runningGameTransition(GameState* state, Terminal* terminal) {
         pressedPause = true;
     }
 
-    if (arenaIsGameOver(state->arena)) {
+    int health = 1;
+    if (arenaIsGameOver(state->arena, &health)) {
         resetBools();
-        newState = gameOverMenuNew(terminal);
+        if (health > 0) {
+            newState = winMenuNew(terminal);
+        } else {
+            newState = gameOverMenuNew(terminal);
+        }
 
     } else if (buttonIsFinished(state->goBackMainMenuButton) && pressedGoBack) {
         resetBools();
@@ -424,7 +485,8 @@ static void createArena(GameState* state, Terminal* terminal) {
     Vector* paths = vectorCreate(sizeof(Path*), pathListFree);
     Path* p;
     MonsterGen* mg;
-	Vector* monsterGenList = vectorCreate(sizeof(MonsterGen*), monsterGenListFree);
+    Vector* monsterGenList = vectorCreate(sizeof(MonsterGen*), monsterGenListFree);
+    int bananaStart = 10;
 
     switch (currentLevel) {
         case 0:
@@ -443,6 +505,7 @@ static void createArena(GameState* state, Terminal* terminal) {
             path = path2;
             lake = lake2;
             background = background2;
+            bananaStart = 25;
 
             p = pathNew(4, vectorCreateWithFloatingData(sizeof(float), NULL, 35 * 2, -50.0, 352.0, 32.0, 352.0, 64.0, 352.0, 64.0, 320.0, 96.0, 320.0, 96.0, 288.0, 128.0, 288.0, 160.0, 288.0, 192.0, 288.0, 224.0, 288.0, 224.0, 320.0, 224.0, 352.0, 256.0, 352.0, 256.0, 384.0, 256.0, 416.0, 256.0, 448.0, 288.0, 448.0, 320.0, 448.0, 352.0, 448.0, 384.0, 448.0, 416.0, 448.0, 448.0, 448.0, 480.0, 448.0, 512.0, 448.0, 512.0, 480.0, 544.0, 480.0, 576.0, 480.0, 608.0, 480.0, 608.0, 512.0, 640.0, 512.0, 672.0, 512.0, 704.0, 512.0, 736.0, 512.0, 800.0, 512.0, 801.0, 512.0));
             vectorPushBack(paths, (char*)&p);
@@ -513,7 +576,7 @@ static void createArena(GameState* state, Terminal* terminal) {
             break;
     }
 
-    state->arena = arenaNew(terminal, map, path, lake, background, paths, monsterGenList);
+    state->arena = arenaNew(terminal, map, path, lake, background, paths, monsterGenList, bananaStart);
 }
 
 GameState* runningGameNew(Terminal* terminal) {
