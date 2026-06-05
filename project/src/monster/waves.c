@@ -7,33 +7,33 @@
 #define MAP23_DURATION_SEC (8u * 60u)
 
 static const WaveComposition MAP1_WAVES[NORMAL_WAVES] = {
-    {12u, 0u, 0u},
-    {15u, 9u, 6u},
-    {15u, 12u, 6u},
-    {18u, 12u, 9u},
-    {18u, 15u, 9u},
-    {21u, 15u, 9u},
-    {24u, 18u, 9u},
+    {4u, 0, 0},
+    {5u, 3u, 2u},
+    {5u, 4u, 2u},
+    {6u, 4u, 3u},
+    {6u, 5u, 3u},
+    {7u, 5u, 3u},
+    {8u, 6u, 3u},
 };
 
 static const WaveComposition MAP2_WAVES[NORMAL_WAVES] = {
-    {12u, 0u, 0u},
-    {15u, 12u, 6u},
-    {18u, 15u, 9u},
-    {18u, 18u, 9u},
-    {21u, 18u, 9u},
-    {24u, 18u, 12u},
-    {24u, 21u, 12u},
+    {4u, 0, 0},
+    {5u, 4u, 2u},
+    {6u, 5u, 3u},
+    {6u, 6u, 3u},
+    {7u, 6u, 3u},
+    {8u, 6u, 4u},
+    {8u, 7u, 4u},
 };
 
 static const WaveComposition MAP3_WAVES[NORMAL_WAVES] = {
-    {12u, 0u, 0u},
-    {15u, 15u, 6u},
-    {18u, 15u, 9u},
-    {21u, 18u, 9u},
-    {21u, 21u, 12u},
-    {24u, 21u, 12u},
-    {27u, 21u, 12u},
+    {4u, 0, 0},
+    {5u, 5u, 2u},
+    {6u, 5u, 3u},
+    {7u, 6u, 3u},
+    {7u, 7u, 4u},
+    {8u, 7u, 4u},
+    {9u, 7u, 4u},
 };
 
 unsigned waves_match_duration_sec(int level) {

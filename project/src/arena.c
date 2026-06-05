@@ -1152,8 +1152,13 @@ void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
  
     for (unsigned int i = 0; i < vectorGetSize(arena->monsterGenList); i++) {
         MonsterGen* mg = *(MonsterGen**)vectorGet(arena->monsterGenList, i);
-        arena->HeroHP -= monsterGenGetNumberOfInstantFinishedMonsters(mg);
+        unsigned int leaked = monsterGenGetNumberOfInstantFinishedMonsters(mg);
+        if (mg != arena->boss_gen) arena->HeroHP -= (int)leaked;
         monsterGenUpdate(mg, arena, terminal, deltaTime);
+        if (arena->boss_gen == mg && monsterGenGetNumberOfInstantFinishedMonsters(mg) > 0u) {
+            arena->HeroHP = 0;
+            if (arena->outcome == ARENA_OUTCOME_PLAYING) arena->outcome = ARENA_OUTCOME_LOSE;
+        }
     }
 
     arena_check_boss_win(arena);
