@@ -19,6 +19,8 @@
 #include "../resources/maps/map1/map1.h"
 #include "../resources/maps/map2/map2.h"
 
+#include "../resources/maps/map3/map3.h"
+
 #include <stdlib.h>
 
 static bool pressedToPlay = false;
