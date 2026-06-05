@@ -13,11 +13,11 @@ static AnimatedSprite* getSprites_(char** XPMs[], int n, float frameSpeed, Vec2d
 }
 
 static AnimatedSprite* spearManAnimationBuilder() {
-    spearManAnimation = getSprites_(lancerXPM, SPEAR_MAN_FRAMES, SPEAR_MAN_FRAME_SPEED, (Vec2d){0, 0});
+    spearManAnimation = getSprites_(lancerXPM, SPEAR_MAN_FRAMES, SPEAR_MAN_FRAME_SPEED, (Vec2d){0, -35});
     return spearManAnimation;
 }
 
 Monster* spearManMonsterNew(float x, float y, Path* path) {
-    Monster* p = monsterNew(x, y, 36, 74, 50, 7000, spearManAnimationBuilder, path);
+    Monster* p = monsterNew(x, y, 36, 74, LANCER_SPEED, LANCER_HEALTH, spearManAnimationBuilder, path);
     return p;
 }

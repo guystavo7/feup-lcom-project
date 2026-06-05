@@ -75,6 +75,39 @@ int constantSlowGenTimeFunc(float totalTimeElapsed,Timer* genTimer) {
  
     return res;
 }
+int constantSlowGenTimeFunc_1(float totalTimeElapsed,Timer* genTimer) { 
+
+
+    timerSetInitialTime(genTimer,16); 
+    
+    if(totalTimeElapsed<15 ){
+        timerRestart(genTimer);;  
+    }
+    int res = 0;
+    if (!timerIsRunning(genTimer)) {
+        timerRestart(genTimer);
+        res = 1;
+    }
+ 
+    return res;
+}
+
+int constantSlowGenTimeFunc_2(float totalTimeElapsed,Timer* genTimer) { 
+
+
+    timerSetInitialTime(genTimer,16); 
+    
+    if(totalTimeElapsed<30 ){
+        timerRestart(genTimer);;  
+    }
+    int res = 0;
+    if (!timerIsRunning(genTimer)) {
+        timerRestart(genTimer);
+        res = 1;
+    }
+ 
+    return res;
+}
 
 int waveNoAutoSpawnGenTimeFunc(float totalTimeElapsed, Timer* genTimer) {
     (void)totalTimeElapsed;
