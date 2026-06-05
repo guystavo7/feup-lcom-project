@@ -91,6 +91,12 @@ static const Vec2d PLAYER_HIT_BOX_OFFSET = {10, 33};
 static const Vec2d PLAYER_SIZE = {17, 13};
 
 // Tower
+#define NORMAL_DAMAGE 500
+#define PIERCING_DAMAGE 800
+#define FAST_DAMAGE 500
+#define SKY_FALL_DAMAGE 3500
+#define NEAR_DAMAGE 700
+
 static const Vec2d BASIC_TOWER_SIZE = {43, 29};
 static const Vec2d BASIC_TOWER_HIT_BOX_OFFSET = {9, 0};
 static const Vec2d BASIC_UPPER_HALF_OFFSET = {0, -59};
