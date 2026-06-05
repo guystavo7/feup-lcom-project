@@ -33,6 +33,7 @@ static const char* lake1 = "/home/lcom/labs/grupo_2leic13_2/project/resources/ma
 #define TOWER_PICK_ICON_W 60
 
 static const Vec2d EMPTY_VEC2D = {0, 0};
+static const Vec2d PLAYER_POS = {100, 300};
 
 // Fruit
 static const Vec2d FRUIT_SIZE = {32, 32};

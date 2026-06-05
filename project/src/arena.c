@@ -21,7 +21,7 @@
 #include "../include/ui/statsBar.h"
 
 #include "../resources/blue/tower/blueTower.h"
-#include "../resources/fruits/fruits.h"
+#include "../resources/fruits/smallFruit.h"
 #include "../resources/icons/icons.h"
 #include "../resources/maps/map1/map1.h"
 #include "../resources/tiles/tiles.h"
@@ -112,15 +112,15 @@ struct Arena {
 static char** arena_fruit_xpm_for_kind(FruitKind kind) {
     switch (kind) {
         case FRUIT_BANANA:
-            return banana;
+            return smallBanana;
         case FRUIT_ABACATE:
-            return abacate;
+            return smallAbacate;
         case FRUIT_CEREJA:
-            return cereja;
+            return smallCereja;
         case FRUIT_CENOURA:
-            return cenoura;
+            return smallCenoura;
         default:
-            return banana;
+            return smallBanana;
     }
 }
 
@@ -149,7 +149,7 @@ static void arena_fruit_push(Arena* arena, Vec2d position, FruitKind kind, float
         return;
     }
     arena->fruits = grown;
-    Collectable* c = collectableNew(position, EMPTY_VEC2D, FRUIT_SIZE, arena_fruit_xpm_for_kind(kind));
+    Collectable* c = collectableNew(position, EMPTY_VEC2D, arena_fruit_xpm_for_kind(kind));
     arena->fruits[idx].collectable = c;
     arena->fruits[idx].kind = kind;
     arena->fruits[idx].timeToLive = ttl_sec;
@@ -615,8 +615,7 @@ static void createLakeColliders(Arena* arena, const char* filename) {
 }
 
 static void createPlayer(Arena* arena) {
-    Vec2d playerPos = {100, 100};
-    arena->player = playerNew(playerPos);
+    arena->player = playerNew(PLAYER_POS);
 
     arena->colliders[PLAYER_TAG] = malloc(sizeof(BoxCollider*));
     arena->colliders[PLAYER_TAG][0] = playerModelGetHitBox(playerGetPlayerModel(arena->player));

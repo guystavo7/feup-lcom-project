@@ -11,15 +11,17 @@ struct Collectable {
 	bool isActive;
 };
 
-Collectable* collectableNew(Vec2d position, Vec2d offset, Vec2d size, char** XPM) {
+Collectable* collectableNew(Vec2d position, Vec2d offset, char** XPM) {
 	Collectable* res = malloc(sizeof(Collectable));
 
 	SpriteXPM* sprite = newSpriteXPM((xpm_map_t)XPM, XPM_8_8_8, offset.x, offset.y);
-	BoxCollider* hitBox = boxColliderNew(position, offset, size, 2);
+
+	Vec2d hitBoxSize = {getSpriteWidth(sprite), getSpriteHeight(sprite	)};
+	BoxCollider* hitBox = boxColliderNew(position, offset, hitBoxSize, 2);
 	res->sprite = sprite;
 	res->hitBox = hitBox;
 	res->position = position;
-	res->size = size;
+	res->size = hitBoxSize;
 	res->isActive = true;
 
 	return res;
