@@ -10,6 +10,8 @@ typedef struct monsterGen MonsterGen;
 
 Monster* defaultMonsterCreator(Path* path);
 Monster* pawnMonsterCreator(Path* path);
+Monster* alienMonsterCreator(Path* path);
+Monster* spearManMonsterCreator(Path* path);
 Monster* bossMonsterCreator(Path* path);
 
 Monster* alienMonsterCreator(Path* path);
@@ -30,10 +32,12 @@ int singleAppear450(float totalTimeElapsed,Timer* genTimer) ;
 
 int defaultGenTimeFunc(float delta,Timer*);
 int constantSlowGenTimeFunc(float totalTimeElapsed,Timer* genTimer);
-
+ 
 int constantSlowGenTimeFunc_1(float totalTimeElapsed,Timer* genTimer);
 int constantSlowGenTimeFunc_2(float totalTimeElapsed,Timer* genTimer);
-
+ 
+int waveNoAutoSpawnGenTimeFunc(float totalTimeElapsed, Timer* genTimer);
+ 
 int singleSpawnGenTimeFunc(float totalTimeElapsed, Timer* genTimer);
 
 
@@ -43,8 +47,8 @@ MonsterGen* monsterGenNew(Path* path,Monster* (*monsterCreator)(Path*),int (*gen
 
 void monsterGenFree(MonsterGen* mg);
 void monsterGenAddMonster(MonsterGen* mg);
- 
 
+void monsterGenSpawnOne(MonsterGen* mg);
 
 void monsterGenUpdate(MonsterGen* mg, Arena* arena,Terminal* terminal, float delta_t);
 
@@ -54,6 +58,8 @@ Monster* monsterGenGetMonster(MonsterGen* mg,unsigned int index);
 
 
 unsigned int monsterGenGetNumberOfInstantFinishedMonsters(MonsterGen* mg);
+
+bool monsterGenBossDefeated(MonsterGen* bossGen);
 
 
  

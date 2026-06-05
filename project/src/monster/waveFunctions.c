@@ -1,19 +1,6 @@
 #include "../../include/monster/monsterGen.h"
 
-
-Monster* alienMonsterCreator(Path* path) {
-    Vec2d startPos;
-    pathGetPoint(path,0,&startPos);
-
-    return alienMonsterNew(startPos.x,startPos.y, path);
-}
-
-Monster* spearManMonsterCreator(Path* path) {
-    Vec2d startPos;
-    pathGetPoint(path,0,&startPos);
-
-    return spearManMonsterNew(startPos.x,startPos.y, path);
-}
+ 
 
 int progressiveTimeFunction50(float totalTimeElapsed,Timer* genTimer) {
     float timeInterval=50;
@@ -135,12 +122,27 @@ int progressiveTimeFunction200_2(float totalTimeElapsed,Timer* genTimer) {
     return res;
 } 
 
+ 
 int singleAppear450(float totalTimeElapsed,Timer* genTimer) {
+    float timeInterval=450;
+    float SecondsBetweenSpawns=32;
+
+    for(unsigned int i=1;SecondsBetweenSpawns>0;i++){
+        if(totalTimeElapsed<timeInterval*i){
+            timerSetInitialTime(genTimer,SecondsBetweenSpawns); 
+            break;
+        }
+        SecondsBetweenSpawns/=2;
+    }
+    if(totalTimeElapsed<30+timeInterval){
+        timerRestart(genTimer);
+    }
+
     int res = 0;
-    if (totalTimeElapsed==450) { 
+    if (!timerIsRunning(genTimer)) {
+        timerRestart(genTimer);
         res = 1;
     }
  
     return res;
-
-}
+} 

@@ -1,4 +1,5 @@
 #include "../../include/monster/monsterGen.h"
+#include "../../include/monster/alienMonster.h"
 #include "../../include/monster/spearManMonster.h"
 #include "../../include/monster/pawnMonster.h"
 #include "../../include/monster/bossMonster.h"
@@ -27,6 +28,18 @@ Monster* pawnMonsterCreator(Path* path) {
     pathGetPoint(path,0,&startPos);
 
     return pawnMonsterNew(startPos.x,startPos.y, path);
+}
+
+Monster* alienMonsterCreator(Path* path) {
+    Vec2d startPos;
+    pathGetPoint(path, 0, &startPos);
+    return alienMonsterNew(startPos.x, startPos.y, path);
+}
+
+Monster* spearManMonsterCreator(Path* path) {
+    Vec2d startPos;
+    pathGetPoint(path, 0, &startPos);
+    return spearManMonsterNew(startPos.x, startPos.y, path);
 }
 
 Monster* bossMonsterCreator(Path* path) {
@@ -96,6 +109,12 @@ int constantSlowGenTimeFunc_2(float totalTimeElapsed,Timer* genTimer) {
     return res;
 }
 
+int waveNoAutoSpawnGenTimeFunc(float totalTimeElapsed, Timer* genTimer) {
+    (void)totalTimeElapsed;
+    (void)genTimer;
+    return 0;
+}
+
 int defaultGenTimeFunc(float totalTimeElapsed,Timer* genTimer) {
     float timeInterval=50;
     if(totalTimeElapsed<1*timeInterval){
@@ -114,7 +133,7 @@ int defaultGenTimeFunc(float totalTimeElapsed,Timer* genTimer) {
         timerSetInitialTime(genTimer,0.5);
     //    printf("gen0.5\n");
     }
-     else if(totalTimeElapsed<5*timeInterval){
+    else if(totalTimeElapsed<5*timeInterval){
         timerSetInitialTime(genTimer,0.25);
      //   printf("gen0.25\n");
     }
@@ -186,6 +205,27 @@ void monsterGenAddMonster(MonsterGen* mg) {
     vectorPushBackVal(mg->activeMonsterIdSorted, vectorGetSize(mg->monsterList) - 1);
 }
 
+static void monsterGen_activate_or_add_one(MonsterGen* mg) {
+    Vec2d startPos;
+    pathGetPoint(mg->path, 0, &startPos);
+
+    int stackSize = (int)vectorGetSize(mg->availableMonsterIdStack);
+    if (stackSize > 0) {
+        int monsterId = vectorGetVal(mg->availableMonsterIdStack, (unsigned int)stackSize - 1U);
+        Monster* m = *(Monster**)vectorGet(mg->monsterList, (unsigned int)monsterId);
+        monsterReset(m, &startPos);
+        vectorPopBack(mg->availableMonsterIdStack);
+        vectorSetVal(mg->deactivatedMonsterIdList, (unsigned int)monsterId, false);
+        vectorPushBackVal(mg->activeMonsterIdSorted, monsterId);
+    } else {
+        monsterGenAddMonster(mg);
+    }
+}
+
+void monsterGenSpawnOne(MonsterGen* mg) {
+    monsterGen_activate_or_add_one(mg);
+}
+
 void monsterGenUpdate(MonsterGen* mg, Arena* arena, Terminal* terminal, float delta_t) {
     mg->totalTimeElapsed+=delta_t;
     timerUpdate(mg->genTimer,delta_t);
@@ -232,30 +272,9 @@ void monsterGenUpdate(MonsterGen* mg, Arena* arena, Terminal* terminal, float de
     for (unsigned int i = 0; i < n_removes; i++) {
         vectorPopBack(mg->activeMonsterIdSorted);
     }
-    int stackSize;
-    int monsterId; 
 
-    Vec2d startPos;
-    pathGetPoint(mg->path,0,&startPos);
-    
     while (n_monster_to_render > 0) {
-        stackSize = vectorGetSize(mg->availableMonsterIdStack);
-        if (stackSize > 0) {
-            monsterId = vectorGetVal(mg->availableMonsterIdStack, stackSize - 1);
-            Monster* m = *(Monster**)vectorGet(mg->monsterList, monsterId);
-            monsterReset(m,&startPos );
-            vectorPopBack(mg->availableMonsterIdStack);
-            vectorSetVal(mg->deactivatedMonsterIdList, monsterId, false);
-            vectorPushBackVal(mg->activeMonsterIdSorted, monsterId);
-        } else {
-            monsterGenAddMonster(mg);
-            /*
-            if (!(vectorGetSize(mg->monsterList) > 8)) {
-               
-            }
-            */
-        }
-
+        monsterGen_activate_or_add_one(mg);
         n_monster_to_render--;
     }
 }
@@ -274,6 +293,13 @@ Monster* monsterGenGetMonster(MonsterGen* mg, unsigned int index) {
 unsigned int monsterGenGetNumberOfInstantFinishedMonsters(MonsterGen* mg) {
 
     return mg->numberOfInstantFinishedMonsters;
+}
+
+bool monsterGenBossDefeated(MonsterGen* bossGen) {
+    if (bossGen == NULL) return false;
+    if (vectorGetSize(bossGen->monsterList) == 0u) return false;
+    Monster* m = *(Monster**)vectorGet(bossGen->monsterList, 0u);
+    return monsterIsDead(m);
 }
 
 /*
