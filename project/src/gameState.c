@@ -6,6 +6,7 @@
 #include "../include/utils/inputHandler.h"
 
 #include "../../lab5/spriteXMP.h"
+#include "../resources/gameOverMenu/gameOver.h"
 #include "../resources/icons/icons.h"
 #include "../resources/mainMenu/mainMenu.h"
 #include "../resources/pauseMenu/pauseMenu.h"
@@ -16,6 +17,26 @@ static bool pressedNewGame = false;
 static bool pressedExit = false;
 static bool pressedGoBack = false;
 static bool pressedPause = false;
+
+static void resumeFn(Button* self) {
+    pressedPause = false;
+}
+
+static void helpFn(Button* self) {
+    printf("Help\n");
+}
+
+static void goBackMainMenuFn(Button* self) {
+    pressedGoBack = true;
+}
+
+static void exitGameFn(Button* self) {
+    pressedExit = true;
+}
+
+static void newGameFn(Button* self) {
+    pressedNewGame = true;
+}
 
 struct GameState {
     void (*act)(GameState* state, Terminal* terminal, float deltaTime);
@@ -36,6 +57,11 @@ struct GameState {
     Button* resumeButton;
     Button* helpButton;
     Button* goBackMainMenuButton;
+
+    // Game Over Menu
+    SpriteXPM* gameOver;
+    Button* restartButton;
+    // uses go back main menu button
 };
 
 static void resetBools() {
@@ -68,6 +94,83 @@ GameState* gameStateTransition(GameState* state, Terminal* terminal) {
     return state->transition(state, terminal);
 }
 
+// Game Over
+static void GameOverButtonsHandler(GameState* state) {
+    Vec2d mousePos = {cursorGetX(getCursor()), cursorGetY(getCursor())};
+    bool leftClick = cursorIsLeftButtonPressedDown(getCursor());
+
+    if (boxIsCollidingWithPoint(buttonGetBoxCollider(state->restartButton), mousePos)) {
+        if (leftClick) buttonClick(state->restartButton);
+        buttonHover(state->restartButton);
+
+    } else {
+        buttonReset(state->restartButton);
+    }
+
+    if (boxIsCollidingWithPoint(buttonGetBoxCollider(state->goBackMainMenuButton), mousePos)) {
+        if (leftClick) buttonClick(state->goBackMainMenuButton);
+        buttonHover(state->goBackMainMenuButton);
+
+    } else {
+        buttonReset(state->goBackMainMenuButton);
+    }
+}
+
+static void gameOverAct(GameState* state, Terminal* terminal, float deltaTime) {
+    drawSpriteXPM(state->gameOver, terminal, GAME_OVER_POSITION.x, GAME_OVER_POSITION.y, false);
+    buttonDraw(state->restartButton, terminal, deltaTime, false);
+    buttonDraw(state->goBackMainMenuButton, terminal, deltaTime, false);
+    GameOverButtonsHandler(state);
+}
+
+static void gameOverFree(GameState* state) {
+    free(state->gameOver);
+    buttonFree(state->restartButton);
+    buttonFree(state->goBackMainMenuButton);
+    free(state);
+}
+
+static GameState* gameOverTransition(GameState* state, Terminal* terminal) {
+    GameState* newState = state;
+    // Wait for the animation to finish first - if there is one
+    if (buttonIsFinished(state->restartButton) && pressedNewGame) {
+        newState = runningGameNew(terminal);
+        resetBools();
+
+    } else if (buttonIsFinished(state->goBackMainMenuButton) && pressedGoBack) {
+        newState = mainMenuNew(terminal);
+        resetBools();
+    }
+
+    return newState;
+}
+
+GameState* gameOverMenuNew(Terminal* terminal) {
+    resetBools();
+
+    GameState* res = gameStateNew(gameOverAct, gameOverFree, gameOverTransition);
+    SpriteXPM** restartButtons = malloc(sizeof(SpriteXPM*) * GAME_OVER_RESTART_FRAMES);
+    SpriteXPM** closeGameButtons = malloc(sizeof(SpriteXPM*) * GAME_OVER_EXIT_FRAMES);
+    res->gameOver = newSpriteXPM((xpm_map_t)gameOverXPM[GAME_OVER_LOGO], XPM_8_8_8, 0, 0);
+
+    // Restart Button
+    SpriteXPM* buttonNormal = newSpriteXPM((xpm_map_t)gameOverXPM[GAME_OVER_RESTART_NORMAL], XPM_8_8_8, 0, 0);
+    SpriteXPM* buttonPressed = newSpriteXPM((xpm_map_t)gameOverXPM[GAME_OVER_RESTART_PRESSED], XPM_8_8_8, 0, 0);
+    restartButtons[0] = buttonNormal;
+    restartButtons[1] = buttonPressed;
+    res->restartButton = buttonNew(NEW_GAME_BUTTON_POS.x, NEW_GAME_BUTTON_POS.y, NEW_GAME_BUTTON_SIZE.x, NEW_GAME_BUTTON_SIZE.y, animatedSpriteNew(BUTTONS_FRAME_SPEED, restartButtons, GAME_OVER_RESTART_FRAMES, NORMAL), newGameFn, basicButtonHoverFn);
+
+    // Exit Button
+    buttonNormal = newSpriteXPM((xpm_map_t)gameOverXPM[GAME_OVER_EXIT_NORMAL], XPM_8_8_8, 0, 0);
+    buttonPressed = newSpriteXPM((xpm_map_t)gameOverXPM[GAME_OVER_EXIT_PRESSED], XPM_8_8_8, 0, 0);
+    closeGameButtons[0] = buttonNormal;
+    closeGameButtons[1] = buttonPressed;
+    res->goBackMainMenuButton = buttonNew(EXIT_BUTTON_POS.x, EXIT_BUTTON_POS.y, EXIT_BUTTON_SIZE.x, EXIT_BUTTON_SIZE.y, animatedSpriteNew(BUTTONS_FRAME_SPEED, closeGameButtons, GAME_OVER_EXIT_FRAMES, NORMAL), goBackMainMenuFn, basicButtonHoverFn);
+
+    clearEmptyBuffer(terminal);
+    return res;
+}
+
 // GameLoop
 static void runningGameFree(GameState* state) {
     buttonFree(state->resumeButton);
@@ -85,23 +188,15 @@ static GameState* runningGameTransition(GameState* state, Terminal* terminal) {
         pressedPause = true;
     }
 
-    if (buttonIsFinished(state->goBackMainMenuButton) && pressedGoBack) {
+    if (arenaIsGameOver(state->arena)) {
+        resetBools();
+        newState = gameOverMenuNew(terminal);
+
+    } else if (buttonIsFinished(state->goBackMainMenuButton) && pressedGoBack) {
         resetBools();
         newState = mainMenuNew(terminal);
     }
     return newState;
-}
-
-static void resumeFn(Button* self) {
-    pressedPause = false;
-}
-
-static void helpFn(Button* self) {
-    printf("Help\n");
-}
-
-static void goBackMainMenuFn(Button* self) {
-    pressedGoBack = true;
 }
 
 static void pausedMenuButtonsHandler(GameState* state) {
@@ -181,9 +276,6 @@ GameState* runningGameNew(Terminal* terminal) {
 }
 
 // Main Menu
-static void newGameFn(Button* self) {
-    pressedNewGame = true;
-}
 
 static void mainMenuButtonsHandler(GameState* state) {
     Vec2d mousePos = {cursorGetX(getCursor()), cursorGetY(getCursor())};
@@ -233,10 +325,6 @@ static GameState* mainMenuTransition(GameState* state, Terminal* terminal) {
     }
 
     return newState;
-}
-
-static void exitGameFn(Button* self) {
-    pressedExit = true;
 }
 
 GameState* mainMenuNew(Terminal* terminal) {
