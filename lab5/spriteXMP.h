@@ -16,7 +16,5 @@ enum xpm_image_type getSpriteType(SpriteXPM* sprite);
 uint16_t getSpriteWidth(SpriteXPM* sprite);
 uint16_t getSpriteHeight(SpriteXPM* sprite);
 size_t getSpriteSize(SpriteXPM* sprite);
-uint8_t getSpritePixel(SpriteXPM* sprite, uint16_t x, uint16_t y);
-
 
 #endif
