@@ -13,24 +13,24 @@ Monster* defaultMonsterCreator(Path* path) {
 }
  
 int defaultGenTimeFunc(float totalTimeElapsed,Timer* genTimer) {
-
-    if(totalTimeElapsed<5){
+    float timeInterval=50;
+    if(totalTimeElapsed<1*timeInterval){
         timerSetInitialTime(genTimer,3);
      //   printf("gen3\n");
     }
-    else if(totalTimeElapsed<10){
+    else if(totalTimeElapsed<2*timeInterval){
         timerSetInitialTime(genTimer,2);
       //  printf("gen2\n");
     }
-    else if(totalTimeElapsed<15){
+    else if(totalTimeElapsed<3*timeInterval){
         timerSetInitialTime(genTimer,1);
      //   printf("gen1\n");
     }
-    else if(totalTimeElapsed<20){
+    else if(totalTimeElapsed<4*timeInterval){
         timerSetInitialTime(genTimer,0.5);
     //    printf("gen0.5\n");
     }
-     else if(totalTimeElapsed<25){
+     else if(totalTimeElapsed<5*timeInterval){
         timerSetInitialTime(genTimer,0.25);
      //   printf("gen0.25\n");
     }

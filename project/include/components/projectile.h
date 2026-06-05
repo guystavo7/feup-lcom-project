@@ -46,4 +46,7 @@ void projectileSetMaxPierce(Projectile* p, int max);
 
 void projectileUpdadeSpeed(Projectile* p, float incX, float incY);
 
+bool projectileHasHit(Projectile* p, BoxCollider* enemy);
+void projectileAddHit(Projectile* p, BoxCollider* enemy);
+
 #endif

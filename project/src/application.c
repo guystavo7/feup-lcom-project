@@ -82,6 +82,8 @@ int(proj_main_loop)(int argc, char* argv[]) {
 
                         cleanBytes();
                     }
+                  //  if(cursorIsMiddleButtonPressedDown(get))
+                  //  cursorGetPixelPosition(getCursor)
                 }
 
                 if (msg.m_notify.interrupts & (1 << KBC_IRQ_LINE)) {
