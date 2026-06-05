@@ -1,4 +1,5 @@
  
+/** @file pawnMonster.c @brief Implementacao; ver comentarios nas funcoes estaticas onde aplicavel. */
 #include "../../include/monster/pawnMonster.h"
 
 #include "../../resources/pawn/pawnRun.h"

@@ -1,4 +1,5 @@
 #include "../include/utils/utils.h"
+/** @file utils.c @brief Implementacao; ver comentarios nas funcoes estaticas onde aplicavel. */
 
 float floatModule(float n) {
 	if (n < 0) n = -n;

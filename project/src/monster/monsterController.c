@@ -1,4 +1,5 @@
 #include "../../include/monster/monsterController.h"
+/** @file monsterController.c @brief Implementacao; ver comentarios nas funcoes estaticas onde aplicavel. */
 
 struct monsterController {
     MonsterModel* model;

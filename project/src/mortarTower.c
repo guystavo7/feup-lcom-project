@@ -1,4 +1,5 @@
 #include "../include/buildings/mortarTower.h"
+/** @file mortarTower.c @brief Implementacao; ver comentarios nas funcoes estaticas onde aplicavel. */
 #include "../include/data.h"
 #include "../resources/asteroid/asteroid.h"
 #include "../resources/black/monk/monkHeal.h"

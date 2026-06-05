@@ -1,4 +1,5 @@
 #include "../include/player/playerModel.h"
+/** @file playerModel.c @brief Implementacao; ver comentarios nas funcoes estaticas onde aplicavel. */
 #include "../resources/blue/warrior/warriorIdle.h"
 #include "../resources/blue/warrior/warriorRun.h"
 #include "../include/data.h"

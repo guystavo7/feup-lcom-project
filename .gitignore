@@ -16,6 +16,9 @@ lab4/lab4
 lab5/lab5
 project/src/proj
 
+# Doxygen HTML (gerado localmente)
+project/docs/doxygen/
+
 # Runtime / LCF trace and stdout captures
 **/trace.txt
 **/output.txt

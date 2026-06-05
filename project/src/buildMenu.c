@@ -1,4 +1,5 @@
 #include "../include/ui/buildMenu.h"
+/** @file buildMenu.c @brief Implementacao; ver comentarios nas funcoes estaticas onde aplicavel. */
 #include "../include/utils/cursorHandler.h"
 #include "../include/button.h"
 #include "../include/data.h"

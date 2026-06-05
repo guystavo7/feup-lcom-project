@@ -1,4 +1,5 @@
 #include "../include/components/projectile.h"
+/** @file projectile.c @brief Implementacao; ver comentarios nas funcoes estaticas onde aplicavel. */
 #include "../include/data.h"
 #include "../resources/particles/dust/dust.h"
 #include <math.h>

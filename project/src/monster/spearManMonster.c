@@ -1,4 +1,5 @@
 #include "../../include/monster/spearManMonster.h"
+/** @file spearManMonster.c @brief Implementacao; ver comentarios nas funcoes estaticas onde aplicavel. */
 #include "../../resources/red/lancer/lancer.h"
 
 #define SPEAR_MAN_FRAMES 6

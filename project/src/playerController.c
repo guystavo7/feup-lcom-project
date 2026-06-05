@@ -1,4 +1,5 @@
 #include "../include/player/playerController.h"
+/** @file playerController.c @brief Implementacao; ver comentarios nas funcoes estaticas onde aplicavel. */
 #include "../include/player/playerIdle.h"
 #include "../include/player/playerState.h"
 #include "../include/utils/inputHandler.h"

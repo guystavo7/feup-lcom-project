@@ -1,4 +1,5 @@
 #include "../include/buildings/piercingTower.h"
+/** @file piercingTower.c @brief Implementacao; ver comentarios nas funcoes estaticas onde aplicavel. */
 #include "../include/data.h"
 #include "../resources/purple/tower/purpleTower.h"
 #include "../resources/purple/archer/archerIdle.h"

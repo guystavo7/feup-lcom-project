@@ -1,4 +1,5 @@
 #include "../include/ui/numbers.h"
+/** @file numbers.c @brief Implementacao; ver comentarios nas funcoes estaticas onde aplicavel. */
 #include "../include/data.h"
 #include "../resources/numbers/numbers.h"
 #include <stdlib.h>

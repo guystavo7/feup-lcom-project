@@ -1,4 +1,5 @@
 #include "../include/utils/timer.h"
+/** @file timer.c @brief Implementacao; ver comentarios nas funcoes estaticas onde aplicavel. */
 
 struct Timer {
     float initialTime;

@@ -24,6 +24,10 @@
 
 #include <stdlib.h>
 
+/** @file gameState.c
+ *  @brief Estados do jogo: menus, selector de nivel, pausa, game over, vitoria e partida em arena.
+ */
+
 static bool pressedToPlay = false;
 static bool pressedNewGame = false;
 static bool pressedExit = false;
@@ -32,11 +36,17 @@ static bool pressedPause = false;
 static bool pressedHowToPlay = false;
 static int currentLevel = 0;
 
+/** @brief Callback seta: nivel anterior no selector (wrap).
+ *  @param[in] self Botao (nao usado).
+ */
 static void leftButtonFn(Button* self) {
     currentLevel--;
     if (currentLevel < 0) currentLevel = MAX_LVL - 1;
 }
 
+/** @brief Callback seta: nivel seguinte no selector (wrap).
+ *  @param[in] self Botao (nao usado).
+ */
 static void rightButtonFn(Button* self) {
     currentLevel++;
     if (currentLevel >= MAX_LVL) {
@@ -44,26 +54,44 @@ static void rightButtonFn(Button* self) {
     }
 }
 
+/** @brief Marca que o jogador pressionou jogar no selector.
+ *  @param[in] self Botao (nao usado).
+ */
 static void selectButtonFn(Button* self) {
     pressedToPlay = true;
 }
 
+/** @brief Sai do menu de pausa (resume).
+ *  @param[in] self Botao (nao usado).
+ */
 static void resumeFn(Button* self) {
     pressedPause = false;
 }
 
+/** @brief Abre ecra "how to play" a partir da pausa.
+ *  @param[in] self Botao (nao usado).
+ */
 static void helpFn(Button* self) {
     pressedHowToPlay = true;
 }
 
+/** @brief Volta ao menu principal (flag global).
+ *  @param[in] self Botao (nao usado).
+ */
 static void goBackMainMenuFn(Button* self) {
     pressedGoBack = true;
 }
 
+/** @brief Pedido de sair do programa.
+ *  @param[in] self Botao (nao usado).
+ */
 static void exitGameFn(Button* self) {
     pressedExit = true;
 }
 
+/** @brief Inicia novo jogo a partir do menu.
+ *  @param[in] self Botao (nao usado).
+ */
 static void newGameFn(Button* self) {
     pressedNewGame = true;
 }
