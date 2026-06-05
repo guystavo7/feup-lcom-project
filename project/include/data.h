@@ -203,6 +203,18 @@ static const Vec2d EXIT_BUTTON_SIZE = {282, 94};
 
 #define PAUSE_MENU_INDEX 0
 
+// Game over
+#define GAME_OVER_EXIT_NORMAL 0
+#define GAME_OVER_EXIT_PRESSED 1
+#define GAME_OVER_LOGO 2
+#define GAME_OVER_RESTART_NORMAL 3
+#define GAME_OVER_RESTART_PRESSED 4
+
+#define GAME_OVER_EXIT_FRAMES 2
+#define GAME_OVER_RESTART_FRAMES 2
+static const Vec2d GAME_OVER_POSITION = {400 - 283 / 2, 100};
+
+
 static const Vec2d PAUSE_MENU_ICON_SIZE = {63, 60};
 static const Vec2d PAUSE_MENU_BG_POS = {SCREEN_WIDTH / 2 - 295 / 2, SCREEN_HEIGHT / 2 - 252 / 2};
 static const Vec2d RESUME_POS = {SCREEN_WIDTH / 2 - 259 / 2 + 20, SCREEN_HEIGHT / 2 - 252 / 2 + 124};

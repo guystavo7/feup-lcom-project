@@ -993,3 +993,7 @@ void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
 
     cursorUpdate(getCursor(), terminal, deltaTime);
 }
+
+bool arenaIsGameOver(Arena* arena) {
+	return arena->HeroHP <= 0;
+}
