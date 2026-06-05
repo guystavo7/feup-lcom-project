@@ -29,15 +29,11 @@
 #include "../../lab5/spriteXMP.h"
 #include "../../lab5/terminal.h"
 
-#include "../include/monster/alienMonster.h"
 #include "../include/monster/monsterGen.h"
-#include "../include/monster/pawnMonster.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-
-#include <limits.h>
 
 typedef enum {
     ARENA_CONSTRUCT_NORMAL = 0,
@@ -107,15 +103,6 @@ struct Arena {
 
     float carrotSpawnCooldown;
 };
-
-void pathListFree(void* path) {
-    Path* p = *(Path**)path;
-    pathFree(p);
-}
-void monsterGenListFree(void* path) {
-    MonsterGen* p = *(MonsterGen**)path;
-    monsterGenFree(p);
-}
 
 static char** arena_fruit_xpm_for_kind(FruitKind kind) {
     switch (kind) {
@@ -661,7 +648,7 @@ static void createUpgradeUI(Arena* res) {
     res->upgradeHammerRightLong = buttonNew(UPGRADE_HAMMER_RIGHT_X, UPGRADE_HAMMER_RIGHT_Y, UPGRADE_HAMMER_W, UPGRADE_HAMMER_H, animatedSpriteNew((float)UPGRADE_HAMMER_FRAME_SPEED, hammerSpritesRight, UPGRADE_HAMMER_FRAMES, NORMAL), arenaUpgradeConfirmEletrictCb, basicButtonHoverFn);
 }
 
-Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile, const char* waterFile, char** background) {
+Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile, const char* waterFile, char** background, Vector* paths, Vector* gens) {
     Arena* res = malloc(sizeof(Arena));
     res->collidersN = malloc(sizeof(int) * TAGS_NUM);
     res->colliders = malloc(sizeof(BoxCollider*) * TAGS_NUM);
@@ -669,39 +656,10 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
         res->collidersN[t] = 0;
         res->colliders[t] = NULL;
     }
- 
      
+	res->pathList = paths;
+	res->monsterGenList = gens;
 
-    res->pathList = vectorCreate(sizeof(Path*), pathListFree);
-    res->monsterGenList = vectorCreate(sizeof(MonsterGen*), monsterGenListFree);
-
-    Path* p;
-    p = pathNew(4, vectorCreateWithFloatingData(sizeof(float), NULL, 35 * 2,
-                                                -50.0, 352.0, 32.0, 352.0, 64.0, 352.0, 64.0, 320.0, 96.0, 320.0, 96.0, 288.0, 128.0, 288.0, 160.0, 288.0, 192.0, 288.0, 224.0, 288.0, 224.0, 320.0, 224.0, 352.0, 256.0, 352.0, 256.0, 384.0, 256.0, 416.0, 256.0, 448.0, 288.0, 448.0, 320.0, 448.0, 352.0, 448.0, 384.0, 448.0, 416.0, 448.0, 448.0, 448.0, 480.0, 448.0, 512.0, 448.0, 512.0, 480.0, 544.0, 480.0, 576.0, 480.0, 608.0, 480.0, 608.0, 512.0, 640.0, 512.0, 672.0, 512.0, 704.0, 512.0, 736.0, 512.0, 800.0, 512.0, 801.0, 512.0));
-
-    vectorPushBack(res->pathList, (char*)&p);
-
-    p = pathNew(4, vectorCreateWithFloatingData(sizeof(float), NULL, 34 * 2,
-                                                -50.0, 352.0, 32.0, 352.0, 64.0, 352.0, 64.0, 320.0, 96.0, 320.0, 96.0, 288.0, 128.0, 288.0, 160.0, 288.0, 192.0, 288.0, 224.0, 288.0, 224.0, 256.0, 224.0, 224.0, 256.0, 224.0, 288.0, 224.0, 320.0, 224.0, 352.0, 224.0, 384.0, 224.0, 416.0, 224.0, 448.0, 224.0, 480.0, 224.0, 512.0, 224.0, 544.0, 224.0, 544.0, 192.0, 576.0, 192.0, 576.0, 160.0, 576.0, 128.0, 576.0, 96.0, 608.0, 96.0, 640.0, 96.0, 672.0, 96.0, 704.0, 96.0, 736.0, 96.0, 800.0, 96.0, 801.0, 96.0));
-
-    vectorPushBack(res->pathList, (char*)&p);
-
-    p = pathNew(4, vectorCreateWithFloatingData(sizeof(float), NULL, 18 * 2,
-                                                -50.0, 160.0, 32.0, 160.0, 64.0, 160.0, 96.0, 160.0, 128.0, 160.0, 160.0, 160.0, 192.0, 160.0, 224.0, 160.0, 224.0, 128.0, 256.0, 128.0, 256.0, 96.0, 288.0, 96.0, 320.0, 96.0, 320.0, 64.0, 320.0, 32.0, 352.0, 32.0, 352.0, -50.0, 352.0, -60.0));
-
-    vectorPushBack(res->pathList, (char*)&p);
-
-    p = pathNew(4, vectorCreateWithFloatingData(sizeof(float), NULL, 31 * 2,
-                                                -50.0, 160.0, 32.0, 160.0, 64.0, 160.0, 96.0, 160.0, 128.0, 160.0, 160.0, 160.0, 192.0, 160.0, 224.0, 160.0, 224.0, 192.0, 224.0, 224.0, 256.0, 224.0, 288.0, 224.0, 320.0, 224.0, 352.0, 224.0, 384.0, 224.0, 416.0, 224.0, 448.0, 224.0, 480.0, 224.0, 512.0, 224.0, 544.0, 224.0, 544.0, 192.0, 576.0, 192.0, 576.0, 160.0, 576.0, 128.0, 576.0, 96.0, 576.0, 64.0, 544.0, 64.0, 544.0, 32.0, 544.0, 0.0, 512.0, -50.0, 512.0, -60.0));
-
-    vectorPushBack(res->pathList, (char*)&p);
-
-    for (int i = 0; i < 4; i++) {
-        MonsterGen* mg = monsterGenNew(*(Path**)vectorGet(res->pathList, i), pawnMonsterCreator, constantSlowGenTimeFunc);
-        vectorPushBack(res->monsterGenList, (char*)&mg);
-    }
-
-  
     res->fruits = NULL;
     res->fruitsN = 0;
     res->carrotSpawnCooldown = FRUIT_CARROT_SPAWN_INTERVAL_SEC * 0.5f;
