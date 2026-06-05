@@ -18,15 +18,15 @@
 #define TAGS_NUM 8
 
 // File Paths
-static const char* map1 = "/home/lcom/labs/project/resources/maps/map1/walls.csv";
+/* static const char* map1 = "/home/lcom/labs/project/resources/maps/map1/walls.csv";
 static const char* path1 = "/home/lcom/labs/project/resources/maps/map1/path.csv";
 static const char* lake1 = "/home/lcom/labs/project/resources/maps/map1/water.csv";
 
 static const char* map2 = "/home/lcom/labs/project/resources/maps/map2/walls.csv";
 static const char* path2 = "/home/lcom/labs/project/resources/maps/map2/path.csv";
 static const char* lake2 = "/home/lcom/labs/project/resources/maps/map2/water.csv";
+ */
 
-/*
 static const char* map1 = "/home/lcom/labs/grupo_2leic13_2/project/resources/maps/map1/walls.csv";
 static const char* path1 = "/home/lcom/labs/grupo_2leic13_2/project/resources/maps/map1/path.csv";
 static const char* lake1 = "/home/lcom/labs/grupo_2leic13_2/project/resources/maps/map1/water.csv";
@@ -34,7 +34,7 @@ static const char* lake1 = "/home/lcom/labs/grupo_2leic13_2/project/resources/ma
 static const char* map2 = "/home/lcom/labs/grupo_2leic13_2/project/resources/maps/map2/walls.csv";
 static const char* path2 = "/home/lcom/labs/grupo_2leic13_2/project/resources/maps/map2/path.csv";
 static const char* lake2 = "/home/lcom/labs/grupo_2leic13_2/project/resources/maps/map2/water.csv";
-*/
+
 
 // Screen configs
 #define MODE 0x115
