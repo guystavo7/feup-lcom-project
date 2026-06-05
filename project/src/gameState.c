@@ -10,6 +10,7 @@
 #include "../resources/icons/icons.h"
 #include "../resources/mainMenu/mainMenu.h"
 #include "../resources/pauseMenu/pauseMenu.h"
+#include "../resources/howToPlay/howToPlay.h"
 
 #include "../resources/maps/map1/map1.h"
 #include "../resources/maps/map2/map2.h"
@@ -20,13 +21,14 @@ static bool pressedNewGame = false;
 static bool pressedExit = false;
 static bool pressedGoBack = false;
 static bool pressedPause = false;
+static bool pressedHowToPlay = false;
 
 static void resumeFn(Button* self) {
     pressedPause = false;
 }
 
 static void helpFn(Button* self) {
-    printf("Help\n");
+    pressedHowToPlay = true;
 }
 
 static void goBackMainMenuFn(Button* self) {
@@ -52,6 +54,7 @@ struct GameState {
 
     // Main menu
     SpriteXPM* logo;
+    SpriteXPM* howToPlay;
     Button* newGameButton;
     Button* closeGameButton;
 
@@ -72,6 +75,7 @@ static void resetBools() {
     pressedGoBack = false;
     pressedNewGame = false;
     pressedPause = false;
+    pressedHowToPlay = false;
 }
 
 static GameState* gameStateNew(void (*act)(GameState* state, Terminal* terminal, float deltaTimem), void (*free)(GameState* state), GameState* (*transition)(GameState* state, Terminal* terminal)) {
@@ -180,6 +184,7 @@ static void runningGameFree(GameState* state) {
     buttonFree(state->goBackMainMenuButton);
     buttonFree(state->helpButton);
     freeSpriteXPM(state->pauseMenu);
+	freeSpriteXPM(state->howToPlay);
     arenaFree(state->arena);
 
     free(state);
@@ -231,14 +236,25 @@ static void pausedMenuButtonsHandler(GameState* state) {
     }
 }
 
+static void howToPlayHandleMenu(GameState* state, Terminal* terminal) {
+	if (getKeyDown(getInputHandler(), KEYCODE_ESQ)) {
+		pressedHowToPlay = false;
+	}
+}
+
 static void runningGameAct(GameState* state, Terminal* terminal, float deltaTime) {
-    if (pressedPause) {
+    if (pressedPause && !pressedHowToPlay) {
         drawSpriteXPM(state->pauseMenu, terminal, PAUSE_MENU_BG_POS.x, PAUSE_MENU_BG_POS.y, false);
         buttonDraw(state->resumeButton, terminal, deltaTime, false);
         buttonDraw(state->helpButton, terminal, deltaTime, false);
         buttonDraw(state->goBackMainMenuButton, terminal, deltaTime, false);
         pausedMenuButtonsHandler(state);
-    } else {
+
+	} else if (pressedHowToPlay) {
+		drawSpriteXPM(state->howToPlay, terminal, HOW_TO_PLAY_POSITION.x, HOW_TO_PLAY_POSITION.y, false);
+		howToPlayHandleMenu(state, terminal);
+
+	} else {
         arenaUpdate(state->arena, terminal, deltaTime);
     }
 }
@@ -247,6 +263,7 @@ GameState* runningGameNew(Terminal* terminal) {
     GameState* res = gameStateNew(runningGameAct, runningGameFree, runningGameTransition);
     res->arena = arenaNew(terminal, map2, path2, lake2, background2);
     res->pauseMenu = newSpriteXPM((xpm_map_t)pauseMenuXPM[PAUSE_MENU_INDEX], XPM_8_8_8, 0, 0);
+	res->howToPlay = newSpriteXPM((xpm_map_t)howToPlay, XPM_8_8_8, 0, 0);
 
     // Resume Button
     SpriteXPM** resumeSprites = malloc(sizeof(SpriteXPM*) * 2);
