@@ -11,8 +11,13 @@
 
 typedef struct Arena Arena;
 
+typedef enum {
+    ARENA_OUTCOME_PLAYING = 0,
+    ARENA_OUTCOME_WIN,
+    ARENA_OUTCOME_LOSE,
+} ArenaOutcome;
 
-Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile, const char* waterFile, char** background, Vector* paths, Vector* gens, int bananaStart);
+Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile, const char* waterFile, char** background, Vector* paths, Vector* gens, int bananaStart, int level);
 void arenaFree(Arena* arena);
 
 int arenaDetectCollisions(Arena* arena, BoxCollider* box, int tag, BoxCollider** colliders);
@@ -23,7 +28,10 @@ void arenaBuildTower(Arena* arena, Vec2d position);
 
 bool arenaCanPlaceTower(Arena* arena, Vec2d position);
 void arenaDeathFruit(Arena* arena, Vec2d position);
+ArenaOutcome arenaGetOutcome(Arena* arena);
+
 bool arenaIsGameOver(Arena* arena, int* health);
+
 void arenaSpawnBoss(Arena* arena);
 
 #endif
