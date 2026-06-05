@@ -662,8 +662,8 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
         res->colliders[t] = NULL;
     }
 
-    res->path_test = pathNew(4, vectorCreateWithFloatingData(sizeof(float), NULL, 35 * 2, 
-   -50.0, 352.0, 32.0, 352.0, 64.0, 352.0, 64.0, 320.0, 96.0, 320.0, 96.0, 288.0, 128.0, 288.0, 160.0, 288.0, 192.0, 288.0, 224.0, 288.0, 224.0, 320.0, 224.0, 352.0, 256.0, 352.0, 256.0, 384.0, 256.0, 416.0, 256.0, 448.0, 288.0, 448.0, 320.0, 448.0, 352.0, 448.0, 384.0, 448.0, 416.0, 448.0, 448.0, 448.0, 480.0, 448.0, 512.0, 448.0, 512.0, 480.0, 544.0, 480.0, 576.0, 480.0, 608.0, 480.0, 608.0, 512.0, 640.0, 512.0, 672.0, 512.0, 704.0, 512.0, 736.0, 512.0, 800.0, 512.0, 801.0, 512.0
+    res->path_test = pathNew(4, vectorCreateWithFloatingData(sizeof(float), NULL, 33 * 2, 
+   -50.0, 352.0, 0.0, 256.0, 32.0, 256.0, 64.0, 256.0, 96.0, 256.0, 128.0, 256.0, 160.0, 256.0, 192.0, 256.0, 224.0, 256.0, 256.0, 256.0, 256.0, 288.0, 288.0, 288.0, 320.0, 288.0, 352.0, 288.0, 384.0, 288.0, 384.0, 256.0, 416.0, 256.0, 416.0, 224.0, 448.0, 224.0, 480.0, 224.0, 512.0, 224.0, 544.0, 224.0, 544.0, 256.0, 576.0, 256.0, 576.0, 288.0, 576.0, 320.0, 608.0, 320.0, 640.0, 320.0, 672.0, 320.0, 704.0, 320.0, 736.0, 320.0, 768.0, 320.0, 810.0, 320.0 
 ));
     res->monster_test = pawnMonsterNew(10, 150, res->path_test);
     res->monsterGen1 = monsterGenNew(res->path_test, defaultMonsterCreator, defaultGenTimeFunc);
@@ -704,10 +704,10 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
     res->statsBar = statsBarNew();
     res->basicTowerBuildMenu = buildMenuNew(TOWER_KIND_BASIC);
     res->longTowerBuildMenu = buildMenuNew(TOWER_KIND_LONG);
-    statsBarSetBanana(res->statsBar, 5);
-    statsBarSetAvocado(res->statsBar, 5);
-    statsBarSetCherry(res->statsBar, 5);
-    statsBarSetCarrot(res->statsBar, 5);
+    statsBarSetBanana(res->statsBar, BANANA_START);
+    statsBarSetAvocado(res->statsBar, 0);
+    statsBarSetCherry(res->statsBar, 0);
+    statsBarSetCarrot(res->statsBar, 0);
 
     return res;
 }

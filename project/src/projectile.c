@@ -123,7 +123,7 @@ void projectileReset(Projectile* p, ProjectileType type, float x, float y, float
 
     if (type == PROJ_SKY_FALL) {
         vec2dSetX(p->pos, x);
-        vec2dSetY(p->pos, y - 400.0f);
+        vec2dSetY(p->pos, -100.0f);
         vec2dSetX(p->vel, 0.0f);
         vec2dSetY(p->vel, 0.0f);
     } else {
