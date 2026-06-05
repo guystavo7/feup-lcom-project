@@ -30,6 +30,7 @@
 #include "../../lab5/terminal.h"
 
 #include "../include/monster/monsterGen.h"
+#include "../include/monster/waves.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -51,6 +52,14 @@ typedef struct {
     FruitKind kind;
     float timeToLive;
 } ArenaFruit;
+
+#define ARENA_WAVE_MAX_SPAWNS 64
+
+typedef enum {
+    ARENA_WAVE_KIND_PAWN = 0,
+    ARENA_WAVE_KIND_ALIEN = 1,
+    ARENA_WAVE_KIND_SPEAR = 2,
+} ArenaWaveKind;
 
 struct Arena {
     int* collidersN;
@@ -102,7 +111,19 @@ struct Arena {
     TowerKind towerType;
 
     float carrotSpawnCooldown;
-	bool isGameOver;
+
+    int level;
+    float match_time_sec;
+    int prepared_wave_index;
+    unsigned wave_token_total;
+    unsigned wave_token_cursor;
+    int wave_tokens[ARENA_WAVE_MAX_SPAWNS];
+    float wave_spawn_time_abs[ARENA_WAVE_MAX_SPAWNS];
+    unsigned wave_gen_count;
+    bool boss_spawned;
+    MonsterGen* boss_gen;
+
+    ArenaOutcome outcome;
 };
 
 static char** arena_fruit_xpm_for_kind(FruitKind kind) {
@@ -649,7 +670,120 @@ static void createUpgradeUI(Arena* res) {
     res->upgradeHammerRightLong = buttonNew(UPGRADE_HAMMER_RIGHT_X, UPGRADE_HAMMER_RIGHT_Y, UPGRADE_HAMMER_W, UPGRADE_HAMMER_H, animatedSpriteNew((float)UPGRADE_HAMMER_FRAME_SPEED, hammerSpritesRight, UPGRADE_HAMMER_FRAMES, NORMAL), arenaUpgradeConfirmEletrictCb, basicButtonHoverFn);
 }
 
-Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile, const char* waterFile, char** background, Vector* paths, Vector* gens, int bananaStart) {
+static void arena_shuffle_ints(int* arr, unsigned n) {
+    for (unsigned i = n; i > 1u; i--) {
+        unsigned j = (unsigned)rand() % i;
+        int t = arr[j];
+        arr[j] = arr[i - 1u];
+        arr[i - 1u] = t;
+    }
+}
+
+static void arena_fill_wave_tokens(Arena* arena, int wave_index) {
+    WaveComposition wc = {0u, 0u, 0u};
+    waves_get_composition(arena->level, (unsigned)wave_index, &wc);
+    unsigned n = wc.pawn + wc.alien + wc.spear;
+    if (n == 0u) {
+        arena->wave_token_total = 0u;
+        arena->wave_token_cursor = 0u;
+        return;
+    }
+    if (n > ARENA_WAVE_MAX_SPAWNS) n = ARENA_WAVE_MAX_SPAWNS;
+
+    unsigned i = 0;
+    for (unsigned k = 0; k < wc.pawn && i < n; k++) arena->wave_tokens[i++] = (int)ARENA_WAVE_KIND_PAWN;
+    for (unsigned k = 0; k < wc.alien && i < n; k++) arena->wave_tokens[i++] = (int)ARENA_WAVE_KIND_ALIEN;
+    for (unsigned k = 0; k < wc.spear && i < n; k++) arena->wave_tokens[i++] = (int)ARENA_WAVE_KIND_SPEAR;
+
+    arena_shuffle_ints(arena->wave_tokens, n);
+
+    float minute_start = (float)wave_index * 60.0f;
+    for (unsigned k = 0; k < n; k++) {
+        float jitter = ((float)(rand() % 17) - 8.0f) / 200.0f;
+        float slot = ((float)k + 0.5f) * 60.0f / (float)n;
+        arena->wave_spawn_time_abs[k] = minute_start + slot + jitter;
+        if (arena->wave_spawn_time_abs[k] < minute_start) arena->wave_spawn_time_abs[k] = minute_start;
+        if (arena->wave_spawn_time_abs[k] >= minute_start + 60.0f) arena->wave_spawn_time_abs[k] = minute_start + 59.5f;
+    }
+
+    arena->wave_token_total = n;
+    arena->wave_token_cursor = 0u;
+}
+
+static unsigned arena_paths_count(const Arena* arena) {
+    if (arena->wave_gen_count < 3u) return 1u;
+    return arena->wave_gen_count / 3u;
+}
+
+static void arena_emit_wave_spawns(Arena* arena) {
+    unsigned n_paths = arena_paths_count(arena);
+    if (n_paths == 0u) n_paths = 1u;
+
+    while (arena->wave_token_cursor < arena->wave_token_total &&
+           arena->wave_spawn_time_abs[arena->wave_token_cursor] <= arena->match_time_sec) {
+        int kind = arena->wave_tokens[arena->wave_token_cursor];
+        if (kind < 0 || kind > 2) kind = 0;
+        unsigned path_i = (unsigned)rand() % n_paths;
+        unsigned gen_idx = path_i * 3u + (unsigned)kind;
+        if (gen_idx >= arena->wave_gen_count) gen_idx = arena->wave_gen_count - 1u;
+        MonsterGen* mg = *(MonsterGen**)vectorGet(arena->monsterGenList, gen_idx);
+        monsterGenSpawnOne(mg);
+        arena->wave_token_cursor++;
+    }
+}
+
+static void arena_try_spawn_boss(Arena* arena) {
+    if (!waves_level_has_boss(arena->level)) return;
+    if (arena->match_time_sec < 420.0f) return;
+    arenaSpawnBoss(arena);
+}
+
+static void arena_wave_tick(Arena* arena, float delta_t) {
+    if (arena->outcome != ARENA_OUTCOME_PLAYING) return;
+
+    arena->match_time_sec += delta_t;
+
+    if (arena->level == 0 && arena->match_time_sec >= 420.0f) {
+        arena->outcome = ARENA_OUTCOME_WIN;
+        arena->wave_token_total = 0u;
+        arena->wave_token_cursor = 0u;
+        return;
+    }
+
+    arena_try_spawn_boss(arena);
+
+    int cw = (int)(arena->match_time_sec / 60.0f);
+    if (cw < 0) cw = 0;
+
+    arena_emit_wave_spawns(arena);
+
+    if (cw != arena->prepared_wave_index) {
+        bool boss_level = waves_level_has_boss(arena->level);
+        if (boss_level && cw >= 7) {
+            arena->wave_token_total = 0u;
+            arena->wave_token_cursor = 0u;
+        } else if (arena->level == 0 && cw >= 7) {
+            arena->wave_token_total = 0u;
+            arena->wave_token_cursor = 0u;
+        } else if ((unsigned)cw < waves_normal_wave_count()) {
+            arena_fill_wave_tokens(arena, cw);
+        } else {
+            arena->wave_token_total = 0u;
+            arena->wave_token_cursor = 0u;
+        }
+        arena->prepared_wave_index = cw;
+        arena_emit_wave_spawns(arena);
+    }
+}
+
+static void arena_check_boss_win(Arena* arena) {
+    if (arena->outcome != ARENA_OUTCOME_PLAYING) return;
+    if (!waves_level_has_boss(arena->level)) return;
+    if (!arena->boss_spawned || arena->boss_gen == NULL) return;
+    if (monsterGenBossDefeated(arena->boss_gen)) arena->outcome = ARENA_OUTCOME_WIN;
+}
+
+Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile, const char* waterFile, char** background, Vector* paths, Vector* gens, int bananaStart, int level) {
     Arena* res = malloc(sizeof(Arena));
     res->collidersN = malloc(sizeof(int) * TAGS_NUM);
     res->colliders = malloc(sizeof(BoxCollider*) * TAGS_NUM);
@@ -702,8 +836,17 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
     res->healthBar = healthBarNew(res->HeroHP);
     res->statsBar = statsBarNew();
     res->basicTowerBuildMenu = buildMenuNew(TOWER_KIND_BASIC);
-    res->longTowerBuildMenu = buildMenuNew(TOWER_KIND_LONG); 
-	res->isGameOver = false;
+    res->longTowerBuildMenu = buildMenuNew(TOWER_KIND_LONG);
+
+    res->level = level;
+    res->match_time_sec = 0.0f;
+    res->prepared_wave_index = -1;
+    res->wave_token_total = 0u;
+    res->wave_token_cursor = 0u;
+    res->wave_gen_count = (unsigned)vectorGetSize(gens);
+    res->boss_spawned = false;
+    res->boss_gen = NULL;
+    res->outcome = ARENA_OUTCOME_PLAYING;
 
     statsBarSetBanana(res->statsBar, bananaStart);
     statsBarSetAvocado(res->statsBar, 0);
@@ -997,6 +1140,8 @@ void arenaHandleMonsterDamage(Arena* arena) {
 }
 
 void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
+    arena_wave_tick(arena, deltaTime);
+
     arena_fruits_tick_time_to_live(arena, deltaTime);
     arena_carrot_spawn_tick(arena, deltaTime);
     for (int i = 0; i < arena->fruitsN; i++) collectableUpdate(arena->fruits[i].collectable, terminal);
@@ -1009,7 +1154,9 @@ void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
         MonsterGen* mg = *(MonsterGen**)vectorGet(arena->monsterGenList, i);
         arena->HeroHP -= monsterGenGetNumberOfInstantFinishedMonsters(mg);
         monsterGenUpdate(mg, arena, terminal, deltaTime);
-    } 
+    }
+
+    arena_check_boss_win(arena);
 
     arenaCollectableHandler(arena);
     arenaHandleConstruction(arena, terminal);
@@ -1029,9 +1176,9 @@ void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
         buildMenuUpdate(arena->longTowerBuildMenu, terminal, arena, deltaTime);
     }
 
-    if (arena->HeroHP <= 0) {
-        arena->HeroHP = 1;
-		arena->isGameOver = true;
+    if (arena->HeroHP <= 0 && arena->outcome == ARENA_OUTCOME_PLAYING) {
+        arena->HeroHP = 0;
+        arena->outcome = ARENA_OUTCOME_LOSE;
     }
 
     healthBarSetHealth(arena->healthBar, arena->HeroHP);
@@ -1041,14 +1188,21 @@ void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
     cursorUpdate(getCursor(), terminal, deltaTime);
 }
 
+ArenaOutcome arenaGetOutcome(Arena* arena) {
+    return arena->outcome;
+}
+
 bool arenaIsGameOver(Arena* arena, int* health) {
-	*health = arena->HeroHP;
-    return arena->isGameOver;
+    if (health != NULL) *health = arena->HeroHP;
+    return arena->outcome != ARENA_OUTCOME_PLAYING;
 }
 
 void arenaSpawnBoss(Arena* arena) {
     if (!arena || !arena->pathList || vectorGetSize(arena->pathList) == 0) return;
+    if (arena->boss_spawned) return;
     Path* path = *(Path**)vectorGet(arena->pathList, 0);
     MonsterGen* mg = monsterGenNew(path, bossMonsterCreator, singleSpawnGenTimeFunc);
     vectorPushBack(arena->monsterGenList, (char*)&mg);
+    arena->boss_spawned = true;
+    arena->boss_gen = mg;
 }

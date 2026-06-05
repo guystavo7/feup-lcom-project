@@ -399,10 +399,10 @@ static GameState* runningGameTransition(GameState* state, Terminal* terminal) {
         pressedPause = true;
     }
 
-    int health = 1;
-    if (arenaIsGameOver(state->arena, &health)) {
+    ArenaOutcome out = arenaGetOutcome(state->arena);
+    if (out != ARENA_OUTCOME_PLAYING) {
         resetBools();
-        if (health > 0) {
+        if (out == ARENA_OUTCOME_WIN) {
             newState = winMenuNew(terminal);
         } else {
             newState = gameOverMenuNew(terminal);
@@ -477,6 +477,16 @@ void monsterGenListFree(void* path) {
     monsterGenFree(p);
 }
 
+static void push_three_wave_monster_gens(Vector* monsterGenList, Path* p) {
+    MonsterGen* mg;
+    mg = monsterGenNew(p, pawnMonsterCreator, waveNoAutoSpawnGenTimeFunc);
+    vectorPushBack(monsterGenList, (char*)&mg);
+    mg = monsterGenNew(p, alienMonsterCreator, waveNoAutoSpawnGenTimeFunc);
+    vectorPushBack(monsterGenList, (char*)&mg);
+    mg = monsterGenNew(p, spearManMonsterCreator, waveNoAutoSpawnGenTimeFunc);
+    vectorPushBack(monsterGenList, (char*)&mg);
+}
+
 static void createArena(GameState* state, Terminal* terminal) {
     const char* map;
     const char* path;
@@ -484,7 +494,6 @@ static void createArena(GameState* state, Terminal* terminal) {
     char** background;
     Vector* paths = vectorCreate(sizeof(Path*), pathListFree);
     Path* p;
-    MonsterGen* mg;
     Vector* monsterGenList = vectorCreate(sizeof(MonsterGen*), monsterGenListFree);
     int bananaStart = 10;
 
@@ -496,8 +505,7 @@ static void createArena(GameState* state, Terminal* terminal) {
             background = background1;
             p = pathNew(4, vectorCreateWithFloatingData(sizeof(float), NULL, 33 * 2, -50.0, 352.0, 0.0, 256.0, 32.0, 256.0, 64.0, 256.0, 96.0, 256.0, 128.0, 256.0, 160.0, 256.0, 192.0, 256.0, 224.0, 256.0, 256.0, 256.0, 256.0, 288.0, 288.0, 288.0, 320.0, 288.0, 352.0, 288.0, 384.0, 288.0, 384.0, 256.0, 416.0, 256.0, 416.0, 224.0, 448.0, 224.0, 480.0, 224.0, 512.0, 224.0, 544.0, 224.0, 544.0, 256.0, 576.0, 256.0, 576.0, 288.0, 576.0, 320.0, 608.0, 320.0, 640.0, 320.0, 672.0, 320.0, 704.0, 320.0, 736.0, 320.0, 768.0, 320.0, 810.0, 320.0));
             vectorPushBack(paths, (char*)&p);
-            mg = monsterGenNew(p, pawnMonsterCreator, constantSlowGenTimeFunc);
-            vectorPushBack(monsterGenList, (char*)&mg);
+            push_three_wave_monster_gens(monsterGenList, p);
 
             break;
         case 1:
@@ -509,21 +517,19 @@ static void createArena(GameState* state, Terminal* terminal) {
 
             p = pathNew(4, vectorCreateWithFloatingData(sizeof(float), NULL, 35 * 2, -50.0, 352.0, 32.0, 352.0, 64.0, 352.0, 64.0, 320.0, 96.0, 320.0, 96.0, 288.0, 128.0, 288.0, 160.0, 288.0, 192.0, 288.0, 224.0, 288.0, 224.0, 320.0, 224.0, 352.0, 256.0, 352.0, 256.0, 384.0, 256.0, 416.0, 256.0, 448.0, 288.0, 448.0, 320.0, 448.0, 352.0, 448.0, 384.0, 448.0, 416.0, 448.0, 448.0, 448.0, 480.0, 448.0, 512.0, 448.0, 512.0, 480.0, 544.0, 480.0, 576.0, 480.0, 608.0, 480.0, 608.0, 512.0, 640.0, 512.0, 672.0, 512.0, 704.0, 512.0, 736.0, 512.0, 800.0, 512.0, 801.0, 512.0));
             vectorPushBack(paths, (char*)&p);
+            push_three_wave_monster_gens(monsterGenList, p);
 
             p = pathNew(4, vectorCreateWithFloatingData(sizeof(float), NULL, 34 * 2, -50.0, 352.0, 32.0, 352.0, 64.0, 352.0, 64.0, 320.0, 96.0, 320.0, 96.0, 288.0, 128.0, 288.0, 160.0, 288.0, 192.0, 288.0, 224.0, 288.0, 224.0, 256.0, 224.0, 224.0, 256.0, 224.0, 288.0, 224.0, 320.0, 224.0, 352.0, 224.0, 384.0, 224.0, 416.0, 224.0, 448.0, 224.0, 480.0, 224.0, 512.0, 224.0, 544.0, 224.0, 544.0, 192.0, 576.0, 192.0, 576.0, 160.0, 576.0, 128.0, 576.0, 96.0, 608.0, 96.0, 640.0, 96.0, 672.0, 96.0, 704.0, 96.0, 736.0, 96.0, 800.0, 96.0, 801.0, 96.0));
             vectorPushBack(paths, (char*)&p);
-            mg = monsterGenNew(p, pawnMonsterCreator, constantSlowGenTimeFunc);
-            vectorPushBack(monsterGenList, (char*)&mg);
+            push_three_wave_monster_gens(monsterGenList, p);
 
             p = pathNew(4, vectorCreateWithFloatingData(sizeof(float), NULL, 18 * 2, -50.0, 160.0, 32.0, 160.0, 64.0, 160.0, 96.0, 160.0, 128.0, 160.0, 160.0, 160.0, 192.0, 160.0, 224.0, 160.0, 224.0, 128.0, 256.0, 128.0, 256.0, 96.0, 288.0, 96.0, 320.0, 96.0, 320.0, 64.0, 320.0, 32.0, 352.0, 32.0, 352.0, -50.0, 352.0, -60.0));
             vectorPushBack(paths, (char*)&p);
-            mg = monsterGenNew(p, pawnMonsterCreator, constantSlowGenTimeFunc);
-            vectorPushBack(monsterGenList, (char*)&mg);
+            push_three_wave_monster_gens(monsterGenList, p);
 
             p = pathNew(4, vectorCreateWithFloatingData(sizeof(float), NULL, 31 * 2, -50.0, 160.0, 32.0, 160.0, 64.0, 160.0, 96.0, 160.0, 128.0, 160.0, 160.0, 160.0, 192.0, 160.0, 224.0, 160.0, 224.0, 192.0, 224.0, 224.0, 256.0, 224.0, 288.0, 224.0, 320.0, 224.0, 352.0, 224.0, 384.0, 224.0, 416.0, 224.0, 448.0, 224.0, 480.0, 224.0, 512.0, 224.0, 544.0, 224.0, 544.0, 192.0, 576.0, 192.0, 576.0, 160.0, 576.0, 128.0, 576.0, 96.0, 576.0, 64.0, 544.0, 64.0, 544.0, 32.0, 544.0, 0.0, 512.0, -50.0, 512.0, -60.0));
             vectorPushBack(paths, (char*)&p);
-            mg = monsterGenNew(p, pawnMonsterCreator, constantSlowGenTimeFunc);
-            vectorPushBack(monsterGenList, (char*)&mg);
+            push_three_wave_monster_gens(monsterGenList, p);
 
             break;
         case 2:
@@ -544,9 +550,7 @@ static void createArena(GameState* state, Terminal* terminal) {
 
             
             vectorPushBack(paths, (char*)&p);
-
-            mg = monsterGenNew(p, pawnMonsterCreator, constantSlowGenTimeFunc);
-            vectorPushBack(monsterGenList, (char*)&mg);
+            push_three_wave_monster_gens(monsterGenList, p);
 
             p = pathNew(4, 
                 vectorCreateWithFloatingData(sizeof(float), NULL,
@@ -556,11 +560,7 @@ static void createArena(GameState* state, Terminal* terminal) {
                  ));
 
             vectorPushBack(paths, (char*)&p);
-
-            mg = monsterGenNew(p, pawnMonsterCreator, constantSlowGenTimeFunc);
-            vectorPushBack(monsterGenList, (char*)&mg);
-
- 
+            push_three_wave_monster_gens(monsterGenList, p);
 
             break;
         default:
@@ -570,13 +570,12 @@ static void createArena(GameState* state, Terminal* terminal) {
             background = background1;
             p = pathNew(4, vectorCreateWithFloatingData(sizeof(float), NULL, 33 * 2, -50.0, 352.0, 0.0, 256.0, 32.0, 256.0, 64.0, 256.0, 96.0, 256.0, 128.0, 256.0, 160.0, 256.0, 192.0, 256.0, 224.0, 256.0, 256.0, 256.0, 256.0, 288.0, 288.0, 288.0, 320.0, 288.0, 352.0, 288.0, 384.0, 288.0, 384.0, 256.0, 416.0, 256.0, 416.0, 224.0, 448.0, 224.0, 480.0, 224.0, 512.0, 224.0, 544.0, 224.0, 544.0, 256.0, 576.0, 256.0, 576.0, 288.0, 576.0, 320.0, 608.0, 320.0, 640.0, 320.0, 672.0, 320.0, 704.0, 320.0, 736.0, 320.0, 768.0, 320.0, 810.0, 320.0));
             vectorPushBack(paths, (char*)&p);
-            mg = monsterGenNew(p, pawnMonsterCreator, constantSlowGenTimeFunc);
-            vectorPushBack(monsterGenList, (char*)&mg);
+            push_three_wave_monster_gens(monsterGenList, p);
 
             break;
     }
 
-    state->arena = arenaNew(terminal, map, path, lake, background, paths, monsterGenList, bananaStart);
+    state->arena = arenaNew(terminal, map, path, lake, background, paths, monsterGenList, bananaStart, currentLevel);
 }
 
 GameState* runningGameNew(Terminal* terminal) {

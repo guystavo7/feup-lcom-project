@@ -44,6 +44,7 @@ SRCS= \
 	spearManMonster.c \
 	bossMonster.c \
 	monsterGen.c \
+	waves.c \
 	./healthBar.c \
 	./statsBar.c \
 	./numbers.c \
