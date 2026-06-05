@@ -936,28 +936,28 @@ BoxCollider* arenaFindFirstEnemy(Arena* arena, BoxCollider* range) {
 }
 
 void arenaHandleMonsterDamage(Arena* arena) {
+    for (int t = 0; t < arena->towersN; t++) {
+        GenericTower* tower = arena->towers[t];
+        int projCount = towerGetProjectilesCount(tower);
+        for (int i = 0; i < projCount; i++) {
+            Projectile* arrow = towerGetProjectile(tower, i);
+            if (!projectileIsActive(arrow)) continue;
 
-    int monsterIterator = monsterGenGetNextActiveMonsterIndex(arena->monsterGen1, 0);
+            BoxCollider* projCollider = projectileGetCollider(arrow);
 
-    while (monsterIterator != -1) {
-        Monster* monster = monsterGenGetMonster(arena->monsterGen1, monsterIterator);
+            for (unsigned int si = 0;; si++) {
+                if (!projectileIsActive(arrow)) break;
 
-        for (int t = 0; t < arena->towersN; t++) {
-            GenericTower* tower = arena->towers[t];
-            int projCount = towerGetProjectilesCount(tower);
-            for (int i = 0; i < projCount; i++) {
-                Projectile* arrow = towerGetProjectile(tower, i);
-                if (!projectileIsActive(arrow)) continue;
+                int mi = monsterGenGetNextActiveMonsterIndex(arena->monsterGen1, si);
+                if (mi < 0) break;
 
-                if (boxIsCollidingWithBox(projectileGetCollider(arrow), monsterGetBoxCollider(monster))) {
+                Monster* monster = monsterGenGetMonster(arena->monsterGen1, (unsigned int)mi);
+                if (boxIsCollidingWithBox(projCollider, monsterGetBoxCollider(monster))) {
                     monsterSumHP(monster, -1000);
                     projectileAddPierce(arrow);
                 }
             }
         }
-
-        monsterIterator++;
-        monsterIterator = monsterGenGetNextActiveMonsterIndex(arena->monsterGen1, monsterIterator);
     }
 }
 
