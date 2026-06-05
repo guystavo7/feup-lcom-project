@@ -41,6 +41,7 @@ SRCS= \
 	./eletrictTower.c \
 	./basicLongTower.c \
 	alienMonster.c \
+	spearManMonster.c \
 	monsterGen.c \
 	./healthBar.c \
 	./statsBar.c \

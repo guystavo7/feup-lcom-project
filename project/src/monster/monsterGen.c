@@ -1,4 +1,6 @@
 #include "../../include/monster/monsterGen.h"
+#include "../../include/monster/spearManMonster.h"
+#include "../../include/monster/pawnMonster.h"
 
 #include "../../include/arena.h"
 #include "../../include/data.h"
@@ -9,7 +11,14 @@ Monster* defaultMonsterCreator(Path* path) {
     Vec2d startPos;
     pathGetPoint(path,0,&startPos);
 
-    return alienMonsterNew(startPos.x,startPos.y, path);
+    int r = rand() % 3;
+    if (r == 0) {
+        return alienMonsterNew(startPos.x,startPos.y, path);
+    } else if (r == 1) {
+        return pawnMonsterNew(startPos.x,startPos.y, path);
+    } else {
+        return spearManMonsterNew(startPos.x,startPos.y, path);
+    }
 }
  
 int defaultGenTimeFunc(float totalTimeElapsed,Timer* genTimer) {
