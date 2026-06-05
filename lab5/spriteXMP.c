@@ -38,29 +38,34 @@ static uint32_t getColorFromPixel(SpriteXPM* sprite, unsigned int bytesPerPixel,
     return color;
 }
 
-void drawSpriteXPM(SpriteXPM* sprite, Terminal* terminal, int x, int y, bool isFlipped) {
+static void blitSpriteXPM(SpriteXPM* sprite, Terminal* terminal, int x, int y, bool isFlipped, bool to_empty_buffer) {
+    unsigned int bpp = getBytesPerPixel(terminal);
     for (uint16_t i = 0; i < sprite->img->height; i++) {
         for (uint16_t j = 0; j < sprite->img->width; j++) {
-            uint32_t color = getColorFromPixel(sprite, getBytesPerPixel(terminal), j, i);
-            if (color == 0 || color == xpm_transparency_color(XPM_8_8_8)) continue; 
+            uint32_t color = getColorFromPixel(sprite, bpp, j, i);
+            if (color == 0 || color == xpm_transparency_color(XPM_8_8_8)) continue;
 
-			int pixelX = isFlipped ? x + sprite->offsetX + sprite->img->width - 1 - j : x + sprite->offsetX + j;
-			int pixelY = y + sprite->offsetY + i;
-            drawPixel(terminal, pixelX, pixelY, getColorFromPixel(sprite, getBytesPerPixel(terminal), j, i));
+            int pixelX = isFlipped ? x + sprite->offsetX + sprite->img->width - 1 - j : x + sprite->offsetX + j;
+            int pixelY = y + sprite->offsetY + i;
+            if (to_empty_buffer)
+                drawPixelInEmptyBuffer(terminal, pixelX, pixelY, color);
+            else
+                drawPixel(terminal, pixelX, pixelY, color);
         }
     }
 }
-void generateEmptyBuffer(SpriteXPM* sprite, Terminal* terminal, int x, int y, bool isFlipped) {
-    for (uint16_t i = 0; i < sprite->img->height; i++) {
-        for (uint16_t j = 0; j < sprite->img->width; j++) {
-			int pixelX = isFlipped ? x + sprite->offsetX + sprite->img->width - 1 - j : x + sprite->offsetX + j;
-			int pixelY = y + sprite->offsetY + i;
-			
-            drawPixelInEmptyBuffer(terminal, pixelX, pixelY, getColorFromPixel(sprite, getBytesPerPixel(terminal), j, i));
-        }
-    }
 
-	free(sprite);
+void drawSpriteXPM(SpriteXPM* sprite, Terminal* terminal, int x, int y, bool isFlipped) {
+    blitSpriteXPM(sprite, terminal, x, y, isFlipped, false);
+}
+
+void drawSpriteXPMToEmptyBuffer(SpriteXPM* sprite, Terminal* terminal, int x, int y, bool isFlipped) {
+    blitSpriteXPM(sprite, terminal, x, y, isFlipped, true);
+}
+
+void generateEmptyBuffer(SpriteXPM* sprite, Terminal* terminal, int x, int y, bool isFlipped) {
+    blitSpriteXPM(sprite, terminal, x, y, isFlipped, true);
+    freeSpriteXPM(sprite);
 }
 
 enum xpm_image_type getSpriteType(SpriteXPM* sprite) {

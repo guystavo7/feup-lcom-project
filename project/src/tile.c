@@ -25,6 +25,7 @@ Tile* tileNew(char** sprite, int id, int x, int y, int width, int height) {
 }
 
 void tileFree(Tile* tile) {
+    if (tile->sprite != NULL) freeSpriteXPM(tile->sprite);
     if (tile->collider != NULL) boxColliderFree(tile->collider);
     free(tile);
 }

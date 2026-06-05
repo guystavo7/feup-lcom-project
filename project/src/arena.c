@@ -690,6 +690,15 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
     SpriteXPM* backgroundSprite = newSpriteXPM((xpm_map_t)background, XPM_8_8_8, 0, 0);
     generateEmptyBuffer(backgroundSprite, terminal, 0, 0, false);
 
+    for (int i = 0; i < res->tilesN; i++) {
+        Tile* t = res->tiles[i];
+        if (t->sprite != NULL) {
+            drawSpriteXPMToEmptyBuffer(t->sprite, terminal, (int)t->pos.x, (int)t->pos.y, false);
+            freeSpriteXPM(t->sprite);
+            t->sprite = NULL;
+        }
+    }
+
     res->HeroHP = 10;
     res->healthBar = healthBarNew(res->HeroHP);
     res->statsBar = statsBarNew();
@@ -929,26 +938,27 @@ BoxCollider* arenaFindFirstEnemy(Arena* arena, BoxCollider* range) {
 }
 
 void arenaHandleMonsterDamage(Arena* arena) {
+    for (int t = 0; t < arena->towersN; t++) {
+        GenericTower* tower = arena->towers[t];
+        int projCount = towerGetProjectilesCount(tower);
+        for (int i = 0; i < projCount; i++) {
+            Projectile* arrow = towerGetProjectile(tower, i);
+            if (!projectileIsActive(arrow)) continue;
 
-    int monsterIterator = monsterGenGetNextActiveMonsterIndex(arena->monsterGen1, 0);
+            BoxCollider* projCollider = projectileGetCollider(arrow);
 
-    while (monsterIterator != -1) {
-        Monster* monster = monsterGenGetMonster(arena->monsterGen1, monsterIterator);
+            for (unsigned int si = 0;; si++) {
+                if (!projectileIsActive(arrow)) break;
 
-        for (int t = 0; t < arena->towersN; t++) {
-            GenericTower* tower = arena->towers[t];
-            int projCount = towerGetProjectilesCount(tower);
-            for (int i = 0; i < projCount; i++) {
-                Projectile* arrow = towerGetProjectile(tower, i);
-                if (!projectileIsActive(arrow)) continue;
+                int mi = monsterGenGetNextActiveMonsterIndex(arena->monsterGen1, si);
+                if (mi < 0) break;
 
-                if (boxIsCollidingWithBox(projectileGetCollider(arrow), monsterGetBoxCollider(monster))) {
+                Monster* monster = monsterGenGetMonster(arena->monsterGen1, (unsigned int)mi);
+                if (boxIsCollidingWithBox(projCollider, monsterGetBoxCollider(monster))) {
                     if (!projectileHasHit(arrow, monsterGetBoxCollider(monster))) {
-                        if(projectileGetType(arrow)==PROJ_SKY_FALL){
-
+                        if (projectileGetType(arrow) == PROJ_SKY_FALL) {
                             monsterSumHP(monster, -10000);
-                        }
-                        else{
+                        } else {
                             monsterSumHP(monster, -1000);
                         }
                         projectileAddPierce(arrow);
@@ -957,9 +967,6 @@ void arenaHandleMonsterDamage(Arena* arena) {
                 }
             }
         }
-
-        monsterIterator++;
-        monsterIterator = monsterGenGetNextActiveMonsterIndex(arena->monsterGen1, monsterIterator);
     }
 }
 
