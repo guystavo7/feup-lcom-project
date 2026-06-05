@@ -688,6 +688,15 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
     SpriteXPM* backgroundSprite = newSpriteXPM((xpm_map_t)background1, XPM_8_8_8, 0, 0);
     generateEmptyBuffer(backgroundSprite, terminal, 0, 0, false);
 
+    for (int i = 0; i < res->tilesN; i++) {
+        Tile* t = res->tiles[i];
+        if (t->sprite != NULL) {
+            drawSpriteXPMToEmptyBuffer(t->sprite, terminal, (int)t->pos.x, (int)t->pos.y, false);
+            freeSpriteXPM(t->sprite);
+            t->sprite = NULL;
+        }
+    }
+
     res->HeroHP = 10;
     res->healthBar = healthBarNew(res->HeroHP);
     res->statsBar = statsBarNew();

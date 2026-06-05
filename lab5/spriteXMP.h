@@ -10,6 +10,7 @@ typedef struct SpriteXPM SpriteXPM;
 SpriteXPM* newSpriteXPM(xpm_map_t xpm, enum xpm_image_type type, int offsetX, int offsetY);
 void freeSpriteXPM(SpriteXPM* sprite); 
 void drawSpriteXPM(SpriteXPM* sprite, Terminal* terminal, int x, int y, bool isFlipped);
+void drawSpriteXPMToEmptyBuffer(SpriteXPM* sprite, Terminal* terminal, int x, int y, bool isFlipped);
 void generateEmptyBuffer(SpriteXPM* sprite, Terminal* terminal, int x, int y, bool isFlipped);
 
 enum xpm_image_type getSpriteType(SpriteXPM* sprite);
