@@ -11,15 +11,35 @@ Monster* defaultMonsterCreator(Path* path) {
 
     return alienMonsterNew(startPos.x,startPos.y, path);
 }
-
-static float counter = 0;
-int defaultGenTimeFunc(float delta) {
+ 
+int defaultGenTimeFunc(float totalTimeElapsed,Timer* genTimer) {
+    float timeInterval=50;
+    if(totalTimeElapsed<1*timeInterval){
+        timerSetInitialTime(genTimer,3);
+     //   printf("gen3\n");
+    }
+    else if(totalTimeElapsed<2*timeInterval){
+        timerSetInitialTime(genTimer,2);
+      //  printf("gen2\n");
+    }
+    else if(totalTimeElapsed<3*timeInterval){
+        timerSetInitialTime(genTimer,1);
+     //   printf("gen1\n");
+    }
+    else if(totalTimeElapsed<4*timeInterval){
+        timerSetInitialTime(genTimer,0.5);
+    //    printf("gen0.5\n");
+    }
+     else if(totalTimeElapsed<5*timeInterval){
+        timerSetInitialTime(genTimer,0.25);
+     //   printf("gen0.25\n");
+    }
     int res = 0;
-    if ((int)counter % 20 == 0) {
+    if (!timerIsRunning(genTimer)) {
+        timerRestart(genTimer);
         res = 1;
     }
-
-    counter++;
+ 
     return res;
 }
 
@@ -29,8 +49,13 @@ struct monsterGen {
     Vector* deactivatedMonsterIdList;
     Vector* activeMonsterIdSorted; // indices of active monsters (see monsterGenGetNextActiveMonsterIndex)
     Path* path;
+    
     Monster* (*monsterCreator)(Path*);
-    int (*genTimeFunc)(float);
+
+    int (*genTimeFunc)(float,Timer*);
+    float totalTimeElapsed;
+    Timer* genTimer;
+
     unsigned int numberOfInstantFinishedMonsters;
 };
 
@@ -39,17 +64,23 @@ void freeMonsterList(void* m) {
     monsterFree(monster);
 }
 
-MonsterGen* monsterGenNew(Path* path, Monster* (*monsterCreator)(Path*), int (*genTimeFunc)(float)) {
+MonsterGen* monsterGenNew(Path* path, Monster* (*monsterCreator)(Path*), int (*genTimeFunc)(float,Timer*)) {
     MonsterGen* mg = malloc(sizeof(MonsterGen));
     mg->path = path;
+
     mg->monsterCreator = monsterCreator;
+
     mg->genTimeFunc = genTimeFunc;
+    mg->totalTimeElapsed =0;
+    mg->genTimer=timerNew(0);
 
     mg->monsterList = vectorCreate(sizeof(Monster*), freeMonsterList);
     mg->availableMonsterIdStack = vectorCreate(sizeof(int), NULL);
     mg->activeMonsterIdSorted = vectorCreate(sizeof(int), NULL);
     mg->deactivatedMonsterIdList = vectorCreate(sizeof(bool), NULL);
     mg->numberOfInstantFinishedMonsters = 0;
+
+    
 
     return mg;
 }
@@ -59,6 +90,7 @@ void monsterGenFree(MonsterGen* mg) {
     vectorFree(mg->availableMonsterIdStack);
     vectorFree(mg->deactivatedMonsterIdList);
     vectorFree(mg->activeMonsterIdSorted);
+    timerFree(mg->genTimer);
     free(mg);
 }
 
@@ -71,7 +103,11 @@ void monsterGenAddMonster(MonsterGen* mg) {
 }
 
 void monsterGenUpdate(MonsterGen* mg, Arena* arena, Terminal* terminal, float delta_t) {
-    int n_monster_to_render = mg->genTimeFunc(delta_t);
+    mg->totalTimeElapsed+=delta_t;
+    timerUpdate(mg->genTimer,delta_t);
+    int n_monster_to_render = mg->genTimeFunc(mg->totalTimeElapsed,mg->genTimer);
+     
+     
 
     mg->numberOfInstantFinishedMonsters = 0;
 
@@ -128,9 +164,12 @@ void monsterGenUpdate(MonsterGen* mg, Arena* arena, Terminal* terminal, float de
             vectorSetVal(mg->deactivatedMonsterIdList, monsterId, false);
             vectorPushBackVal(mg->activeMonsterIdSorted, monsterId);
         } else {
+            monsterGenAddMonster(mg);
+            /*
             if (!(vectorGetSize(mg->monsterList) > 8)) {
-                monsterGenAddMonster(mg);
+               
             }
+            */
         }
 
         n_monster_to_render--;
