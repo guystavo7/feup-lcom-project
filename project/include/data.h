@@ -29,10 +29,10 @@ static const char* lake1 = "/home/lcom/labs/project/resources/maps/map1/water.cs
 
 // Screen configs
 #define MODE 0x115
-#define SCREEN_WIDTH 800 
-#define SCREEN_HEIGHT 600 
-#define MAP_TILES_X 25 
-#define MAP_TILES_Y 19 
+#define SCREEN_WIDTH 800
+#define SCREEN_HEIGHT 600
+#define MAP_TILES_X 25
+#define MAP_TILES_Y 19
 #define TILE_SIZE 32
 
 #define PLACEMENT_QUERY_MAX 128
@@ -40,9 +40,17 @@ static const char* lake1 = "/home/lcom/labs/project/resources/maps/map1/water.cs
 #define TOWER_PICK_ICON_W 60
 
 static const Vec2d EMPTY_VEC2D = {0, 0};
+static const Vec2d PLAYER_POS = {100, 300};
 
 // Fruit
 static const Vec2d FRUIT_SIZE = {32, 32};
+#define FRUIT_TIME_ON_SCREEN_SEC 15.0f
+#define FRUIT_MONSTER_DROP_PERCENT 45
+#define FRUIT_MONSTER_ROLL_BANANA_BELOW 50
+#define FRUIT_MONSTER_ROLL_ABACATE_BELOW 80
+
+#define FRUIT_CARROT_SPAWN_INTERVAL_SEC 22.0f
+#define FRUIT_CARROT_SAMPLE_TRIES 48
 
 // Player
 #define PLAYER_MAX_VELOCITY 200

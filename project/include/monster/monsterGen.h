@@ -17,11 +17,9 @@ void monsterGenAddMonster(MonsterGen* mg);
 
 void monsterGenUpdate(MonsterGen* mg, Arena* arena,Terminal* terminal, float delta_t);
 
-Monster* defaultMonsterCreator(Path* path);
-
 int defaultGenTimeFunc(float delta);
 
-int monsterGenGetNextActiveMonsterIndex(MonsterGen* mg, unsigned int begin);
+int monsterGenGetNextActiveMonsterIndex(MonsterGen* mg, unsigned int sortedIndex);
 Monster* monsterGenGetMonster(MonsterGen* mg,unsigned int index);
 
 

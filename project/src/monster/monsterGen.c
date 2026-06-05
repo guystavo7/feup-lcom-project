@@ -1,5 +1,10 @@
 #include "../../include/monster/monsterGen.h"
 
+#include "../../include/arena.h"
+#include "../../include/data.h"
+
+#include <stdlib.h>
+
 Monster* defaultMonsterCreator(Path* path) {
     Vec2d startPos;
     pathGetPoint(path,0,&startPos);
@@ -22,7 +27,7 @@ struct monsterGen {
     Vector* monsterList;
     Vector* availableMonsterIdStack;
     Vector* deactivatedMonsterIdList;
-    Vector* activeMonsterIdSorted; // sorted by decreasing order of which monster is closer to the end of its path (the first is the closest)
+    Vector* activeMonsterIdSorted; // indices of active monsters (see monsterGenGetNextActiveMonsterIndex)
     Path* path;
     Monster* (*monsterCreator)(Path*);
     int (*genTimeFunc)(float);
@@ -82,6 +87,15 @@ void monsterGenUpdate(MonsterGen* mg, Arena* arena, Terminal* terminal, float de
             if (!(monsterIsDead(m))) {
                 mg->numberOfInstantFinishedMonsters++;
             }
+
+            if (arena != NULL && monsterIsDead(m)) {
+                BoxCollider* bc = monsterGetBoxCollider(m);
+                float ax = boxColliderGetX(bc) + boxColliderGetOffsetX(bc);
+                float ay = boxColliderGetY(bc) + boxColliderGetOffsetY(bc);
+                Vec2d pos = {ax + boxColliderGetWidth(bc) * 0.5f - FRUIT_SIZE.x * 0.5f,
+                             ay + boxColliderGetHeight(bc) * 0.5f - FRUIT_SIZE.y * 0.5f};
+                arenaDeathFruit(arena, pos);
+            }
         }
     }
 
@@ -123,12 +137,11 @@ void monsterGenUpdate(MonsterGen* mg, Arena* arena, Terminal* terminal, float de
     }
 }
 
-int monsterGenGetNextActiveMonsterIndex(MonsterGen* mg, unsigned int i) {
-    if (vectorGetSize(mg->activeMonsterIdSorted) == 0 || i >= vectorGetSize(mg->activeMonsterIdSorted)) {
+int monsterGenGetNextActiveMonsterIndex(MonsterGen* mg, unsigned int sortedIndex) {
+    if (vectorGetSize(mg->activeMonsterIdSorted) == 0 || sortedIndex >= vectorGetSize(mg->activeMonsterIdSorted)) {
         return -1;
-    } else {
-        return vectorGetVal(mg->activeMonsterIdSorted, i);
     }
+    return vectorGetVal(mg->activeMonsterIdSorted, sortedIndex);
 }
 
 Monster* monsterGenGetMonster(MonsterGen* mg, unsigned int index) {

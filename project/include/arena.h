@@ -21,4 +21,6 @@ void arenaBuildTower(Arena* arena, Vec2d position);
 
 bool arenaCanPlaceTower(Arena* arena, Vec2d position);
 
+void arenaDeathFruit(Arena* arena, Vec2d position);
+
 #endif

@@ -15,7 +15,7 @@ Player* playerNew(Vec2d pos) {
 	res->model = model;
 	res->controller = controller;
 
-    return res;
+	return res;
 }
 
 void playerFree(Player* player) {

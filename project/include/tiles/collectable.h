@@ -8,7 +8,7 @@
 
 typedef struct Collectable Collectable;
 
-Collectable* collectableNew(Vec2d position, Vec2d offset, Vec2d size, char** XPM);
+Collectable* collectableNew(Vec2d position, Vec2d offset, char** XPM);
 void collectableFree(Collectable* c);
 
 void collectableSetActive(Collectable* c, bool isActive);
