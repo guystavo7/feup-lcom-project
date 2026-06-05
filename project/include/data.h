@@ -154,8 +154,6 @@ static const int MORTAR_TOWER_COST[4] = {0, 0, 2, 4};
 static const int ELETRICT_TOWER_COST[4] = {0, 3, 0, 4};
 static const int* TOWER_COST[6] = {BASIC_TOWER_COST, FAST_TOWER_COST, PIERCING_TOWER_COST, MORTAR_TOWER_COST, ELETRICT_TOWER_COST, LONG_TOWER_COST};
 
-#define BANANA_START 99 
-
 // Archer
 #define ARCHER_FRAME_SPEED 10
 #define ARCHER_IDLE_FRAMES 6
@@ -255,6 +253,13 @@ static const Vec2d PAUSE_MENU_BG_POS = {SCREEN_WIDTH / 2 - 295 / 2, SCREEN_HEIGH
 static const Vec2d RESUME_POS = {SCREEN_WIDTH / 2 - 259 / 2 + 20, SCREEN_HEIGHT / 2 - 252 / 2 + 124};
 static const Vec2d HELP_POS = {SCREEN_WIDTH / 2 - 259 / 2 + 100, SCREEN_HEIGHT / 2 - 252 / 2 + 124};
 static const Vec2d GO_BACK_POS = {SCREEN_WIDTH / 2 - 259 / 2 + 170, SCREEN_HEIGHT / 2 - 252 / 2 + 124};
+
+// Win menu
+#define WIN_BACKGROUND 0
+#define WIN_BUTTON_NORMAL 2
+#define WIN_BUTTON_PRESSED 1
+static const Vec2d WIN_INFO_POSITION = {SCREEN_WIDTH / 2 - 450 / 2, 10};
+static const Vec2d WIN_BUTTON_POSITION = {SCREEN_WIDTH / 2 - 283 / 2, 500};
 
 // UI
 #define HEALTH_BAR_INDEX 0
