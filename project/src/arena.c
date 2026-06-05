@@ -72,7 +72,6 @@ struct Arena {
     int height;
     int tileSize;
 
-    Monster* monster_test;
     MonsterGen* monsterGen1;
 
     Path* path_test;
@@ -665,15 +664,13 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
     res->path_test = pathNew(4, vectorCreateWithFloatingData(sizeof(float), NULL, 33 * 2, 
    -50.0, 352.0, 0.0, 256.0, 32.0, 256.0, 64.0, 256.0, 96.0, 256.0, 128.0, 256.0, 160.0, 256.0, 192.0, 256.0, 224.0, 256.0, 256.0, 256.0, 256.0, 288.0, 288.0, 288.0, 320.0, 288.0, 352.0, 288.0, 384.0, 288.0, 384.0, 256.0, 416.0, 256.0, 416.0, 224.0, 448.0, 224.0, 480.0, 224.0, 512.0, 224.0, 544.0, 224.0, 544.0, 256.0, 576.0, 256.0, 576.0, 288.0, 576.0, 320.0, 608.0, 320.0, 640.0, 320.0, 672.0, 320.0, 704.0, 320.0, 736.0, 320.0, 768.0, 320.0, 810.0, 320.0 
 ));
-    res->monster_test = pawnMonsterNew(10, 150, res->path_test);
     res->monsterGen1 = monsterGenNew(res->path_test, defaultMonsterCreator, defaultGenTimeFunc);
     res->fruits = NULL;
     res->fruitsN = 0;
     res->carrotSpawnCooldown = FRUIT_CARROT_SPAWN_INTERVAL_SEC * 0.5f;
 
-    res->collidersN[MONSTER_TAG] = 1;
+    res->collidersN[MONSTER_TAG] = 0;
     res->colliders[MONSTER_TAG] = malloc(sizeof(BoxCollider*) * res->collidersN[MONSTER_TAG]);
-    res->colliders[MONSTER_TAG][0] = monsterGetBoxCollider(res->monster_test);
 
     createMap(res, tilesFile, TILE_SIZE);
     createMonsterPathColliders(res, pathFile);
@@ -787,7 +784,6 @@ void arenaFree(Arena* arena) {
     for (int i = 0; i < arena->fruitsN; i++) collectableFree(arena->fruits[i].collectable);
     free(arena->fruits);
 
-    monsterFree(arena->monster_test);
     monsterGenFree(arena->monsterGen1);
     pathFree(arena->path_test);
 
@@ -986,7 +982,6 @@ void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
 
     arenaHandleMonsterDamage(arena);
 
-    monsterUpdate(arena->monster_test, arena, terminal, deltaTime);
     monsterGenUpdate(arena->monsterGen1, arena, terminal, deltaTime);
 
     arenaCollectableHandler(arena);
