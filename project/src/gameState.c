@@ -271,7 +271,11 @@ static GameState* levelSelectorTransition(GameState* state, Terminal* terminal) 
     if (buttonIsFinished(state->playButton) && pressedToPlay) {
         newState = runningGameNew(terminal);
         resetBools();
-    }
+
+    } else if (getKeyDown(getInputHandler(), KEYCODE_ESQ)) {
+		newState = mainMenuNew(terminal);
+		resetBools();
+	}
 
     return newState;
 }
