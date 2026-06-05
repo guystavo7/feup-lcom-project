@@ -18,6 +18,6 @@ static AnimatedSprite* bossAnimationBuilder() {
 }
 
 Monster* bossMonsterNew(float x, float y, Path* path) {
-    Monster* p = monsterNew(x, y, 100, 100, 20, 50000, bossAnimationBuilder, path);
+    Monster* p = monsterNew(x, y, 100, 100, 20, 125000, bossAnimationBuilder, path);
     return p;
 }
