@@ -48,6 +48,11 @@ float vec2dModule(Vec2d* v) {
     return m;
 }
 
+float vec2dDistance2Between(Vec2d* v1,Vec2d* v2){
+    Vec2d v3={v1->x-v2->x,v1->y-v2->y};
+    return vec2dModule2(&v3);
+}
+
 void vec2dNormalize(Vec2d* v) {
     if (v->x == 0.0f && v->y == 0.0f) {
         return;
@@ -71,3 +76,4 @@ void vec2dSubVec(Vec2d* v, Vec2d* v2) {
     v->x -= v2->x;
     v->y -= v2->y;
 }
+

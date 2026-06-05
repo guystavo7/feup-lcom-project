@@ -23,6 +23,6 @@ static AnimatedSprite* pawnAnimationBuilder(){
 
 Monster* pawnMonsterNew(float x,float y ,Path* path){
     
-    Monster* p=monsterNew(x,y,10,10,100,100000,pawnAnimationBuilder,path);
+    Monster* p=monsterNew(x,y,10,10,PAWN_SPEED,PAWN_HEALTH,pawnAnimationBuilder,path);
     return p;
 } 

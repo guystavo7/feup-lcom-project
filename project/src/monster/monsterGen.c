@@ -20,7 +20,31 @@ Monster* defaultMonsterCreator(Path* path) {
         return spearManMonsterNew(startPos.x,startPos.y, path);
     }
 }
+
+Monster* pawnMonsterCreator(Path* path) {
+    Vec2d startPos;
+    pathGetPoint(path,0,&startPos);
+
+    return pawnMonsterNew(startPos.x,startPos.y, path);
+}
  
+int constantSlowGenTimeFunc(float totalTimeElapsed,Timer* genTimer) { 
+
+
+    timerSetInitialTime(genTimer,4); 
+    
+    if(totalTimeElapsed<15 ){
+        timerRestart(genTimer);;  
+    }
+    int res = 0;
+    if (!timerIsRunning(genTimer)) {
+        timerRestart(genTimer);
+        res = 1;
+    }
+ 
+    return res;
+}
+
 int defaultGenTimeFunc(float totalTimeElapsed,Timer* genTimer) {
     float timeInterval=50;
     if(totalTimeElapsed<1*timeInterval){

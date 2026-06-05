@@ -31,6 +31,8 @@ void vec2dSetY(Vec2d* v, float y);
 void vec2dSetWithVec2d(Vec2d* v, Vec2d* v2);
 float vec2dModule(Vec2d* v);
 float vec2dModule2(Vec2d* v);
+float vec2dDistance2Between(Vec2d* v1,Vec2d* v2);
+
 void vec2dNormalize(Vec2d* v);
 void vec2dMultiply(Vec2d* v, float delta);
 void vec2dAddVec(Vec2d* v, Vec2d* v2);
