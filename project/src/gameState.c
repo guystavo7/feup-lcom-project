@@ -2,6 +2,9 @@
 #include "../include/arena.h"
 #include "../include/button.h"
 #include "../include/data.h"
+#include "../include/data_structures/vector.h"
+#include "../include/monster/monsterGen.h"
+#include "../include/monster/path.h"
 #include "../include/utils/cursorHandler.h"
 #include "../include/utils/inputHandler.h"
 
@@ -273,9 +276,9 @@ static GameState* levelSelectorTransition(GameState* state, Terminal* terminal) 
         resetBools();
 
     } else if (getKeyDown(getInputHandler(), KEYCODE_ESQ)) {
-		newState = mainMenuNew(terminal);
-		resetBools();
-	}
+        newState = mainMenuNew(terminal);
+        resetBools();
+    }
 
     return newState;
 }
@@ -399,34 +402,77 @@ static void runningGameAct(GameState* state, Terminal* terminal, float deltaTime
     }
 }
 
+void pathListFree(void* path) {
+    Path* p = *(Path**)path;
+    pathFree(p);
+}
+
+void monsterGenListFree(void* path) {
+    MonsterGen* p = *(MonsterGen**)path;
+    monsterGenFree(p);
+}
+
 static void createArena(GameState* state, Terminal* terminal) {
     const char* map;
     const char* path;
-	const char* lake;
+    const char* lake;
     char** background;
+    Vector* paths = vectorCreate(sizeof(Path*), pathListFree);
+    Path* p;
+    MonsterGen* mg;
+	Vector* monsterGenList = vectorCreate(sizeof(MonsterGen*), monsterGenListFree);
 
     switch (currentLevel) {
         case 0:
             map = map1;
             path = path1;
-			lake = lake1;
+            lake = lake1;
             background = background1;
+            p = pathNew(4, vectorCreateWithFloatingData(sizeof(float), NULL, 33 * 2, -50.0, 352.0, 0.0, 256.0, 32.0, 256.0, 64.0, 256.0, 96.0, 256.0, 128.0, 256.0, 160.0, 256.0, 192.0, 256.0, 224.0, 256.0, 256.0, 256.0, 256.0, 288.0, 288.0, 288.0, 320.0, 288.0, 352.0, 288.0, 384.0, 288.0, 384.0, 256.0, 416.0, 256.0, 416.0, 224.0, 448.0, 224.0, 480.0, 224.0, 512.0, 224.0, 544.0, 224.0, 544.0, 256.0, 576.0, 256.0, 576.0, 288.0, 576.0, 320.0, 608.0, 320.0, 640.0, 320.0, 672.0, 320.0, 704.0, 320.0, 736.0, 320.0, 768.0, 320.0, 810.0, 320.0));
+            vectorPushBack(paths, (char*)&p);
+            mg = monsterGenNew(p, pawnMonsterCreator, constantSlowGenTimeFunc);
+            vectorPushBack(monsterGenList, (char*)&mg);
+
             break;
         case 1:
             map = map2;
             path = path2;
-			lake = lake2;
+            lake = lake2;
             background = background2;
+
+            p = pathNew(4, vectorCreateWithFloatingData(sizeof(float), NULL, 35 * 2, -50.0, 352.0, 32.0, 352.0, 64.0, 352.0, 64.0, 320.0, 96.0, 320.0, 96.0, 288.0, 128.0, 288.0, 160.0, 288.0, 192.0, 288.0, 224.0, 288.0, 224.0, 320.0, 224.0, 352.0, 256.0, 352.0, 256.0, 384.0, 256.0, 416.0, 256.0, 448.0, 288.0, 448.0, 320.0, 448.0, 352.0, 448.0, 384.0, 448.0, 416.0, 448.0, 448.0, 448.0, 480.0, 448.0, 512.0, 448.0, 512.0, 480.0, 544.0, 480.0, 576.0, 480.0, 608.0, 480.0, 608.0, 512.0, 640.0, 512.0, 672.0, 512.0, 704.0, 512.0, 736.0, 512.0, 800.0, 512.0, 801.0, 512.0));
+            vectorPushBack(paths, (char*)&p);
+
+            p = pathNew(4, vectorCreateWithFloatingData(sizeof(float), NULL, 34 * 2, -50.0, 352.0, 32.0, 352.0, 64.0, 352.0, 64.0, 320.0, 96.0, 320.0, 96.0, 288.0, 128.0, 288.0, 160.0, 288.0, 192.0, 288.0, 224.0, 288.0, 224.0, 256.0, 224.0, 224.0, 256.0, 224.0, 288.0, 224.0, 320.0, 224.0, 352.0, 224.0, 384.0, 224.0, 416.0, 224.0, 448.0, 224.0, 480.0, 224.0, 512.0, 224.0, 544.0, 224.0, 544.0, 192.0, 576.0, 192.0, 576.0, 160.0, 576.0, 128.0, 576.0, 96.0, 608.0, 96.0, 640.0, 96.0, 672.0, 96.0, 704.0, 96.0, 736.0, 96.0, 800.0, 96.0, 801.0, 96.0));
+            vectorPushBack(paths, (char*)&p);
+            mg = monsterGenNew(p, pawnMonsterCreator, constantSlowGenTimeFunc);
+            vectorPushBack(monsterGenList, (char*)&mg);
+
+            p = pathNew(4, vectorCreateWithFloatingData(sizeof(float), NULL, 18 * 2, -50.0, 160.0, 32.0, 160.0, 64.0, 160.0, 96.0, 160.0, 128.0, 160.0, 160.0, 160.0, 192.0, 160.0, 224.0, 160.0, 224.0, 128.0, 256.0, 128.0, 256.0, 96.0, 288.0, 96.0, 320.0, 96.0, 320.0, 64.0, 320.0, 32.0, 352.0, 32.0, 352.0, -50.0, 352.0, -60.0));
+            vectorPushBack(paths, (char*)&p);
+            mg = monsterGenNew(p, pawnMonsterCreator, constantSlowGenTimeFunc);
+            vectorPushBack(monsterGenList, (char*)&mg);
+
+            p = pathNew(4, vectorCreateWithFloatingData(sizeof(float), NULL, 31 * 2, -50.0, 160.0, 32.0, 160.0, 64.0, 160.0, 96.0, 160.0, 128.0, 160.0, 160.0, 160.0, 192.0, 160.0, 224.0, 160.0, 224.0, 192.0, 224.0, 224.0, 256.0, 224.0, 288.0, 224.0, 320.0, 224.0, 352.0, 224.0, 384.0, 224.0, 416.0, 224.0, 448.0, 224.0, 480.0, 224.0, 512.0, 224.0, 544.0, 224.0, 544.0, 192.0, 576.0, 192.0, 576.0, 160.0, 576.0, 128.0, 576.0, 96.0, 576.0, 64.0, 544.0, 64.0, 544.0, 32.0, 544.0, 0.0, 512.0, -50.0, 512.0, -60.0));
+            vectorPushBack(paths, (char*)&p);
+            mg = monsterGenNew(p, pawnMonsterCreator, constantSlowGenTimeFunc);
+            vectorPushBack(monsterGenList, (char*)&mg);
+
             break;
         default:
             map = map1;
             path = path1;
-			lake = lake1;
+            lake = lake1;
             background = background1;
+            p = pathNew(4, vectorCreateWithFloatingData(sizeof(float), NULL, 33 * 2, -50.0, 352.0, 0.0, 256.0, 32.0, 256.0, 64.0, 256.0, 96.0, 256.0, 128.0, 256.0, 160.0, 256.0, 192.0, 256.0, 224.0, 256.0, 256.0, 256.0, 256.0, 288.0, 288.0, 288.0, 320.0, 288.0, 352.0, 288.0, 384.0, 288.0, 384.0, 256.0, 416.0, 256.0, 416.0, 224.0, 448.0, 224.0, 480.0, 224.0, 512.0, 224.0, 544.0, 224.0, 544.0, 256.0, 576.0, 256.0, 576.0, 288.0, 576.0, 320.0, 608.0, 320.0, 640.0, 320.0, 672.0, 320.0, 704.0, 320.0, 736.0, 320.0, 768.0, 320.0, 810.0, 320.0));
+            vectorPushBack(paths, (char*)&p);
+            mg = monsterGenNew(p, pawnMonsterCreator, constantSlowGenTimeFunc);
+            vectorPushBack(monsterGenList, (char*)&mg);
+
             break;
     }
 
-    state->arena = arenaNew(terminal, map, path, lake, background);
+    state->arena = arenaNew(terminal, map, path, lake, background, paths, monsterGenList);
 }
 
 GameState* runningGameNew(Terminal* terminal) {
