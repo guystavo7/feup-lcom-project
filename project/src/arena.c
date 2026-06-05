@@ -102,6 +102,7 @@ struct Arena {
     TowerKind towerType;
 
     float carrotSpawnCooldown;
+	bool isGameOver;
 };
 
 static char** arena_fruit_xpm_for_kind(FruitKind kind) {
@@ -648,7 +649,7 @@ static void createUpgradeUI(Arena* res) {
     res->upgradeHammerRightLong = buttonNew(UPGRADE_HAMMER_RIGHT_X, UPGRADE_HAMMER_RIGHT_Y, UPGRADE_HAMMER_W, UPGRADE_HAMMER_H, animatedSpriteNew((float)UPGRADE_HAMMER_FRAME_SPEED, hammerSpritesRight, UPGRADE_HAMMER_FRAMES, NORMAL), arenaUpgradeConfirmEletrictCb, basicButtonHoverFn);
 }
 
-Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile, const char* waterFile, char** background, Vector* paths, Vector* gens) {
+Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile, const char* waterFile, char** background, Vector* paths, Vector* gens, int bananaStart) {
     Arena* res = malloc(sizeof(Arena));
     res->collidersN = malloc(sizeof(int) * TAGS_NUM);
     res->colliders = malloc(sizeof(BoxCollider*) * TAGS_NUM);
@@ -702,8 +703,9 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
     res->statsBar = statsBarNew();
     res->basicTowerBuildMenu = buildMenuNew(TOWER_KIND_BASIC);
     res->longTowerBuildMenu = buildMenuNew(TOWER_KIND_LONG); 
+	res->isGameOver = false;
 
-    statsBarSetBanana(res->statsBar, BANANA_START);
+    statsBarSetBanana(res->statsBar, bananaStart);
     statsBarSetAvocado(res->statsBar, 0);
     statsBarSetCherry(res->statsBar, 0);
     statsBarSetCarrot(res->statsBar, 0); 
@@ -1027,8 +1029,9 @@ void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
         buildMenuUpdate(arena->longTowerBuildMenu, terminal, arena, deltaTime);
     }
 
-    if (!(arena->HeroHP > 0)) {
-        arena->HeroHP = 0;
+    if (arena->HeroHP <= 0) {
+        arena->HeroHP = 1;
+		arena->isGameOver = true;
     }
 
     healthBarSetHealth(arena->healthBar, arena->HeroHP);
@@ -1038,6 +1041,14 @@ void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
     cursorUpdate(getCursor(), terminal, deltaTime);
 }
 
-bool arenaIsGameOver(Arena* arena) {
-    return arena->HeroHP <= 0;
+bool arenaIsGameOver(Arena* arena, int* health) {
+	*health = arena->HeroHP;
+    return arena->isGameOver;
+}
+
+void arenaSpawnBoss(Arena* arena) {
+    if (!arena || !arena->pathList || vectorGetSize(arena->pathList) == 0) return;
+    Path* path = *(Path**)vectorGet(arena->pathList, 0);
+    MonsterGen* mg = monsterGenNew(path, bossMonsterCreator, singleSpawnGenTimeFunc);
+    vectorPushBack(arena->monsterGenList, (char*)&mg);
 }

@@ -64,7 +64,7 @@ def convert_branches_to_top_lefts(branches):
 
 
 def main():
-    grid = load_map("./../resources/maps/map2/path.csv")
+    grid = load_map("./../resources/maps/map3/path.csv")
 
     branches = find_branches(grid)
     branch_tiles_world = convert_branches_to_top_lefts(branches)

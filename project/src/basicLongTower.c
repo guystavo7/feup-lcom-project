@@ -12,11 +12,11 @@ GenericTower* basicLongTowerNew(Vec2d position) {
 
 	SpriteXPM** archerIdle = malloc(sizeof(SpriteXPM*) * MONK_IDLE_FRAMES);
 	for (int i = 0; i < MONK_IDLE_FRAMES; i++) archerIdle[i] = newSpriteXPM((xpm_map_t)monkIdleXPM[i], XPM_8_8_8, MONK_OFFSET.x, MONK_OFFSET.y);
-	AnimatedSprite* idle = animatedSpriteNew(ARCHER_FRAME_SPEED, archerIdle, ARCHER_IDLE_FRAMES, LOOP);
+	AnimatedSprite* idle = animatedSpriteNew(ARCHER_FRAME_SPEED, archerIdle, MONK_IDLE_FRAMES, LOOP);
 
 	SpriteXPM** archerShoot = malloc(sizeof(SpriteXPM*) * MONK_HEAL_FRAMES);
 	for (int i = 0; i < MONK_HEAL_FRAMES; i++) archerShoot[i] = newSpriteXPM((xpm_map_t)monkHealXPM[i], XPM_8_8_8, MONK_HEAL_OFFSET.x, MONK_HEAL_OFFSET.y);
-	AnimatedSprite* shoot = animatedSpriteNew(BASIC_TOWER_SHOOT_SPEED, archerShoot, ARCHER_SHOOT_FRAMES, NORMAL);
+	AnimatedSprite* shoot = animatedSpriteNew(BASIC_TOWER_SHOOT_SPEED, archerShoot, MONK_HEAL_FRAMES, NORMAL);
 
 	SpriteXPM** projectileSprite = malloc(sizeof(SpriteXPM*) * ARROW_FRAMES); 
 	for (int i = 0; i < ARROW_FRAMES; i++) projectileSprite[i] = newSpriteXPM((xpm_map_t)arrowXPM[i], XPM_8_8_8, 0, 0);
