@@ -6,13 +6,14 @@
 #include "../../lab5/terminal.h"
 #include "data_structures/vector.h"
 #include "utils/vec2d.h"
+#include "waves.h"
 
 #include <stdbool.h>
 
 typedef struct Arena Arena;
 
 
-Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile, const char* waterFile, char** background, Vector* paths, Vector* gens);
+Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile, const char* waterFile, char** background, Vector* paths, Vector* gens, const WaveSpawn* waves, unsigned int wavesLen, float matchDurationSec);
 void arenaFree(Arena* arena);
 
 int arenaDetectCollisions(Arena* arena, BoxCollider* box, int tag, BoxCollider** colliders);

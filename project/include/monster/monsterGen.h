@@ -1,37 +1,23 @@
+#pragma once
+
 #include "monster.h"
-#include "pawnMonster.h"
-#include "alienMonster.h"
-#include "../utils/timer.h"
+#include "monsterKind.h"
 
 typedef struct monsterGen MonsterGen;
- 
 
-Monster* defaultMonsterCreator(Path* path);
-Monster* pawnMonsterCreator(Path* path);
-
-
-
-int defaultGenTimeFunc(float delta,Timer*);
-int constantSlowGenTimeFunc(float totalTimeElapsed,Timer* genTimer) ;
-
+Monster* monsterCreateFromKind(MonsterKind kind, Path* path);
 
 void freeMonsterList(void* m);
 
-MonsterGen* monsterGenNew(Path* path,Monster* (*monsterCreator)(Path*),int (*genTimeFunc)(float,Timer*));
+MonsterGen* monsterGenNew(Path* path);
 
 void monsterGenFree(MonsterGen* mg);
-void monsterGenAddMonster(MonsterGen* mg);
- 
 
+void monsterGenQueueSpawns(MonsterGen* mg, MonsterKind kind, int count);
 
-void monsterGenUpdate(MonsterGen* mg, Arena* arena,Terminal* terminal, float delta_t);
-
+void monsterGenUpdate(MonsterGen* mg, Arena* arena, Terminal* terminal, float delta_t);
 
 int monsterGenGetNextActiveMonsterIndex(MonsterGen* mg, unsigned int sortedIndex);
-Monster* monsterGenGetMonster(MonsterGen* mg,unsigned int index);
-
+Monster* monsterGenGetMonster(MonsterGen* mg, unsigned int index);
 
 unsigned int monsterGenGetNumberOfInstantFinishedMonsters(MonsterGen* mg);
-
-
- 

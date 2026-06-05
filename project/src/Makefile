@@ -41,9 +41,12 @@ SRCS= \
 	./eletrictTower.c \
 	./basicLongTower.c \
 	alienMonster.c \
+	lancerMonster.c \
+	bossMonster.c \
 	monsterGen.c \
 	waves_map1.c \
 	waves_map2.c \
+	waves_schedule.c \
 	./healthBar.c \
 	./statsBar.c \
 	./numbers.c \

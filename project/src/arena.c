@@ -102,6 +102,12 @@ struct Arena {
     TowerKind towerType;
 
     float carrotSpawnCooldown;
+
+    const WaveSpawn* waveTable;
+    unsigned int waveTableLen;
+    float matchDurationSec;
+    float matchElapsedSec;
+    int* waveReleasedCount;
 };
 
 static char** arena_fruit_xpm_for_kind(FruitKind kind) {
@@ -648,7 +654,7 @@ static void createUpgradeUI(Arena* res) {
     res->upgradeHammerRightLong = buttonNew(UPGRADE_HAMMER_RIGHT_X, UPGRADE_HAMMER_RIGHT_Y, UPGRADE_HAMMER_W, UPGRADE_HAMMER_H, animatedSpriteNew((float)UPGRADE_HAMMER_FRAME_SPEED, hammerSpritesRight, UPGRADE_HAMMER_FRAMES, NORMAL), arenaUpgradeConfirmEletrictCb, basicButtonHoverFn);
 }
 
-Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile, const char* waterFile, char** background, Vector* paths, Vector* gens) {
+Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile, const char* waterFile, char** background, Vector* paths, Vector* gens, const WaveSpawn* waves, unsigned int wavesLen, float matchDurationSec) {
     Arena* res = malloc(sizeof(Arena));
     res->collidersN = malloc(sizeof(int) * TAGS_NUM);
     res->colliders = malloc(sizeof(BoxCollider*) * TAGS_NUM);
@@ -659,6 +665,16 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
      
 	res->pathList = paths;
 	res->monsterGenList = gens;
+
+    res->waveTable = waves;
+    res->waveTableLen = wavesLen;
+    res->matchDurationSec = matchDurationSec;
+    res->matchElapsedSec = 0.0f;
+    if (waves != NULL && wavesLen > 0) {
+        res->waveReleasedCount = calloc(wavesLen, sizeof(int));
+    } else {
+        res->waveReleasedCount = NULL;
+    }
 
     res->fruits = NULL;
     res->fruitsN = 0;
@@ -785,7 +801,9 @@ void arenaFree(Arena* arena) {
     for (int i = 0; i < arena->tilesN; i++) tileFree(arena->tiles[i]);
     for (int i = 0; i < arena->fruitsN; i++) collectableFree(arena->fruits[i].collectable);
     free(arena->fruits);
- 
+
+    free(arena->waveReleasedCount);
+
     vectorFree(arena->monsterGenList);
     vectorFree(arena->pathList); 
 
@@ -994,7 +1012,44 @@ void arenaHandleMonsterDamage(Arena* arena) {
     }
 }
 
+static void arena_waves_tick(Arena* arena) {
+    unsigned int r;
+    unsigned int ngen;
+
+    if (arena->waveTable == NULL || arena->waveReleasedCount == NULL) {
+        return;
+    }
+
+    ngen = vectorGetSize(arena->monsterGenList);
+    if (ngen == 0) {
+        return;
+    }
+
+    for (r = 0; r < arena->waveTableLen; r++) {
+        const WaveSpawn* w = &arena->waveTable[r];
+        while (arena->waveReleasedCount[r] < w->count) {
+            int k = arena->waveReleasedCount[r];
+            if (!(arena->matchElapsedSec >= waveSpawnScheduledTime(w, k))) {
+                break;
+            }
+            {
+                unsigned int pi = w->pathIndex;
+                MonsterGen* mg;
+                if (pi >= ngen) {
+                    pi = ngen - 1;
+                }
+                mg = *(MonsterGen**)vectorGet(arena->monsterGenList, pi);
+                monsterGenQueueSpawns(mg, w->kind, 1);
+            }
+            arena->waveReleasedCount[r]++;
+        }
+    }
+}
+
 void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
+    arena->matchElapsedSec += deltaTime;
+    arena_waves_tick(arena);
+
     arena_fruits_tick_time_to_live(arena, deltaTime);
     arena_carrot_spawn_tick(arena, deltaTime);
     for (int i = 0; i < arena->fruitsN; i++) collectableUpdate(arena->fruits[i].collectable, terminal);
