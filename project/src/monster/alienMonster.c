@@ -1,4 +1,5 @@
 #include "../../include/monster/pawnMonster.h"
+/** @file alienMonster.c @brief Implementacao; ver comentarios nas funcoes estaticas onde aplicavel. */
 #include "../../resources/alien/all_xpm.h"
 
 #define PAWN_MONSTER_IDLE_FRAMES 6

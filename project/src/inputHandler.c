@@ -1,4 +1,5 @@
 #include "../include/utils/inputHandler.h"
+/** @file inputHandler.c @brief Implementacao; ver comentarios nas funcoes estaticas onde aplicavel. */
 #include <stdint.h>
 #include <stdlib.h>
 

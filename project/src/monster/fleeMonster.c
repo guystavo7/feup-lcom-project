@@ -1,4 +1,5 @@
  
+/** @file fleeMonster.c @brief Implementacao; ver comentarios nas funcoes estaticas onde aplicavel. */
 #include "../../include/monster/fleeMonster.h"
 
 #include "../../resources/flee/fleefly.h"

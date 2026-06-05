@@ -1,4 +1,5 @@
 #include "../../include/monster/path.h"
+/** @file path.c @brief Implementacao; ver comentarios nas funcoes estaticas onde aplicavel. */
 
 struct path {
     float pcd; // point change distance

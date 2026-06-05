@@ -1,4 +1,5 @@
 #include "../include/utils/cursorHandler.h"
+/** @file cursorHandler.c @brief Implementacao; ver comentarios nas funcoes estaticas onde aplicavel. */
 #include "../include/data.h"
 #include "../resources/cursor/cursor.h"
 

@@ -1,6 +1,10 @@
 #ifndef INPUT_HANDLER
 #define INPUT_HANDLER
 
+/** @file inputHandler.h
+ *  @brief Teclado: mapeamento de scancodes e singleton de estado de teclas.
+ */
+
 #include <lcom/lcf.h>
 #include <stdint.h>
 #include <stdbool.h>
@@ -61,9 +65,30 @@ typedef struct InputHandler InputHandler;
 static InputHandler* inputHandler;
 static bool isInputHandlerCreated = false;
 
+/** @brief Obtem o handler global de teclado (cria na primeira chamada se aplicavel).
+ *  @return Ponteiro para InputHandler.
+ */
 InputHandler* getInputHandler();
+
+/** @brief Verdadeiro enquanto a tecla esta mantida premida (estado "down").
+ *  @param[in] inputHandler Handler.
+ *  @param[in] keycode Codigo Make/Break mapeado internamente.
+ *  @return true se a tecla esta activa.
+ */
 bool getKeyDown(InputHandler* inputHandler, uint16_t keycode);
+
+/** @brief Verdadeiro apenas no instante em que a tecla foi pressionada (edge).
+ *  @param[in] inputHandler Handler.
+ *  @param[in] keycode Codigo da tecla.
+ *  @return true num unico frame apos pressionar.
+ */
 bool getKeyPressed(InputHandler* inputHandler, uint16_t keycode);
+
+/** @brief Actualiza estado da tecla a partir de um evento make/break.
+ *  @param[in,out] inputHandler Handler.
+ *  @param[in] keycode Codigo da tecla.
+ *  @param[in] isMake true se pressao, false se libertacao.
+ */
 void readKey(InputHandler* inputHandler, uint16_t keycode, bool isMake);
 
 #endif

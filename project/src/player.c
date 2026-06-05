@@ -1,4 +1,5 @@
 #include "../include/player/player.h"
+/** @file player.c @brief Implementacao; ver comentarios nas funcoes estaticas onde aplicavel. */
 
 #include <stdlib.h>
 

@@ -1,4 +1,5 @@
 #include "../include/components/boxCollider.h"
+/** @file boxCollider.c @brief Implementacao; ver comentarios nas funcoes estaticas onde aplicavel. */
 #include "../include/utils/vec2d.h"
 #include <stdlib.h>
 

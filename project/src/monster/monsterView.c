@@ -1,4 +1,5 @@
 #include "../../include/monster/monsterView.h" 
+/** @file monsterView.c @brief Implementacao; ver comentarios nas funcoes estaticas onde aplicavel. */
 struct monsterView{
     MonsterModel* model;
     AnimatedSprite* animation;

@@ -1,4 +1,5 @@
 #include "../../include/monster/bossMonster.h"
+/** @file bossMonster.c @brief Implementacao; ver comentarios nas funcoes estaticas onde aplicavel. */
 #include "../../resources/black/warrior/warriorRun.h"
 
 #define BOSS_FRAMES 6

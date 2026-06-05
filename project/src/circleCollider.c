@@ -1,4 +1,5 @@
 #include "../include/components/circleCollider.h"
+/** @file circleCollider.c @brief Implementacao; ver comentarios nas funcoes estaticas onde aplicavel. */
 #include <stdlib.h>
 
 struct CircleCollider {

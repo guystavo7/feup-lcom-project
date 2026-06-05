@@ -1,4 +1,5 @@
 #include "../include/utils/vec2d.h"
+/** @file vec2d.c @brief Implementacao; ver comentarios nas funcoes estaticas onde aplicavel. */
 
 Vec2d* vec2dCreate(float x, float y) {
     Vec2d* v = malloc(sizeof(Vec2d));

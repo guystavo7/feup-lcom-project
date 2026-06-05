@@ -1,4 +1,5 @@
 #include "../../include/monster/waves.h"
+/** @file waves.c @brief Implementacao; ver comentarios nas funcoes estaticas onde aplicavel. */
 
 #include <stddef.h>
 

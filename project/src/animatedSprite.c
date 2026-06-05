@@ -1,4 +1,5 @@
 #include "../include/components/animatedSprite.h"
+/** @file animatedSprite.c @brief Implementacao; ver comentarios nas funcoes estaticas onde aplicavel. */
 #include <stdint.h>
 #include <stdlib.h>
 

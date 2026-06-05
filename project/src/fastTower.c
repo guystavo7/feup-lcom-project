@@ -1,4 +1,5 @@
 #include "../include/buildings/fastTower.h"
+/** @file fastTower.c @brief Implementacao; ver comentarios nas funcoes estaticas onde aplicavel. */
 #include "../include/data.h"
 #include "../resources/red/archer/archerIdle.h"
 #include "../resources/red/archer/archerShoot.h"
