@@ -124,6 +124,7 @@ struct Arena {
     MonsterGen* boss_gen;
 
     ArenaOutcome outcome;
+    bool ignore_boss_win;
 };
 
 static char** arena_fruit_xpm_for_kind(FruitKind kind) {
@@ -733,9 +734,11 @@ static void arena_emit_wave_spawns(Arena* arena) {
 }
 
 static void arena_try_spawn_boss(Arena* arena) {
+    if(!arena->ignore_boss_win){
     if (!waves_level_has_boss(arena->level)) return;
     if (arena->match_time_sec < 420.0f) return;
     arenaSpawnBoss(arena);
+    }
 }
 
 static void arena_wave_tick(Arena* arena, float delta_t) {
@@ -792,6 +795,12 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
         res->colliders[t] = NULL;
     }
      
+    if(level==2){
+        res->ignore_boss_win=true;
+    }
+    else{
+        res->ignore_boss_win=false;
+    }
 	res->pathList = paths;
 	res->monsterGenList = gens;
 
@@ -1161,7 +1170,10 @@ void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
         }
     }
 
+    if(!arena->ignore_boss_win){
+
     arena_check_boss_win(arena);
+    }
 
     arenaCollectableHandler(arena);
     arenaHandleConstruction(arena, terminal);
