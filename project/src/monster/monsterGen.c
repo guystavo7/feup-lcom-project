@@ -242,3 +242,7 @@ unsigned int monsterGenGetNumberOfInstantFinishedMonsters(MonsterGen* mg) {
 
     return mg->numberOfInstantFinishedMonsters;
 }
+
+/*
+
+*/

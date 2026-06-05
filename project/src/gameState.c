@@ -20,6 +20,8 @@
 #include "../resources/maps/map1/map1.h"
 #include "../resources/maps/map2/map2.h"
 
+#include "../resources/maps/map3/map3.h"
+
 #include <stdlib.h>
 
 static bool pressedToPlay = false;
@@ -295,6 +297,8 @@ static GameState* levelSelectorNew(Terminal* terminal) {
     state->levels[0] = newSpriteXPM((xpm_map_t)map1XPM[SMALL_IMAGE_INDEX], XPM_8_8_8, 0, 0);
     state->levels[1] = newSpriteXPM((xpm_map_t)map2XPM[SMALL_IMAGE_INDEX], XPM_8_8_8, 0, 0);
 
+    state->levels[2] = newSpriteXPM((xpm_map_t)smallMap3, XPM_8_8_8, 0, 0);
+
     state->levelSelectLogo = newSpriteXPM((xpm_map_t)levelSelectorXPM[LVL_SELECT_LOGO], XPM_8_8_8, 0, 0);
 
     SpriteXPM** leftButtons = malloc(sizeof(SpriteXPM*) * 2);
@@ -520,6 +524,43 @@ static void createArena(GameState* state, Terminal* terminal) {
             vectorPushBack(paths, (char*)&p);
             mg = monsterGenNew(p, pawnMonsterCreator, constantSlowGenTimeFunc);
             vectorPushBack(monsterGenList, (char*)&mg);
+
+            break;
+        case 2:
+            map = map3;
+            path = path3;
+            lake = lake3;
+            background = background3;
+
+             
+ 
+
+            p = pathNew(4, 
+                vectorCreateWithFloatingData(sizeof(float), NULL,
+                 48 * 2,
+                 -50.0, 480.0, 32.0, 480.0, 64.0, 480.0, 64.0, 448.0, 96.0, 448.0, 96.0, 416.0, 128.0, 416.0, 128.0, 384.0, 160.0, 384.0, 160.0, 352.0, 160.0, 320.0, 192.0, 320.0, 192.0, 288.0, 224.0, 288.0, 224.0, 256.0, 256.0, 256.0, 256.0, 224.0, 256.0, 192.0, 288.0, 192.0, 288.0, 160.0, 320.0, 160.0, 352.0, 160.0, 352.0, 128.0, 384.0, 128.0, 416.0, 128.0, 448.0, 128.0, 480.0, 128.0, 480.0, 160.0, 512.0, 160.0, 544.0, 160.0, 544.0, 192.0, 576.0, 192.0, 576.0, 224.0, 576.0, 256.0, 608.0, 256.0, 608.0, 288.0, 640.0, 288.0, 640.0, 320.0, 672.0, 320.0, 672.0, 352.0, 704.0, 352.0, 704.0, 384.0, 704.0, 416.0, 736.0, 416.0, 736.0, 448.0, 768.0, 448.0, 800.0, 480.0, 801.0, 480.0
+
+                 ));
+
+            
+            vectorPushBack(paths, (char*)&p);
+
+            mg = monsterGenNew(p, pawnMonsterCreator, constantSlowGenTimeFunc);
+            vectorPushBack(monsterGenList, (char*)&mg);
+
+            p = pathNew(4, 
+                vectorCreateWithFloatingData(sizeof(float), NULL,
+                 48 * 2,
+                 -50.0, 128.0, 32.0, 128.0, 64.0, 128.0, 64.0, 160.0, 96.0, 160.0, 96.0, 192.0, 128.0, 192.0, 128.0, 224.0, 160.0, 224.0, 160.0, 256.0, 160.0, 288.0, 192.0, 288.0, 192.0, 320.0, 224.0, 320.0, 224.0, 352.0, 256.0, 352.0, 256.0, 384.0, 256.0, 416.0, 288.0, 416.0, 288.0, 448.0, 320.0, 448.0, 352.0, 448.0, 352.0, 480.0, 384.0, 480.0, 416.0, 480.0, 448.0, 480.0, 480.0, 480.0, 480.0, 448.0, 512.0, 448.0, 544.0, 448.0, 544.0, 416.0, 576.0, 416.0, 576.0, 384.0, 576.0, 352.0, 608.0, 352.0, 608.0, 320.0, 640.0, 320.0, 640.0, 288.0, 672.0, 288.0, 672.0, 256.0, 704.0, 256.0, 704.0, 224.0, 704.0, 192.0, 736.0, 192.0, 736.0, 160.0, 768.0, 160.0, 800.0, 128.0, 801.0, 128.0
+
+                 ));
+
+            vectorPushBack(paths, (char*)&p);
+
+            mg = monsterGenNew(p, pawnMonsterCreator, constantSlowGenTimeFunc);
+            vectorPushBack(monsterGenList, (char*)&mg);
+
+ 
 
             break;
         default:

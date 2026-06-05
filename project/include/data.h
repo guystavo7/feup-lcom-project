@@ -18,6 +18,8 @@
 #define TAGS_NUM 8
 
 // File Paths
+
+/*
 static const char* map1 = "/home/lcom/labs/project/resources/maps/map1/walls.csv";
 static const char* path1 = "/home/lcom/labs/project/resources/maps/map1/path.csv";
 static const char* lake1 = "/home/lcom/labs/project/resources/maps/map1/water.csv";
@@ -26,7 +28,12 @@ static const char* map2 = "/home/lcom/labs/grupo_2leic13_2/project/resources/map
 static const char* path2 = "/home/lcom/labs/grupo_2leic13_2/project/resources/maps/map2/path.csv";
 static const char* lake2 = "/home/lcom/labs/grupo_2leic13_2/project/resources/maps/map2/water.csv";
 
-/*
+
+static const char* map3= "/home/lcom/labs/project/resources/maps/map3/walls.csv";
+static const char* path3 = "/home/lcom/labs/project/resources/maps/map3/path.csv";
+static const char* lake3 = "/home/lcom/labs/project/resources/maps/map3/water.csv";
+
+*/
 static const char* map1 = "/home/lcom/labs/grupo_2leic13_2/project/resources/maps/map1/walls.csv";
 static const char* path1 = "/home/lcom/labs/grupo_2leic13_2/project/resources/maps/map1/path.csv";
 static const char* lake1 = "/home/lcom/labs/grupo_2leic13_2/project/resources/maps/map1/water.csv";
@@ -34,7 +41,12 @@ static const char* lake1 = "/home/lcom/labs/grupo_2leic13_2/project/resources/ma
 static const char* map2 = "/home/lcom/labs/grupo_2leic13_2/project/resources/maps/map2/walls.csv";
 static const char* path2 = "/home/lcom/labs/grupo_2leic13_2/project/resources/maps/map2/path.csv";
 static const char* lake2 = "/home/lcom/labs/grupo_2leic13_2/project/resources/maps/map2/water.csv";
-*/
+
+
+static const char* map3= "/home/lcom/labs/grupo_2leic13_2/project/resources/maps/map3/walls.csv";
+static const char* path3 = "/home/lcom/labs/grupo_2leic13_2/project/resources/maps/map3/path.csv";
+static const char* lake3 = "/home/lcom/labs/grupo_2leic13_2/project/resources/maps/map3/water.csv";
+
 
 // Screen configs
 #define MODE 0x115
@@ -52,7 +64,7 @@ static const Vec2d EMPTY_VEC2D = {0, 0};
 static const Vec2d PLAYER_POS = {100, 300};
 
 // Level selector
-#define MAX_LVL 2
+#define MAX_LVL 3
 #define FULL_IMAGE_INDEX 0
 #define SMALL_IMAGE_INDEX 1
 
