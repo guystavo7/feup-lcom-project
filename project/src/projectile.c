@@ -89,7 +89,7 @@ Projectile* projectileCreate(ProjectileType type, float x, float y, float vel_x,
     } else if (type == PROJ_SKY_FALL) {
         p->extra_data.sky_fall.target_x = x;
         p->extra_data.sky_fall.target_y = y;
-        p->extra_data.sky_fall.gravity = 380.0f;
+        p->extra_data.sky_fall.gravity = 1000.0f;
     } else if (type == PROJ_NEAR) {
         p->extra_data.near.damage_dealt = false;
     }
@@ -106,7 +106,7 @@ void projectileReset(Projectile* p, ProjectileType type, float x, float y, float
 
     if (type == PROJ_SKY_FALL) {
         vec2dSetX(p->pos, x);
-        vec2dSetY(p->pos, y - 400.0f);
+        vec2dSetY(p->pos, -100.0f);
         vec2dSetX(p->vel, 0.0f);
         vec2dSetY(p->vel, 0.0f);
     } else {

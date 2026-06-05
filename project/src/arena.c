@@ -704,10 +704,10 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
     res->statsBar = statsBarNew();
     res->basicTowerBuildMenu = buildMenuNew(TOWER_KIND_BASIC);
     res->longTowerBuildMenu = buildMenuNew(TOWER_KIND_LONG);
-    statsBarSetBanana(res->statsBar, 5);
-    statsBarSetAvocado(res->statsBar, 5);
-    statsBarSetCherry(res->statsBar, 5);
-    statsBarSetCarrot(res->statsBar, 5);
+    statsBarSetBanana(res->statsBar, 99);
+    statsBarSetAvocado(res->statsBar, 99);
+    statsBarSetCherry(res->statsBar, 99);
+    statsBarSetCarrot(res->statsBar, 99);
 
     return res;
 }
@@ -1013,5 +1013,5 @@ void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
 }
 
 bool arenaIsGameOver(Arena* arena) {
-	return arena->HeroHP <= 0;
+	return arena->HeroHP < 0;
 }

@@ -96,48 +96,56 @@ static const Vec2d BASIC_TOWER_HIT_BOX_OFFSET = {9, 0};
 static const Vec2d BASIC_UPPER_HALF_OFFSET = {0, -59};
 
 // Basic tower
-static const Vec2d BASIC_TOWER_RANGE = {300, 300};
-static const Vec2d BASIC_TOWER_RANGE_OFFSET = {(60 - 300) / 2, (11 - 300) / 2};
+static const Vec2d BASIC_TOWER_RANGE = {250, 250};
+static const Vec2d BASIC_TOWER_RANGE_OFFSET = {(60 - 250) / 2, (11 - 250) / 2};
 #define BASIC_TOWER_COOLDOWN 0.5
-#define BASIC_TOWER_SHOOT_SPEED 10
+#define BASIC_TOWER_SHOOT_SPEED 10 
 #define ARROW_FRAMES 8
 #define ARROW_EPSILON 0.2f
-#define ARROW_SPEED 500
+#define ARROW_SPEED 1000
 #define ARROW_FRAME_SPEED 10
+#define BASIC_DAMAGE 500
 
-// Basic 2 Tower
 #define ASTEROID_FRAMES 3
 #define SKY_FALL_ARROW_SPEED 700
 #define ASTEROID_FRAME_SPEED 10
 static const Vec2d ASTEROID_SIZE = {140, 268};
+#define LONG_DAMAGE 500
 
 #define LIGHTNING_FRAMES 4
 #define LIGHTNING_SPEED 10
 static const Vec2d LIGHTNING_SIZE = {122, 120};
 
 // Fast Tower
-static const Vec2d FAST_TOWER_RANGE = {350, 350};
-static const Vec2d FAST_TOWER_RANGE_OFFSET = {(60 - 350) / 2, (11 - 350) / 2};
-#define FAST_TOWER_COOLDOWN 0.1
-#define FAST_TOWER_SHOOT_SPEED 20
+static const Vec2d FAST_TOWER_RANGE = {250, 250};
+static const Vec2d FAST_TOWER_RANGE_OFFSET = {(60 - 250) / 2, (11 - 250) / 2};
+#define FAST_TOWER_COOLDOWN 0.05
+#define FAST_TOWER_SHOOT_SPEED 30 
+#define FAST_DAMAGE 500
+
 
 // Piercing Tower
 static const Vec2d PIERCING_TOWER_RANGE = {350, 350};
 static const Vec2d PIERCING_TOWER_RANGE_OFFSET = {(60 - 350) / 2, (11 - 350) / 2};
-#define PIERCING_TOWER_COOLDOWN 0.7
+#define PIERCING_TOWER_COOLDOWN 0.5
 #define PIERCING_TOWER_SHOOT_SPEED 10
+#define PIERCING_DAMAGE 1000
+
 
 // Mortar Tower
-static const Vec2d MORTAR_TOWER_RANGE = {600, 600};
-static const Vec2d MORTAR_TOWER_RANGE_OFFSET = {(60 - 600) / 2, (11 - 600) / 2};
-#define MORTAR_COOLDOWN 1.5
-#define MORTAR_TOWER_SHOOT_SPEED 10
+static const Vec2d MORTAR_TOWER_RANGE = {500, 500};
+static const Vec2d MORTAR_TOWER_RANGE_OFFSET = {(60 - 500) / 2, (11 - 500) / 2};
+#define MORTAR_COOLDOWN 3
+#define MORTAR_TOWER_SHOOT_SPEED 10 
+#define MORTAR_DAMAGE 3500
+
 
 // Eletric Tower
-static const Vec2d ELETRICT_TOWER_RANGE = {300, 300};
-static const Vec2d ELETRICT_TOWER_RANGE_OFFSET = {(60 - 300) / 2, (11 - 300) / 2};
+static const Vec2d ELETRICT_TOWER_RANGE = {200, 200};
+static const Vec2d ELETRICT_TOWER_RANGE_OFFSET = {(60 - 200) / 2, (11 - 200) / 2};
 #define ELETRICT_COOLDOWN 0.3
 #define ELETRICT_TOWER_SHOOT_SPEED 15
+#define ELETRIC_DAMAGE 700 
 
 // Cost
 static const int BASIC_TOWER_COST[4] = {3, 0, 0, 0};
@@ -263,5 +271,23 @@ static const Vec2d CARROT_STATS_POSITION = {SCREEN_WIDTH - 115 + 60, 20 + 52 + 1
 
 // Numbers
 #define NUMBER_WIDTH 14
+
+
+// Monsters
+// Pawn
+#define PAWN_HEALTH 2000
+#define PAWN_SPEED 10
+
+// Alien
+#define ALIEN_HEALTH 2000
+#define ALIEN_SPEED 30
+
+// Lancer
+#define LANCER_HEALTH 7000
+#define LANCER_SPEED 10
+
+// Boss
+#define BOSS_HEALTH 99999
+#define BOSS_SPEED 5
 
 #endif
