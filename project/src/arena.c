@@ -1030,7 +1030,7 @@ void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
     }
 
     if (arena->HeroHP <= 0) {
-        arena->HeroHP = 1;
+        arena->HeroHP = 0;
 		arena->isGameOver = true;
     }
 
