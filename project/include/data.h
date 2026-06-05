@@ -135,7 +135,7 @@ static const Vec2d PIERCING_TOWER_RANGE_OFFSET = {(60 - 350) / 2, (11 - 350) / 2
 // Mortar Tower
 static const Vec2d MORTAR_TOWER_RANGE = {500, 500};
 static const Vec2d MORTAR_TOWER_RANGE_OFFSET = {(60 - 500) / 2, (11 - 500) / 2};
-#define MORTAR_COOLDOWN 3
+#define MORTAR_COOLDOWN 5
 #define MORTAR_TOWER_SHOOT_SPEED 10 
 #define MORTAR_DAMAGE 3500
 
