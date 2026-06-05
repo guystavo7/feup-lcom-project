@@ -37,7 +37,7 @@ void monsterControllerUpdate(MonsterController* controller, Arena* arena, float 
    // printf("\nhere1\n");
    // printf("path index:%d",pathGetNumOfPoints(controller->path)-1);//pathGetCurPointIndex(controller->path,model)
 
-    if (!monsterModelGetDead(model) && !monsterModelGetFinishedPath(model)) {
+    if (!monsterModelGetDead(model)&& !monsterModelGetFinishedPath(model) ) {//
 
         Vec2d delta_x, monsterPos;
 
