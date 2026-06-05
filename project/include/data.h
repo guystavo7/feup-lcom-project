@@ -90,6 +90,21 @@ static const Vec2d FRUIT_SIZE = {32, 32};
 static const Vec2d PLAYER_HIT_BOX_OFFSET = {10, 33};
 static const Vec2d PLAYER_SIZE = {17, 13};
 
+//MONSTERS STATS
+
+#define PAWN_HEALTH 2000
+#define PAWN_SPEED 100
+
+#define ALIEN_HEALTH 2000
+#define ALIEN_SPEED 200
+
+#define LANCER_HEALTH 7000
+#define LANCER_SPEED 150
+
+#define BOSS_HEALTH 9999
+#define BOSS_SPEED 50
+ 
+
 // Tower
 #define NORMAL_DAMAGE 500
 #define PIERCING_DAMAGE 800

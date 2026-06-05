@@ -2,6 +2,7 @@
 #include "monsterController.h"
 #include "monsterModel.h"
 #include "monsterView.h"
+#include "../data.h"
 
 typedef struct monster Monster;
 
