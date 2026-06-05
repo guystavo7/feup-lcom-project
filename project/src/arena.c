@@ -23,9 +23,9 @@
 #include "../resources/blue/tower/blueTower.h"
 #include "../resources/fruits/smallFruit.h"
 #include "../resources/icons/icons.h"
-#include "../resources/maps/map1/map1.h"
 #include "../resources/tiles/tiles.h"
 #include "../resources/upgradeMenu/upgradeMenu.h"
+
 
 #include "../../lab5/spriteXMP.h"
 #include "../../lab5/terminal.h"
@@ -653,7 +653,7 @@ static void createUpgradeUI(Arena* res) {
     res->upgradeHammerRightLong = buttonNew(UPGRADE_HAMMER_RIGHT_X, UPGRADE_HAMMER_RIGHT_Y, UPGRADE_HAMMER_W, UPGRADE_HAMMER_H, animatedSpriteNew((float)UPGRADE_HAMMER_FRAME_SPEED, hammerSpritesRight, UPGRADE_HAMMER_FRAMES, NORMAL), arenaUpgradeConfirmEletrictCb, basicButtonHoverFn);
 }
 
-Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile, const char* waterFile) {
+Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile, const char* waterFile, char** background) {
     Arena* res = malloc(sizeof(Arena));
     res->collidersN = malloc(sizeof(int) * TAGS_NUM);
     res->colliders = malloc(sizeof(BoxCollider*) * TAGS_NUM);
@@ -662,7 +662,9 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
         res->colliders[t] = NULL;
     }
 
-    res->path_test = pathNew(4, vectorCreateWithFloatingData(sizeof(float), NULL, 33 * 2, -50.0, 256.0, 32.0, 256.0, 64.0, 256.0, 96.0, 256.0, 128.0, 256.0, 160.0, 256.0, 192.0, 256.0, 224.0, 256.0, 256.0, 256.0, 256.0, 288.0, 288.0, 288.0, 320.0, 288.0, 352.0, 288.0, 384.0, 288.0, 384.0, 256.0, 416.0, 256.0, 416.0, 224.0, 448.0, 224.0, 480.0, 224.0, 512.0, 224.0, 544.0, 224.0, 544.0, 256.0, 576.0, 256.0, 576.0, 288.0, 576.0, 320.0, 608.0, 320.0, 640.0, 320.0, 672.0, 320.0, 704.0, 320.0, 736.0, 320.0, 768.0, 320.0, 880.0, 320.0, 881.0, 320.0));
+    res->path_test = pathNew(4, vectorCreateWithFloatingData(sizeof(float), NULL, 35 * 2, 
+   -50.0, 352.0, 32.0, 352.0, 64.0, 352.0, 64.0, 320.0, 96.0, 320.0, 96.0, 288.0, 128.0, 288.0, 160.0, 288.0, 192.0, 288.0, 224.0, 288.0, 224.0, 320.0, 224.0, 352.0, 256.0, 352.0, 256.0, 384.0, 256.0, 416.0, 256.0, 448.0, 288.0, 448.0, 320.0, 448.0, 352.0, 448.0, 384.0, 448.0, 416.0, 448.0, 448.0, 448.0, 480.0, 448.0, 512.0, 448.0, 512.0, 480.0, 544.0, 480.0, 576.0, 480.0, 608.0, 480.0, 608.0, 512.0, 640.0, 512.0, 672.0, 512.0, 704.0, 512.0, 736.0, 512.0, 800.0, 512.0, 801.0, 512.0
+));
     res->monster_test = pawnMonsterNew(10, 150, res->path_test);
     res->monsterGen1 = monsterGenNew(res->path_test, defaultMonsterCreator, defaultGenTimeFunc);
     res->fruits = NULL;
@@ -685,7 +687,7 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
     res->upgradeTargetIndex = -1;
     createUpgradeUI(res);
 
-    SpriteXPM* backgroundSprite = newSpriteXPM((xpm_map_t)background1, XPM_8_8_8, 0, 0);
+    SpriteXPM* backgroundSprite = newSpriteXPM((xpm_map_t)background, XPM_8_8_8, 0, 0);
     generateEmptyBuffer(backgroundSprite, terminal, 0, 0, false);
 
     for (int i = 0; i < res->tilesN; i++) {
@@ -704,8 +706,8 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
     res->longTowerBuildMenu = buildMenuNew(TOWER_KIND_LONG);
     statsBarSetBanana(res->statsBar, 5);
     statsBarSetAvocado(res->statsBar, 5);
-    statsBarSetCherry(res->statsBar, 0);
-    statsBarSetCarrot(res->statsBar, 0);
+    statsBarSetCherry(res->statsBar, 5);
+    statsBarSetCarrot(res->statsBar, 5);
 
     return res;
 }
@@ -953,8 +955,15 @@ void arenaHandleMonsterDamage(Arena* arena) {
 
                 Monster* monster = monsterGenGetMonster(arena->monsterGen1, (unsigned int)mi);
                 if (boxIsCollidingWithBox(projCollider, monsterGetBoxCollider(monster))) {
-                    monsterSumHP(monster, -1000);
-                    projectileAddPierce(arrow);
+                    if (!projectileHasHit(arrow, monsterGetBoxCollider(monster))) {
+                        if (projectileGetType(arrow) == PROJ_SKY_FALL) {
+                            monsterSumHP(monster, -10000);
+                        } else {
+                            monsterSumHP(monster, -1000);
+                        }
+                        projectileAddPierce(arrow);
+                        projectileAddHit(arrow, monsterGetBoxCollider(monster));
+                    }
                 }
             }
         }
@@ -1001,4 +1010,8 @@ void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
     statsBarUpdate(arena->statsBar, terminal, arena);
 
     cursorUpdate(getCursor(), terminal, deltaTime);
+}
+
+bool arenaIsGameOver(Arena* arena) {
+	return arena->HeroHP <= 0;
 }
