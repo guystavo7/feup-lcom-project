@@ -89,6 +89,7 @@ static const Vec2d FRUIT_SIZE = {32, 32};
 #define PLAYER_RUNNING_FRAMES 6
 static const Vec2d PLAYER_HIT_BOX_OFFSET = {10, 33};
 static const Vec2d PLAYER_SIZE = {17, 13};
+ 
 
 // Tower
 #define NORMAL_DAMAGE 500
@@ -274,18 +275,18 @@ static const Vec2d CARROT_STATS_POSITION = {SCREEN_WIDTH - 115 + 60, 20 + 52 + 1
 // Monsters
 // Pawn
 #define PAWN_HEALTH 2000
-#define PAWN_SPEED 10
+#define PAWN_SPEED 100
 
 // Alien
 #define ALIEN_HEALTH 2000
-#define ALIEN_SPEED 30
+#define ALIEN_SPEED 200
 
 // Lancer
 #define LANCER_HEALTH 7000
-#define LANCER_SPEED 10
+#define LANCER_SPEED 150
 
 // Boss
 #define BOSS_HEALTH 99999
-#define BOSS_SPEED 5
+#define BOSS_SPEED 25
 
 #endif
