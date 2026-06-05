@@ -22,6 +22,7 @@ typedef enum {
     ARENA_OUTCOME_LOSE,        /**< Jogador perdeu. */
 } ArenaOutcome;
 
+ 
 /** @brief Constroi uma arena a partir de ficheiros de mapa e listas de caminhos/spawns.
  *  @param[in] terminal Contexto grafico para desenho.
  *  @param[in] tilesFile CSV ou ficheiro de paredes/chao.
@@ -39,6 +40,7 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
 /** @brief Liberta toda a memoria associada a arena.
  *  @param[in] arena Instancia a libertar.
  */
+ 
 void arenaFree(Arena* arena);
 
 /** @brief Detecta colisoes do collider box com etiqueta tag contra outros colliders na arena.
