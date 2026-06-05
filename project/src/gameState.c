@@ -11,6 +11,9 @@
 #include "../resources/mainMenu/mainMenu.h"
 #include "../resources/pauseMenu/pauseMenu.h"
 
+#include "../resources/maps/map1/map1.h"
+#include "../resources/maps/map2/map2.h"
+
 #include <stdlib.h>
 
 static bool pressedNewGame = false;
@@ -242,7 +245,7 @@ static void runningGameAct(GameState* state, Terminal* terminal, float deltaTime
 
 GameState* runningGameNew(Terminal* terminal) {
     GameState* res = gameStateNew(runningGameAct, runningGameFree, runningGameTransition);
-    res->arena = arenaNew(terminal, map1, path1, lake1);
+    res->arena = arenaNew(terminal, map2, path2, lake2, background2);
     res->pauseMenu = newSpriteXPM((xpm_map_t)pauseMenuXPM[PAUSE_MENU_INDEX], XPM_8_8_8, 0, 0);
 
     // Resume Button
