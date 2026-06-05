@@ -72,9 +72,9 @@ struct Arena {
     int width;
     int height;
     int tileSize;
-
+ 
     Vector* pathList;
-    Vector* monsterGenList;
+    Vector* monsterGenList; 
 
     Player* player;
     Cursor* cursor;
@@ -669,20 +669,8 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
         res->collidersN[t] = 0;
         res->colliders[t] = NULL;
     }
-
-    /*
-
-    Paths:
-    p1:
-
-    P2:
-
-    Tiles:
-    P3:
-     Tiles: 30
-0.0, 160.0, 32.0, 160.0, 64.0, 160.0, 96.0, 160.0, 128.0, 160.0, 160.0, 160.0, 192.0, 160.0, 224.0, 160.0, 224.0, 192.0, 224.0, 224.0, 256.0, 224.0, 288.0, 224.0, 320.0, 224.0, 352.0, 224.0, 384.0, 224.0, 416.0, 224.0, 448.0, 224.0, 480.0, 224.0, 512.0, 224.0, 544.0, 224.0, 544.0, 192.0, 576.0, 192.0, 576.0, 160.0, 576.0, 128.0, 576.0, 96.0, 576.0, 64.0, 544.0, 64.0, 544.0, 32.0, 544.0, 0.0, 512.0, 0.0,
-
-    */
+ 
+     
 
     res->pathList = vectorCreate(sizeof(Path*), pathListFree);
     res->monsterGenList = vectorCreate(sizeof(MonsterGen*), monsterGenListFree);
@@ -713,15 +701,19 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
         vectorPushBack(res->monsterGenList, (char*)&mg);
     }
 
+  
     res->fruits = NULL;
     res->fruitsN = 0;
     res->carrotSpawnCooldown = FRUIT_CARROT_SPAWN_INTERVAL_SEC * 0.5f;
-
+ 
     /*
     res->collidersN[MONSTER_TAG] = 1;
     res->colliders[MONSTER_TAG] = malloc(sizeof(BoxCollider*) * res->collidersN[MONSTER_TAG]);
     res->colliders[MONSTER_TAG][0] = monsterGetBoxCollider(res->monster_test);
-    */
+    */ 
+    res->collidersN[MONSTER_TAG] = 0;
+    res->colliders[MONSTER_TAG] = malloc(sizeof(BoxCollider*) * res->collidersN[MONSTER_TAG]);
+ 
 
     createMap(res, tilesFile, TILE_SIZE);
     createMonsterPathColliders(res, pathFile);
@@ -751,11 +743,12 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
     res->healthBar = healthBarNew(res->HeroHP);
     res->statsBar = statsBarNew();
     res->basicTowerBuildMenu = buildMenuNew(TOWER_KIND_BASIC);
-    res->longTowerBuildMenu = buildMenuNew(TOWER_KIND_LONG);
-    statsBarSetBanana(res->statsBar, 15);
-    statsBarSetAvocado(res->statsBar, 15);
-    statsBarSetCherry(res->statsBar, 15);
-    statsBarSetCarrot(res->statsBar, 15);
+    res->longTowerBuildMenu = buildMenuNew(TOWER_KIND_LONG); 
+
+    statsBarSetBanana(res->statsBar, BANANA_START);
+    statsBarSetAvocado(res->statsBar, 0);
+    statsBarSetCherry(res->statsBar, 0);
+    statsBarSetCarrot(res->statsBar, 0); 
 
     return res;
 }
@@ -834,9 +827,9 @@ void arenaFree(Arena* arena) {
     for (int i = 0; i < arena->tilesN; i++) tileFree(arena->tiles[i]);
     for (int i = 0; i < arena->fruitsN; i++) collectableFree(arena->fruits[i].collectable);
     free(arena->fruits);
-
+ 
     vectorFree(arena->monsterGenList);
-    vectorFree(arena->pathList);
+    vectorFree(arena->pathList); 
 
     free(arena->colliders[WALLS_TAG]);
     free(arena->colliders[TOWER_TAG]);
@@ -1051,12 +1044,12 @@ void arenaUpdate(Arena* arena, Terminal* terminal, float deltaTime) {
     for (int i = arena->towersN - 1; i >= 0; i--) towerUpdate(arena->towers[i], terminal, arena, deltaTime);
 
     arenaHandleMonsterDamage(arena);
-
+ 
     for (unsigned int i = 0; i < vectorGetSize(arena->monsterGenList); i++) {
         MonsterGen* mg = *(MonsterGen**)vectorGet(arena->monsterGenList, i);
         arena->HeroHP -= monsterGenGetNumberOfInstantFinishedMonsters(mg);
         monsterGenUpdate(mg, arena, terminal, deltaTime);
-    }
+    } 
 
     arenaCollectableHandler(arena);
     arenaHandleConstruction(arena, terminal);
