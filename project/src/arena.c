@@ -1,4 +1,7 @@
 #include "../include/arena.h"
+/** @file arena.c
+ *  @brief Implementacao da arena: mapa, ondas, frutos, torres, menus de upgrade/construcao e colisoes.
+ */
 #include "../include/buildings/basicLongTower.h"
 #include "../include/buildings/basicTower.h"
 #include "../include/buildings/eletricTower.h"
@@ -127,6 +130,10 @@ struct Arena {
     bool ignore_boss_win;
 };
 
+/** @brief Selecciona o array XPM pequeno consoante o tipo de fruto.
+ *  @param[in] kind Tipo de fruto.
+ *  @return Ponteiro para dados XPM (static do recurso).
+ */
 static char** arena_fruit_xpm_for_kind(FruitKind kind) {
     switch (kind) {
         case FRUIT_BANANA:
@@ -142,6 +149,9 @@ static char** arena_fruit_xpm_for_kind(FruitKind kind) {
     }
 }
 
+/** @brief Actualiza o array de colliders COLLECTABLE_TAG com base nos frutos activos.
+ *  @param[in,out] arena Arena.
+ */
 static void arena_fruits_sync_colliders(Arena* arena) {
     int n = arena->fruitsN;
     arena->collidersN[COLLECTABLE_TAG] = n;
@@ -158,6 +168,12 @@ static void arena_fruits_sync_colliders(Arena* arena) {
     }
 }
 
+/** @brief Adiciona um fruto colecionavel com TTL e sincroniza colliders.
+ *  @param[in,out] arena Arena.
+ *  @param[in] position Posicao de spawn.
+ *  @param[in] kind Variante de fruto.
+ *  @param[in] ttl_sec Segundos ate expirar.
+ */
 static void arena_fruit_push(Arena* arena, Vec2d position, FruitKind kind, float ttl_sec) {
     int idx = arena->fruitsN;
     arena->fruitsN++;
@@ -174,6 +190,9 @@ static void arena_fruit_push(Arena* arena, Vec2d position, FruitKind kind, float
     arena_fruits_sync_colliders(arena);
 }
 
+/** @brief Sorteia tipo de fruto largado por monstro segundo tabela de probabilidades.
+ *  @return FruitKind sorteado.
+ */
 static FruitKind arena_roll_monster_drop_fruit_kind(void) {
     int r = rand() % 100;
     if (r < FRUIT_MONSTER_ROLL_BANANA_BELOW) return FRUIT_BANANA;
@@ -187,6 +206,11 @@ void arenaDeathFruit(Arena* arena, Vec2d position) {
     arena_fruit_push(arena, position, arena_roll_monster_drop_fruit_kind(), FRUIT_TIME_ON_SCREEN_SEC);
 }
 
+/** @brief Verifica se uma caixa de teste pode receber cenoura (sem path, lago ou torre).
+ *  @param[in] arena Arena.
+ *  @param[in] probe Caixa de teste.
+ *  @return true se posicao valida.
+ */
 static bool arena_carrot_probe_valid(Arena* arena, BoxCollider* probe) {
     BoxCollider* hits[PLACEMENT_QUERY_MAX];
     if (arenaDetectCollisions(arena, probe, PATH_TAG, hits) > 0) return false;
@@ -197,6 +221,9 @@ static bool arena_carrot_probe_valid(Arena* arena, BoxCollider* probe) {
     return true;
 }
 
+/** @brief Tenta colocar uma cenoura numa posicao aleatoria valida.
+ *  @param[in,out] arena Arena.
+ */
 static void arena_carrot_spawn_try(Arena* arena) {
     int spanW = MAP_TILES_X * TILE_SIZE - (int)FRUIT_SIZE.x;
     int spanH = MAP_TILES_Y * TILE_SIZE - (int)FRUIT_SIZE.y;
@@ -213,6 +240,10 @@ static void arena_carrot_spawn_try(Arena* arena) {
     }
 }
 
+/** @brief Decrementa cooldown global e dispara tentativa de spawn de cenoura.
+ *  @param[in,out] arena Arena.
+ *  @param[in] deltaTime Delta em segundos.
+ */
 static void arena_carrot_spawn_tick(Arena* arena, float deltaTime) {
     if (arena == NULL) return;
     arena->carrotSpawnCooldown -= deltaTime;
@@ -221,6 +252,10 @@ static void arena_carrot_spawn_tick(Arena* arena, float deltaTime) {
     arena_carrot_spawn_try(arena);
 }
 
+/** @brief Remove fruto por indice e compacta o array.
+ *  @param[in,out] arena Arena.
+ *  @param[in] index Indice valido em fruits.
+ */
 static void arena_fruit_remove_at(Arena* arena, int index) {
     if (index < 0 || index >= arena->fruitsN) return;
     collectableFree(arena->fruits[index].collectable);
@@ -237,6 +272,10 @@ static void arena_fruit_remove_at(Arena* arena, int index) {
     arena_fruits_sync_colliders(arena);
 }
 
+/** @brief Decrementa TTL dos frutos e remove os expirados ou inactivos.
+ *  @param[in,out] arena Arena.
+ *  @param[in] deltaTime Delta em segundos.
+ */
 static void arena_fruits_tick_time_to_live(Arena* arena, float deltaTime) {
     for (int i = 0; i < arena->fruitsN;) {
         Collectable* c = arena->fruits[i].collectable;
@@ -253,6 +292,10 @@ static void arena_fruits_tick_time_to_live(Arena* arena, float deltaTime) {
     }
 }
 
+/** @brief Credita recurso na stats bar quando o jogador apanha um fruto.
+ *  @param[in,out] sb Barra de estatisticas.
+ *  @param[in] kind Tipo de fruto apanhado.
+ */
 static void arena_pickup_add_fruit_to_stats_bar(StatsBar* sb, FruitKind kind) {
     switch (kind) {
         case FRUIT_BANANA:
@@ -272,8 +315,12 @@ static void arena_pickup_add_fruit_to_stats_bar(StatsBar* sb, FruitKind kind) {
     }
 }
 
+/** @brief Contexto global temporario para callbacks de botoes de upgrade (padrao legado). */
 static Arena* s_arena_upgrade_button_ctx;
 
+/** @brief Fecha UI de upgrade e repoe botoes.
+ *  @param[in,out] arena Arena.
+ */
 static void arenaCloseUpgradeMenu(Arena* arena) {
     arena->upgradePhase = ARENA_UPGRADE_IDLE;
     arena->upgradeTargetIndex = -1;
@@ -283,6 +330,11 @@ static void arenaCloseUpgradeMenu(Arena* arena) {
     buttonReset(arena->upgradeHammerRightLong);
 }
 
+/** @brief Verifica custo e debita recursos da stats bar se possivel.
+ *  @param[in,out] arena Arena.
+ *  @param[in] newKind Tipo de torre a comprar.
+ *  @return true se a compra foi debitada com sucesso.
+ */
 static bool buyTower(Arena* arena, TowerKind newKind) {
     bool canBuy = true;
     const int* cost = TOWER_COST[newKind];
@@ -297,6 +349,10 @@ static bool buyTower(Arena* arena, TowerKind newKind) {
     return canBuy;
 }
 
+/** @brief Substitui a torre seleccionada por uma nova variante apos compra valida.
+ *  @param[in,out] arena Arena.
+ *  @param[in] newKind Novo TowerKind.
+ */
 static void arenaReplaceTargetTower(Arena* arena, TowerKind newKind) {
     int i = arena->upgradeTargetIndex;
     if (i < 0 || i >= arena->towersN || !buyTower(arena, newKind)) return;
@@ -336,26 +392,42 @@ static void arenaReplaceTargetTower(Arena* arena, TowerKind newKind) {
     arenaCloseUpgradeMenu(arena);
 }
 
+/** @brief Callback: confirma upgrade para torre rapida.
+ *  @param[in] self Botao (nao usado).
+ */
 static void arenaUpgradeConfirmFastCb(Button* self) {
     (void)self;
     if (s_arena_upgrade_button_ctx) arenaReplaceTargetTower(s_arena_upgrade_button_ctx, TOWER_KIND_FAST);
 }
 
+/** @brief Callback: confirma upgrade para torre piercing.
+ *  @param[in] self Botao (nao usado).
+ */
 static void arenaUpgradeConfirmPiercingCb(Button* self) {
     (void)self;
     if (s_arena_upgrade_button_ctx) arenaReplaceTargetTower(s_arena_upgrade_button_ctx, TOWER_KIND_PIERCING);
 }
 
+/** @brief Callback: confirma upgrade para morteiro.
+ *  @param[in] self Botao (nao usado).
+ */
 static void arenaUpgradeConfirmMortarCb(Button* self) {
     (void)self;
     if (s_arena_upgrade_button_ctx) arenaReplaceTargetTower(s_arena_upgrade_button_ctx, TOWER_KIND_MORTAR);
 }
 
+/** @brief Callback: confirma upgrade para torre electrica.
+ *  @param[in] self Botao (nao usado).
+ */
 static void arenaUpgradeConfirmEletrictCb(Button* self) {
     (void)self;
     if (s_arena_upgrade_button_ctx) arenaReplaceTargetTower(s_arena_upgrade_button_ctx, TOWER_KIND_ELETRICT);
 }
 
+/** @brief Abre menu de upgrade para torre basica no indice ti.
+ *  @param[in,out] arena Arena.
+ *  @param[in] ti Indice em towers[].
+ */
 static void basicTowerClick(Arena* arena, int ti) {
     arena->upgradePhase = ARENA_UPGRADE_MENU_OPEN;
     arena->upgradeTargetIndex = ti;
@@ -364,6 +436,10 @@ static void basicTowerClick(Arena* arena, int ti) {
     arena->towerType = TOWER_KIND_BASIC;
 }
 
+/** @brief Abre menu de upgrade para torre longa no indice ti.
+ *  @param[in,out] arena Arena.
+ *  @param[in] ti Indice em towers[].
+ */
 static void longTowerClick(Arena* arena, int ti) {
     arena->upgradePhase = ARENA_UPGRADE_MENU_OPEN;
     arena->upgradeTargetIndex = ti;
@@ -372,6 +448,9 @@ static void longTowerClick(Arena* arena, int ti) {
     arena->towerType = TOWER_KIND_LONG;
 }
 
+/** @brief Detecta clique numa torre basica/long e abre UI de upgrade.
+ *  @param[in,out] arena Arena.
+ */
 static void arenaTryOpenUpgradeFromTowerClick(Arena* arena) {
     if (arena->constructPhase != ARENA_CONSTRUCT_NORMAL || arena->upgradePhase != ARENA_UPGRADE_IDLE) return;
     Cursor* cur = getCursor();
@@ -394,6 +473,9 @@ static void arenaTryOpenUpgradeFromTowerClick(Arena* arena) {
     }
 }
 
+/** @brief Input e hover do menu de upgrade para torre basica.
+ *  @param[in,out] arena Arena.
+ */
 static void arenaHandleUpgradeUiBasic(Arena* arena) {
     s_arena_upgrade_button_ctx = arena;
     Cursor* cur = getCursor();
@@ -428,6 +510,9 @@ static void arenaHandleUpgradeUiBasic(Arena* arena) {
     s_arena_upgrade_button_ctx = NULL;
 }
 
+/** @brief Input e hover do menu de upgrade para torre longa.
+ *  @param[in,out] arena Arena.
+ */
 static void arenaHandleUpgradeUiLong(Arena* arena) {
     s_arena_upgrade_button_ctx = arena;
     Cursor* cur = getCursor();
@@ -461,6 +546,11 @@ static void arenaHandleUpgradeUiLong(Arena* arena) {
     s_arena_upgrade_button_ctx = NULL;
 }
 
+/** @brief Desenha sprites e botoes do menu de upgrade basico.
+ *  @param[in] arena Arena.
+ *  @param[in] terminal Terminal.
+ *  @param[in] deltaTime Delta para animacao dos botoes.
+ */
 static void arenaDrawUpgradeMenuBasic(Arena* arena, Terminal* terminal, float deltaTime) {
     drawSpriteXPM(arena->upgradeScrollLeftBasic, terminal, UPGRADE_SCROLL_LEFT_X, UPGRADE_SCROLL_ORIGIN_Y, false);
     drawSpriteXPM(arena->upgradeScrollRightBasic, terminal, UPGRADE_SCROLL_RIGHT_X, UPGRADE_SCROLL_ORIGIN_Y, false);
@@ -468,6 +558,11 @@ static void arenaDrawUpgradeMenuBasic(Arena* arena, Terminal* terminal, float de
     buttonDraw(arena->upgradeHammerRightBasic, terminal, deltaTime, false);
 }
 
+/** @brief Desenha menu de upgrade para torre longa.
+ *  @param[in] arena Arena.
+ *  @param[in] terminal Terminal.
+ *  @param[in] deltaTime Delta para animacao.
+ */
 static void arenaDrawUpgradeMenuLong(Arena* arena, Terminal* terminal, float deltaTime) {
     drawSpriteXPM(arena->upgradeScrollLeftLong, terminal, UPGRADE_SCROLL_LEFT_X, UPGRADE_SCROLL_ORIGIN_Y, false);
     drawSpriteXPM(arena->upgradeScrollRightLong, terminal, UPGRADE_SCROLL_RIGHT_X, UPGRADE_SCROLL_ORIGIN_Y, false);
@@ -475,6 +570,11 @@ static void arenaDrawUpgradeMenuLong(Arena* arena, Terminal* terminal, float del
     buttonDraw(arena->upgradeHammerRightLong, terminal, deltaTime, false);
 }
 
+/** @brief Le CSV de tiles, cria Tile* e colliders de paredes/bordas.
+ *  @param[in,out] arena Arena.
+ *  @param[in] filename Caminho do ficheiro walls/tiles.
+ *  @param[in] tileSize Tamanho em pixels de cada celula.
+ */
 static void createMap(Arena* arena, const char* filename, int tileSize) {
     FILE* file = fopen(filename, "r");
     if (!file) {
@@ -534,6 +634,10 @@ static void createMap(Arena* arena, const char* filename, int tileSize) {
     free(map);
 }
 
+/** @brief Le ficheiro de path e cria colliders PATH_TAG para colocacao de torres.
+ *  @param[in,out] arena Arena.
+ *  @param[in] filename CSV do path.
+ */
 static void createMonsterPathColliders(Arena* arena, const char* filename) {
     FILE* file = fopen(filename, "r");
     if (!file) {
@@ -583,6 +687,10 @@ static void createMonsterPathColliders(Arena* arena, const char* filename) {
     free(map);
 }
 
+/** @brief Le ficheiro de agua e cria colliders LAKE_TAG.
+ *  @param[in,out] arena Arena.
+ *  @param[in] filename CSV de agua.
+ */
 static void createLakeColliders(Arena* arena, const char* filename) {
     FILE* file = fopen(filename, "r");
     if (!file) {
@@ -632,6 +740,9 @@ static void createLakeColliders(Arena* arena, const char* filename) {
     free(map);
 }
 
+/** @brief Instancia o jogador e regista o collider em PLAYER_TAG.
+ *  @param[in,out] arena Arena.
+ */
 static void createPlayer(Arena* arena) {
     arena->player = playerNew(PLAYER_POS);
 
@@ -640,6 +751,9 @@ static void createPlayer(Arena* arena) {
     arena->collidersN[PLAYER_TAG] = 1;
 }
 
+/** @brief Cria sprites e botoes do menu de upgrade (basico e longo).
+ *  @param[in,out] res Arena onde se guarda a UI.
+ */
 static void createUpgradeUI(Arena* res) {
     res->upgradeScrollLeftBasic = newSpriteXPM((xpm_map_t)upgradeMenuXPM[UPGRADE_MENU_XPM_FAST], XPM_8_8_8, 0, 0);
     res->upgradeScrollRightBasic = newSpriteXPM((xpm_map_t)upgradeMenuXPM[UPGRADE_MENU_XPM_PIERCING], XPM_8_8_8, 0, 0);
@@ -671,6 +785,10 @@ static void createUpgradeUI(Arena* res) {
     res->upgradeHammerRightLong = buttonNew(UPGRADE_HAMMER_RIGHT_X, UPGRADE_HAMMER_RIGHT_Y, UPGRADE_HAMMER_W, UPGRADE_HAMMER_H, animatedSpriteNew((float)UPGRADE_HAMMER_FRAME_SPEED, hammerSpritesRight, UPGRADE_HAMMER_FRAMES, NORMAL), arenaUpgradeConfirmEletrictCb, basicButtonHoverFn);
 }
 
+/** @brief Baralha array de inteiros (Fisher-Yates simplificado).
+ *  @param[in,out] arr Array.
+ *  @param[in] n Comprimento.
+ */
 static void arena_shuffle_ints(int* arr, unsigned n) {
     for (unsigned i = n; i > 1u; i--) {
         unsigned j = (unsigned)rand() % i;
@@ -680,6 +798,10 @@ static void arena_shuffle_ints(int* arr, unsigned n) {
     }
 }
 
+/** @brief Preenche wave_tokens e tempos de spawn para a onda wave_index.
+ *  @param[in,out] arena Arena.
+ *  @param[in] wave_index Indice da onda (minuto ou indice logico).
+ */
 static void arena_fill_wave_tokens(Arena* arena, int wave_index) {
     WaveComposition wc = {0u, 0u, 0u};
     waves_get_composition(arena->level, (unsigned)wave_index, &wc);
@@ -711,11 +833,18 @@ static void arena_fill_wave_tokens(Arena* arena, int wave_index) {
     arena->wave_token_cursor = 0u;
 }
 
+/** @brief Numero de paths paralelos activos para distribuir spawns.
+ *  @param[in] arena Arena.
+ *  @return Numero de paths (>=1).
+ */
 static unsigned arena_paths_count(const Arena* arena) {
     if (arena->wave_gen_count < 3u) return 1u;
     return arena->wave_gen_count / 3u;
 }
 
+/** @brief Dispara monsterGenSpawnOne para cada token cuja hora de spawn ja passou.
+ *  @param[in,out] arena Arena.
+ */
 static void arena_emit_wave_spawns(Arena* arena) {
     unsigned n_paths = arena_paths_count(arena);
     if (n_paths == 0u) n_paths = 1u;
@@ -733,6 +862,9 @@ static void arena_emit_wave_spawns(Arena* arena) {
     }
 }
 
+/** @brief Invoca spawn do boss quando o tempo e o nivel o permitem.
+ *  @param[in,out] arena Arena.
+ */
 static void arena_try_spawn_boss(Arena* arena) {
     if(!arena->ignore_boss_win){
     if (!waves_level_has_boss(arena->level)) return;
@@ -741,6 +873,10 @@ static void arena_try_spawn_boss(Arena* arena) {
     }
 }
 
+/** @brief Actualiza relogio de partida, ondas e condicoes de vitoria antecipada (nivel 0).
+ *  @param[in,out] arena Arena.
+ *  @param[in] delta_t Delta em segundos.
+ */
 static void arena_wave_tick(Arena* arena, float delta_t) {
     if (arena->outcome != ARENA_OUTCOME_PLAYING) return;
 
@@ -779,6 +915,9 @@ static void arena_wave_tick(Arena* arena, float delta_t) {
     }
 }
 
+/** @brief Marca vitoria se o boss foi derrotado.
+ *  @param[in,out] arena Arena.
+ */
 static void arena_check_boss_win(Arena* arena) {
     if (arena->outcome != ARENA_OUTCOME_PLAYING) return;
     if (!waves_level_has_boss(arena->level)) return;
@@ -979,6 +1118,9 @@ int arenaDetectCollisions(Arena* arena, BoxCollider* box, int tag, BoxCollider**
     return j;
 }
 
+/** @brief Detecta colisao jogador-fruto, credita stats bar e remove o fruto.
+ *  @param[in,out] arena Arena.
+ */
 static void arenaCollectableHandler(Arena* arena) {
     BoxCollider* hitBox = playerModelGetHitBox(playerGetPlayerModel(arena->player));
     BoxCollider* collisions[PLACEMENT_QUERY_MAX];
@@ -997,6 +1139,10 @@ static void arenaCollectableHandler(Arena* arena) {
     }
 }
 
+/** @brief Fluxo de construcao de torres, menus de upgrade e modo de cursor.
+ *  @param[in,out] arena Arena.
+ *  @param[in] terminal Terminal.
+ */
 static void arenaHandleConstruction(Arena* arena, Terminal* terminal) {
     Cursor* cur = getCursor();
     Vec2d mousePos = {cursorGetX(cur), cursorGetY(cur)};

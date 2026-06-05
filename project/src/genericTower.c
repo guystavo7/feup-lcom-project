@@ -1,4 +1,5 @@
 #include "../include/buildings/genericTower.h"
+/** @file genericTower.c @brief Implementacao; ver comentarios nas funcoes estaticas onde aplicavel. */
 #include "../include/components/animatedSprite.h"
 #include "../include/components/boxCollider.h"
 #include "../include/data.h"

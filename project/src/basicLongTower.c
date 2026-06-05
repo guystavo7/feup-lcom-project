@@ -1,4 +1,5 @@
 #include "../include/buildings/basicLongTower.h"
+/** @file basicLongTower.c @brief Implementacao; ver comentarios nas funcoes estaticas onde aplicavel. */
 #include "../include/data.h"
 #include "../include/components/projectile.h"
 #include "../resources/blue/tower/blueTower.h"

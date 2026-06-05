@@ -1,4 +1,5 @@
 #include "../include/game.h"
+/** @file game.c @brief Implementacao; ver comentarios nas funcoes estaticas onde aplicavel. */
 #include "../include/gameState.h"
 
 static GameState* state;

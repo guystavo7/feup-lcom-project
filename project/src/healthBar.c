@@ -1,4 +1,5 @@
 #include "../include/ui/healthBar.h"
+/** @file healthBar.c @brief Implementacao; ver comentarios nas funcoes estaticas onde aplicavel. */
 #include "../include/data.h"
 #include "../include/ui/numbers.h"
 #include "../resources/ui/ui.h"

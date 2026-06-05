@@ -1,4 +1,5 @@
 #include "./../include/player/playerIdle.h"
+/** @file playerIdle.c @brief Implementacao; ver comentarios nas funcoes estaticas onde aplicavel. */
 #include "./../include/player/playerRunning.h"
 
 void idleAct(PlayerState* state, PlayerModel* model, Terminal* terminal, Arena* arena, float deltaTime) {

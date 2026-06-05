@@ -1,4 +1,5 @@
 #include "../include/tiles/tile.h"
+/** @file tile.c @brief Implementacao; ver comentarios nas funcoes estaticas onde aplicavel. */
 #include "../include/data.h"
 #include "../include/utils/vec2d.h"
 #include <stdlib.h>

@@ -1,4 +1,5 @@
 #include "../../include/monster/monsterModel.h"
+/** @file monsterModel.c @brief Implementacao; ver comentarios nas funcoes estaticas onde aplicavel. */
  
 
 struct monsterModel

@@ -1,4 +1,5 @@
 #include "./../include/player/playerRunning.h"
+/** @file playerRunning.c @brief Implementacao; ver comentarios nas funcoes estaticas onde aplicavel. */
 #include "./../include/player/playerIdle.h"
 
 void runningAct(PlayerState* state, PlayerModel* model, Terminal* terminal, Arena* arena, float deltaTime) {

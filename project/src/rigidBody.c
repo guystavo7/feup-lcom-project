@@ -1,4 +1,5 @@
 #include "../include/components/rigidBody.h"
+/** @file rigidBody.c @brief Implementacao; ver comentarios nas funcoes estaticas onde aplicavel. */
 #include "../include/components/boxCollider.h"
 #include "../include/utils/vec2d.h"
 #include "../include/data.h"

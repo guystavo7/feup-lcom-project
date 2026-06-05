@@ -1,6 +1,11 @@
 #ifndef DATA
 #define DATA
 
+/** @file data.h
+ *  @brief Parametros estaticos do jogo: caminhos de ficheiros de mapa, dimensoes do ecra, tags,
+ *         stats de torres/monstros, posicoes de UI e macros de balanceamento.
+ */
+
 #include "../resources/maps/map1/map1.h"
 #include "../resources/maps/map2/map2.h"
 #include "utils/vec2d.h"

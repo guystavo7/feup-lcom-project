@@ -1,4 +1,5 @@
 #include "../include/buildings/eletricTower.h"
+/** @file eletrictTower.c @brief Implementacao; ver comentarios nas funcoes estaticas onde aplicavel. */
 #include "../include/data.h"
 #include "../resources/yellow/tower/yellowTower.h"
 #include "../resources/yellow/monk/monkIdle.h"

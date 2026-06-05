@@ -1,3 +1,6 @@
+/** @file vector.c
+ *  @brief Implementacao do vector generico (buffer contiguo, redimensionamento, free opcional).
+ */
 
 #include "../../include/data_structures/vector.h"
 
@@ -9,6 +12,10 @@
 #include <stdarg.h>
 #include <stdbool.h>
 
+/** @brief Log de depuracao condicional (activo apenas se DEBUG != 0).
+ *  @param[in] format String estilo printf.
+ *  @param[in] ... Argumentos variadicos.
+ */
 void printTest(const char* format, ...) {
 #if DEBUG
     va_list args;
@@ -85,6 +92,9 @@ Vector* vectorCreateWithFloatingData(unsigned int data_size, void (*freeFunction
     return vec;
 }
 
+/** @brief Chama freeFunction em todos os elementos presentes (para libertar ponteiros internos).
+ *  @param[in,out] vec Vector cujos elementos serao libertados.
+ */
 void vectorCleanVecData(Vector* vec) {
     if (vec->freeFunction != NULL) {
         for (unsigned int i = 0; i < vec->size; i++) {
@@ -141,6 +151,11 @@ void vectorResize(Vector* vec, unsigned int size) {
     vec->size = size;
 }
 
+/** @brief Escreve bytes em pos sem libertar elemento antigo (uso interno apos resize).
+ *  @param[in,out] vec Vector.
+ *  @param[in] pos Indice valido (< size).
+ *  @param[in] val Origem dos data_size bytes.
+ */
 void vectorSet_(Vector* vec, unsigned int pos, char* val) {
     if (!(pos < vec->size)) {
         printf("index out of range");

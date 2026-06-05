@@ -1,4 +1,5 @@
 #include "../include/player/playerState.h"
+/** @file playerState.c @brief Implementacao; ver comentarios nas funcoes estaticas onde aplicavel. */
 
 struct PlayerState {
     void (*act)(PlayerState* state, PlayerModel* model, Terminal* terminal, Arena* arena, float deltaTime);

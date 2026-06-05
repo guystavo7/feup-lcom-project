@@ -1,4 +1,5 @@
 #include "../../include/monster/monsterGen.h"
+/** @file monsterGen.c @brief Implementacao; ver comentarios nas funcoes estaticas onde aplicavel. */
 #include "../../include/monster/alienMonster.h"
 #include "../../include/monster/spearManMonster.h"
 #include "../../include/monster/pawnMonster.h"

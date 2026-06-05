@@ -1,4 +1,5 @@
 #include "../../include/monster/monsterGen.h"
+/** @file waveFunctions.c @brief Implementacao; ver comentarios nas funcoes estaticas onde aplicavel. */
 
  
 

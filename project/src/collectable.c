@@ -1,4 +1,5 @@
 #include "../include/tiles/collectable.h"
+/** @file collectable.c @brief Implementacao; ver comentarios nas funcoes estaticas onde aplicavel. */
 #include <stdlib.h>
 
 struct Collectable {

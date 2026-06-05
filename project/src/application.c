@@ -15,12 +15,22 @@
 #include <stdio.h>
 #include <unistd.h>
 
-/** If proj is started from project/src or project/build, cwd is not project/; chdir once so resource paths need no "..". */
+/** @file application.c
+ *  @brief Ponto de entrada: dispositivos LCF, cursor, teclado e arranque do jogo.
+ */
+
+/** @brief Garante cwd na pasta do projecto para paths de recursos funcionarem.
+ */
 static void ensure_project_resource_cwd(void) {
     if (access("resources/map/grid_walls.csv", R_OK) == 0) return;
     (void)chdir("..");
 }
 
+/** @brief Funcao main: inicializa subsistemas LCF e entra no loop do jogo.
+ *  @param[in] argc Numero de argumentos.
+ *  @param[in] argv Argumentos da linha de comandos.
+ *  @return Codigo de saida do programa.
+ */
 int main(int argc, char* argv[]) {
     // sets the language of LCF messages (can be either EN-US or PT-PT)
     lcf_set_language("EN-US");
