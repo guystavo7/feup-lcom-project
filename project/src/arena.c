@@ -1045,3 +1045,10 @@ bool arenaIsGameOver(Arena* arena, int* health) {
 	*health = arena->HeroHP;
     return arena->isGameOver;
 }
+
+void arenaSpawnBoss(Arena* arena) {
+    if (!arena || !arena->pathList || vectorGetSize(arena->pathList) == 0) return;
+    Path* path = *(Path**)vectorGet(arena->pathList, 0);
+    MonsterGen* mg = monsterGenNew(path, bossMonsterCreator, singleSpawnGenTimeFunc);
+    vectorPushBack(arena->monsterGenList, (char*)&mg);
+}

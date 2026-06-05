@@ -13,10 +13,10 @@ struct StatsBar {
 
 StatsBar* statsBarNew() {
     StatsBar* statsBar = malloc(sizeof(StatsBar));
-    statsBar->banana = numberNew(0);
-    statsBar->avocado = numberNew(0);
-    statsBar->cherry = numberNew(0);
-    statsBar->carrot = numberNew(0);
+    statsBar->banana = numberNew(99);
+    statsBar->avocado = numberNew(99);
+    statsBar->cherry = numberNew(99);
+    statsBar->carrot = numberNew(99);
 
     statsBar->sprite = newSpriteXPM((xpm_map_t)uiXPM[STATS_BAR_INDEX], XPM_8_8_8, 0, 0);
 
