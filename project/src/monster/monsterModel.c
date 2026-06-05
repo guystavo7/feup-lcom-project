@@ -25,7 +25,8 @@ MonsterModel* monsterModelNew(float x,float y,float sizeX,float sizeY,float velX
   m->hp=hp; 
   m->initialHP=hp;
   m->dead=false;
-  
+  m->finishedPath=false;
+
   return m;
 }
 
