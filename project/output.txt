@@ -1,3 +1,0 @@
-Error: Could not open map file: /home/lcom/labs/grupo_2leic13_2/project/resources/maps/map1/walls.csv
-Error: Could not open map file: /home/lcom/labs/grupo_2leic13_2/project/resources/maps/map1/path.csv
-Error: Could not open map file: /home/lcom/labs/grupo_2leic13_2/project/resources/maps/map1/water.csv

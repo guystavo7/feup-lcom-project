@@ -15,12 +15,19 @@
 
 #define TAGS_NUM 		8
 
-// File Paths (map1: resources/maps/map1 — alinhar com MAP_TILES_* e background em map1.h)
-static const char* map1 = "/home/lcom/labs/grupo_2leic13_2/project/resources/maps/map1/walls.csv";
-static const char* path1 = "/home/lcom/labs/grupo_2leic13_2/project/resources/maps/map1/path.csv";
-static const char* lake1 = "/home/lcom/labs/grupo_2leic13_2/project/resources/maps/map1/water.csv";
+// File Paths
+/* 
+static const char* map1 = "/home/lcom/labs/project/resources/maps/map1/walls.csv";
+static const char* path1 = "/home/lcom/labs/project/resources/maps/map1/path.csv";
+static const char* lake1 = "/home/lcom/labs/project/resources/maps/map1/water.csv";
+*/
 
-// Screen configs (800x600 / 25x19 tiles — mesmo tamanho que o XPM background1 em map1.h)
+ static const char* map1 =  "/home/lcom/labs/grupo_2leic13_2/project/resources/maps/map1/walls.csv";
+ static const char* path1 = "/home/lcom/labs/grupo_2leic13_2/project/resources/maps/map1/path.csv";
+ static const char* lake1 = "/home/lcom/labs/grupo_2leic13_2/project/resources/maps/map1/water.csv";
+
+
+// Screen configs
 #define MODE 0x115
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 600

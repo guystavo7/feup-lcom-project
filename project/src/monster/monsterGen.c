@@ -6,7 +6,10 @@
 #include <stdlib.h>
 
 Monster* defaultMonsterCreator(Path* path) {
-    return alienMonsterNew(10, 10, path);
+    Vec2d startPos;
+    pathGetPoint(path,0,&startPos);
+
+    return alienMonsterNew(startPos.x,startPos.y, path);
 }
 
 static float counter = 0;
@@ -110,15 +113,17 @@ void monsterGenUpdate(MonsterGen* mg, Arena* arena, Terminal* terminal, float de
         vectorPopBack(mg->activeMonsterIdSorted);
     }
     int stackSize;
-    int monsterId;
-    Vec2d v = {10, 10};
+    int monsterId; 
 
+    Vec2d startPos;
+    pathGetPoint(mg->path,0,&startPos);
+    
     while (n_monster_to_render > 0) {
         stackSize = vectorGetSize(mg->availableMonsterIdStack);
         if (stackSize > 0) {
             monsterId = vectorGetVal(mg->availableMonsterIdStack, stackSize - 1);
             Monster* m = *(Monster**)vectorGet(mg->monsterList, monsterId);
-            monsterReset(m, &v);
+            monsterReset(m,&startPos );
             vectorPopBack(mg->availableMonsterIdStack);
             vectorSetVal(mg->deactivatedMonsterIdList, monsterId, false);
             vectorPushBackVal(mg->activeMonsterIdSorted, monsterId);
