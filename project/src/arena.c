@@ -832,7 +832,7 @@ Arena* arenaNew(Terminal* terminal, const char* tilesFile, const char* pathFile,
         }
     }
 
-    res->HeroHP = 99;
+    res->HeroHP = 20;
     res->healthBar = healthBarNew(res->HeroHP);
     res->statsBar = statsBarNew();
     res->basicTowerBuildMenu = buildMenuNew(TOWER_KIND_BASIC);

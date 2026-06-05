@@ -299,7 +299,7 @@ static const Vec2d CARROT_STATS_POSITION = {SCREEN_WIDTH - 115 + 60, 20 + 52 + 1
 
 // Lancer
 #define LANCER_HEALTH 7000
-#define LANCER_SPEED 150
+#define LANCER_SPEED 75 
 
 // Boss
 #define BOSS_HEALTH 99999
