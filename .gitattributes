@@ -2,7 +2,7 @@
 # * text eol=lf
 
 # Imagens e ficheiros binários
-*.png binary
+# *.png binary
 *.jpg binary
 *.jpeg binary
 *.gif binary
