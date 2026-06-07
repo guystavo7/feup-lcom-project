@@ -71,12 +71,12 @@ Each level still uses the same technical pipeline: three comma-separated grid fi
 For our project, we adopted an OOP approach focusing on the SOLID principles, particularly the Single Responsibility Principle. Although, due to time constraints, we were unable to fully accomplish it in all files. Regardless, in a general view, we can define the flow of our project in this abstract UML.
 
 
-<img src="./misc/general.png">
+![Diagrama UML geral](./misc/general.png)
 
 ### Application
 The <a href="./project/src/application.c">application.c</a> is the entry point of our project; it is the file that starts our program and mainly handles all the initialization of the drivers and their interrupts. It also owns a `Game` object whose update method is called on each timer 0 interrupt.
 
-<img src="./misc/application.png">
+![Diagrama UML application](./misc/application.png)
 
 ### Game
 The <a href="./project/src/game.c">game</a> class has the responsibility to handle the state of the game, i.e. it should be able to perform all the necessary actions of each state and transition between them. For that reason, we designed a state machine with the corresponding states:
@@ -86,8 +86,8 @@ The <a href="./project/src/game.c">game</a> class has the responsibility to hand
 - Game Over: state that should display when you lose
 - Win Game: state that should display when you win
 
-<img src="./misc/gameState1.png">
-<img src="./misc/gameState2.png">
+![Diagrama UML gameState1](./misc/gameState1.png)
+![Diagrama UML gameState2](./misc/gameState2.png)
 
 ### Arena 
 The <a href="./project/src/arena.c">Arena</a> class is a large wrapper that holds all running objects from the running game and calls their update methods. Besides being a wrapper, it also holds some auxiliary functions to help components connect with other objects, for example a method to help colliders detect if they are colliding with other objects, or a method to check if the game is over. It reads the level CSVs, maintains wave timing, fruit spawning, towers, and UI such as the build and upgrade menus.
@@ -104,8 +104,8 @@ To explain the rest of our project, we need to explain the components directory.
 ### Player
 The <a href="./project/src/player.c">Player class</a> follows something similar to an MVC architecture with only a <a href="./project/src/playerModel.c">model class</a> and a <a href="./project/src/playerController.c">controller class</a> to handle the visual and input logic. To handle all variations of player behaviour, we defined player states to process inputs and decide which animation to show. To make the player easier to manage, we use animated sprites for different actions, a rigid body for collisions with walls, and box colliders for the hitbox.
 
-<img src="./misc/playerState1.png">
-<img src="./misc/playerState2.png">
+![Diagrama UML playerState1](./misc/playerState1.png)
+![Diagrama UML playerState2](./misc/playerState2.png)
 
 ### Tile and Collectable
 The <a href="./project/src/tile.c">Tile class</a> and <a href="./project/src/collectable.c">Collectable class</a> are classes that have a box collider and SpriteXPM and they represent a generic tile to display on the map. The collectable is special in that it disappears after being collected, to represent the fruits the player needs to gather. In order to detect collisions with fruits, we use the arena as an observer to detect which collectable collided with the player.
