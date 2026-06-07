@@ -129,8 +129,18 @@ Besides that, each tower also has a projectile stored in it. The <a href="./proj
 - sky fall: a projectile that falls from the sky and is affected by gravity
 - near: an immobile projectile 
 
-### Monsters
-Someone that knows fill it
+### Monsters and its Generators
+To ensure modularity, the <a href="./project/src/monster/monster.c">monster</a> (pseudo-)"class" was designed to keep all general information in it. Through this factory-based approach, the creation of a new (specific) monster was simplified by the implementation of a new (pseudo-)"constructor" that would define its attributes, such as the speed, HP and the animation generator function. Furthermore, a clean implementation of the facade pattern for the MVC architecture components was accomplished in this class, which aggregates all the distinct data and functionalities from monsterModel, monsterView and monsterController. 
+
+The monsters we created were:
+- pawn: a simple basic monster with a medium speed and HP.
+- alien: the fastest monster in the game, but also the weakest, even though it doesn't make him that easy to kill.
+- spearMan: a little bit slow, tough man with a long spear that is hard to kill.
+- boss: as the name says, it is an ultimately powerful beast and probably the last thing you want to see. His massive aura farming while walking is going to make you tremble with fear and defeating him is our final challenge to you so you can claim ultimate victory.
+
+The MonsterGen (pseudo-)"class" is responsible for the generation of monsters along a single path (a monsterGen is required for each path). It implements a dynamic object pool pattern in order to avoid the unnecessary memory (de)allocation. When the monsters die or finish their path, they are tracked by a stack of deactivated monsters (indices) to be reused to initialize new monsters. 
+The monsterGen class is also very generic and customizable, since you can control very precisely how many and which monsters you want to create in each instant of time using only 2 functions that are passed in the monsterGen (pseudo-)"constructor". 
+For the timeGenFunc callback, the class provides 2 parameters: a Timer* (that can be used for the spawn rate) and a float (with the total elapsed time).
 
 ## What devices did we use
 ### VESA BIOS
