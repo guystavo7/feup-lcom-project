@@ -25,8 +25,11 @@ For this project, we aimed to create a tower defense game, a genre in which play
 
 TODO insert game image
 
+## Note before compiling the project 
+Due to an unknown reason, the current working directory is always the root of the operating system. That's why, it is important to check in <a href="./project/include/data.h"> data.h </a> file if the file paths section match your current directory tree.
+
 ## How to build and run
-The final program is built from `project/src` using the course LCOM toolchain (`minix.lcom.mk`). It links against our previous labs (`lab2` timer, `lab3` keyboard, `lab4` mouse, `lab5` sprite XPM).
+The final program is built from `project/src` using the course LCOM toolchain (`minix.lcom.mk`). It links against our previous labs (`lab2` timer, `lab3` keyboard, `lab4` mouse, `lab5` VESA BIOS).
 
 Build the lab libraries:
 
@@ -69,7 +72,6 @@ Each level still uses the same technical pipeline: three comma-separated grid fi
 
 ## How did we structure the project
 For our project, we adopted an OOP approach focusing on the SOLID principles, particularly the Single Responsibility Principle. Although, due to time constraints, we were unable to fully accomplish it in all files. Regardless, in a general view, we can define the flow of our project in this abstract UML.
-
 
 ![Diagrama UML geral](./misc/general.png)
 

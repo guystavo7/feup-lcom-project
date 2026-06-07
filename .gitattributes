@@ -1,5 +1,5 @@
 # Forçar quebras de linha Unix (LF) para todos os ficheiros de código e Makefiles
-* text eol=lf
+# * text eol=lf
 
 # Imagens e ficheiros binários
 *.png binary
