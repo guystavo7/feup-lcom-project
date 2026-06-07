@@ -3,8 +3,8 @@
 
 # Imagens e ficheiros binários
 # *.png binary
-*.jpg binary
-*.jpeg binary
-*.gif binary
-*.ico binary
-*.webp binary
+# *.jpg binary
+# *.jpeg binary
+# *.gif binary
+# *.ico binary
+# *.webp binary
