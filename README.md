@@ -1,6 +1,6 @@
 # Report 
 ## Disclaimers 
-All images used in this project were obtained from publicly available sources on the Internet. We do not own or claim any rights to these sprites. The assets used include the <a href = "https://pixelfrog-assets.itch.io/tiny-swords">Tiny Swords</a> sprite sheet by Pixel Frog, the <a href = "https://foozlecc.itch.io/void-environment-pack">Void Envorinment Pack</a> by Foozle, the <a href = "https://nyknck.itch.io/pixelarteffectfx017">Fireball effect</a> by NYKNCk all of which are distributed under the CC0 license. We also used sprites from the game Bad Ice Cream by Studio Nitrome and one AI generated animation.
+All images used in this project were obtained from publicly available sources on the Internet. We do not own or claim any rights to these sprites. The assets used include the <a href = "https://pixelfrog-assets.itch.io/tiny-swords">Tiny Swords</a> sprite sheet by Pixel Frog, the <a href = "https://foozlecc.itch.io/void-environment-pack">Void Environment Pack</a> by Foozle, the <a href = "https://nyknck.itch.io/pixelarteffectfx017">Fireball effect</a> by NYKNCk all of which are distributed under the CC0 license. We also used sprites from the game Bad Ice Cream by Studio Nitrome and one AI generated animation.
 
 This project was created solely for educational purposes.
 
@@ -9,7 +9,7 @@ This project was created solely for educational purposes.
 We declare that:
 
 1. We are responsible for all code and documentation in this repository, and we understand that we must be able to explain and justify any part of it on request.  
-2. We have used AI-based tools (e.g., code assistants, chatbots, or generators) only to support my learning, not to bypass the intended learning outcomes or any assessment rules.  
+2. We have used AI-based tools (e.g., code assistants, chatbots, or generators) only to support our learning, not to bypass the intended learning outcomes or any assessment rules.  
 3. Wherever AI tools contributed to this work, we have:  
    - Used them within the limits set by the course policies and institutional regulations.  
    - Reviewed, tested, and, where necessary, edited the outputs, taking full responsibility for their correctness, originality, and legality.  
@@ -21,23 +21,65 @@ Signed: Gustavo Bastos, Isaac Santos, Dalton Yuiti Kitadani Liaw Djoesman, Tiago
 Date: 26 de Fev / 2026
 
 ## What was our goal 
-For this project, we aimed to create a tower defense game, a genre of games which players need manage resources and build defenses across the map in order to protect themselves from waves of enemies. The core gameplay loop involves gathering fruits and it to build towers that automatically attack enemies as they approach in successive waves.
+For this project, we aimed to create a tower defense game, a genre in which players manage resources and build defenses across the map in order to protect themselves from waves of enemies. The core gameplay loop involves gathering fruits and spending them to build towers that automatically attack enemies as they approach in successive waves.
 
 TODO insert game image
 
+## How to build and run
+The final program is built from `project/src` using the course LCOM toolchain (`minix.lcom.mk`). It links against our previous labs (`lab2` timer, `lab3` keyboard, `lab4` mouse, `lab5` sprite XPM).
+
+Build the lab libraries:
+
+```bash
+cd /lab2 && make
+```
+
+```bash
+cd /lab3 && make
+```
+
+```bash
+cd /lab4 && make
+```
+
+```bash
+cd /lab5 && make
+```
+
+Build the game:
+
+```bash
+cd /project/src && make
+```
+
+Run the game:
+
+```bash
+cd /project/src && lcom_run proj
+```
+
+## Level and map data
+The game has **three separate levels**, each with its own map assets under <a href="./project/resources/maps">`project/resources/maps`</a> (`map1`, `map2`, `map3`) and a different role in the overall experience:
+
+- **Level 1 (`map1`):** a smaller, easier layout that acts as our **tutorial**. The match is tuned so the player can win in **at most about seven minutes**, without the pressure of a boss fight—ideal for learning fruits, building, and basic waves.  
+- **Level 2 (`map2`):** a **larger** map and a longer run (**about eight minutes**). When that time window is over, the player must **defeat the boss** to finish victorious; the level is built around that escalation.  
+- **Level 3 (`map3`):** a **different** layout again—another version of the game with its own map geometry, paths, and pacing, distinct from the first two.
+
+Each level still uses the same technical pipeline: three comma-separated grid files per folder—**`walls.csv`**, **`path.csv`**, and **`water.csv`** (lake tiles). The grid size and tile size match the constants in <a href="./project/include/data.h">`data.h`</a> (`MAP_TILES_X`, `MAP_TILES_Y`, `TILE_SIZE`).
+
 ## How did we structure the project
-For our project, we adopted an OOP approach focusing on the SOLID principles, particulary the Single Reponsibility Principle. Altough, due to time constraints, we were unable to fully accomplish it in all files. Regardless in a general view, we can define the flow of our project in this abstract UML.
+For our project, we adopted an OOP approach focusing on the SOLID principles, particularly the Single Responsibility Principle. Although, due to time constraints, we were unable to fully accomplish it in all files. Regardless, in a general view, we can define the flow of our project in this abstract UML.
 
 
 <img src="./misc/general.png">
 
-### Aplication
-The <a href="./project/src/application.c">application.c</a> is the entry point of our project, it is the file that starts our program and mainly handles all the initialization of the drivers and their interruptions. And it also has a Game object whose update method is called for each timer 0 interrupt.
+### Application
+The <a href="./project/src/application.c">application.c</a> is the entry point of our project; it is the file that starts our program and mainly handles all the initialization of the drivers and their interrupts. It also owns a `Game` object whose update method is called on each timer 0 interrupt.
 
 <img src="./misc/application.png">
 
 ### Game
-The <a href="./project/src/game.c">game</a> class has the responsability to handle the state of the game, i.e. it should be able to do all the necessary actions of each state and be able to transition between them. For that reason, we designed a state machine with the correspoding states:
+The <a href="./project/src/game.c">game</a> class has the responsibility to handle the state of the game, i.e. it should be able to perform all the necessary actions of each state and transition between them. For that reason, we designed a state machine with the corresponding states:
 - Main Menu: state that should show the startup menu
 - Level Selector: state that should show a menu in which you can choose which level to play
 - Running Game: state that should display the actual game
@@ -48,39 +90,39 @@ The <a href="./project/src/game.c">game</a> class has the responsability to hand
 <img src="./misc/gameState2.png">
 
 ### Arena 
-The <a href="./project/src/arena.c">Arena</a> class is just big wrapper that holds all running objects from the running game and calls their update methods. Beside being a wrapper, it also holds some auxiliar functions to help components connect with other objects for example a method to help colliders detect if they are colliding with some other objects or a method to check if the game is over.
+The <a href="./project/src/arena.c">Arena</a> class is a large wrapper that holds all running objects from the running game and calls their update methods. Besides being a wrapper, it also holds some auxiliary functions to help components connect with other objects, for example a method to help colliders detect if they are colliding with other objects, or a method to check if the game is over. It reads the level CSVs, maintains wave timing, fruit spawning, towers, and UI such as the build and upgrade menus.
 
 ### Components
-To explain the rest of our project, we need to explain the components directory. These are black boxes classes that should have only purpose and should be independent or only needing of others components in order to work. These files were the first structure created for our project and we used some ideas from game engines like Unity and Godot to help start our project, for that reason we have defined that we would need the following components:
-- <a href="./project/src/boxCollider.c">BoxCollider</a>: a simple object that represent a rectangle hitbox
+To explain the rest of our project, we need to explain the components directory. These are black-box classes that should have a single purpose and should be independent or only depend on other components in order to work. These files were the first structure created for our project and we used some ideas from game engines like Unity and Godot to help start our project; for that reason we defined that we would need the following components:
+- <a href="./project/src/boxCollider.c">BoxCollider</a>: a simple object that represents a rectangular hitbox
 - <a href="./project/src/rigidBody.c" >RigidBody</a>: a component that needs a collider and handles all necessary movement for objects that need to collide with other objects (used for the player)
-- <a href="./project/src/timer.c">Timer</a>: a component to countdown time
-- <a href="./lab5/spriteXMP.c">SpriteXPM</a>: a component that should be able to handle the displaying of a XPM
+- <a href="./project/src/timer.c">Timer</a>: a component to count down time
+- <a href="./lab5/spriteXMP.c">SpriteXPM</a>: a component that should be able to handle the displaying of an XPM
 - <a href="./project/src/animatedSprite.c">AnimatedSprite</a>: a component able to display animations 
-- <a href="./project/src/button.c">Button</a>: a component that has a onClick and onHover function
+- <a href="./project/src/button.c">Button</a>: a component that has `onClick` and `onHover` behaviour
 
 ### Player
-The <a href="./project/src/player.c">Player class </a> follows something similar to a MVC architecture with only a <a href="./project/src/playerModel.c">model class </a> and <a href="./project/src/playerController.c"> logic class </a> to handle the visual and controller. To handle all variations of player states, we defined a game state to handle all player inputs and their logic and process which visual to display. To help manage easier the player, we use Animated Sprites to display different animations depending in which action the player is doing, a rigidbody to abstract all functions that handles collisions with walls and boxColliders to represent the player hitbox.
+The <a href="./project/src/player.c">Player class</a> follows something similar to an MVC architecture with only a <a href="./project/src/playerModel.c">model class</a> and a <a href="./project/src/playerController.c">controller class</a> to handle the visual and input logic. To handle all variations of player behaviour, we defined player states to process inputs and decide which animation to show. To make the player easier to manage, we use animated sprites for different actions, a rigid body for collisions with walls, and box colliders for the hitbox.
 
 <img src="./misc/playerState1.png">
 <img src="./misc/playerState2.png">
 
 ### Tile and Collectable
-The <a href="./project/src/tile.c"> Tile class </a> and <a href="./project/src/collectable.c"> Collectable class </a> are classes that have a boxcollider and spriteXPM and they represent a generic tile to display in the map. The collectable is special in a way that it disapears after being collected in order to represent the fruits from the game which the player needs to collect. And in order to detect the collisions with the fruits, we use the arena as observer to analyse which collectable collided with the player.
+The <a href="./project/src/tile.c">Tile class</a> and <a href="./project/src/collectable.c">Collectable class</a> are classes that have a box collider and SpriteXPM and they represent a generic tile to display on the map. The collectable is special in that it disappears after being collected, to represent the fruits the player needs to gather. In order to detect collisions with fruits, we use the arena as an observer to detect which collectable collided with the player.
 
 ### Generic Tower and Projectiles
-In order to have a modular to generate different types of tower, we decide to define inheritance approach to implement the towers. So we defined the generic tower as an abstract class that is implemented by diverses type of towers:
+In order to have a modular way to generate different types of tower, we decided to use an inheritance-style approach. We defined the generic tower as an abstract base that is implemented by several tower types:
 - <a href="./project/src/basicTower.c">Basic Tower</a>;
 - <a href="./project/src/basicLongTower.c">Long Tower</a>;
 - <a href="./project/src/fastTower.c">Fast Tower</a>;
 - <a href="./project/src/piercingTower.c">Piercing Tower</a>;
-- <a href="./project/src/eletrictTower.c">Eletric Tower</a>;
+- <a href="./project/src/eletrictTower.c">Electric Tower</a>;
 - <a href="./project/src/mortarTower.c">Mortar Tower</a>;
 
-Beside that, each towers also has a projectile stored in it. The <a href="./project/src/projectile.c"> Projectile class </a> also uses inheritance to create modular structure to create projectiles, doing so we created the following types of projectiles:
+Besides that, each tower also has a projectile stored in it. The <a href="./project/src/projectile.c">Projectile class</a> also uses inheritance to keep a modular structure; we created the following projectile kinds:
 - normal: a normal projectile that stops after the first valid collision
-- piercing: a projectile that pierces everything until hits a wall
-- sky fall: a projectile that falls from the sky and it is affected by gravity
+- piercing: a projectile that pierces everything until it hits a wall
+- sky fall: a projectile that falls from the sky and is affected by gravity
 - near: an immobile projectile 
 
 ### Monsters
