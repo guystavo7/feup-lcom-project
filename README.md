@@ -23,7 +23,9 @@ Date: 26 de Fev / 2026
 ## What was our goal 
 For this project, we aimed to create a tower defense game, a genre in which players manage resources and build defenses across the map in order to protect themselves from waves of enemies. The core gameplay loop involves gathering fruits and spending them to build towers that automatically attack enemies as they approach in successive waves.
 
-TODO insert game image
+![Gameplay1](./misc/gif1.gif)
+![Gameplay2](./misc/gif2.gif)
+
 
 ## Note before compiling the project 
 Due to an unknown reason, the current working directory is always the root of the operating system. That's why, it is important to check in <a href="./project/include/data.h"> data.h </a> file if the file paths section match your current directory tree.
